@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="GatepassDatasetType" targetNamespace="http://tempuri.org/GatepassDatasetType.xsd" xmlns:mstns="http://tempuri.org/GatepassDatasetType.xsd" xmlns="http://tempuri.org/GatepassDatasetType.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="GatepassDatasetType" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="GatepassDatasetType" msprop:Generator_UserDSName="GatepassDatasetType">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="GatepassDT" msprop:Generator_TableClassName="GatepassDTDataTable" msprop:Generator_TableVarName="tableGatepassDT" msprop:Generator_TablePropName="GatepassDT" msprop:Generator_RowDeletingName="GatepassDTRowDeleting" msprop:Generator_RowChangingName="GatepassDTRowChanging" msprop:Generator_RowEvHandlerName="GatepassDTRowChangeEventHandler" msprop:Generator_RowDeletedName="GatepassDTRowDeleted" msprop:Generator_UserTableName="GatepassDT" msprop:Generator_RowChangedName="GatepassDTRowChanged" msprop:Generator_RowEvArgName="GatepassDTRowChangeEvent" msprop:Generator_RowClassName="GatepassDTRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="GatepassNumber" msprop:Generator_ColumnVarNameInTable="columnGatepassNumber" msprop:Generator_ColumnPropNameInRow="GatepassNumber" msprop:Generator_ColumnPropNameInTable="GatepassNumberColumn" msprop:Generator_UserColumnName="GatepassNumber" type="xs:string" />
+              <xs:element name="Date" msprop:Generator_ColumnVarNameInTable="columnDate" msprop:Generator_ColumnPropNameInRow="Date" msprop:Generator_ColumnPropNameInTable="DateColumn" msprop:Generator_UserColumnName="Date" type="xs:string" minOccurs="0" />
+              <xs:element name="Sender" msprop:Generator_ColumnVarNameInTable="columnSender" msprop:Generator_ColumnPropNameInRow="Sender" msprop:Generator_ColumnPropNameInTable="SenderColumn" msprop:Generator_UserColumnName="Sender" type="xs:string" minOccurs="0" />
+              <xs:element name="SenderOffice" msprop:Generator_ColumnVarNameInTable="columnSenderOffice" msprop:Generator_ColumnPropNameInRow="SenderOffice" msprop:Generator_ColumnPropNameInTable="SenderOfficeColumn" msprop:Generator_UserColumnName="SenderOffice" type="xs:string" minOccurs="0" />
+              <xs:element name="Receiver" msprop:Generator_ColumnVarNameInTable="columnReceiver" msprop:Generator_ColumnPropNameInRow="Receiver" msprop:Generator_ColumnPropNameInTable="ReceiverColumn" msprop:Generator_UserColumnName="Receiver" type="xs:string" minOccurs="0" />
+              <xs:element name="ReceiverOffice" msprop:Generator_ColumnVarNameInTable="columnReceiverOffice" msprop:Generator_ColumnPropNameInRow="ReceiverOffice" msprop:Generator_ColumnPropNameInTable="ReceiverOfficeColumn" msprop:Generator_UserColumnName="ReceiverOffice" type="xs:string" minOccurs="0" />
+              <xs:element name="IssueDate" msprop:Generator_ColumnVarNameInTable="columnIssueDate" msprop:Generator_ColumnPropNameInRow="IssueDate" msprop:Generator_ColumnPropNameInTable="IssueDateColumn" msprop:Generator_UserColumnName="IssueDate" type="xs:string" minOccurs="0" />
+              <xs:element name="Status" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemName" msprop:Generator_ColumnVarNameInTable="columnItemName" msprop:Generator_ColumnPropNameInRow="ItemName" msprop:Generator_ColumnPropNameInTable="ItemNameColumn" msprop:Generator_UserColumnName="ItemName" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemSerialNumber" msprop:Generator_ColumnVarNameInTable="columnItemSerialNumber" msprop:Generator_ColumnPropNameInRow="ItemSerialNumber" msprop:Generator_ColumnPropNameInTable="ItemSerialNumberColumn" msprop:Generator_UserColumnName="ItemSerialNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemCategory" msprop:Generator_ColumnVarNameInTable="columnItemCategory" msprop:Generator_ColumnPropNameInRow="ItemCategory" msprop:Generator_ColumnPropNameInTable="ItemCategoryColumn" msprop:Generator_UserColumnName="ItemCategory" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemMake" msprop:Generator_ColumnVarNameInTable="columnItemMake" msprop:Generator_ColumnPropNameInRow="ItemMake" msprop:Generator_ColumnPropNameInTable="ItemMakeColumn" msprop:Generator_UserColumnName="ItemMake" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemStatus" msprop:Generator_ColumnVarNameInTable="columnItemStatus" msprop:Generator_ColumnPropNameInRow="ItemStatus" msprop:Generator_ColumnPropNameInTable="ItemStatusColumn" msprop:Generator_UserColumnName="ItemStatus" type="xs:string" minOccurs="0" />
+              <xs:element name="ItemInventoryNumber" msprop:Generator_ColumnVarNameInTable="columnItemInventoryNumber" msprop:Generator_ColumnPropNameInRow="ItemInventoryNumber" msprop:Generator_ColumnPropNameInTable="ItemInventoryNumberColumn" msprop:Generator_UserColumnName="ItemInventoryNumber" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

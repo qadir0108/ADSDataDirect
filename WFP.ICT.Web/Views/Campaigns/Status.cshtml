@@ -1,0 +1,99 @@
+﻿@using System.Threading.Tasks
+@using ADSDataDirect.Enums
+@model WFP.ICT.Data.Entities.Campaign
+
+@{
+    ViewData["Title"] = "Campaign Status";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Campaign Status</h2>@Html.ActionLink("Back to Orders", "Index", "Campaigns")
+
+@*<p>
+    <a asp-action="Create">Create New</a>
+</p>*@
+<table class="table">
+    <thead>
+    <tr>
+        <th>
+            Status
+        </th>
+        <th>
+            Order Number
+        </th>
+        <th>
+            Campaign Name
+        </th>
+        <th>
+            Status Date
+        </th>
+        <th>
+            Deploy Date Time
+        </th>
+        <th>
+            Assignt Customer
+        </th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr>
+        <td>
+            @Html.HiddenFor(modelItem => Model.Id)
+            @Enum.GetName(typeof(CampaignStatusEnum), Model.Status)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.OrderNumber)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.CampaignName)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.CreatedAt)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => Model.DeployDateTime)
+        </td>
+        <td>
+            @Html.DropDownList("Customer", null, htmlAttributes: new { @class = "form-control" })
+        </td>
+    </tr>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+
+    var wfp = wfp || {};
+
+    $("#Customer").select2().on("change", function (e) {
+        debugger;
+        if ($(this).val() === '') return;
+        
+        var dataToPost = {
+            Id: $("#Id").val(),
+            UserId: $(this).val()
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "/Campaigns/ChangeAssigned",
+            data: dataToPost,
+            success: function (response) {
+                debugger;
+                if (response === "") wfp.reload();
+                if (response.IsSucess) {
+                    wfp.showSuccess('Assigned to Customer has been updated successfully.');
+                    //wfp.reload();
+                } else {
+                    wfp.showError(response.ErrorMessage);
+                }
+            },
+            failure: function (response) {
+                wfp.showError('There is erorr in service call.');
+            },
+            complete: function () {
+            }
+        });
+    });
+
+</script>
+

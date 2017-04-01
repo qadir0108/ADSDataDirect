@@ -1,0 +1,40 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<xs:schema id="VisitDatasetType" targetNamespace="http://tempuri.org/VisitDatasetType.xsd" xmlns:mstns="http://tempuri.org/VisitDatasetType.xsd" xmlns="http://tempuri.org/VisitDatasetType.xsd" xmlns:xs="http://www.w3.org/2001/XMLSchema" xmlns:msdata="urn:schemas-microsoft-com:xml-msdata" xmlns:msprop="urn:schemas-microsoft-com:xml-msprop" attributeFormDefault="qualified" elementFormDefault="qualified">
+  <xs:annotation>
+    <xs:appinfo source="urn:schemas-microsoft-com:xml-msdatasource">
+      <DataSource DefaultConnectionIndex="0" FunctionsComponentName="QueriesTableAdapter" Modifier="AutoLayout, AnsiClass, Class, Public" SchemaSerializationMode="IncludeSchema" xmlns="urn:schemas-microsoft-com:xml-msdatasource">
+        <Connections />
+        <Tables />
+        <Sources />
+      </DataSource>
+    </xs:appinfo>
+  </xs:annotation>
+  <xs:element name="VisitDatasetType" msdata:IsDataSet="true" msdata:UseCurrentLocale="true" msprop:EnableTableAdapterManager="true" msprop:Generator_DataSetName="VisitDatasetType" msprop:Generator_UserDSName="VisitDatasetType">
+    <xs:complexType>
+      <xs:choice minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="VisitDT" msprop:Generator_TableClassName="VisitDTDataTable" msprop:Generator_TableVarName="tableVisitDT" msprop:Generator_TablePropName="VisitDT" msprop:Generator_RowDeletingName="VisitDTRowDeleting" msprop:Generator_RowChangingName="VisitDTRowChanging" msprop:Generator_RowEvHandlerName="VisitDTRowChangeEventHandler" msprop:Generator_RowDeletedName="VisitDTRowDeleted" msprop:Generator_UserTableName="VisitDT" msprop:Generator_RowChangedName="VisitDTRowChanged" msprop:Generator_RowEvArgName="VisitDTRowChangeEvent" msprop:Generator_RowClassName="VisitDTRow">
+          <xs:complexType>
+            <xs:sequence>
+              <xs:element name="GroupNumber" msprop:Generator_ColumnVarNameInTable="columnGroupNumber" msprop:Generator_ColumnPropNameInRow="GroupNumber" msprop:Generator_ColumnPropNameInTable="GroupNumberColumn" msprop:Generator_UserColumnName="GroupNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="ExpectedDate" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnExpectedDate" msprop:Generator_ColumnPropNameInRow="ExpectedDate" msprop:Generator_ColumnPropNameInTable="ExpectedDateColumn" msprop:Generator_UserColumnName="ExpectedDate" type="xs:string" minOccurs="0" />
+              <xs:element name="Requester" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnRequester" msprop:Generator_ColumnPropNameInRow="Requester" msprop:Generator_ColumnPropNameInTable="RequesterColumn" msprop:Generator_UserColumnName="Requester" type="xs:string" minOccurs="0" />
+              <xs:element name="RequesterUnit" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnRequesterUnit" msprop:Generator_ColumnPropNameInRow="RequesterUnit" msprop:Generator_ColumnPropNameInTable="RequesterUnitColumn" msprop:Generator_UserColumnName="RequesterUnit" type="xs:string" minOccurs="0" />
+              <xs:element name="RequesterOffice" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnRequesterOffice" msprop:Generator_ColumnPropNameInRow="RequesterOffice" msprop:Generator_ColumnPropNameInTable="RequesterOfficeColumn" msprop:Generator_UserColumnName="RequesterOffice" type="xs:string" minOccurs="0" />
+              <xs:element name="Details" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnDetails" msprop:Generator_ColumnPropNameInRow="Details" msprop:Generator_ColumnPropNameInTable="DetailsColumn" msprop:Generator_UserColumnName="Details" type="xs:string" minOccurs="0" />
+              <xs:element name="CompanyName" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnCompanyName" msprop:Generator_ColumnPropNameInRow="CompanyName" msprop:Generator_ColumnPropNameInTable="CompanyNameColumn" msprop:Generator_UserColumnName="CompanyName" type="xs:string" minOccurs="0" />
+              <xs:element name="EntryGate" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnEntryGate" msprop:Generator_ColumnPropNameInRow="EntryGate" msprop:Generator_ColumnPropNameInTable="EntryGateColumn" msprop:Generator_UserColumnName="EntryGate" type="xs:string" minOccurs="0" />
+              <xs:element name="VehicleNumber" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnVehicleNumber" msprop:Generator_ColumnPropNameInRow="VehicleNumber" msprop:Generator_ColumnPropNameInTable="VehicleNumberColumn" msprop:Generator_UserColumnName="VehicleNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="IssueDate" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnIssueDate" msprop:Generator_ColumnPropNameInRow="IssueDate" msprop:Generator_ColumnPropNameInTable="IssueDateColumn" msprop:Generator_UserColumnName="IssueDate" type="xs:string" minOccurs="0" />
+              <xs:element name="Status" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnStatus" msprop:Generator_ColumnPropNameInRow="Status" msprop:Generator_ColumnPropNameInTable="StatusColumn" msprop:Generator_UserColumnName="Status" type="xs:string" minOccurs="0" />
+              <xs:element name="VisitorName" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnVisitorName" msprop:Generator_ColumnPropNameInRow="VisitorName" msprop:Generator_ColumnPropNameInTable="VisitorNameColumn" msprop:Generator_UserColumnName="VisitorName" type="xs:string" minOccurs="0" />
+              <xs:element name="VisitorCompanyName" msdata:Caption="DataColumn1" msprop:Generator_ColumnVarNameInTable="columnVisitorCompanyName" msprop:Generator_ColumnPropNameInRow="VisitorCompanyName" msprop:Generator_ColumnPropNameInTable="VisitorCompanyNameColumn" msprop:Generator_UserColumnName="VisitorCompanyName" type="xs:string" minOccurs="0" />
+              <xs:element name="VisitorCnicPassportNumber" msprop:Generator_ColumnVarNameInTable="columnVisitorCnicPassportNumber" msprop:Generator_ColumnPropNameInRow="VisitorCnicPassportNumber" msprop:Generator_ColumnPropNameInTable="VisitorCnicPassportNumberColumn" msprop:Generator_UserColumnName="VisitorCnicPassportNumber" type="xs:string" minOccurs="0" />
+              <xs:element name="VisitorEntryGate" msprop:Generator_ColumnVarNameInTable="columnVisitorEntryGate" msprop:Generator_ColumnPropNameInRow="VisitorEntryGate" msprop:Generator_ColumnPropNameInTable="VisitorEntryGateColumn" msprop:Generator_UserColumnName="VisitorEntryGate" type="xs:string" minOccurs="0" />
+              <xs:element name="VisitorVehicleNumber" msprop:Generator_ColumnVarNameInTable="columnVisitorVehicleNumber" msprop:Generator_ColumnPropNameInRow="VisitorVehicleNumber" msprop:Generator_ColumnPropNameInTable="VisitorVehicleNumberColumn" msprop:Generator_UserColumnName="VisitorVehicleNumber" type="xs:string" minOccurs="0" />
+            </xs:sequence>
+          </xs:complexType>
+        </xs:element>
+      </xs:choice>
+    </xs:complexType>
+  </xs:element>
+</xs:schema>

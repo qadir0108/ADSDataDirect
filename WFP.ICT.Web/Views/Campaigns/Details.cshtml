@@ -1,0 +1,235 @@
+﻿@model WFP.ICT.Data.Entities.Campaign
+
+@{
+    ViewBag.Title = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Details</h2>
+
+<div>
+    <h4>Campaign</h4>
+    <hr />
+    <dl class="dl-horizontal">
+        <dt>
+            @Html.DisplayNameFor(model => model.CreatedAt)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CreatedAt)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.CampaignName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.CampaignName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.BroadcastDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.BroadcastDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RepresentativeName)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepresentativeName)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.RepresentativeEmail)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.RepresentativeEmail)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReBroadCast)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReBroadCast)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReBroadcastDate)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReBroadcastDate)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TestingUrgency)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TestingUrgency)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ZipCodeFile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ZipCodeFile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.GeoDetails)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.GeoDetails)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Demographics)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Demographics)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.Quantity)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.Quantity)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FromLine)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FromLine)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SubjectLine)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SubjectLine)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.HtmlImageFiles)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.HtmlImageFiles)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.TestSeedList)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.TestSeedList)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.FinalSeedList)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.FinalSeedList)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SuppressionFile)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SuppressionFile)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsPersonalization)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsPersonalization)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsMatchback)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsMatchback)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.IsSuppression)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.IsSuppression)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.WhiteLabel)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.WhiteLabel)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OptOut)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OptOut)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.SpecialInstructions)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.SpecialInstructions)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.ReferenceNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.ReferenceNumber)
+        </dd>
+
+        <dt>
+            @Html.DisplayNameFor(model => model.OrderNumber)
+        </dt>
+
+        <dd>
+            @Html.DisplayFor(model => model.OrderNumber)
+        </dd>
+
+    </dl>
+</div>
+<p>
+    @Html.ActionLink("Edit", "Edit", new { id = Model.Id }) |
+    @Html.ActionLink("Back to List", "Index")
+</p>
