@@ -75,7 +75,7 @@
         </td>
         <td>
             <a href="#" class="btn btn-default" id="btnDrill" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
-            <a href="#" class="btn btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
+            <a href="~/Campaigns/Report?id=@Model.Id" class="btn btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
         </td>
     </tr>
     </tbody>
@@ -168,7 +168,7 @@
                                  @Html.DisplayFor(modelItem => item.Link)
                              </td>
                              <td>
-                                 @Html.DisplayFor(modelItem => item.Quantity)
+                                 @Html.DisplayFor(modelItem => item.QuantityDetail)
                              </td>
                          </tr>
                      }

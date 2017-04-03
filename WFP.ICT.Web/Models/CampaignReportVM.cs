@@ -15,6 +15,7 @@ namespace WFP.ICT.Web.Models
         public string Status { get; set; }
 
         public string IONumber { get; set; }
+        public string OrderDate { get; set; }
         public string StartDate { get; set; }
         public string EmailsSent { get; set; }
         public string OpenedPercentage { get; set; }

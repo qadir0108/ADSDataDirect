@@ -20,17 +20,17 @@ namespace WFP.ICT.Web.Reports {
     [global::System.ComponentModel.DesignerCategoryAttribute("code")]
     [global::System.ComponentModel.ToolboxItem(true)]
     [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedDataSetSchema")]
-    [global::System.Xml.Serialization.XmlRootAttribute("VisitDatasetType")]
+    [global::System.Xml.Serialization.XmlRootAttribute("RegistryDatasetType")]
     [global::System.ComponentModel.Design.HelpKeywordAttribute("vs.data.DataSet")]
-    public partial class VisitDatasetType : global::System.Data.DataSet {
+    public partial class RegistryDatasetType : global::System.Data.DataSet {
         
-        private VisitDTDataTable tableVisitDT;
+        private CampaignDTDataTable tableCampaignDT;
         
         private global::System.Data.SchemaSerializationMode _schemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public VisitDatasetType() {
+        public RegistryDatasetType() {
             this.BeginInit();
             this.InitClass();
             global::System.ComponentModel.CollectionChangeEventHandler schemaChangedHandler = new global::System.ComponentModel.CollectionChangeEventHandler(this.SchemaChanged);
@@ -41,7 +41,7 @@ namespace WFP.ICT.Web.Reports {
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        protected VisitDatasetType(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+        protected RegistryDatasetType(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                 base(info, context, false) {
             if ((this.IsBinarySerialized(info, context) == true)) {
                 this.InitVars(false);
@@ -54,8 +54,8 @@ namespace WFP.ICT.Web.Reports {
             if ((this.DetermineSchemaSerializationMode(info, context) == global::System.Data.SchemaSerializationMode.IncludeSchema)) {
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXmlSchema(new global::System.Xml.XmlTextReader(new global::System.IO.StringReader(strSchema)));
-                if ((ds.Tables["VisitDT"] != null)) {
-                    base.Tables.Add(new VisitDTDataTable(ds.Tables["VisitDT"]));
+                if ((ds.Tables["CampaignDT"] != null)) {
+                    base.Tables.Add(new CampaignDTDataTable(ds.Tables["CampaignDT"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -79,9 +79,9 @@ namespace WFP.ICT.Web.Reports {
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         [global::System.ComponentModel.Browsable(false)]
         [global::System.ComponentModel.DesignerSerializationVisibility(global::System.ComponentModel.DesignerSerializationVisibility.Content)]
-        public VisitDTDataTable VisitDT {
+        public CampaignDTDataTable CampaignDT {
             get {
-                return this.tableVisitDT;
+                return this.tableCampaignDT;
             }
         }
         
@@ -127,7 +127,7 @@ namespace WFP.ICT.Web.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public override global::System.Data.DataSet Clone() {
-            VisitDatasetType cln = ((VisitDatasetType)(base.Clone()));
+            RegistryDatasetType cln = ((RegistryDatasetType)(base.Clone()));
             cln.InitVars();
             cln.SchemaSerializationMode = this.SchemaSerializationMode;
             return cln;
@@ -152,8 +152,8 @@ namespace WFP.ICT.Web.Reports {
                 this.Reset();
                 global::System.Data.DataSet ds = new global::System.Data.DataSet();
                 ds.ReadXml(reader);
-                if ((ds.Tables["VisitDT"] != null)) {
-                    base.Tables.Add(new VisitDTDataTable(ds.Tables["VisitDT"]));
+                if ((ds.Tables["CampaignDT"] != null)) {
+                    base.Tables.Add(new CampaignDTDataTable(ds.Tables["CampaignDT"]));
                 }
                 this.DataSetName = ds.DataSetName;
                 this.Prefix = ds.Prefix;
@@ -188,10 +188,10 @@ namespace WFP.ICT.Web.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         internal void InitVars(bool initTable) {
-            this.tableVisitDT = ((VisitDTDataTable)(base.Tables["VisitDT"]));
+            this.tableCampaignDT = ((CampaignDTDataTable)(base.Tables["CampaignDT"]));
             if ((initTable == true)) {
-                if ((this.tableVisitDT != null)) {
-                    this.tableVisitDT.InitVars();
+                if ((this.tableCampaignDT != null)) {
+                    this.tableCampaignDT.InitVars();
                 }
             }
         }
@@ -199,18 +199,18 @@ namespace WFP.ICT.Web.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         private void InitClass() {
-            this.DataSetName = "VisitDatasetType";
+            this.DataSetName = "RegistryDatasetType";
             this.Prefix = "";
-            this.Namespace = "http://tempuri.org/VisitDatasetType.xsd";
+            this.Namespace = "http://tempuri.org/RegistryDatasetType.xsd";
             this.EnforceConstraints = true;
             this.SchemaSerializationMode = global::System.Data.SchemaSerializationMode.IncludeSchema;
-            this.tableVisitDT = new VisitDTDataTable();
-            base.Tables.Add(this.tableVisitDT);
+            this.tableCampaignDT = new CampaignDTDataTable();
+            base.Tables.Add(this.tableCampaignDT);
         }
         
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        private bool ShouldSerializeVisitDT() {
+        private bool ShouldSerializeCampaignDT() {
             return false;
         }
         
@@ -225,7 +225,7 @@ namespace WFP.ICT.Web.Reports {
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
         public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedDataSetSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
-            VisitDatasetType ds = new VisitDatasetType();
+            RegistryDatasetType ds = new RegistryDatasetType();
             global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
             global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
             global::System.Xml.Schema.XmlSchemaAny any = new global::System.Xml.Schema.XmlSchemaAny();
@@ -270,51 +270,53 @@ namespace WFP.ICT.Web.Reports {
         }
         
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public delegate void VisitDTRowChangeEventHandler(object sender, VisitDTRowChangeEvent e);
+        public delegate void CampaignDTRowChangeEventHandler(object sender, CampaignDTRowChangeEvent e);
         
         /// <summary>
         ///Represents the strongly named DataTable class.
         ///</summary>
         [global::System.Serializable()]
         [global::System.Xml.Serialization.XmlSchemaProviderAttribute("GetTypedTableSchema")]
-        public partial class VisitDTDataTable : global::System.Data.TypedTableBase<VisitDTRow> {
+        public partial class CampaignDTDataTable : global::System.Data.TypedTableBase<CampaignDTRow> {
             
-            private global::System.Data.DataColumn columnGroupNumber;
+            private global::System.Data.DataColumn columnOrderNumber;
             
-            private global::System.Data.DataColumn columnExpectedDate;
-            
-            private global::System.Data.DataColumn columnRequester;
-            
-            private global::System.Data.DataColumn columnRequesterUnit;
-            
-            private global::System.Data.DataColumn columnRequesterOffice;
-            
-            private global::System.Data.DataColumn columnDetails;
-            
-            private global::System.Data.DataColumn columnCompanyName;
-            
-            private global::System.Data.DataColumn columnEntryGate;
-            
-            private global::System.Data.DataColumn columnVehicleNumber;
-            
-            private global::System.Data.DataColumn columnIssueDate;
+            private global::System.Data.DataColumn columnCampaignName;
             
             private global::System.Data.DataColumn columnStatus;
             
-            private global::System.Data.DataColumn columnVisitorName;
+            private global::System.Data.DataColumn columnWhiteLabel;
             
-            private global::System.Data.DataColumn columnVisitorCompanyName;
+            private global::System.Data.DataColumn columnReceivedFrom;
             
-            private global::System.Data.DataColumn columnVisitorCnicPassportNumber;
+            private global::System.Data.DataColumn columnQuantity;
             
-            private global::System.Data.DataColumn columnVisitorEntryGate;
+            private global::System.Data.DataColumn columnClicked;
             
-            private global::System.Data.DataColumn columnVisitorVehicleNumber;
+            private global::System.Data.DataColumn columnOpened;
+            
+            private global::System.Data.DataColumn columnIONumber;
+            
+            private global::System.Data.DataColumn columnStartDate;
+            
+            private global::System.Data.DataColumn columnEmailsSent;
+            
+            private global::System.Data.DataColumn columnOpenedPercentage;
+            
+            private global::System.Data.DataColumn columnClickedPercentage;
+            
+            private global::System.Data.DataColumn columnCTRPercentage;
+            
+            private global::System.Data.DataColumn columnLink;
+            
+            private global::System.Data.DataColumn columnQuantityDetail;
+            
+            private global::System.Data.DataColumn columnOrderDate;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public VisitDTDataTable() {
-                this.TableName = "VisitDT";
+            public CampaignDTDataTable() {
+                this.TableName = "CampaignDT";
                 this.BeginInit();
                 this.InitClass();
                 this.EndInit();
@@ -322,7 +324,7 @@ namespace WFP.ICT.Web.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal VisitDTDataTable(global::System.Data.DataTable table) {
+            internal CampaignDTDataTable(global::System.Data.DataTable table) {
                 this.TableName = table.TableName;
                 if ((table.CaseSensitive != table.DataSet.CaseSensitive)) {
                     this.CaseSensitive = table.CaseSensitive;
@@ -339,88 +341,24 @@ namespace WFP.ICT.Web.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            protected VisitDTDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
+            protected CampaignDTDataTable(global::System.Runtime.Serialization.SerializationInfo info, global::System.Runtime.Serialization.StreamingContext context) : 
                     base(info, context) {
                 this.InitVars();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn GroupNumberColumn {
+            public global::System.Data.DataColumn OrderNumberColumn {
                 get {
-                    return this.columnGroupNumber;
+                    return this.columnOrderNumber;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn ExpectedDateColumn {
+            public global::System.Data.DataColumn CampaignNameColumn {
                 get {
-                    return this.columnExpectedDate;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn RequesterColumn {
-                get {
-                    return this.columnRequester;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn RequesterUnitColumn {
-                get {
-                    return this.columnRequesterUnit;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn RequesterOfficeColumn {
-                get {
-                    return this.columnRequesterOffice;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn DetailsColumn {
-                get {
-                    return this.columnDetails;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn CompanyNameColumn {
-                get {
-                    return this.columnCompanyName;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn EntryGateColumn {
-                get {
-                    return this.columnEntryGate;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn VehicleNumberColumn {
-                get {
-                    return this.columnVehicleNumber;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn IssueDateColumn {
-                get {
-                    return this.columnIssueDate;
+                    return this.columnCampaignName;
                 }
             }
             
@@ -434,41 +372,113 @@ namespace WFP.ICT.Web.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn VisitorNameColumn {
+            public global::System.Data.DataColumn WhiteLabelColumn {
                 get {
-                    return this.columnVisitorName;
+                    return this.columnWhiteLabel;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn VisitorCompanyNameColumn {
+            public global::System.Data.DataColumn ReceivedFromColumn {
                 get {
-                    return this.columnVisitorCompanyName;
+                    return this.columnReceivedFrom;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn VisitorCnicPassportNumberColumn {
+            public global::System.Data.DataColumn QuantityColumn {
                 get {
-                    return this.columnVisitorCnicPassportNumber;
+                    return this.columnQuantity;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn VisitorEntryGateColumn {
+            public global::System.Data.DataColumn ClickedColumn {
                 get {
-                    return this.columnVisitorEntryGate;
+                    return this.columnClicked;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public global::System.Data.DataColumn VisitorVehicleNumberColumn {
+            public global::System.Data.DataColumn OpenedColumn {
                 get {
-                    return this.columnVisitorVehicleNumber;
+                    return this.columnOpened;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn IONumberColumn {
+                get {
+                    return this.columnIONumber;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn StartDateColumn {
+                get {
+                    return this.columnStartDate;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn EmailsSentColumn {
+                get {
+                    return this.columnEmailsSent;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn OpenedPercentageColumn {
+                get {
+                    return this.columnOpenedPercentage;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn ClickedPercentageColumn {
+                get {
+                    return this.columnClickedPercentage;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn CTRPercentageColumn {
+                get {
+                    return this.columnCTRPercentage;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn LinkColumn {
+                get {
+                    return this.columnLink;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn QuantityDetailColumn {
+                get {
+                    return this.columnQuantityDetail;
+                }
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public global::System.Data.DataColumn OrderDateColumn {
+                get {
+                    return this.columnOrderDate;
                 }
             }
             
@@ -483,76 +493,78 @@ namespace WFP.ICT.Web.Reports {
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public VisitDTRow this[int index] {
+            public CampaignDTRow this[int index] {
                 get {
-                    return ((VisitDTRow)(this.Rows[index]));
+                    return ((CampaignDTRow)(this.Rows[index]));
                 }
             }
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event VisitDTRowChangeEventHandler VisitDTRowChanging;
+            public event CampaignDTRowChangeEventHandler CampaignDTRowChanging;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event VisitDTRowChangeEventHandler VisitDTRowChanged;
+            public event CampaignDTRowChangeEventHandler CampaignDTRowChanged;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event VisitDTRowChangeEventHandler VisitDTRowDeleting;
+            public event CampaignDTRowChangeEventHandler CampaignDTRowDeleting;
             
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public event VisitDTRowChangeEventHandler VisitDTRowDeleted;
+            public event CampaignDTRowChangeEventHandler CampaignDTRowDeleted;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void AddVisitDTRow(VisitDTRow row) {
+            public void AddCampaignDTRow(CampaignDTRow row) {
                 this.Rows.Add(row);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public VisitDTRow AddVisitDTRow(
-                        string GroupNumber, 
-                        string ExpectedDate, 
-                        string Requester, 
-                        string RequesterUnit, 
-                        string RequesterOffice, 
-                        string Details, 
-                        string CompanyName, 
-                        string EntryGate, 
-                        string VehicleNumber, 
-                        string IssueDate, 
+            public CampaignDTRow AddCampaignDTRow(
+                        string OrderNumber, 
+                        string CampaignName, 
                         string Status, 
-                        string VisitorName, 
-                        string VisitorCompanyName, 
-                        string VisitorCnicPassportNumber, 
-                        string VisitorEntryGate, 
-                        string VisitorVehicleNumber) {
-                VisitDTRow rowVisitDTRow = ((VisitDTRow)(this.NewRow()));
+                        string WhiteLabel, 
+                        string ReceivedFrom, 
+                        string Quantity, 
+                        string Clicked, 
+                        string Opened, 
+                        string IONumber, 
+                        string StartDate, 
+                        string EmailsSent, 
+                        string OpenedPercentage, 
+                        string ClickedPercentage, 
+                        string CTRPercentage, 
+                        string Link, 
+                        string QuantityDetail, 
+                        string OrderDate) {
+                CampaignDTRow rowCampaignDTRow = ((CampaignDTRow)(this.NewRow()));
                 object[] columnValuesArray = new object[] {
-                        GroupNumber,
-                        ExpectedDate,
-                        Requester,
-                        RequesterUnit,
-                        RequesterOffice,
-                        Details,
-                        CompanyName,
-                        EntryGate,
-                        VehicleNumber,
-                        IssueDate,
+                        OrderNumber,
+                        CampaignName,
                         Status,
-                        VisitorName,
-                        VisitorCompanyName,
-                        VisitorCnicPassportNumber,
-                        VisitorEntryGate,
-                        VisitorVehicleNumber};
-                rowVisitDTRow.ItemArray = columnValuesArray;
-                this.Rows.Add(rowVisitDTRow);
-                return rowVisitDTRow;
+                        WhiteLabel,
+                        ReceivedFrom,
+                        Quantity,
+                        Clicked,
+                        Opened,
+                        IONumber,
+                        StartDate,
+                        EmailsSent,
+                        OpenedPercentage,
+                        ClickedPercentage,
+                        CTRPercentage,
+                        Link,
+                        QuantityDetail,
+                        OrderDate};
+                rowCampaignDTRow.ItemArray = columnValuesArray;
+                this.Rows.Add(rowCampaignDTRow);
+                return rowCampaignDTRow;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public override global::System.Data.DataTable Clone() {
-                VisitDTDataTable cln = ((VisitDTDataTable)(base.Clone()));
+                CampaignDTDataTable cln = ((CampaignDTDataTable)(base.Clone()));
                 cln.InitVars();
                 return cln;
             }
@@ -560,103 +572,101 @@ namespace WFP.ICT.Web.Reports {
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataTable CreateInstance() {
-                return new VisitDTDataTable();
+                return new CampaignDTDataTable();
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             internal void InitVars() {
-                this.columnGroupNumber = base.Columns["GroupNumber"];
-                this.columnExpectedDate = base.Columns["ExpectedDate"];
-                this.columnRequester = base.Columns["Requester"];
-                this.columnRequesterUnit = base.Columns["RequesterUnit"];
-                this.columnRequesterOffice = base.Columns["RequesterOffice"];
-                this.columnDetails = base.Columns["Details"];
-                this.columnCompanyName = base.Columns["CompanyName"];
-                this.columnEntryGate = base.Columns["EntryGate"];
-                this.columnVehicleNumber = base.Columns["VehicleNumber"];
-                this.columnIssueDate = base.Columns["IssueDate"];
+                this.columnOrderNumber = base.Columns["OrderNumber"];
+                this.columnCampaignName = base.Columns["CampaignName"];
                 this.columnStatus = base.Columns["Status"];
-                this.columnVisitorName = base.Columns["VisitorName"];
-                this.columnVisitorCompanyName = base.Columns["VisitorCompanyName"];
-                this.columnVisitorCnicPassportNumber = base.Columns["VisitorCnicPassportNumber"];
-                this.columnVisitorEntryGate = base.Columns["VisitorEntryGate"];
-                this.columnVisitorVehicleNumber = base.Columns["VisitorVehicleNumber"];
+                this.columnWhiteLabel = base.Columns["WhiteLabel"];
+                this.columnReceivedFrom = base.Columns["ReceivedFrom"];
+                this.columnQuantity = base.Columns["Quantity"];
+                this.columnClicked = base.Columns["Clicked"];
+                this.columnOpened = base.Columns["Opened"];
+                this.columnIONumber = base.Columns["IONumber"];
+                this.columnStartDate = base.Columns["StartDate"];
+                this.columnEmailsSent = base.Columns["EmailsSent"];
+                this.columnOpenedPercentage = base.Columns["OpenedPercentage"];
+                this.columnClickedPercentage = base.Columns["ClickedPercentage"];
+                this.columnCTRPercentage = base.Columns["CTRPercentage"];
+                this.columnLink = base.Columns["Link"];
+                this.columnQuantityDetail = base.Columns["QuantityDetail"];
+                this.columnOrderDate = base.Columns["OrderDate"];
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             private void InitClass() {
-                this.columnGroupNumber = new global::System.Data.DataColumn("GroupNumber", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnGroupNumber);
-                this.columnExpectedDate = new global::System.Data.DataColumn("ExpectedDate", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnExpectedDate);
-                this.columnRequester = new global::System.Data.DataColumn("Requester", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnRequester);
-                this.columnRequesterUnit = new global::System.Data.DataColumn("RequesterUnit", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnRequesterUnit);
-                this.columnRequesterOffice = new global::System.Data.DataColumn("RequesterOffice", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnRequesterOffice);
-                this.columnDetails = new global::System.Data.DataColumn("Details", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnDetails);
-                this.columnCompanyName = new global::System.Data.DataColumn("CompanyName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnCompanyName);
-                this.columnEntryGate = new global::System.Data.DataColumn("EntryGate", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnEntryGate);
-                this.columnVehicleNumber = new global::System.Data.DataColumn("VehicleNumber", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnVehicleNumber);
-                this.columnIssueDate = new global::System.Data.DataColumn("IssueDate", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnIssueDate);
+                this.columnOrderNumber = new global::System.Data.DataColumn("OrderNumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOrderNumber);
+                this.columnCampaignName = new global::System.Data.DataColumn("CampaignName", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCampaignName);
                 this.columnStatus = new global::System.Data.DataColumn("Status", typeof(string), null, global::System.Data.MappingType.Element);
                 base.Columns.Add(this.columnStatus);
-                this.columnVisitorName = new global::System.Data.DataColumn("VisitorName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnVisitorName);
-                this.columnVisitorCompanyName = new global::System.Data.DataColumn("VisitorCompanyName", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnVisitorCompanyName);
-                this.columnVisitorCnicPassportNumber = new global::System.Data.DataColumn("VisitorCnicPassportNumber", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnVisitorCnicPassportNumber);
-                this.columnVisitorEntryGate = new global::System.Data.DataColumn("VisitorEntryGate", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnVisitorEntryGate);
-                this.columnVisitorVehicleNumber = new global::System.Data.DataColumn("VisitorVehicleNumber", typeof(string), null, global::System.Data.MappingType.Element);
-                base.Columns.Add(this.columnVisitorVehicleNumber);
-                this.columnExpectedDate.Caption = "DataColumn1";
-                this.columnRequester.Caption = "DataColumn1";
-                this.columnRequesterUnit.Caption = "DataColumn1";
-                this.columnRequesterOffice.Caption = "DataColumn1";
-                this.columnDetails.Caption = "DataColumn1";
-                this.columnCompanyName.Caption = "DataColumn1";
-                this.columnEntryGate.Caption = "DataColumn1";
-                this.columnVehicleNumber.Caption = "DataColumn1";
-                this.columnIssueDate.Caption = "DataColumn1";
-                this.columnStatus.Caption = "DataColumn1";
-                this.columnVisitorName.Caption = "DataColumn1";
-                this.columnVisitorCompanyName.Caption = "DataColumn1";
+                this.columnWhiteLabel = new global::System.Data.DataColumn("WhiteLabel", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnWhiteLabel);
+                this.columnReceivedFrom = new global::System.Data.DataColumn("ReceivedFrom", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnReceivedFrom);
+                this.columnQuantity = new global::System.Data.DataColumn("Quantity", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnQuantity);
+                this.columnClicked = new global::System.Data.DataColumn("Clicked", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnClicked);
+                this.columnOpened = new global::System.Data.DataColumn("Opened", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOpened);
+                this.columnIONumber = new global::System.Data.DataColumn("IONumber", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnIONumber);
+                this.columnStartDate = new global::System.Data.DataColumn("StartDate", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnStartDate);
+                this.columnEmailsSent = new global::System.Data.DataColumn("EmailsSent", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnEmailsSent);
+                this.columnOpenedPercentage = new global::System.Data.DataColumn("OpenedPercentage", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOpenedPercentage);
+                this.columnClickedPercentage = new global::System.Data.DataColumn("ClickedPercentage", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnClickedPercentage);
+                this.columnCTRPercentage = new global::System.Data.DataColumn("CTRPercentage", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnCTRPercentage);
+                this.columnLink = new global::System.Data.DataColumn("Link", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnLink);
+                this.columnQuantityDetail = new global::System.Data.DataColumn("QuantityDetail", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnQuantityDetail);
+                this.columnOrderDate = new global::System.Data.DataColumn("OrderDate", typeof(string), null, global::System.Data.MappingType.Element);
+                base.Columns.Add(this.columnOrderDate);
+                this.columnIONumber.Caption = "Opened";
+                this.columnStartDate.Caption = "Opened";
+                this.columnEmailsSent.Caption = "Opened";
+                this.columnClickedPercentage.Caption = "OpenedPercentage";
+                this.columnCTRPercentage.Caption = "OpenedPercentage";
+                this.columnLink.Caption = "OpenedPercentage";
+                this.columnQuantityDetail.Caption = "OpenedPercentage";
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public VisitDTRow NewVisitDTRow() {
-                return ((VisitDTRow)(this.NewRow()));
+            public CampaignDTRow NewCampaignDTRow() {
+                return ((CampaignDTRow)(this.NewRow()));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Data.DataRow NewRowFromBuilder(global::System.Data.DataRowBuilder builder) {
-                return new VisitDTRow(builder);
+                return new CampaignDTRow(builder);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override global::System.Type GetRowType() {
-                return typeof(VisitDTRow);
+                return typeof(CampaignDTRow);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanged(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanged(e);
-                if ((this.VisitDTRowChanged != null)) {
-                    this.VisitDTRowChanged(this, new VisitDTRowChangeEvent(((VisitDTRow)(e.Row)), e.Action));
+                if ((this.CampaignDTRowChanged != null)) {
+                    this.CampaignDTRowChanged(this, new CampaignDTRowChangeEvent(((CampaignDTRow)(e.Row)), e.Action));
                 }
             }
             
@@ -664,8 +674,8 @@ namespace WFP.ICT.Web.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowChanging(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowChanging(e);
-                if ((this.VisitDTRowChanging != null)) {
-                    this.VisitDTRowChanging(this, new VisitDTRowChangeEvent(((VisitDTRow)(e.Row)), e.Action));
+                if ((this.CampaignDTRowChanging != null)) {
+                    this.CampaignDTRowChanging(this, new CampaignDTRowChangeEvent(((CampaignDTRow)(e.Row)), e.Action));
                 }
             }
             
@@ -673,8 +683,8 @@ namespace WFP.ICT.Web.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleted(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleted(e);
-                if ((this.VisitDTRowDeleted != null)) {
-                    this.VisitDTRowDeleted(this, new VisitDTRowChangeEvent(((VisitDTRow)(e.Row)), e.Action));
+                if ((this.CampaignDTRowDeleted != null)) {
+                    this.CampaignDTRowDeleted(this, new CampaignDTRowChangeEvent(((CampaignDTRow)(e.Row)), e.Action));
                 }
             }
             
@@ -682,14 +692,14 @@ namespace WFP.ICT.Web.Reports {
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             protected override void OnRowDeleting(global::System.Data.DataRowChangeEventArgs e) {
                 base.OnRowDeleting(e);
-                if ((this.VisitDTRowDeleting != null)) {
-                    this.VisitDTRowDeleting(this, new VisitDTRowChangeEvent(((VisitDTRow)(e.Row)), e.Action));
+                if ((this.CampaignDTRowDeleting != null)) {
+                    this.CampaignDTRowDeleting(this, new CampaignDTRowChangeEvent(((CampaignDTRow)(e.Row)), e.Action));
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void RemoveVisitDTRow(VisitDTRow row) {
+            public void RemoveCampaignDTRow(CampaignDTRow row) {
                 this.Rows.Remove(row);
             }
             
@@ -698,7 +708,7 @@ namespace WFP.ICT.Web.Reports {
             public static global::System.Xml.Schema.XmlSchemaComplexType GetTypedTableSchema(global::System.Xml.Schema.XmlSchemaSet xs) {
                 global::System.Xml.Schema.XmlSchemaComplexType type = new global::System.Xml.Schema.XmlSchemaComplexType();
                 global::System.Xml.Schema.XmlSchemaSequence sequence = new global::System.Xml.Schema.XmlSchemaSequence();
-                VisitDatasetType ds = new VisitDatasetType();
+                RegistryDatasetType ds = new RegistryDatasetType();
                 global::System.Xml.Schema.XmlSchemaAny any1 = new global::System.Xml.Schema.XmlSchemaAny();
                 any1.Namespace = "http://www.w3.org/2001/XMLSchema";
                 any1.MinOccurs = new decimal(0);
@@ -716,7 +726,7 @@ namespace WFP.ICT.Web.Reports {
                 type.Attributes.Add(attribute1);
                 global::System.Xml.Schema.XmlSchemaAttribute attribute2 = new global::System.Xml.Schema.XmlSchemaAttribute();
                 attribute2.Name = "tableTypeName";
-                attribute2.FixedValue = "VisitDTDataTable";
+                attribute2.FixedValue = "CampaignDTDataTable";
                 type.Attributes.Add(attribute2);
                 type.Particle = sequence;
                 global::System.Xml.Schema.XmlSchema dsSchema = ds.GetSchemaSerializable();
@@ -760,174 +770,46 @@ namespace WFP.ICT.Web.Reports {
         /// <summary>
         ///Represents strongly named DataRow class.
         ///</summary>
-        public partial class VisitDTRow : global::System.Data.DataRow {
+        public partial class CampaignDTRow : global::System.Data.DataRow {
             
-            private VisitDTDataTable tableVisitDT;
+            private CampaignDTDataTable tableCampaignDT;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            internal VisitDTRow(global::System.Data.DataRowBuilder rb) : 
+            internal CampaignDTRow(global::System.Data.DataRowBuilder rb) : 
                     base(rb) {
-                this.tableVisitDT = ((VisitDTDataTable)(this.Table));
+                this.tableCampaignDT = ((CampaignDTDataTable)(this.Table));
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string GroupNumber {
+            public string OrderNumber {
                 get {
                     try {
-                        return ((string)(this[this.tableVisitDT.GroupNumberColumn]));
+                        return ((string)(this[this.tableCampaignDT.OrderNumberColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'GroupNumber\' in table \'VisitDT\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'OrderNumber\' in table \'CampaignDT\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVisitDT.GroupNumberColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string ExpectedDate {
-                get {
-                    try {
-                        return ((string)(this[this.tableVisitDT.ExpectedDateColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'ExpectedDate\' in table \'VisitDT\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVisitDT.ExpectedDateColumn] = value;
+                    this[this.tableCampaignDT.OrderNumberColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Requester {
+            public string CampaignName {
                 get {
                     try {
-                        return ((string)(this[this.tableVisitDT.RequesterColumn]));
+                        return ((string)(this[this.tableCampaignDT.CampaignNameColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Requester\' in table \'VisitDT\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'CampaignName\' in table \'CampaignDT\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVisitDT.RequesterColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string RequesterUnit {
-                get {
-                    try {
-                        return ((string)(this[this.tableVisitDT.RequesterUnitColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RequesterUnit\' in table \'VisitDT\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVisitDT.RequesterUnitColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string RequesterOffice {
-                get {
-                    try {
-                        return ((string)(this[this.tableVisitDT.RequesterOfficeColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'RequesterOffice\' in table \'VisitDT\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVisitDT.RequesterOfficeColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string Details {
-                get {
-                    try {
-                        return ((string)(this[this.tableVisitDT.DetailsColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Details\' in table \'VisitDT\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVisitDT.DetailsColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string CompanyName {
-                get {
-                    try {
-                        return ((string)(this[this.tableVisitDT.CompanyNameColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'CompanyName\' in table \'VisitDT\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVisitDT.CompanyNameColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string EntryGate {
-                get {
-                    try {
-                        return ((string)(this[this.tableVisitDT.EntryGateColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'EntryGate\' in table \'VisitDT\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVisitDT.EntryGateColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string VehicleNumber {
-                get {
-                    try {
-                        return ((string)(this[this.tableVisitDT.VehicleNumberColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'VehicleNumber\' in table \'VisitDT\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVisitDT.VehicleNumberColumn] = value;
-                }
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string IssueDate {
-                get {
-                    try {
-                        return ((string)(this[this.tableVisitDT.IssueDateColumn]));
-                    }
-                    catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'IssueDate\' in table \'VisitDT\' is DBNull.", e);
-                    }
-                }
-                set {
-                    this[this.tableVisitDT.IssueDateColumn] = value;
+                    this[this.tableCampaignDT.CampaignNameColumn] = value;
                 }
             }
             
@@ -936,287 +818,443 @@ namespace WFP.ICT.Web.Reports {
             public string Status {
                 get {
                     try {
-                        return ((string)(this[this.tableVisitDT.StatusColumn]));
+                        return ((string)(this[this.tableCampaignDT.StatusColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'Status\' in table \'VisitDT\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Status\' in table \'CampaignDT\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVisitDT.StatusColumn] = value;
+                    this[this.tableCampaignDT.StatusColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string VisitorName {
+            public string WhiteLabel {
                 get {
                     try {
-                        return ((string)(this[this.tableVisitDT.VisitorNameColumn]));
+                        return ((string)(this[this.tableCampaignDT.WhiteLabelColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'VisitorName\' in table \'VisitDT\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'WhiteLabel\' in table \'CampaignDT\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVisitDT.VisitorNameColumn] = value;
+                    this[this.tableCampaignDT.WhiteLabelColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string VisitorCompanyName {
+            public string ReceivedFrom {
                 get {
                     try {
-                        return ((string)(this[this.tableVisitDT.VisitorCompanyNameColumn]));
+                        return ((string)(this[this.tableCampaignDT.ReceivedFromColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'VisitorCompanyName\' in table \'VisitDT\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'ReceivedFrom\' in table \'CampaignDT\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVisitDT.VisitorCompanyNameColumn] = value;
+                    this[this.tableCampaignDT.ReceivedFromColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string VisitorCnicPassportNumber {
+            public string Quantity {
                 get {
                     try {
-                        return ((string)(this[this.tableVisitDT.VisitorCnicPassportNumberColumn]));
+                        return ((string)(this[this.tableCampaignDT.QuantityColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'VisitorCnicPassportNumber\' in table \'VisitDT\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Quantity\' in table \'CampaignDT\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVisitDT.VisitorCnicPassportNumberColumn] = value;
+                    this[this.tableCampaignDT.QuantityColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string VisitorEntryGate {
+            public string Clicked {
                 get {
                     try {
-                        return ((string)(this[this.tableVisitDT.VisitorEntryGateColumn]));
+                        return ((string)(this[this.tableCampaignDT.ClickedColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'VisitorEntryGate\' in table \'VisitDT\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Clicked\' in table \'CampaignDT\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVisitDT.VisitorEntryGateColumn] = value;
+                    this[this.tableCampaignDT.ClickedColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public string VisitorVehicleNumber {
+            public string Opened {
                 get {
                     try {
-                        return ((string)(this[this.tableVisitDT.VisitorVehicleNumberColumn]));
+                        return ((string)(this[this.tableCampaignDT.OpenedColumn]));
                     }
                     catch (global::System.InvalidCastException e) {
-                        throw new global::System.Data.StrongTypingException("The value for column \'VisitorVehicleNumber\' in table \'VisitDT\' is DBNull.", e);
+                        throw new global::System.Data.StrongTypingException("The value for column \'Opened\' in table \'CampaignDT\' is DBNull.", e);
                     }
                 }
                 set {
-                    this[this.tableVisitDT.VisitorVehicleNumberColumn] = value;
+                    this[this.tableCampaignDT.OpenedColumn] = value;
                 }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsGroupNumberNull() {
-                return this.IsNull(this.tableVisitDT.GroupNumberColumn);
+            public string IONumber {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.IONumberColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'IONumber\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.IONumberColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetGroupNumberNull() {
-                this[this.tableVisitDT.GroupNumberColumn] = global::System.Convert.DBNull;
+            public string StartDate {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.StartDateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'StartDate\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.StartDateColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsExpectedDateNull() {
-                return this.IsNull(this.tableVisitDT.ExpectedDateColumn);
+            public string EmailsSent {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.EmailsSentColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'EmailsSent\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.EmailsSentColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetExpectedDateNull() {
-                this[this.tableVisitDT.ExpectedDateColumn] = global::System.Convert.DBNull;
+            public string OpenedPercentage {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.OpenedPercentageColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'OpenedPercentage\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.OpenedPercentageColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsRequesterNull() {
-                return this.IsNull(this.tableVisitDT.RequesterColumn);
+            public string ClickedPercentage {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.ClickedPercentageColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'ClickedPercentage\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.ClickedPercentageColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetRequesterNull() {
-                this[this.tableVisitDT.RequesterColumn] = global::System.Convert.DBNull;
+            public string CTRPercentage {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.CTRPercentageColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'CTRPercentage\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.CTRPercentageColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsRequesterUnitNull() {
-                return this.IsNull(this.tableVisitDT.RequesterUnitColumn);
+            public string Link {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.LinkColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'Link\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.LinkColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetRequesterUnitNull() {
-                this[this.tableVisitDT.RequesterUnitColumn] = global::System.Convert.DBNull;
+            public string QuantityDetail {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.QuantityDetailColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'QuantityDetail\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.QuantityDetailColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsRequesterOfficeNull() {
-                return this.IsNull(this.tableVisitDT.RequesterOfficeColumn);
+            public string OrderDate {
+                get {
+                    try {
+                        return ((string)(this[this.tableCampaignDT.OrderDateColumn]));
+                    }
+                    catch (global::System.InvalidCastException e) {
+                        throw new global::System.Data.StrongTypingException("The value for column \'OrderDate\' in table \'CampaignDT\' is DBNull.", e);
+                    }
+                }
+                set {
+                    this[this.tableCampaignDT.OrderDateColumn] = value;
+                }
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetRequesterOfficeNull() {
-                this[this.tableVisitDT.RequesterOfficeColumn] = global::System.Convert.DBNull;
+            public bool IsOrderNumberNull() {
+                return this.IsNull(this.tableCampaignDT.OrderNumberColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsDetailsNull() {
-                return this.IsNull(this.tableVisitDT.DetailsColumn);
+            public void SetOrderNumberNull() {
+                this[this.tableCampaignDT.OrderNumberColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetDetailsNull() {
-                this[this.tableVisitDT.DetailsColumn] = global::System.Convert.DBNull;
+            public bool IsCampaignNameNull() {
+                return this.IsNull(this.tableCampaignDT.CampaignNameColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsCompanyNameNull() {
-                return this.IsNull(this.tableVisitDT.CompanyNameColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetCompanyNameNull() {
-                this[this.tableVisitDT.CompanyNameColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsEntryGateNull() {
-                return this.IsNull(this.tableVisitDT.EntryGateColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetEntryGateNull() {
-                this[this.tableVisitDT.EntryGateColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsVehicleNumberNull() {
-                return this.IsNull(this.tableVisitDT.VehicleNumberColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetVehicleNumberNull() {
-                this[this.tableVisitDT.VehicleNumberColumn] = global::System.Convert.DBNull;
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsIssueDateNull() {
-                return this.IsNull(this.tableVisitDT.IssueDateColumn);
-            }
-            
-            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetIssueDateNull() {
-                this[this.tableVisitDT.IssueDateColumn] = global::System.Convert.DBNull;
+            public void SetCampaignNameNull() {
+                this[this.tableCampaignDT.CampaignNameColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public bool IsStatusNull() {
-                return this.IsNull(this.tableVisitDT.StatusColumn);
+                return this.IsNull(this.tableCampaignDT.StatusColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
             public void SetStatusNull() {
-                this[this.tableVisitDT.StatusColumn] = global::System.Convert.DBNull;
+                this[this.tableCampaignDT.StatusColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsVisitorNameNull() {
-                return this.IsNull(this.tableVisitDT.VisitorNameColumn);
+            public bool IsWhiteLabelNull() {
+                return this.IsNull(this.tableCampaignDT.WhiteLabelColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetVisitorNameNull() {
-                this[this.tableVisitDT.VisitorNameColumn] = global::System.Convert.DBNull;
+            public void SetWhiteLabelNull() {
+                this[this.tableCampaignDT.WhiteLabelColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsVisitorCompanyNameNull() {
-                return this.IsNull(this.tableVisitDT.VisitorCompanyNameColumn);
+            public bool IsReceivedFromNull() {
+                return this.IsNull(this.tableCampaignDT.ReceivedFromColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetVisitorCompanyNameNull() {
-                this[this.tableVisitDT.VisitorCompanyNameColumn] = global::System.Convert.DBNull;
+            public void SetReceivedFromNull() {
+                this[this.tableCampaignDT.ReceivedFromColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsVisitorCnicPassportNumberNull() {
-                return this.IsNull(this.tableVisitDT.VisitorCnicPassportNumberColumn);
+            public bool IsQuantityNull() {
+                return this.IsNull(this.tableCampaignDT.QuantityColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetVisitorCnicPassportNumberNull() {
-                this[this.tableVisitDT.VisitorCnicPassportNumberColumn] = global::System.Convert.DBNull;
+            public void SetQuantityNull() {
+                this[this.tableCampaignDT.QuantityColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsVisitorEntryGateNull() {
-                return this.IsNull(this.tableVisitDT.VisitorEntryGateColumn);
+            public bool IsClickedNull() {
+                return this.IsNull(this.tableCampaignDT.ClickedColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetVisitorEntryGateNull() {
-                this[this.tableVisitDT.VisitorEntryGateColumn] = global::System.Convert.DBNull;
+            public void SetClickedNull() {
+                this[this.tableCampaignDT.ClickedColumn] = global::System.Convert.DBNull;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public bool IsVisitorVehicleNumberNull() {
-                return this.IsNull(this.tableVisitDT.VisitorVehicleNumberColumn);
+            public bool IsOpenedNull() {
+                return this.IsNull(this.tableCampaignDT.OpenedColumn);
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public void SetVisitorVehicleNumberNull() {
-                this[this.tableVisitDT.VisitorVehicleNumberColumn] = global::System.Convert.DBNull;
+            public void SetOpenedNull() {
+                this[this.tableCampaignDT.OpenedColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsIONumberNull() {
+                return this.IsNull(this.tableCampaignDT.IONumberColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetIONumberNull() {
+                this[this.tableCampaignDT.IONumberColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsStartDateNull() {
+                return this.IsNull(this.tableCampaignDT.StartDateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetStartDateNull() {
+                this[this.tableCampaignDT.StartDateColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsEmailsSentNull() {
+                return this.IsNull(this.tableCampaignDT.EmailsSentColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetEmailsSentNull() {
+                this[this.tableCampaignDT.EmailsSentColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsOpenedPercentageNull() {
+                return this.IsNull(this.tableCampaignDT.OpenedPercentageColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetOpenedPercentageNull() {
+                this[this.tableCampaignDT.OpenedPercentageColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsClickedPercentageNull() {
+                return this.IsNull(this.tableCampaignDT.ClickedPercentageColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetClickedPercentageNull() {
+                this[this.tableCampaignDT.ClickedPercentageColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsCTRPercentageNull() {
+                return this.IsNull(this.tableCampaignDT.CTRPercentageColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetCTRPercentageNull() {
+                this[this.tableCampaignDT.CTRPercentageColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsLinkNull() {
+                return this.IsNull(this.tableCampaignDT.LinkColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetLinkNull() {
+                this[this.tableCampaignDT.LinkColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsQuantityDetailNull() {
+                return this.IsNull(this.tableCampaignDT.QuantityDetailColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetQuantityDetailNull() {
+                this[this.tableCampaignDT.QuantityDetailColumn] = global::System.Convert.DBNull;
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public bool IsOrderDateNull() {
+                return this.IsNull(this.tableCampaignDT.OrderDateColumn);
+            }
+            
+            [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
+            [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
+            public void SetOrderDateNull() {
+                this[this.tableCampaignDT.OrderDateColumn] = global::System.Convert.DBNull;
             }
         }
         
@@ -1224,22 +1262,22 @@ namespace WFP.ICT.Web.Reports {
         ///Row event argument class
         ///</summary>
         [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-        public class VisitDTRowChangeEvent : global::System.EventArgs {
+        public class CampaignDTRowChangeEvent : global::System.EventArgs {
             
-            private VisitDTRow eventRow;
+            private CampaignDTRow eventRow;
             
             private global::System.Data.DataRowAction eventAction;
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public VisitDTRowChangeEvent(VisitDTRow row, global::System.Data.DataRowAction action) {
+            public CampaignDTRowChangeEvent(CampaignDTRow row, global::System.Data.DataRowAction action) {
                 this.eventRow = row;
                 this.eventAction = action;
             }
             
             [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
             [global::System.CodeDom.Compiler.GeneratedCodeAttribute("System.Data.Design.TypedDataSetGenerator", "4.0.0.0")]
-            public VisitDTRow Row {
+            public CampaignDTRow Row {
                 get {
                     return this.eventRow;
                 }

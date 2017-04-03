@@ -238,7 +238,10 @@
                                     <div class="col-md-3">@Html.ActionLink("Delete", "Delete", new {id = item.Id}, new {@class = ""})</div>
                                 }
                                 <div class="col-md-3">@Html.ActionLink("Status", "Status", new {id = item.Id}, new {@class = ""})</div>
-                                <div class="col-md-3">@Html.ActionLink("Report", "Report", new {id = item.Id}, new {@class = ""})</div>
+                                @if (item.Copy != null)
+                                {
+                                    <div class="col-md-3">@Html.ActionLink("Report", "ViewReport", new { id = item.Id }, new { @class = "" })</div>
+                                }
                             </div>
                         </div>
                         @*@Html.ActionLink("Status", "Index", "CampaignStatus", new { id = item.ID }, null)*@

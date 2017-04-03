@@ -295,25 +295,12 @@
     <Compile Include="Models\PrintingProcessVM.cs" />
     <Compile Include="Models\PrintingDashboardVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reports\RegistryDatasetType.Designer.cs">
+    <Compile Include="Reports\CampaignDatasetType.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
-      <DependentUpon>RegistryDatasetType.xsd</DependentUpon>
+      <DependentUpon>CampaignDatasetType.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\GatepassDatasetType.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>GatepassDatasetType.xsd</DependentUpon>
-    </Compile>
-    <Compile Include="Reports\ReportModelVisit.cs" />
-    <Compile Include="Reports\ReportModelRegistry.cs" />
-    <Compile Include="Reports\ReportModelGatepass.cs" />
     <Compile Include="Reports\ReportModel.cs" />
-    <Compile Include="Reports\VisitDatasetType.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>VisitDatasetType.xsd</DependentUpon>
-    </Compile>
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -567,38 +554,16 @@
     <Content Include="fonts\CWB0XYA8bzo0kSThX0UTuA.woff2" />
     <Content Include="fonts\d-6IYplOFocCacKzxwXSOFtXRa8TVwTICgirnJhmVJw.woff2" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
-    <Content Include="Reports\GatepassDatasetType.xsc">
-      <DependentUpon>GatepassDatasetType.xsd</DependentUpon>
+    <Content Include="Reports\CampaignDatasetType.xsc">
+      <DependentUpon>CampaignDatasetType.xsd</DependentUpon>
     </Content>
-    <Content Include="Reports\RegistryDatasetType.xsc">
-      <DependentUpon>RegistryDatasetType.xsd</DependentUpon>
-    </Content>
-    <None Include="Reports\RegistryDatasetType.xsd">
+    <None Include="Reports\CampaignDatasetType.xsd">
       <SubType>Designer</SubType>
       <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>RegistryDatasetType.Designer.cs</LastGenOutput>
+      <LastGenOutput>CampaignDatasetType.Designer.cs</LastGenOutput>
     </None>
-    <Content Include="Reports\RegistryDatasetType.xss">
-      <DependentUpon>RegistryDatasetType.xsd</DependentUpon>
-    </Content>
-    <None Include="Reports\GatepassDatasetType.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>GatepassDatasetType.Designer.cs</LastGenOutput>
-    </None>
-    <Content Include="Reports\GatepassDatasetType.xss">
-      <DependentUpon>GatepassDatasetType.xsd</DependentUpon>
-    </Content>
-    <Content Include="Reports\VisitDatasetType.xsc">
-      <DependentUpon>VisitDatasetType.xsd</DependentUpon>
-    </Content>
-    <None Include="Reports\VisitDatasetType.xsd">
-      <SubType>Designer</SubType>
-      <Generator>MSDataSetGenerator</Generator>
-      <LastGenOutput>VisitDatasetType.Designer.cs</LastGenOutput>
-    </None>
-    <Content Include="Reports\VisitDatasetType.xss">
-      <DependentUpon>VisitDatasetType.xsd</DependentUpon>
+    <Content Include="Reports\CampaignDatasetType.xss">
+      <DependentUpon>CampaignDatasetType.xsd</DependentUpon>
     </Content>
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\i18n\ar.js" />
@@ -669,6 +634,7 @@
     <Content Include="Scripts\_references.js" />
     <Content Include="css\sweetalert.css" />
     <Content Include="Uploads\TextFile1.txt" />
+    <Content Include="Views\Campaigns\Report.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -717,7 +683,7 @@
     <Content Include="Views\Campaigns\Index.cshtml" />
     <Content Include="Views\Shared\_UploadFile.cshtml" />
     <Content Include="Views\Copy\Testing.cshtml" />
-    <Content Include="Views\Campaigns\Report.cshtml" />
+    <Content Include="Views\Campaigns\ViewReport.cshtml" />
     <None Include="Views\Campaigns\Status.cshtml" />
     <Content Include="Views\Copy\Edit.cshtml" />
     <Content Include="Views\Copy\Approved.cshtml" />
@@ -746,15 +712,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reports\Gatepass.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\RegistryIN.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Reports\Visit.rdlc">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </EmbeddedResource>
+    <EmbeddedResource Include="Reports\Campaign.rdlc" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
