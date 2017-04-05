@@ -6,6 +6,7 @@ namespace WFP.ICT.Web.Models
 {
     public class UserProfileVM
     {
+        public string APIKey { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
 

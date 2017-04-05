@@ -31,7 +31,7 @@
             Deploy Date Time
         </th>
         <th>
-            Assignt Customer
+            Assigned Customer
         </th>
     </tr>
     </thead>
@@ -54,7 +54,11 @@
             @Html.DisplayFor(modelItem => Model.DeployDateTime)
         </td>
         <td>
-            @Html.DropDownList("Customer", null, htmlAttributes: new { @class = "form-control" })
+            @Html.DisplayFor(modelItem => Model.AssignedToCustomer)
+            @if (User.Identity.Name.Equals("josh.silver"))
+            {
+                @Html.DropDownList("Customer", null, htmlAttributes: new {@class = "form-control"})
+            }
         </td>
     </tr>
     </tbody>

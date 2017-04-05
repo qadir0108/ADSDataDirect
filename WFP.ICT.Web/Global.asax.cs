@@ -6,6 +6,8 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using Microsoft.AspNet.Identity.Owin;
 using WFP.ICT.Data.Entities;
+using System.Web.Http;
+using System.Web.Routing;
 
 namespace WFP.ICT.Web
 {
@@ -14,10 +16,12 @@ namespace WFP.ICT.Web
         protected void Application_Start()
         {
             AreaRegistration.RegisterAllAreas();
+            GlobalConfiguration.Configure(WebApiConfig.Register);
+
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-
+            
             //ViewEngines.Engines.Clear();
             //ViewEngines.Engines.Add(new RazorViewEngine());
         }

@@ -64,6 +64,7 @@
     <Compile Include="Entities\AspNetRoleClaims.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
     <Compile Include="Entities\ProData.cs" />
+    <Compile Include="Entities\APIRequest.cs" />
     <Compile Include="Entities\Vendor.cs" />
     <Compile Include="Entities\Campaign.cs" />
     <Compile Include="Entities\CampaignStatus.cs" />
@@ -71,6 +72,10 @@
     <Compile Include="Migrations\201703300547045_Initial.cs" />
     <Compile Include="Migrations\201703300547045_Initial.Designer.cs">
       <DependentUpon>201703300547045_Initial.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201704050544413_Key.cs" />
+    <Compile Include="Migrations\201704050544413_Key.Designer.cs">
+      <DependentUpon>201704050544413_Key.cs</DependentUpon>
     </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
@@ -102,6 +107,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201703300547045_Initial.resx">
       <DependentUpon>201703300547045_Initial.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201704050544413_Key.resx">
+      <DependentUpon>201704050544413_Key.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

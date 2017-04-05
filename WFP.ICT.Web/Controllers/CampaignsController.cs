@@ -24,7 +24,7 @@ namespace WFP.ICT.Web.Controllers
     {
         private WFPICTContext db = new WFPICTContext();
         int pageSize = 10;
-
+        
         // GET: Campaigns
         public ActionResult Index(CampaignSearchVM sc)
         {
@@ -173,7 +173,8 @@ namespace WFP.ICT.Web.Controllers
                 db.SaveChanges();
                 return RedirectToAction("Index");
             }
-
+            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
+                "Text", campaign.TestingUrgency);
             return View(campaign);
         }
 
@@ -241,6 +242,12 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult DeleteConfirmed(Guid id)
         {
             Campaign campaign = db.Campaigns.Find(id);
+            var proDatas = db.ProDatas.Where(x => x.CampaignId == campaign.Id);
+            foreach (var proData in proDatas)
+            {
+                db.ProDatas.Remove(proData);
+            }
+            db.SaveChanges();
             db.Campaigns.Remove(campaign);
             db.SaveChanges();
             return RedirectToAction("Index");
@@ -276,6 +283,7 @@ namespace WFP.ICT.Web.Controllers
                     case "Tracking":
                         campaign.Status = (int) CampaignStatusEnum.Tracking;
                         campaign.Copy.Status = (int) CampaignStatusEnum.Tracking;
+                        campaign.Copy.ReportSiteLink = string.Format("http://report-site.com/c/ADS{0}", campaign.OrderNumber);
                         db.SaveChanges();
                         return RedirectToAction("Index", "Copy", new {id = campaign.Copy.Id, from = "Tracking"});
                         break;
@@ -335,7 +343,7 @@ namespace WFP.ICT.Web.Controllers
             }
             try
             {
-                campaign.Copy.AssignedToCustomer = UserId;
+                campaign.AssignedToCustomer = UserId;
                 db.SaveChanges();
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
@@ -357,19 +365,17 @@ namespace WFP.ICT.Web.Controllers
             {
                 return HttpNotFound();
             }
-
-            SortedDictionary<int, double> hoursPercentageDictionary = new SortedDictionary<int, double>()
-            {
-                {10, 0.22181 }, {20, 0.40928}, {30, 0.55004}, {40, 0.67389}, {50, 0.78330}, {60, 0.87274}, {70, 0.93972}, {80, 0.99955}, {90, 1}
-            };
-
+            
             long clicked = 0 , opened = 0;
+            DateTime startDateTime = DateTime.MinValue;
+            string IONumber = "NA";
             if (campaign.ProDatas.Count > 0)
             {
                 clicked = campaign.ProDatas.Sum(x => x.ClickCount);
-                DateTime startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
+                startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
+                IONumber = campaign.ProDatas.FirstOrDefault().IO;
                 int hrsPassed = ((int)Math.Round((DateTime.Now - startDateTime).TotalHours / 10.0)) * 10;
-                double percentage = hrsPassed >= 90 ? 1 : hoursPercentageDictionary[hrsPassed];
+                double percentage = hrsPassed >= 90 ? 1 : ADS.API.Models.Campaign.hoursPercentageDictionary[hrsPassed];
                 opened = ((int)Math.Round(campaign.ProDatas.Sum(x => x.ClickCount) * percentage));
             }
             var model = new CampaignReportVM()
@@ -384,9 +390,8 @@ namespace WFP.ICT.Web.Controllers
                 Clicked = clicked == 0 ? "NA" : clicked.ToString(),
                 Opened = opened == 0 ? "NA" : opened.ToString(),
 
-                IONumber = !string.IsNullOrEmpty(campaign.Copy.IONumber) ? campaign.Copy.IONumber 
-                          : (campaign.ProDatas.Count > 0 ? campaign.ProDatas.FirstOrDefault().IO : "NA"),
-                StartDate = campaign.Copy.DeployDateTime.ToString(),
+                IONumber = IONumber,
+                StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
                 EmailsSent = campaign.Quantity.ToString(),
                 OpenedPercentage = campaign.Quantity == 0 ? "NA" : ((opened/ campaign.Quantity)* 100).ToString("0.00%"),
                 ClickedPercentage = campaign.Quantity == 0 ? "NA" : ((clicked / campaign.Quantity) * 100).ToString("0.00%"),
@@ -405,7 +410,6 @@ namespace WFP.ICT.Web.Controllers
             
             return View(model);
         }
-
 
         public ActionResult Report()
         {
@@ -428,18 +432,16 @@ namespace WFP.ICT.Web.Controllers
                     return HttpNotFound();
                 }
 
-                SortedDictionary<int, double> hoursPercentageDictionary = new SortedDictionary<int, double>()
-                {
-                    {10, 0.22181 }, {20, 0.40928}, {30, 0.55004}, {40, 0.67389}, {50, 0.78330}, {60, 0.87274}, {70, 0.93972}, {80, 0.99955}, {90, 1}
-                };
-
                 long clicked = 0, opened = 0;
+                DateTime startDateTime = DateTime.MinValue;
+                string IONumber = "NA";
                 if (campaign.ProDatas.Count > 0)
                 {
                     clicked = campaign.ProDatas.Sum(x => x.ClickCount);
-                    DateTime startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
+                    startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
+                    IONumber = campaign.ProDatas.FirstOrDefault().IO;
                     int hrsPassed = ((int)Math.Round((DateTime.Now - startDateTime).TotalHours / 10.0)) * 10;
-                    double percentage = hrsPassed >= 90 ? 1 : hoursPercentageDictionary[hrsPassed];
+                    double percentage = hrsPassed >= 90 ? 1 : ADS.API.Models.Campaign.hoursPercentageDictionary[hrsPassed];
                     opened = ((int)Math.Round(campaign.ProDatas.Sum(x => x.ClickCount) * percentage));
                 }
                 
@@ -457,12 +459,12 @@ namespace WFP.ICT.Web.Controllers
                         Clicked = clicked == 0 ? "NA" : clicked.ToString(),
                         Opened = opened == 0 ? "NA" : opened.ToString(),
 
-                        StartDate = campaign.Copy.DeployDateTime.ToString(),
+                        StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
                         EmailsSent = campaign.Quantity.ToString(),
                         OpenedPercentage = ((opened / campaign.Quantity) * 100).ToString("0.00%"),
                         ClickedPercentage = ((clicked / campaign.Quantity) * 100).ToString("0.00%"),
                         CTRPercentage = ((clicked / opened) * 100).ToString("0.00%"),
-                        IONumber = proData.IO,
+                        IONumber = IONumber,
                         Link = proData.Destination_URL,
                         QuantityDetail = proData.ClickCount.ToString()
                     });

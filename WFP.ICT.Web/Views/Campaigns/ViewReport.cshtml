@@ -14,8 +14,11 @@
             </div>
         </div>
     </div>
-    <div class="col-md-1 listing-action" id="divTools" style="text-align:right">
-        <a href="#" class="btn btn-default" id="btnRefresh" data-tooltip="tooltip" title="Refresh"><span class="glyphicon glyphicon-refresh"></span></a>
+    <div class="col-md-1 listing-action" id="divTools" style="text-align: right">
+        @if (User.Identity.Name.Equals("josh.silver"))
+        {
+            <a href="#" class="btn btn-default" id="btnRefresh" data-tooltip="tooltip" title="Refresh"><span class="glyphicon glyphicon-refresh"></span></a>
+        }
     </div>
 </div>
 
@@ -75,7 +78,7 @@
         </td>
         <td>
             <a href="#" class="btn btn-default" id="btnDrill" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
-            <a href="~/Campaigns/Report?id=@Model.Id" class="btn btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
+            <a href="~/Campaigns/Report?id=@Model.Id" target="_blank" class="btn btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
         </td>
     </tr>
     </tbody>
@@ -213,7 +216,7 @@
                     if (response === "") wfp.reload();
                     if (response.IsSucess) {
                         wfp.showSuccess('ProData has been refreshed successfully.');
-                        wfp.redirectTo();
+                        wfp.reload();
                     } else {
                         wfp.showError(response.ErrorMessage);
                     }

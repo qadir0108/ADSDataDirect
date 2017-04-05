@@ -4,6 +4,6 @@
     {
         public bool IsSucess { get; set; }
         public string ErrorMessage { get; set; }
-        public string Result { get; set; }
+        public object Result { get; set; }
     }
 }

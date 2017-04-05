@@ -1,0 +1,43 @@
+﻿@model WFP.ICT.Web.Models.UserProfileVM
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<div class="main-container">
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-push-2">
+                <div class="dashboard-page-head">
+                    <div class="page-header">
+                        <h1>Settings <small></small></h1>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 col-md-push-2 add-listing-dashboard">
+                <div class="row">
+                    <div class="col-md-12 dashboard-form">
+                        <div class="bg-white pinside40 mb30">
+                            <form id="frm" role="form">
+
+                                <div class="form-group has-feedback">
+                                    <label class="control-label" for="txtName">API Key</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-lock"></span>
+                                        </div>
+                                        <input type="text" value="@Model.APIKey" class = "form-control input-md" readonly="readonly" />
+                                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

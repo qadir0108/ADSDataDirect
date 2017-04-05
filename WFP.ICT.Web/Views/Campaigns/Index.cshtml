@@ -232,16 +232,29 @@
                         @*@Html.ActionLink("Details", "Details", new { id = item.ID, @class = "btn btn-primary" }) |*@
                         <div class="row">
                             <div class="col-md-12">
-                                @if (User.Identity.Name.Equals("josh.silver") || item.Copy == null)
-                                {
-                                    <div class="col-md-3">@Html.ActionLink("Edit", "Edit", new {id = item.Id}, new {@class = "pull-right"})</div>
-                                    <div class="col-md-3">@Html.ActionLink("Delete", "Delete", new {id = item.Id}, new {@class = ""})</div>
-                                }
+                                <div class="col-md-3">
+                                    @if (item.Copy == null)
+                                    {
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "pull-right" })
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("&nbsp;")
+                                    }
+                                </div>
+                                <div class="col-md-3">
+                                    @if (User.Identity.Name.Equals("josh.silver") || item.Copy == null)
+                                    {
+                                        @Html.ActionLink("Delete", "Delete", new {id = item.Id}, new {@class = ""})
+                                    }
+                                </div>
                                 <div class="col-md-3">@Html.ActionLink("Status", "Status", new {id = item.Id}, new {@class = ""})</div>
-                                @if (item.Copy != null)
-                                {
-                                    <div class="col-md-3">@Html.ActionLink("Report", "ViewReport", new { id = item.Id }, new { @class = "" })</div>
-                                }
+                                <div class="col-md-3">
+                                    @if (item.Copy != null)
+                                    {
+                                        @Html.ActionLink("Report", "ViewReport", new {id = item.Id}, new {@class = ""})
+                                    }
+                                </div>
                             </div>
                         </div>
                         @*@Html.ActionLink("Status", "Index", "CampaignStatus", new { id = item.ID }, null)*@

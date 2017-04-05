@@ -41,7 +41,7 @@ namespace WFP.ICT.Data.Entities
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string Description { get; set; }
+        public string APIKey { get; set; }
 
         public DateTime? LastLogin { get; set; }
 

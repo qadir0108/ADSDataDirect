@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WFP.ICT.Data.Entities
@@ -25,6 +26,7 @@ namespace WFP.ICT.Data.Entities
         public string ZipCodeFile { get; set; }
         public string GeoDetails { get; set; }
         public string Demographics { get; set; }
+        [Range(1, int.MaxValue, ErrorMessage = "Please enter Quantity to be ordered")]
         public long Quantity { get; set; }
 
         // Campaign Testing

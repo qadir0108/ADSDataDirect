@@ -15,6 +15,22 @@ namespace WFP.ICT.Web.Controllers
             return View();
         }
 
+        public ActionResult Settings()
+        {
+            if (string.IsNullOrEmpty(LoggedInUser.APIKey))
+            {
+                var user = CurrentContextFromOwin.Users.FirstOrDefault(x => x.Id == LoggedInUser.Id);
+                user.APIKey = KeyGenerator.GetUniqueKey(32);
+                CurrentContextFromOwin.SaveChanges();
+                SetupLoggedInUser(LoggedInUser.UserName);
+            }
+            UserProfileVM profile = new UserProfileVM()
+            {
+                APIKey = LoggedInUser.APIKey
+            };
+            return View("Settings",  profile);
+        }
+
         public ActionResult UserProfile()
         {
             UserProfileVM profile = new UserProfileVM()

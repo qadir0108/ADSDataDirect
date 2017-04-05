@@ -1,4 +1,5 @@
-﻿using System.Web.Mvc;
+﻿using System.Web.Http;
+using System.Web.Mvc;
 using System.Web.Routing;
 
 namespace WFP.ICT.Web
@@ -14,13 +15,7 @@ namespace WFP.ICT.Web
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
             );
-
-            routes.MapRoute(
-                name: "Comments",
-                url: "comments",
-                defaults: new { controller = "Home", action = "Comments" }
-            );
-
+           
         }
     }
 }
