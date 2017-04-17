@@ -9,7 +9,7 @@
             <div class="col-md-8 col-md-push-2">
                 <div class="dashboard-page-head">
                     <div class="page-header">
-                        <h1>Settings <small></small></h1>
+                        <h1>Vendor Settings <small></small></h1>
                     </div>
                 </div>
             </div>
@@ -28,16 +28,27 @@
                             <form id="frm" role="form" method="post">
 
                                 <div class="form-group has-feedback">
-                                    <label class="control-label" for="txtName">API Key</label>
+                                    <label class="control-label" for="txtName">Vendor Name<span class="required">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-addon">
-                                            <span class="glyphicon glyphicon-lock"></span>
+                                            <span class="glyphicon glyphicon-user"></span>
                                         </div>
-                                        <input type="text" value="@Model.APIKey" class = "form-control input-md" readonly="readonly" />
+                                        @Html.TextBoxFor(m => m.FirstName, new { @placeholder = "Vendor Name", @class = "form-control input-md", @required = "required" })
                                         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                     </div>
                                 </div>
                                 
+                                <div class="form-group has-feedback">
+                                    <label class="control-label" for="txtName">Company Name<span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <span class="glyphicon glyphicon-user"></span>
+                                        </div>
+                                        @Html.TextBoxFor(m => m.LastName, new { @placeholder = "Company Name", @class = "form-control input-md", @required = "required" })
+                                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                    </div>
+                                </div>
+
                                 <div class="form-group has-feedback">
                                     <label class="control-label" for="txtName">Email<span class="required">*</span></label>
                                     <div class="input-group">
@@ -52,7 +63,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="text-right">
-                                                <button id="btnUpdateProfile" name="btnUpdateProfile" class="btn btn-default" type="submit">Update Profile</button>
+                                                <button id="btnUpdateProfile" name="btnUpdateProfile" class="btn btn-default" type="submit">Update Vendor Settings</button>
                                             </div>
                                         </div>
                                     </div>

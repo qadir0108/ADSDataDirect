@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Linq;
 using System.Web.Mvc;
+using WFP.ICT.Data.Entities;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
@@ -10,6 +11,7 @@ namespace WFP.ICT.Web.Controllers
     [AjaxAuthorize]
     public class HomeController : BaseController
     {
+        private WFPICTContext db = new WFPICTContext();
         public ActionResult Index()
         {
             return View();
@@ -26,39 +28,63 @@ namespace WFP.ICT.Web.Controllers
             }
             UserProfileVM profile = new UserProfileVM()
             {
-                APIKey = LoggedInUser.APIKey
+                APIKey = LoggedInUser.APIKey,
+                Email = LoggedInUser.Email
             };
             return View("Settings",  profile);
         }
 
-        public ActionResult UserProfile()
-        {
-            UserProfileVM profile = new UserProfileVM()
-            {
-                FirstName = (LoggedInUser != null) ? LoggedInUser.FirstName : null,
-                LastName = (LoggedInUser != null) ? LoggedInUser.LastName : null,
-                
-            };
-            return View("UserProfile", profile);
-        }
-
         [HttpPost]
-        public ActionResult UserProfile(UserProfileVM profile)
+        public ActionResult Settings(UserProfileVM profile)
         {
             try
             {
                 var user = CurrentContextFromOwin.Users.FirstOrDefault(x => x.Id == LoggedInUser.Id);
-                user.FirstName = profile.FirstName;
-                user.LastName = profile.LastName;
+                user.Email = profile.Email;
+                //user.APIKey = profile.APIKey;
                 CurrentContextFromOwin.SaveChanges();
 
                 SetupLoggedInUser(LoggedInUser.UserName);
-                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+                TempData["Success"] = "Profile has been updated successfully!";
+                return RedirectToAction("Settings");
             }
             catch (Exception ex)
             {
-                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+                
             }
+            return View("Error");
+        }
+
+        public ActionResult Vendor()
+        {
+            var vendor = db.Vendors.FirstOrDefault();
+            UserProfileVM profile = new UserProfileVM()
+            {
+                FirstName = vendor.Name,
+                LastName = vendor.CompanyName,
+                Email = vendor.Email
+            };
+            return View("Vendor", profile);
+        }
+
+        [HttpPost]
+        public ActionResult Vendor(UserProfileVM profile)
+        {
+            try
+            {
+                var vendor = db.Vendors.FirstOrDefault();
+                vendor.Name = profile.FirstName;
+                vendor.CompanyName = profile.LastName;
+                vendor.Email = profile.Email;
+                db.SaveChanges();
+                TempData["Success"] = "Vendor settings has been updated successfully!";
+                return RedirectToAction("Vendor");
+            }
+            catch (Exception ex)
+            {
+
+            }
+            return View("Error");
         }
     }
 }

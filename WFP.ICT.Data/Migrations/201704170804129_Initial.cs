@@ -8,13 +8,24 @@ namespace WFP.ICT.Data.Migrations
         public override void Up()
         {
             CreateTable(
+                "dbo.APIRequest",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        APIKey = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                        CreatedBy = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.Campaign",
                 c => new
                     {
                         Id = c.Guid(nullable: false),
                         Status = c.Int(nullable: false),
                         CampaignName = c.String(),
-                        BroadcastDate = c.DateTime(),
+                        BroadcastDate = c.DateTime(nullable: false),
                         RepresentativeName = c.String(),
                         RepresentativeEmail = c.String(),
                         ReBroadCast = c.Boolean(nullable: false),
@@ -39,16 +50,21 @@ namespace WFP.ICT.Data.Migrations
                         SpecialInstructions = c.String(),
                         ReferenceNumber = c.Long(nullable: false),
                         OrderNumber = c.String(),
-                        ParentOrderNumber = c.String(),
                         AssignedToCustomer = c.String(),
                         IsTested = c.Boolean(nullable: false),
                         TestingTime = c.DateTime(),
-                        DeployDateTime = c.DateTime(),
                         CreativeURL = c.String(),
                         ZipURL = c.String(),
                         LinkBreakout = c.String(),
                         ReportSiteLink = c.String(),
                         IONumber = c.String(),
+                        ParentId = c.Guid(),
+                        ReBroadcastOrderNumber = c.String(),
+                        ReBroadQuantity = c.Long(nullable: false),
+                        IP = c.String(),
+                        Browser = c.String(),
+                        OS = c.String(),
+                        Referrer = c.String(),
                         CreatedAt = c.DateTime(nullable: false),
                         CreatedBy = c.String(),
                         Copy_Id = c.Guid(),
@@ -72,32 +88,6 @@ namespace WFP.ICT.Data.Migrations
                         MobileCnt = c.Long(nullable: false),
                         ImpressionCnt = c.Long(nullable: false),
                         CampaignId = c.Guid(),
-                        CreatedAt = c.DateTime(nullable: false),
-                        CreatedBy = c.String(),
-                    })
-                .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Campaign", t => t.CampaignId)
-                .Index(t => t.CampaignId);
-            
-            CreateTable(
-                "dbo.CampaignStatus",
-                c => new
-                    {
-                        Id = c.Guid(nullable: false),
-                        CampaignId = c.Guid(),
-                        Status = c.Int(nullable: false),
-                        DeployDateTime = c.DateTime(),
-                        ReportSiteLink = c.String(),
-                        SeedsAdded = c.Long(nullable: false),
-                        IsTested = c.Boolean(nullable: false),
-                        ReTestRqd = c.Boolean(nullable: false),
-                        TestingStartTime = c.DateTime(),
-                        TestingEndTime = c.DateTime(),
-                        Duration = c.Long(nullable: false),
-                        TestingUser = c.String(),
-                        TestingBrowser = c.String(),
-                        TestingOs = c.String(),
-                        TestingReferrer = c.String(),
                         CreatedAt = c.DateTime(nullable: false),
                         CreatedBy = c.String(),
                     })
@@ -167,7 +157,7 @@ namespace WFP.ICT.Data.Migrations
                         Id = c.String(nullable: false, maxLength: 128),
                         FirstName = c.String(),
                         LastName = c.String(),
-                        Description = c.String(),
+                        APIKey = c.String(),
                         LastLogin = c.DateTime(),
                         Status = c.Int(nullable: false),
                         IsLocalUser = c.Boolean(nullable: false),
@@ -240,7 +230,6 @@ namespace WFP.ICT.Data.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.AspNetRoleClaims", "RoleID", "dbo.AspNetRoles");
             DropForeignKey("dbo.AspNetRoleClaims", "ClaimID", "dbo.AspNetClaims");
-            DropForeignKey("dbo.CampaignStatus", "CampaignId", "dbo.Campaign");
             DropForeignKey("dbo.ProData", "CampaignId", "dbo.Campaign");
             DropForeignKey("dbo.Campaign", "Copy_Id", "dbo.Campaign");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
@@ -252,7 +241,6 @@ namespace WFP.ICT.Data.Migrations
             DropIndex("dbo.AspNetRoles", "RoleNameIndex");
             DropIndex("dbo.AspNetRoleClaims", new[] { "RoleID" });
             DropIndex("dbo.AspNetRoleClaims", new[] { "ClaimID" });
-            DropIndex("dbo.CampaignStatus", new[] { "CampaignId" });
             DropIndex("dbo.ProData", new[] { "CampaignId" });
             DropIndex("dbo.Campaign", new[] { "Copy_Id" });
             DropTable("dbo.Vendor");
@@ -263,9 +251,9 @@ namespace WFP.ICT.Data.Migrations
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetRoleClaims");
             DropTable("dbo.AspNetClaims");
-            DropTable("dbo.CampaignStatus");
             DropTable("dbo.ProData");
             DropTable("dbo.Campaign");
+            DropTable("dbo.APIRequest");
         }
     }
 }

@@ -9,6 +9,7 @@ namespace WFP.ICT.Web.Models
         public string APIKey { get; set; }
         public string FirstName { get; set; }
         public string LastName { get; set; }
+        public string Email { get; set; }
 
         public Guid? OfficeID { get; set; }
         public Guid? UnitID { get; set; }

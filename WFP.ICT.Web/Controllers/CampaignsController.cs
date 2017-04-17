@@ -20,6 +20,7 @@ using WFP.ICT.Web.Reports;
 
 namespace WFP.ICT.Web.Controllers
 {
+    [Authorize]
     public class CampaignsController : BaseController
     {
         private WFPICTContext db = new WFPICTContext();
@@ -36,7 +37,7 @@ namespace WFP.ICT.Web.Controllers
             ViewBag.OrderNumberSortParm = sc.sortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
 
             var campagins =
-                db.Campaigns.Include(x => x.Copy).Where(x => x.Status != (int) CampaignStatusEnum.Completed && x.ParentOrderNumber == null).ToList();
+                db.Campaigns.Include(x => x.Copy).Where(x => x.Status != (int) CampaignStatusEnum.Completed && x.ParentId == null).ToList();
 
             switch (sc.sortOrder)
             {
@@ -98,14 +99,14 @@ namespace WFP.ICT.Web.Controllers
 
                 if (!string.IsNullOrEmpty(sc.dateFrom))
                 {
-                    DateTime dateFrom = DateTime.ParseExact(sc.dateFrom, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime dateFrom = DateTime.ParseExact(sc.dateFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
                     campagins = campagins.Where(s => s.CreatedAt.Date >= dateFrom.Date).ToList();
                     ViewBag.DateFrom = sc.dateFrom;
                 }
 
                 if (!string.IsNullOrEmpty(sc.dateTo))
                 {
-                    DateTime dateTo = DateTime.ParseExact(sc.dateTo, "dd/MM/yyyy", CultureInfo.InvariantCulture);
+                    DateTime dateTo = DateTime.ParseExact(sc.dateTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
                     campagins = campagins.Where(s => s.CreatedAt.Date <= dateTo.Date).ToList();
                     ViewBag.DateTo = sc.dateTo;
                 }
@@ -163,14 +164,25 @@ namespace WFP.ICT.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                int newOrderNumber = db.Campaigns.ToList().Max(x => int.Parse(x.OrderNumber)) + 1;
+                var camps = db.Campaigns.ToList();
+                int newOrderNumber = camps.Count > 0 ? camps.Max(x => int.Parse(x.OrderNumber)) + 1 : 2500;
                 campaign.Id = Guid.NewGuid();
                 campaign.CreatedAt = DateTime.Now;
                 campaign.CreatedBy = LoggedInUser.UserName;
-
                 campaign.OrderNumber = newOrderNumber.ToString();
+                campaign.IP = Request.ServerVariables["REMOTE_ADDR"];
+                campaign.Browser = Request.UserAgent;
+                campaign.OS = Environment.OSVersion.Platform + " " + Environment.OSVersion.VersionString;
+                campaign.Referrer = Request.UrlReferrer.AbsolutePath;
+
                 db.Campaigns.Add(campaign);
                 db.SaveChanges();
+
+                new Thread(() =>
+                {
+                   EmailHelper.SendOrderEmailToClient(LoggedInUser, campaign);
+                }).Start();
+
                 return RedirectToAction("Index");
             }
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
@@ -287,6 +299,13 @@ namespace WFP.ICT.Web.Controllers
                         db.SaveChanges();
                         return RedirectToAction("Index", "Copy", new {id = campaign.Copy.Id, from = "Tracking"});
                         break;
+                    case "ReBroadcast":
+                        campaign.Copy.Status = (int)CampaignStatusEnum.Rebroadcasted;
+                        campaign.Copy.ReBroadcastOrderNumber = campaign.Copy.OrderNumber + "RDP";
+                        db.SaveChanges();
+                        return RedirectToAction("Index", "Copy", new { id = campaign.Copy.Id, from = "ReBroadcast" });
+                        break;
+
                 }
             }
             else
@@ -296,7 +315,7 @@ namespace WFP.ICT.Web.Controllers
                 db.Entry(copy).CurrentValues.SetValues(db.Entry(campaign).CurrentValues);
                 copy.Id = Guid.NewGuid();
                 copy.CreatedAt = DateTime.Now;
-                copy.ParentOrderNumber = campaign.OrderNumber;
+                copy.ParentId = campaign.Id;
 
                 copy.CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm", campaign.OrderNumber);
                 copy.ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv", campaign.OrderNumber);
@@ -365,7 +384,6 @@ namespace WFP.ICT.Web.Controllers
             {
                 return HttpNotFound();
             }
-            
             long clicked = 0 , opened = 0;
             DateTime startDateTime = DateTime.MinValue;
             string IONumber = "NA";
@@ -374,9 +392,7 @@ namespace WFP.ICT.Web.Controllers
                 clicked = campaign.ProDatas.Sum(x => x.ClickCount);
                 startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
                 IONumber = campaign.ProDatas.FirstOrDefault().IO;
-                int hrsPassed = ((int)Math.Round((DateTime.Now - startDateTime).TotalHours / 10.0)) * 10;
-                double percentage = hrsPassed >= 90 ? 1 : ADS.API.Models.Campaign.hoursPercentageDictionary[hrsPassed];
-                opened = ((int)Math.Round(campaign.ProDatas.Sum(x => x.ClickCount) * percentage));
+                opened = ADS.API.Models.Campaign.GetOpens(campaign.Copy.Quantity, startDateTime);
             }
             var model = new CampaignReportVM()
             {
@@ -440,11 +456,9 @@ namespace WFP.ICT.Web.Controllers
                     clicked = campaign.ProDatas.Sum(x => x.ClickCount);
                     startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
                     IONumber = campaign.ProDatas.FirstOrDefault().IO;
-                    int hrsPassed = ((int)Math.Round((DateTime.Now - startDateTime).TotalHours / 10.0)) * 10;
-                    double percentage = hrsPassed >= 90 ? 1 : ADS.API.Models.Campaign.hoursPercentageDictionary[hrsPassed];
-                    opened = ((int)Math.Round(campaign.ProDatas.Sum(x => x.ClickCount) * percentage));
+                    opened = ADS.API.Models.Campaign.GetOpens(campaign.Copy.Quantity, startDateTime);
                 }
-                
+
                 foreach (var proData in campaign.ProDatas)
                 {
                     reportDatas.Add(new CampaignReportDetailVM()

@@ -46,7 +46,7 @@ namespace WFP.ICT.Data.Migrations
                 Id = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.Now,
                 UserName = "test.user",
-                Email = "test.user@gmail.com",
+                Email = "qadir0108@gmail.com",
                 Status = (int)UserStatusEnum.Active
             };
             result = UserManager.CreateAsync(appUser, "P@kistan1");
@@ -103,25 +103,15 @@ namespace WFP.ICT.Data.Migrations
             }
             context.SaveChanges();
 
-            var status = new CampaignStatus()
+            var vendor = new WFP.ICT.Data.Entities.Vendor()
             {
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
-                CampaignId = compaignId,
-                Status = (int)CampaignStatusEnum.OrderRecevied,
-                //DeployDateTime = DateTime.Now.AddDays(1),
-                //ReportSiteLink = "http://ameliorate-reporting.com/campclick/report/HAWCHEV1202",
-                //IsTested = true,
-                //SeedsAdded = 1000,
-                //TestingStartTime = DateTime.Now.AddDays(2),
-                //TestingEndTime = DateTime.Now.AddDays(2).AddHours(1),
-                //Duration = 60*60*1,
-                //TestingUser = "38.127.116.226",
-                //TestingBrowser = "Firefox",
-                //TestingOs = "Windows",
-                //TestingReferrer = "https://fs12.formsite.com/enelson/form60/index.html"
+                Email = "qadir0108@gmail.com",
+                Name = "Vendor",
+                CompanyName = "Vendor Company"
             };
-            context.CampaignStatuses.Add(status);
+            context.Vendors.Add(vendor);
             context.SaveChanges();
         }
     }

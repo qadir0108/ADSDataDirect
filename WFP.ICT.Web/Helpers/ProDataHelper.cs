@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
@@ -25,8 +26,11 @@ namespace WFP.ICT.Web.Helpers
 
         public static ProDataResponse Fetch(string OrderNumber)
         {
-            OrderNumber = "2199";
-
+            if (ConfigurationManager.AppSettings["IsLive"] == "false")
+            {
+                OrderNumber = "2199";
+            }
+            
             ProDataResponse proDataResponse;
             string url = string.Format(_url, OrderNumber);
             using (HttpClient client = new HttpClient())
@@ -41,11 +45,12 @@ namespace WFP.ICT.Web.Helpers
                     return proDataResponse;
                 }
             }
+            
         }
         
         public static void FetchAndUpdate(WFPICTContext db, string OrderNumber)
         {
-            var campagin = db.Campaigns.FirstOrDefault(x => x.OrderNumber == OrderNumber && x.ParentOrderNumber == null);
+            var campagin = db.Campaigns.FirstOrDefault(x => x.OrderNumber == OrderNumber && x.ParentId == null);
             var proDatas = db.ProDatas.Where(x => x.CampaignId == campagin.Id);
             foreach (var proData in proDatas)
             {

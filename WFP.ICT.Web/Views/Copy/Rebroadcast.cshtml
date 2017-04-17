@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<WFP.ICT.Data.Entities.Campaign>*@
-@using ADSDataDirect.Enums
+﻿@using ADSDataDirect.Enums
 @using PagedList.Mvc
 @model PagedList.IPagedList<WFP.ICT.Data.Entities.Campaign>
 
@@ -26,7 +25,7 @@
         <div class="col-md-8">
             <div class="dashboard-page-head">
                 <div class="page-header">
-                    <h1>Campaign Tracking<small></small></h1>
+                    <h1>Campaign Rebroadcast<small></small></h1>
                     &nbsp;&nbsp;@Html.ActionLink("Back to Orders", "Index", "Campaigns")
                 </div>
             </div>
@@ -53,22 +52,19 @@
         <table class="table">
             <tr>
                 <th>
-                    Order Number
+                    ReBroadcast Order Number
                 </th>
                 <th>
                     Campaign Name
                 </th>
                 <th>
-                    White Label
+                    Rebroadcast Deploy Date
                 </th>
                 <th>
-                    IO Number
+                    Rebroadcast Deploy Time
                 </th>
                 <th>
-                    Date Started
-                </th>
-                <th>
-                    Report Site Link
+                    Rebroadcast Quantity
                 </th>
                 <th></th>
             </tr>
@@ -77,25 +73,22 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.OrderNumber)
+                        @Html.DisplayFor(modelItem => item.ReBroadcastOrderNumber)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CampaignName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.WhiteLabel)
+                        @(item.ReBroadcastDate.HasValue ? item.ReBroadcastDate.Value.ToString("d") : "")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.IONumber)
+                        @(item.ReBroadcastDate.HasValue ? item.ReBroadcastDate.Value.ToString("hh:mm") : "")
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.BroadcastDate)
+                        @Html.DisplayFor(modelItem => item.ReBroadQuantity)
                     </td>
                     <td>
-                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.ReportSiteLink, item.ReportSiteLink))
-                    </td>
-                    <td>
-                        @Html.ActionLink("Edit", "Edit", "Copy", new { id = item.Id, from = "Tracking" }, null)
+                        @Html.ActionLink("Edit", "Edit", "Copy", new { id = item.Id, from = "Rebroadcast" }, null)
                     </td>
                 </tr>
             }

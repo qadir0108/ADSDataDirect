@@ -10,10 +10,38 @@ namespace ADS.API.Models
 
         public static SortedDictionary<int, double> hoursPercentageDictionary = new SortedDictionary<int, double>()
         {
-            {10, 0.22181 }, {20, 0.40928}, {30, 0.55004}, {40, 0.67389}, {50, 0.78330}, {60, 0.87274}, {70, 0.93972}, {80, 0.99955}, {90, 1}
+            {1, 0.0139 }, {5, 0.0395}, {8, 0.0613}, {12, 0.0823}, {18, 0.0934}, {24, 0.1023}, {30, 0.1082}, {36, 0.1094}, {44, 1127}
         };
 
+        // 4 = 1
+        // 5 = 5
+        // 6 = 5
+        // >=44 = 44
+        public static double GetPercentage(int hr)
+        {
+            if (hr >= 44) return hoursPercentageDictionary[44];
+
+            int actualHr = -1;
+            int[] hrs = hoursPercentageDictionary.Keys.ToArray();
+            for (int i =0; i < hrs.Length;i++)
+            {
+                if (hr >= hrs[i] && hr < hrs[i + 1])
+                {
+                    actualHr = hrs[i];
+                    break;
+                }
+            }
+            return hoursPercentageDictionary[actualHr];
+        }
+
+        public static int GetOpens(long Quantity, DateTime startDateTime)
+        {
+            int hrsPassed = (int)Math.Round((DateTime.Now - startDateTime).TotalHours);
+            return (int) Math.Round(Quantity * GetPercentage(hrsPassed));
+        }
+
         public string CampaignName { get; set; }
+        public string OrderNumber { get; set; }
         public string IONumber { get; set; }
         public string StartDate { get; set; }
         public string EmailsSent { get; set; }
@@ -26,21 +54,19 @@ namespace ADS.API.Models
         {
             long clicked = 0, opened = 0;
             DateTime startDateTime = DateTime.MinValue;
+            string IONumber = "NA";
             if (campaign.ProDatas.Count > 0)
             {
                 clicked = campaign.ProDatas.Sum(x => x.ClickCount);
                 startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
-                int hrsPassed = ((int)Math.Round((DateTime.Now - startDateTime).TotalHours / 10.0)) * 10;
-                double percentage = hrsPassed >= 90 ? 1 : hoursPercentageDictionary[hrsPassed];
-                opened = ((int)Math.Round(campaign.ProDatas.Sum(x => x.ClickCount) * percentage));
+                opened = GetOpens(campaign.Copy.Quantity, startDateTime);
             }
             var model = new ADS.API.Models.Campaign()
             {
                 CampaignName = campaign.Copy.CampaignName,
                 EmailsClicked = clicked == 0 ? "NA" : clicked.ToString(),
                 EmailsOpened = opened == 0 ? "NA" : opened.ToString(),
-                IONumber = !string.IsNullOrEmpty(campaign.Copy.IONumber) ? campaign.Copy.IONumber
-                          : (campaign.ProDatas.Count > 0 ? campaign.ProDatas.FirstOrDefault().IO : "NA"),
+                IONumber = campaign.ProDatas.FirstOrDefault().IO,
                 StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
                 EmailsSent = campaign.Quantity.ToString(),
             };

@@ -1,6 +1,7 @@
 ﻿@*@model IEnumerable<WFP.ICT.Data.Entities.Campaign>*@
 @using ADSDataDirect.Enums
 @using PagedList.Mvc
+@using WFP.ICT.Web.Helpers
 @model PagedList.IPagedList<WFP.ICT.Data.Entities.Campaign>
 
 @{
@@ -49,7 +50,7 @@
         <a href="#" class="btn btn-default" id="btnSendToVendor" data-tooltip="tooltip" title="Send to Vendor"><span class="glyphicon glyphicon-envelope"></span></a>
     </div>
 </div>
-        
+        @Html.HiddenFor(m => Model.FirstOrDefault().Id)
         <table class="table">
             <tr>
                 <th>
@@ -83,10 +84,19 @@
                     Quantity
                 </th>
                 <th>
-                    Matchback
+                    Match -back
+                </th>
+                <th>
+                    Re -broadcast
                 </th>
                 <th>
                     Link Breakout
+                </th>
+                <th>
+                    Deploy Date
+                </th>
+                <th>
+                    Deploy Time
                 </th>
                 <th></th>
             </tr>
@@ -110,7 +120,7 @@
                         @Html.DisplayFor(modelItem => item.SubjectLine)
                     </td>
                     <td>
-                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.CreativeURL, item.CreativeURL))
+                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.CreativeURL, StringHelper.URLSubstring(item.CreativeURL)))
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.GeoDetails)
@@ -119,7 +129,7 @@
                         @Html.DisplayFor(modelItem => item.Demographics)
                     </td>
                     <td>
-                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.ZipURL, item.ZipURL))
+                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.ZipURL, StringHelper.URLSubstring(item.ZipURL)))
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Quantity)
@@ -128,7 +138,16 @@
                         @(item.IsMatchback? "Yes" : "No")
                     </td>
                     <td>
-                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.LinkBreakout, item.LinkBreakout))
+                        @(item.ReBroadCast ? "Yes" : "No")
+                    </td>
+                    <td>
+                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.LinkBreakout, StringHelper.URLSubstring(item.LinkBreakout)))
+                    </td>
+                    <td>
+                        @(item.BroadcastDate.HasValue ? item.BroadcastDate.Value.ToString("d") : "")
+                    </td>
+                    <td>
+                        @(item.BroadcastDate.HasValue ? item.BroadcastDate.Value.ToString("hh:mm") : "")
                     </td>
                     <td>
                         @Html.ActionLink("Edit", "Edit", "Copy", new { id = item.Id, from = "Approved" }, null)
@@ -169,6 +188,41 @@
                 return false;
             });
 
+            $('#btnSendToVendor').click(function (e) {
+                debugger;
+                e.preventDefault();
+                var dataToPost = {
+                    Id: $('#Id').val()
+                };
+
+                wfp.showSwal("Are you sure to send to vendor?",
+               function () {
+
+                   debugger;
+                   $.ajax({
+                       type: "POST",
+                       url: "/Copy/SendToVendor",
+                       data: JSON.stringify(dataToPost),
+                       contentType: "application/json; charset=utf-8",
+                       success: function (response) {
+                           debugger;
+                           if (response === "") wfp.reload();
+                           if (response.IsSucess) {
+                               wfp.showSuccess('Approved order has been sent to vendor successfully.');
+                               wfp.redirectTo();
+                           } else {
+                               wfp.showError(response.ErrorMessage);
+                           }
+                       },
+                       failure: function (response) {
+                           wfp.showError('There is erorr in service call.');
+                       },
+                       complete: function () {
+                       }
+                   });
+               });
+
+            });
         });
 
 </script>

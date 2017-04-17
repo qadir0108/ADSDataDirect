@@ -11,7 +11,6 @@ namespace WFP.ICT.Data.Repository
     {
         private WFPICTContext context = new WFPICTContext();
         private GenericRepository<Campaign> campaignRepository;
-        private GenericRepository<CampaignStatus> statusRepository;
 
         public GenericRepository<Campaign> CampaignRepository
         {
@@ -22,18 +21,6 @@ namespace WFP.ICT.Data.Repository
                     this.campaignRepository = new GenericRepository<Campaign>(context);
                 }
                 return campaignRepository;
-            }
-        }
-
-        public GenericRepository<CampaignStatus> StatusRepository
-        {
-            get
-            {
-                if (this.statusRepository == null)
-                {
-                    this.statusRepository = new GenericRepository<CampaignStatus>(context);
-                }
-                return statusRepository;
             }
         }
 

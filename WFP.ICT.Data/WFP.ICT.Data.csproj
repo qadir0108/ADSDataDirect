@@ -67,15 +67,10 @@
     <Compile Include="Entities\APIRequest.cs" />
     <Compile Include="Entities\Vendor.cs" />
     <Compile Include="Entities\Campaign.cs" />
-    <Compile Include="Entities\CampaignStatus.cs" />
     <Compile Include="Entities\iBaseEntity.cs" />
-    <Compile Include="Migrations\201703300547045_Initial.cs" />
-    <Compile Include="Migrations\201703300547045_Initial.Designer.cs">
-      <DependentUpon>201703300547045_Initial.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Migrations\201704050544413_Key.cs" />
-    <Compile Include="Migrations\201704050544413_Key.Designer.cs">
-      <DependentUpon>201704050544413_Key.cs</DependentUpon>
+    <Compile Include="Migrations\201704170804129_Initial.cs" />
+    <Compile Include="Migrations\201704170804129_Initial.Designer.cs">
+      <DependentUpon>201704170804129_Initial.cs</DependentUpon>
     </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
@@ -105,11 +100,8 @@
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Migrations\201703300547045_Initial.resx">
-      <DependentUpon>201703300547045_Initial.cs</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201704050544413_Key.resx">
-      <DependentUpon>201704050544413_Key.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201704170804129_Initial.resx">
+      <DependentUpon>201704170804129_Initial.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

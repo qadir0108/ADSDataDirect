@@ -1,6 +1,7 @@
 ﻿@*@model IEnumerable<WFP.ICT.Data.Entities.Campaign>*@
 @using ADSDataDirect.Enums
 @using PagedList.Mvc
+@using WFP.ICT.Web.Helpers
 @model PagedList.IPagedList<WFP.ICT.Data.Entities.Campaign>
 
 @{
@@ -80,7 +81,13 @@
                     Tested
                 </th>
                 <th>
-                    Test Time
+                    Test DateTime
+                </th>
+                <th>
+                    Deploy Date
+                </th>
+                <th>
+                    Deploy Time
                 </th>
                 <th></th>
             </tr>
@@ -104,7 +111,7 @@
                         @Html.DisplayFor(modelItem => item.SubjectLine)
                     </td>
                     <td>
-                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.CreativeURL, item.CreativeURL.Substring(item.CreativeURL.Length - 18, 18)))
+                        @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.CreativeURL, StringHelper.URLSubstring(item.CreativeURL)))
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TestSeedList)
@@ -122,6 +129,12 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.TestingTime)
+                    </td>
+                    <td>
+                        @(item.BroadcastDate.HasValue ? item.BroadcastDate.Value.ToString("d") : "")
+                    </td>
+                    <td>
+                        @(item.BroadcastDate.HasValue ? item.BroadcastDate.Value.ToString("hh:mm") : "")
                     </td>
                     <td>
                         @Html.ActionLink("Edit", "Edit", "Copy", new { id = item.Id, from = "Testing" }, null)

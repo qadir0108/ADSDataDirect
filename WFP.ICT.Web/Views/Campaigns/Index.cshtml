@@ -84,75 +84,12 @@
                     @Html.ActionLink("Status", "Index", columnSortParams5)
                     @*@Html.DisplayNameFor(model => model.ReferenceNumber)*@
                 </td>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.ReBroadCast)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ReBroadcastDate)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Price)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.TestingUrgency)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.ZipCodeFile)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.GeoDetails)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Demographics)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.Quantity)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.FromLine)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.SubjectLine)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.HtmlImageFiles)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.TestSeedList)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.FinalSeedList)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.SuppressionFile)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IsPersonalization)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IsMatchback)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.IsSuppression)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.WhiteLabel)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.OptOut)
-                    </th>
-                    <th>
-                        @Html.DisplayNameFor(model => model.SpecialInstructions)
-                    </th>*@
                 <th></th>
             </tr>
 
             @foreach (var item in Model)
             {
                 <tr>
-                    @*<td>
-                            @Html.DisplayFor(modelItem => item.CreatedAt)
-                        </td>*@
                     <td>
                         @Html.DisplayFor(modelItem => item.OrderNumber)
                     </td>
@@ -168,66 +105,6 @@
                     <td>
                         @Enum.GetName(typeof(CampaignStatusEnum), item.Status)
                     </td>
-   @* <td>
-        @Html.DisplayFor(modelItem => item.ReBroadCast)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ReBroadcastDate)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Price)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.TestingUrgency)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.ZipCodeFile)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.GeoDetails)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Demographics)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.Quantity)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.FromLine)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.SubjectLine)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.HtmlImageFiles)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.TestSeedList)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.FinalSeedList)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.SuppressionFile)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.IsPersonalization)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.IsMatchback)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.IsSuppression)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.WhiteLabel)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.OptOut)
-    </td>
-    <td>
-        @Html.DisplayFor(modelItem => item.SpecialInstructions)
-    </td>*@
                     <td>
                         @*@Html.ActionLink("Details", "Details", new { id = item.ID, @class = "btn btn-primary" }) |*@
                         <div class="row">
@@ -262,10 +139,15 @@
                         {
                             <div class="row" style="margin-top: 3px">
                                 <div class="col-md-12">
-                                    <div class="col-md-3"></div>
                                     <div class="col-md-3">@Html.ActionLink("Testing", "MoveTo", new { id = item.Id, to = "Testing" }, new { @class = "btn btn-default btn-sm" })</div>
                                     <div class="col-md-3">@Html.ActionLink("Approved", "MoveTo", new { id = item.Id, to = "Approved" }, new { @class = "btn btn-default btn-sm" })</div>
                                     <div class="col-md-3">@Html.ActionLink("Tracking", "MoveTo", new { id = item.Id, to = "Tracking" }, new { @class = "btn btn-default btn-sm" })</div>
+                                    <div class="col-md-3">
+                                        @if (item.ReBroadCast)
+                                        {
+                                            @Html.ActionLink("Re-broad", "MoveTo", new { id = item.Id, to = "ReBroadcast" }, new { @class = "btn btn-default btn-sm" })
+                                        }
+                                    </div>
                                 </div>
                             </div>
                             <div class="row" >
@@ -289,9 +171,8 @@
         </div>
 
 <!-- Modal -->
-@if (Model.Count > 0)
-{
-    Html.RenderPartial("_Search", Model.FirstOrDefault());
+@{
+    Html.RenderPartial("_Search", new WFP.ICT.Data.Entities.Campaign());
 }
 <script type="text/javascript">
 

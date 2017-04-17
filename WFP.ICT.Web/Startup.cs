@@ -3,6 +3,7 @@ using Microsoft.Owin;
 using Nelibur.ObjectMapper;
 using Owin;
 using System;
+using System.Globalization;
 using System.Linq;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WFP.ICT.Data.Entities;
@@ -15,8 +16,13 @@ namespace WFP.ICT.Web
     {
         public void Configuration(IAppBuilder app)
         {
-            ConfigureAuth(app);
+            CultureInfo.DefaultThreadCurrentCulture = CultureInfo.GetCultureInfo("en-US");
+            CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
+            ConfigureAuth(app);
+            //ADS.API.Models.Campaign.GetPercentage(4);
+            //ADS.API.Models.Campaign.GetPercentage(5);
+            //ADS.API.Models.Campaign.GetPercentage(45);
             SetupInitialSettings();
         }
 

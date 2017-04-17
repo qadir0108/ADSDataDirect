@@ -13,7 +13,7 @@ namespace WFP.ICT.Data.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201703300547045_Initial"; }
+            get { return "201704170804129_Initial"; }
         }
         
         string IMigrationMetadata.Source

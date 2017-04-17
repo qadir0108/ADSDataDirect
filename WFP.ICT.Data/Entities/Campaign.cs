@@ -14,6 +14,7 @@ namespace WFP.ICT.Data.Entities
 
         // Campaign Details
         public string CampaignName { get; set; }
+        [Required]
         public DateTime? BroadcastDate { get; set; }
         public string RepresentativeName { get; set; }
         public string RepresentativeEmail { get; set; }
@@ -50,12 +51,10 @@ namespace WFP.ICT.Data.Entities
         public long ReferenceNumber { get; set; }
         public string OrderNumber { get; set; }
 
-        public string ParentOrderNumber { get; set; }
         public string AssignedToCustomer { get; set; }
 
         public bool IsTested { get; set; }
         public DateTime? TestingTime { get; set; }
-        public DateTime? DeployDateTime { get; set; }
 
         public string CreativeURL { get; set; }
         public string ZipURL { get; set; }
@@ -64,14 +63,21 @@ namespace WFP.ICT.Data.Entities
         public string ReportSiteLink { get; set; }
         public string IONumber { get; set; }
 
+        public Guid? ParentId { get; set; }
         public virtual Campaign Copy { get; set; }
 
-        public virtual ICollection<CampaignStatus> StatusHistory { get; set; }
+        public string ReBroadcastOrderNumber { get; set; }
+        public long ReBroadQuantity { get; set; }
+
+        public string IP { get; set; }
+        public string Browser { get; set; }
+        public string OS { get; set; }
+        public string Referrer { get; set; }
+
         public virtual ICollection<ProData> ProDatas { get; set; }
 
         public Campaign()
         {
-            StatusHistory = new HashSet<CampaignStatus>();
             ProDatas = new HashSet<ProData>();
         }
     }

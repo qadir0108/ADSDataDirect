@@ -4,15 +4,19 @@ using System.Data;
 using System.Data.Entity;
 using System.Linq;
 using System.Net;
+using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
 using PagedList;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
+using WFP.ICT.Web.Helpers;
+using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
 {
+    [Authorize]
     public class CopyController : Controller
     {
         private WFPICTContext db = new WFPICTContext();
@@ -22,7 +26,7 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Index(int? page, string searchString, Guid? id, string from)
         {
             var campagins = db.Campaigns
-                .Where(x => x.ParentOrderNumber != null)
+                .Where(x => x.ParentId != null)
                 .OrderBy(x => x.CreatedAt)
                 .ToList();
 
@@ -61,8 +65,41 @@ namespace WFP.ICT.Web.Controllers
                 case "Tracking":
                     return View("Tracking", campagins.ToPagedList(pageNumber, pageSize));
                     break;
+                case "ReBroadcast":
+                    return View("ReBroadcast", campagins.ToPagedList(pageNumber, pageSize));
+                    break;
             }
             return View("Error");
+        }
+
+        public ActionResult SendToVendor(Guid? Id)
+        {
+            try
+            {
+                Campaign campaign = db.Campaigns.FirstOrDefault(x => x.Id == Id);
+                Campaign parentCampaign = db.Campaigns.FirstOrDefault(x => x.Id == campaign.ParentId);
+                if (campaign == null)
+                {
+                    return HttpNotFound();
+                }
+
+                var vendor = db.Vendors.FirstOrDefault();
+                new Thread(() =>
+                {
+                    EmailHelper.SendApprovedToVendor(vendor, campaign);
+                }).Start();
+
+                parentCampaign.Status = (int)CampaignStatusEnum.Tracking;
+                campaign.Status = (int)CampaignStatusEnum.Tracking;
+                campaign.ReportSiteLink = string.Format("http://report-site.com/c/ADS{0}", campaign.OrderNumber);
+                db.SaveChanges();
+                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+
         }
 
         // GET: Copy/Edit/5
@@ -86,7 +123,7 @@ namespace WFP.ICT.Web.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,Status,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,ReferenceNumber,OrderNumber,ParentOrderNumber,AssignedToCustomer,IsTested,TestingTime,DeployDateTime,CreativeURL,ZipURL,LinkBreakout,ReportSiteLink,IONumber,CreatedAt,CreatedBy")] Campaign campaign)
+        public ActionResult Edit([Bind(Include = "Id,ParentId,Status,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,ReferenceNumber,OrderNumber,ParentOrderNumber,AssignedToCustomer,IsTested,TestingTime,DeployDateTime,CreativeURL,ZipURL,LinkBreakout,ReportSiteLink,IONumber,CreatedAt,CreatedBy,ReBroadcastOrderNumber,ReBroadQuantity")] Campaign campaign)
         {
             if (ModelState.IsValid)
             {

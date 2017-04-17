@@ -1,57 +1,100 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Net.Mail;
 using System.Threading.Tasks;
+using ADSDataDirect.Enums;
+using WFP.ICT.Data.Entities;
 
 namespace WFP.ICT.Web.Helpers
 {
     public class EmailHelper
     {
         private const string Footer = @"<br/><br/>Thanks<br/>
-                                        <b>WFP Pakistan - ICT Unit</b><br/>http://www.wfp.org/countries/pakistan";
+                                        <b>ADS Data Direct</b><br/>http://www.adsdatadirect.com";
 
-        public static async Task SendRegistryInEmail(string to, string name, string from, string registrySubject, string number)
+        public static async Task SendOrderEmailToClient(WFPUser loggedInUser, Campaign campaign)
         {
-            string subject = "A registry has been arrived at WFP - Frontdesk";
-            string body = string.Format(@"<br/><p>Dear {0}</p><br/>" 
-                                      + @" We have recevied your registry from {1}. <p><b>Registry # :</b>{2}</p>"
-                                      + @" <p><b>Subject :</b>{3}</p>"
-                                      + @"Be patient, it will be soon delivered to you by front-desk.</p> {4}"
-                                      , name, from,number, registrySubject, Footer);
-            await SendEmail(to, subject, body);
-        }
+            string subject = string.Format("Order # {0}, Campaign Date {1}, QTY {2} , Date Submitted {3}",
+                                    campaign.OrderNumber, campaign.BroadcastDate.Value.ToString("d"), campaign.Quantity, campaign.CreatedAt.ToString("d"));
 
-        public static async Task SendStationeryIssueEmail(string to, string name, string requester, string requestedOn, string issuedOn, string items, string status)
-        {
-            string subject = "Stationery has been "+ status +" by WFP - Admin";
             string body = string.Format(@"<br/><p>Dear {0}</p><br/>
-                                        <p><b>Stationery has been {1} by WFP - Admin</b></p>
-                                        <p>Requested by : {2}.</p> <p>Requested on : {3}.</p><p>{1} on : {4}.</p><p><b>Items:</b> {5}</p>{6}"
-                                        , name, status, requester, requestedOn, issuedOn, items, Footer);
-            await SendEmail(to, subject, body);
+                                       We have recevied your order.<br/><br/>
+                                        <table border=""2"">
+                                        <tr><th>Order #:</th><td>{1}</td></tr>
+                                        <tr><th>Status:</th><td>{2}</td></tr>
+                                        <tr><th>Username:</th><td>{3}</td></tr>
+                                        <tr><th>User Email:</th><td>{4}</td></tr>
+                                        <tr><th>Campaign Name:</th><td>{5}</td></tr>
+                                        <tr><th>Broadcast Date:</th><td>{6}</td></tr>
+                                        <tr><th>Rebroadcast:</th><td>{7}</td></tr>
+                                        <tr><th>From Line:</th><td>{8}</td></tr>
+                                        <tr><th>Subject Line:</th><td>{9}</td></tr>
+                                        <tr><th>Personalization:</th><td>{10}</td></tr>
+                                        <tr><th>Matchback:</th><td>{11}</td></tr>
+                                        <tr><th>Suppression:</th><td>{12}</td></tr>
+                                        <tr><th>White Label:</th><td>{13}</td></tr>
+                                        <tr><th>Last Update:</th><td>{14}</td></tr>
+                                        <tr><th>Start Time:</th><td>{15}</td></tr>
+                                        <tr><tr><th>Finish Time:</th><td>{16}</td></tr>
+                                        <tr><th>IP:</th><td>{17}</td></tr>
+                                        <tr><th>Browser:</th><td>{18}</td></tr>
+                                        <tr><th>OS:</th><td>{19}</td></tr>
+                                        <tr><th>Referrer:</th><td>{20}</td></tr>
+                                        </table></p> <p>We will soon contact you and update you about your order.</p> {21}"
+                                      , loggedInUser.UserName.ToCapitalLetterString().ToCapitalized(), campaign.OrderNumber, (CampaignStatusEnum)campaign.Status
+                                      , loggedInUser.UserName, loggedInUser.Email, campaign.CampaignName, campaign.BroadcastDate.Value.ToString("d")
+                                      , campaign.ReBroadCast ? "Yes" : "No", campaign.FromLine, campaign.SubjectLine, campaign.IsPersonalization ? "Yes" : "No"
+                                      , campaign.IsMatchback ? "Yes" : "No", campaign.IsSuppression ? "Yes" : "No", campaign.WhiteLabel, campaign.CreatedAt.AddMinutes(2).AddSeconds(30).ToString()
+                                      , campaign.CreatedAt.ToString(), campaign.CreatedAt.AddMinutes(2).AddSeconds(30).ToString(), campaign.IP, campaign.Browser, campaign.OS, campaign.Referrer
+                                      , Footer);
+            await SendEmail(loggedInUser.Email, subject, body);
         }
 
-        public static async Task SendGatepassIssueEmail(string to, string name, string requester, string requestedOn, string issuedOn, string items, string status, string number, string unit)
+        public static async Task SendApprovedToVendor(Vendor vendor, Campaign campaign)
         {
-            string subject = string.Format("A gatepass has been {0} by WFP - {1}", status, unit);
-            string body = string.Format(@"<br/><p>Dear {0}</p><br/>
-                                        <p><b>A gatepass has been {1} by WFP - {2}</b></p>
-                                        <p><b>Gatepass # :</b>{3}</p>
-                                        <p>Requested by : {4}.</p> <p>Requested on : {5}.</p><p>Issued on : {6}.</p><p><b>Items:</b> {7}</p>{8}", 
-                                        name, status, unit, number, requester, requestedOn, issuedOn, items, Footer);
-            await SendEmail(to, subject, body);
-        }
+            string newOld = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? "New" : "RDP";
+            string orderNumber = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? campaign.OrderNumber : campaign.ReBroadcastOrderNumber;
+            string deployDate = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? campaign.BroadcastDate.Value.ToString("d") : campaign.ReBroadcastDate.Value.ToString("d");
+            string deployTime = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? campaign.BroadcastDate.Value.ToString("hh:mm") : campaign.ReBroadcastDate.Value.ToString("hh:mm");
+            string quantity = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? campaign.Quantity.ToString() : campaign.ReBroadQuantity.ToString();
 
-        public static async Task SendVisitIssueEmail(string to, string name, string requester, string requestedOn, string issuedOn, string items, string status, string number, string unit)
-        {
-            string subject = string.Format("A visit has been {0} by WFP - {1}", status, unit);
-            string body = string.Format(@"<br/><p>Dear {0}</p><br/>
-                                        <p><b>A vist has been {1} by WFP - {2}</b></p>
-                                        <p><b>Visit Group # :</b>{3}</p>
-                                        <p>Requested by : {4}.</p> <p>Requested on : {5}.</p><p>Issued on : {6}.</p><p><b>Visitors:</b> {7}</p>{8}",
-                                        name, status, unit, number, requester, requestedOn, issuedOn, items, Footer);
-            await SendEmail(to, subject, body);
-        }
+            string subject = string.Format("{0} Order {1}, Order # {2}",
+                                    newOld, campaign.CampaignName, campaign.OrderNumber);
 
+            string body = string.Format(@"<br/><p>Dear {0}</p><br/>
+                                       Please find below Order details<br/><br/>
+                                        <table border=""2"">
+                                        <tr><th>Reference #:</th><td>{1}</td></tr>
+                                        <tr><th>Order #:</th><td>{2}</td></tr>
+                                        <tr><th>Campaign Name:</th><td>{3}</td></tr>
+                                        <tr><th>Rebroadcast:</th><td>{4}</td></tr>                                        
+                                        <tr><th>Broadcast Date:</th><td>{5}</td></tr>
+                                        <tr><th>From Line:</th><td>{6}</td></tr>
+                                        <tr><th>Subject Line:</th><td>{7}</td></tr>
+                                        <tr><th>Opt Out:</th><td>{8}</td></tr>
+                                        <tr><th>White Label:</th><td>{9}</td></tr>                                        
+                                        <tr><th>Personalization:</th><td>{10}</td></tr>
+                                        <tr><th>Creative URL:</th><td>{11}</td></tr>
+                                        <tr><th>Quantity:</th><td>{12}</td></tr>
+                                        <tr><th>Geo (s):</th><td>{13}</td></tr>
+                                        <tr><th>Demographics:</th><td>{14}</td></tr>
+                                        <tr><tr><th>Zip URL:</th><td>{15}</td></tr>
+                                        <tr><th>Special Instructions:</th><td>{16}</td></tr>
+                                        <tr><th>Deploy Date:</th><td>{17}</td></tr>
+                                        <tr><th>Deploy Time:</th><td>{18}</td></tr>
+                                        <tr><th>ReportSite Link:</th><td>{19}</td></tr>
+                                        <tr><th>Link Breakout:</th><td>{20}</td></tr>
+                                        </table></p> <p></p> {21}"
+                                      , vendor.Name, campaign.ReferenceNumber, orderNumber, campaign.CampaignName
+                                      , campaign.ReBroadCast ? "Yes" : "No", campaign.BroadcastDate.Value.ToString("d")
+                                      , campaign.FromLine, campaign.SubjectLine, campaign.OptOut, campaign.WhiteLabel
+                                      , campaign.IsPersonalization ? "Yes" : "No", campaign.CreativeURL, quantity
+                                      , campaign.GeoDetails, campaign.Demographics, campaign.ZipURL
+                                      , campaign.SpecialInstructions, deployDate, deployTime
+                                      , campaign.ReportSiteLink, campaign.LinkBreakout
+                                      , Footer);
+            await SendEmail(vendor.Email, subject, body);
+        }
 
         public static async Task SendEmail(string to, string subject, string body, List<string> attachments = null)
         {
@@ -70,5 +113,6 @@ namespace WFP.ICT.Web.Helpers
                 await smtpClient.SendMailAsync(msg);
             }
         }
+        
     }
 }

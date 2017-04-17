@@ -39,7 +39,6 @@ namespace WFP.ICT.Data.Entities
         public DbSet<AspNetRoleClaims> RoleClaims { get; set; }
 
         public DbSet<Campaign> Campaigns { get; set; }
-        public DbSet<CampaignStatus> CampaignStatuses { get; set; }
         public DbSet<ProData> ProDatas { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
 

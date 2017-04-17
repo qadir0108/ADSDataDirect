@@ -8,6 +8,7 @@ namespace ADSDataDirect.Enums
     public enum CampaignStatusEnum
     {
         OrderRecevied,
+        Rebroadcasted,
         Testing,
         Approved,
         Tracking,

@@ -16,7 +16,10 @@
         @Html.HiddenFor(model => model.Id)
         @Html.HiddenFor(model => model.CreatedAt)
         @Html.HiddenFor(model => model.CreatedBy)
-        @Html.HiddenFor(model => model.OrderNumber)
+        @Html.HiddenFor(model => model.IP)
+        @Html.HiddenFor(model => model.Browser)
+        @Html.HiddenFor(model => model.OS)
+        @Html.HiddenFor(model => model.Referrer)
 
         @*<div class="form-group">
                 @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "control-label col-md-2" })
@@ -338,10 +341,10 @@
             $(function () {
 
                 $('#BroadcastDate').datetimepicker({
-                    format: 'DD/M/YYYY hh:mm:ss A'
+                    format: 'M/DD/YYYY hh:mm:ss A'
                 });
                 $('#ReBroadcastDate').datetimepicker({
-                    format: 'DD/M/YYYY hh:mm:ss A'
+                    format: 'M/DD/YYYY hh:mm:ss A'
                 });
 
                 $('#ZipCodeFile').prop('readonly', "readonly");

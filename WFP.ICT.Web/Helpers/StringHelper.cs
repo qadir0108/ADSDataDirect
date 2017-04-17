@@ -1,4 +1,6 @@
-﻿namespace WFP.ICT.Web.Helpers
+﻿using System.Linq;
+
+namespace WFP.ICT.Web.Helpers
 {
     public class StringHelper
     {
@@ -6,6 +8,12 @@
         {
             if (string.IsNullOrEmpty(Source)) return false;
             return Source.ToLowerInvariant().Contains(ToCheck.ToLowerInvariant());
+        }
+
+        public static string URLSubstring(string Source)
+        {
+            var parts = Source.Split("//".ToCharArray());
+            return string.Join("/", parts.ToList().Skip(parts.Length - 3));
         }
     }
 }
