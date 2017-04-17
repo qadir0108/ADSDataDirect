@@ -212,13 +212,17 @@ wfp.loadPartial = function (partialURL) {
 }
 
 wfp.redirectTo = function (controllerAction) {
-    setTimeout(
+    if (controllerAction) {
+        setTimeout(
         function () {
-            if (controllerAction)
-                location.href = "http://" + $(location).attr('host') + controllerAction;
-            else
-                window.location.reload();
+            location.href = "http://" + $(location).attr('host') + controllerAction;
         }, 2000);
+    } else {
+        setTimeout(
+        function () {
+            window.location.reload();
+        }, 2000);
+    }
 }
 
 wfp.reload = function (controllerAction) {
