@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Globalization;
-using System.IO;
 using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Threading.Tasks;
-using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
 using PagedList;
@@ -29,6 +25,8 @@ namespace WFP.ICT.Web.Controllers
         // GET: Campaigns
         public ActionResult Index(CampaignSearchVM sc)
         {
+            if(LoggedInUser == null) return RedirectToAction("LogOff", "Account");
+
             ViewBag.CurrentSort = sc.sortOrder;
             ViewBag.CampaignNameSortParm = sc.sortOrder == "CampaignName" ? "CampaignName_desc" : "CampaignName";
             ViewBag.BroadcastDateSortParm = sc.sortOrder == "BroadcastDate" ? "BroadcastDate_desc" : "BroadcastDate";
@@ -37,7 +35,9 @@ namespace WFP.ICT.Web.Controllers
             ViewBag.OrderNumberSortParm = sc.sortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
 
             var campagins =
-                db.Campaigns.Include(x => x.Copy).Where(x => x.Status != (int) CampaignStatusEnum.Completed && x.ParentId == null).ToList();
+                db.Campaigns
+                .Include(x => x.Testing).Include(x => x.Approved)
+                .ToList();
 
             switch (sc.sortOrder)
             {
@@ -94,7 +94,7 @@ namespace WFP.ICT.Web.Controllers
 
                 if (!string.IsNullOrEmpty(sc.IsTested))
                 {
-                    campagins = campagins.Where(s => s.IsTested == Boolean.Parse(sc.IsTested)).ToList();
+                    campagins = campagins.Where(s => s.Testing.IsTested == Boolean.Parse(sc.IsTested)).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(sc.dateFrom))
@@ -110,12 +110,26 @@ namespace WFP.ICT.Web.Controllers
                     campagins = campagins.Where(s => s.CreatedAt.Date <= dateTo.Date).ToList();
                     ViewBag.DateTo = sc.dateTo;
                 }
+                
             }
 
-            if (!User.Identity.Name.Equals("josh.silver"))
+            if (LoggedInUser != null && !IsAdmin)
             {
                 campagins = campagins.Where(s => s.CreatedBy == LoggedInUser.UserName).ToList();
             }
+
+            if (!string.IsNullOrEmpty(sc.Status))
+            {
+                int status = int.Parse(sc.Status);
+                campagins = campagins.Where(s => s.Status == status).ToList();
+                ViewBag.StatusSearched = sc.Status;
+            }
+            else
+            {
+                campagins = campagins.Where(x => x.Status != (int) CampaignStatusEnum.Completed).ToList();
+            }
+
+            ViewBag.Status = new SelectList(EnumHelper.GetEnumTextValues(typeof(CampaignStatusEnum)), "Value", "Text");
 
             // Paging
             int pageNumber = (sc.page ?? 1);
@@ -145,7 +159,8 @@ namespace WFP.ICT.Web.Controllers
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
                 OrderNumber = "",
-                ReferenceNumber = 0
+                RepresentativeName = LoggedInUser.UserName,
+                RepresentativeEmail = LoggedInUser.Email
             };
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", model.TestingUrgency);
@@ -160,12 +175,12 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Create(
             [Bind(
                  Include =
-                     "ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,ReferenceNumber,OrderNumber")] Campaign campaign)
+                     "ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber")] Campaign campaign)
         {
             if (ModelState.IsValid)
             {
                 var camps = db.Campaigns.ToList();
-                int newOrderNumber = camps.Count > 0 ? camps.Max(x => int.Parse(x.OrderNumber)) + 1 : 2500;
+                int newOrderNumber = camps.Count > 0 ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1 : 2500;
                 campaign.Id = Guid.NewGuid();
                 campaign.CreatedAt = DateTime.Now;
                 campaign.CreatedBy = LoggedInUser.UserName;
@@ -217,7 +232,7 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Edit(
             [Bind(
                  Include =
-                     "ID,CreatedAt,CreatedBy,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,ReferenceNumber,OrderNumber,Status"
+                     "ID,CreatedAt,CreatedBy,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber,Status"
              )] Campaign campaign)
         {
             if (ModelState.IsValid)
@@ -260,256 +275,89 @@ namespace WFP.ICT.Web.Controllers
                 db.ProDatas.Remove(proData);
             }
             db.SaveChanges();
+
+            if (campaign.OrderNumber.EndsWith("RDP"))
+            {
+                Campaign campaign1 = db.Campaigns.Include(x => x.Testing).Include(x => x.Approved)
+                    .FirstOrDefault(x => x.RebroadId == campaign.Id);
+                campaign1.RebroadId = null;
+                db.SaveChanges();
+
+                db.CampaignsTesting.Remove(campaign1.Testing);
+                db.CampaignsApproved.Remove(campaign1.Approved);
+                db.SaveChanges();
+            }
             db.Campaigns.Remove(campaign);
             db.SaveChanges();
             return RedirectToAction("Index");
         }
 
-        public ActionResult MoveTo(Guid id, string to)
-        {
-            var campaign = db.Campaigns
-                .Include(ds => ds.Copy)
-                .FirstOrDefault(e => e.Id == id);
-
-            if(string.IsNullOrEmpty(campaign.OrderNumber))
-                throw new Exception("Please enter Order Number first");
-
-            if (campaign.Copy != null)
-            {
-                switch (to)
-                {
-                    case "Testing":
-                        campaign.Status = (int) CampaignStatusEnum.Testing;
-                        campaign.Copy.Status = (int) CampaignStatusEnum.Testing;
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Copy", new {id = campaign.Copy.Id, from = "Testing"});
-                        break;
-                    case "Approved":
-                        campaign.Status = (int) CampaignStatusEnum.Approved;
-                        campaign.Copy.Status = (int) CampaignStatusEnum.Approved;
-                        campaign.Copy.LinkBreakout = string.Format(
-                            "http://www.digitaldynamixs.net/ep2/{0}/{0}linkr.csv", campaign.OrderNumber);
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Copy", new {id = campaign.Copy.Id, from = "Approved"});
-                        break;
-                    case "Tracking":
-                        campaign.Status = (int) CampaignStatusEnum.Tracking;
-                        campaign.Copy.Status = (int) CampaignStatusEnum.Tracking;
-                        campaign.Copy.ReportSiteLink = string.Format("http://report-site.com/c/ADS{0}", campaign.OrderNumber);
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Copy", new {id = campaign.Copy.Id, from = "Tracking"});
-                        break;
-                    case "ReBroadcast":
-                        campaign.Copy.Status = (int)CampaignStatusEnum.Rebroadcasted;
-                        campaign.Copy.ReBroadcastOrderNumber = campaign.Copy.OrderNumber + "RDP";
-                        db.SaveChanges();
-                        return RedirectToAction("Index", "Copy", new { id = campaign.Copy.Id, from = "ReBroadcast" });
-                        break;
-
-                }
-            }
-            else
-            {
-                var copy = new Campaign();
-                db.Campaigns.Add(copy);
-                db.Entry(copy).CurrentValues.SetValues(db.Entry(campaign).CurrentValues);
-                copy.Id = Guid.NewGuid();
-                copy.CreatedAt = DateTime.Now;
-                copy.ParentId = campaign.Id;
-
-                copy.CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm", campaign.OrderNumber);
-                copy.ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv", campaign.OrderNumber);
-
-                copy.Status = (int) CampaignStatusEnum.Testing;
-                db.SaveChanges();
-
-                campaign.Copy = copy;
-                db.SaveChanges();
-
-                return RedirectToAction("Index", "Copy", new {id = campaign.Copy.Id, from = "Testing"});
-            }
-            return null;
-        }
-
-        public ActionResult Status(Guid? id)
+        // GET: Campaigns/Delete/5
+        public ActionResult Clone(Guid? id)
         {
             if (id == null)
             {
                 return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
             }
-            Campaign campaign = db.Campaigns.Include("Copy").FirstOrDefault(x => x.Id == id);
+            Campaign campaign = db.Campaigns.Find(id);
             if (campaign == null)
             {
                 return HttpNotFound();
             }
-
-            if (campaign.Copy != null)
-                campaign = campaign.Copy;
-
-            var allUsers = db.Users.Where(x => !x.UserName.Equals("josh.silver")).ToList();
-            allUsers.Insert(0, new WFPUser() {Id = "", UserName = "Select User"});
-
-            ViewBag.Customer = new SelectList(allUsers, "Id", "UserName", campaign.AssignedToCustomer);
             return View(campaign);
         }
 
-        public ActionResult ChangeAssigned(Guid? Id, string UserId)
+        [HttpPost, ActionName("Clone")]
+        [ValidateAntiForgeryToken]
+        public ActionResult CloneConfirmed(Guid id)
         {
-            Campaign campaign = db.Campaigns.Include("Copy").FirstOrDefault(x => x.Id == Id);
-            if (campaign == null)
+            var camps = db.Campaigns.ToList();
+            int newOrderNumber = camps.Count > 0 ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1 : 2500;
+
+            Campaign campaign = db.Campaigns.Include(x => x.Testing).Include(x => x.Approved).FirstOrDefault(x => x.Id == id);
+
+            var copy = new Campaign();
+            db.Campaigns.Add(copy);
+            db.Entry(copy).CurrentValues.SetValues(db.Entry(campaign).CurrentValues);
+            copy.Id = Guid.NewGuid();
+            copy.CreatedAt = DateTime.Now;
+            copy.OrderNumber = newOrderNumber.ToString();
+            copy.Status = (int)CampaignStatusEnum.OrderRecevied;
+            db.SaveChanges();
+
+            if (campaign.Testing != null)
             {
-                return HttpNotFound();
-            }
-            try
-            {
-                campaign.AssignedToCustomer = UserId;
+                var testingId = Guid.NewGuid();
+                var copyTesting = new CampaignTesting();
+                db.CampaignsTesting.Add(copyTesting);
+                db.Entry(copyTesting).CurrentValues.SetValues(db.Entry(campaign.Testing).CurrentValues);
+                copyTesting.Id = testingId;
+                copyTesting.CreatedAt = DateTime.Now;
+                copyTesting.CampaignId = copy.Id;
+                copyTesting.OrderNumber = newOrderNumber.ToString();
                 db.SaveChanges();
-                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+
+                copy.TestingId = testingId;
+                db.SaveChanges();
             }
 
-        }
-
-        public ActionResult ViewReport(Guid? id)
-        {
-            if (id == null)
+            if (campaign.Approved != null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                var approvedId = Guid.NewGuid();
+                var copyApproved = new CampaignApproved();
+                db.CampaignsApproved.Add(copyApproved);
+                db.Entry(copyApproved).CurrentValues.SetValues(db.Entry(campaign.Approved).CurrentValues);
+                copyApproved.Id = approvedId;
+                copyApproved.CreatedAt = DateTime.Now;
+                copyApproved.CampaignId = copy.Id;
+                copyApproved.OrderNumber = newOrderNumber.ToString();
+                db.SaveChanges();
+
+                copy.ApprovedId = approvedId;
+                db.SaveChanges();
             }
-            Campaign campaign = db.Campaigns.Include("ProDatas").Include("Copy").FirstOrDefault(x => x.Id == id);
-            if (campaign == null)
-            {
-                return HttpNotFound();
-            }
-            long clicked = 0 , opened = 0;
-            DateTime startDateTime = DateTime.MinValue;
-            string IONumber = "NA";
-            if (campaign.ProDatas.Count > 0)
-            {
-                clicked = campaign.ProDatas.Sum(x => x.ClickCount);
-                startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
-                IONumber = campaign.ProDatas.FirstOrDefault().IO;
-                opened = ADS.API.Models.Campaign.GetOpens(campaign.Copy.Quantity, startDateTime);
-            }
-            var model = new CampaignReportVM()
-            {
-                Id = campaign.Id.ToString(),
-                OrderNumber = campaign.OrderNumber,
-                CampaignName = campaign.CampaignName,
-                OrderDate = campaign.CreatedAt.ToString(),
-                Status = ((CampaignStatusEnum)campaign.Status).ToString(),
-                WhiteLabel = campaign.WhiteLabel,
-                Quantity = campaign.Quantity.ToString(),
-                Clicked = clicked == 0 ? "NA" : clicked.ToString(),
-                Opened = opened == 0 ? "NA" : opened.ToString(),
-
-                IONumber = IONumber,
-                StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
-                EmailsSent = campaign.Quantity.ToString(),
-                OpenedPercentage = campaign.Quantity == 0 ? "NA" : ((opened/ campaign.Quantity)* 100).ToString("0.00%"),
-                ClickedPercentage = campaign.Quantity == 0 ? "NA" : ((clicked / campaign.Quantity) * 100).ToString("0.00%"),
-                CTRPercentage = opened == 0 ? "NA" : ((clicked/opened) * 100).ToString("0.00%"),
-            };
-            model.PerLink = new List<CampaignReportDetailVM>();
-            foreach (var proData in campaign.ProDatas)
-            {
-                model.PerLink.Add(new CampaignReportDetailVM()
-                {
-                    IONumber = proData.IO,
-                    Link = proData.Destination_URL,
-                    QuantityDetail = proData.ClickCount.ToString()
-                });
-            }
-            
-            return View(model);
-        }
-
-        public ActionResult Report()
-        {
-            var reportDatas = new List<CampaignReportDetailVM>();
-            if (Request.Params["id"] != null)
-            {
-                Guid id;
-                try
-                {
-                    Guid.TryParse(Request.Params["id"], out id);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Wrong Input" + ex.Message);
-                }
-
-                Campaign campaign = db.Campaigns.Include("ProDatas").Include("Copy").FirstOrDefault(x => x.Id == id);
-                if (campaign == null)
-                {
-                    return HttpNotFound();
-                }
-
-                long clicked = 0, opened = 0;
-                DateTime startDateTime = DateTime.MinValue;
-                string IONumber = "NA";
-                if (campaign.ProDatas.Count > 0)
-                {
-                    clicked = campaign.ProDatas.Sum(x => x.ClickCount);
-                    startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
-                    IONumber = campaign.ProDatas.FirstOrDefault().IO;
-                    opened = ADS.API.Models.Campaign.GetOpens(campaign.Copy.Quantity, startDateTime);
-                }
-
-                foreach (var proData in campaign.ProDatas)
-                {
-                    reportDatas.Add(new CampaignReportDetailVM()
-                    {
-                        Id = campaign.Id.ToString(),
-                        OrderNumber = campaign.OrderNumber,
-                        CampaignName = campaign.CampaignName,
-                        OrderDate = campaign.CreatedAt.ToString(),
-                        Status = ((CampaignStatusEnum)campaign.Status).ToString(),
-                        WhiteLabel = campaign.WhiteLabel,
-                        Quantity = campaign.Quantity.ToString(),
-                        Clicked = clicked == 0 ? "NA" : clicked.ToString(),
-                        Opened = opened == 0 ? "NA" : opened.ToString(),
-
-                        StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
-                        EmailsSent = campaign.Quantity.ToString(),
-                        OpenedPercentage = ((opened / campaign.Quantity) * 100).ToString("0.00%"),
-                        ClickedPercentage = ((clicked / campaign.Quantity) * 100).ToString("0.00%"),
-                        CTRPercentage = ((clicked / opened) * 100).ToString("0.00%"),
-                        IONumber = IONumber,
-                        Link = proData.Destination_URL,
-                        QuantityDetail = proData.ClickCount.ToString()
-                    });
-                }
-            }
-            var reportModel = new ReportModel
-            {
-                DataSet = reportDatas.ToDataSet(),
-                Parameters = new Dictionary<string, object>()
-            };
-            return View("Report", reportModel);
-        }
-
-        public JsonResult RefreshProData(string OrderNumber)
-        {
-            try
-            {
-                if (OrderNumber == null)
-                {
-                    throw  new Exception("Order Number missing");
-                }
-
-                ProDataHelper.FetchAndUpdate(db, OrderNumber);
-
-                return Json(new JsonResponse() { IsSucess = true });
-            }
-            catch (Exception ex)
-            {
-                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message });
-            }
-
+            TempData["Success"] = "Order : " + campaign.OrderNumber + " has been cloned to Order: " + newOrderNumber + " sucessfully.";
+            return RedirectToAction("Index");
         }
 
         protected override void Dispose(bool disposing)

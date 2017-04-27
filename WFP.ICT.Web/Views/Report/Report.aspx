@@ -16,10 +16,16 @@
                 private void Page_Load(object sender, EventArgs e)
                 {
                     ReportViewer1.ProcessingMode = ProcessingMode.Local;
+                    ReportViewer1.LocalReport.EnableExternalImages = true;
                     ReportViewer1.LocalReport.ReportPath = Server.MapPath("~/Reports/Campaign.rdlc");
                     ReportDataSource datasource = new ReportDataSource("CampaignDataset", Model.DataSet.Tables[0]);
                     ReportViewer1.LocalReport.DataSources.Clear();
                     ReportViewer1.LocalReport.DataSources.Add(datasource);
+
+                    var parametersCollection = new List<ReportParameter>();
+                    parametersCollection.Add(new ReportParameter("pLogoUrl", Model.Parameters["pLogoUrl"].ToString(), false));
+                    ReportViewer1.LocalReport.SetParameters(parametersCollection);
+
                     ReportViewer1.LocalReport.Refresh();
                     ReportViewer1.DataBind();
                 }

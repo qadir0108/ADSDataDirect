@@ -41,12 +41,17 @@ namespace WFP.ICT.Data.Entities
 
         public string FirstName { get; set; }
         public string LastName { get; set; }
-        public string APIKey { get; set; }
-
+        
         public DateTime? LastLogin { get; set; }
 
         public int Status { get; set; } // UserStatusEnum
-        public bool IsLocalUser { get; set; }
+        public int UserType { get; set; } // UserTypeEnum
+
+        public bool IsUsesAPI { get; set; }
+        public string APIKey { get; set; }
+        public bool IsTestsCreatives { get; set; }
+
+        public string CompanyLogo { get; set; }
 
         public DateTime CreatedAt { get; set; }
         public string CreatedByID { get; set; }

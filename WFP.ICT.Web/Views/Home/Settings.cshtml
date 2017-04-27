@@ -1,31 +1,40 @@
-﻿@model WFP.ICT.Web.Models.UserProfileVM
+﻿@using WFP.ICT.Data.Entities
+@using WFP.ICT.Enum
+@model WFP.ICT.Web.Models.UserProfileVM
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var LoggedInUser = Session["user"] as WFPUser;
+    var IsLoggedIn = LoggedInUser != null;
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+
 }
 
-<div class="main-container">
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-push-2">
-                <div class="dashboard-page-head">
-                    <div class="page-header">
-                        <h1>Settings <small></small></h1>
+@using (Html.BeginForm())
+{
+    <div class="main-container">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-push-2">
+                    <div class="dashboard-page-head">
+                        <div class="page-header">
+                            <h1>Settings <small></small>
+                            </h1>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
-    </div>
-    @if (TempData["Success"] != null)
-    {
-        <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
-    }
-    <div class="container">
-        <div class="row">
-            <div class="col-md-8 col-md-push-2 add-listing-dashboard">
-                <div class="row">
-                    <div class="col-md-12 dashboard-form">
-                        <div class="bg-white pinside40 mb30">
-                            <form id="frm" role="form" method="post">
+        @if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+        }
+        <div class="container">
+            <div class="row">
+                <div class="col-md-8 col-md-push-2 add-listing-dashboard">
+                    <div class="row">
+                        <div class="col-md-12 dashboard-form">
+                            <div class="bg-white pinside40 mb30">
 
                                 <div class="form-group has-feedback">
                                     <label class="control-label" for="txtName">API Key</label>
@@ -33,21 +42,43 @@
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-lock"></span>
                                         </div>
-                                        <input type="text" value="@Model.APIKey" class = "form-control input-md" readonly="readonly" />
+                                        <input type="text" value="@Model.APIKey" class="form-control input-md" readonly="readonly"/>
                                         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                     </div>
                                 </div>
-                                
+
                                 <div class="form-group has-feedback">
                                     <label class="control-label" for="txtName">Email<span class="required">*</span></label>
                                     <div class="input-group">
                                         <div class="input-group-addon">
                                             <span class="glyphicon glyphicon-user"></span>
                                         </div>
-                                        @Html.TextBoxFor(m => m.Email, new { @placeholder = "Email", @class = "form-control input-md", @required = "required" })
+                                        @Html.TextBoxFor(m => m.Email, new {@placeholder = "Email", @class = "form-control input-md", @required = "required"})
                                         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                     </div>
                                 </div>
+                                <div class="form-group">
+                                    <label class="control-label" for="txtName">Company Logo<span class="required">*</span></label>
+                                    <div class="col-md-12 no-left-padding no-right-padding">
+                                        @Html.EditorFor(model => model.CompanyLogo, new {htmlAttributes = new {@class = "form-control"}})
+                                        @Html.Partial("_UploadFile", "CompanyLogo")
+                                    </div>
+                                </div>
+                                @*<div class="form-group">
+                                    <label class="control-label" for="txtName">Is Uses API<span class="required">*</span></label>
+                                    <div class="input-group">
+                                        <div class="">
+                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsTestsCreatives, "True")Yes
+                                                </label>
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsTestsCreatives, "False")No
+                                                </label>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>*@
                                 <div class="row">
                                     <div class="col-md-12">
                                         <div class="form-group">
@@ -57,11 +88,21 @@
                                         </div>
                                     </div>
                                 </div>
-                            </form>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
+}
+<script type="text/javascript">
+
+            var wfp = wfp || {};
+
+            $(function () {
+
+                $('#CompanyLogo').prop('readonly', "readonly");
+
+            });
+</script>

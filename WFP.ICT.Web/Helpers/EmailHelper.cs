@@ -52,11 +52,11 @@ namespace WFP.ICT.Web.Helpers
 
         public static async Task SendApprovedToVendor(Vendor vendor, Campaign campaign)
         {
-            string newOld = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? "New" : "RDP";
-            string orderNumber = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? campaign.OrderNumber : campaign.ReBroadcastOrderNumber;
-            string deployDate = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? campaign.BroadcastDate.Value.ToString("d") : campaign.ReBroadcastDate.Value.ToString("d");
-            string deployTime = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? campaign.BroadcastDate.Value.ToString("hh:mm") : campaign.ReBroadcastDate.Value.ToString("hh:mm");
-            string quantity = string.IsNullOrEmpty(campaign.ReBroadcastOrderNumber) ? campaign.Quantity.ToString() : campaign.ReBroadQuantity.ToString();
+            string newOld = !campaign.RebroadId.HasValue ? "New" : "RDP";
+            string orderNumber = campaign.OrderNumber;
+            string deployDate = campaign.Approved.DeployDate.Value.ToString("d");
+            string deployTime = campaign.Approved.DeployDate.Value.ToString("hh:mm");
+            string quantity = campaign.Approved.Quantity.ToString();
 
             string subject = string.Format("{0} Order {1}, Order # {2}",
                                     newOld, campaign.CampaignName, campaign.OrderNumber);
@@ -85,23 +85,31 @@ namespace WFP.ICT.Web.Helpers
                                         <tr><th>ReportSite Link:</th><td>{19}</td></tr>
                                         <tr><th>Link Breakout:</th><td>{20}</td></tr>
                                         </table></p> <p></p> {21}"
-                                      , vendor.Name, campaign.ReferenceNumber, orderNumber, campaign.CampaignName
-                                      , campaign.ReBroadCast ? "Yes" : "No", campaign.BroadcastDate.Value.ToString("d")
-                                      , campaign.FromLine, campaign.SubjectLine, campaign.OptOut, campaign.WhiteLabel
-                                      , campaign.IsPersonalization ? "Yes" : "No", campaign.CreativeURL, quantity
-                                      , campaign.GeoDetails, campaign.Demographics, campaign.ZipURL
-                                      , campaign.SpecialInstructions, deployDate, deployTime
-                                      , campaign.ReportSiteLink, campaign.LinkBreakout
+                                      , vendor.Name, campaign.Approved.ReferenceNumber, orderNumber, campaign.Approved.CampaignName
+                                      , campaign.Approved.ReBroadCast ? "Yes" : "No", campaign.Approved.DeployDate.Value.ToString("d")
+                                      , campaign.Approved.FromLine, campaign.Approved.SubjectLine, campaign.OptOut, campaign.Approved.WhiteLabel
+                                      , campaign.IsPersonalization ? "Yes" : "No", campaign.Approved.CreativeURL, quantity
+                                      , campaign.Approved.GeoDetails, campaign.Approved.Demographics, campaign.Approved.ZipURL
+                                      , campaign.Approved.SpecialInstructions, deployDate, deployTime
+                                      , campaign.Approved.ReportSiteLink, campaign.Approved.LinkBreakout
                                       , Footer);
-            await SendEmail(vendor.Email, subject, body);
+            await SendEmail(vendor.Email, subject, body, vendor.CCEmails);
         }
 
-        public static async Task SendEmail(string to, string subject, string body, List<string> attachments = null)
+        public static async Task SendEmail(string to, string subject, string body, string ccEmails = "", List < string> attachments = null)
         {
             using (var smtpClient = new SmtpClient())
             {
                 MailMessage msg = new MailMessage();
                 msg.To.Add(new MailAddress(to));
+                if (!string.IsNullOrEmpty(ccEmails))
+                {
+                    foreach (var ccEmail in ccEmails.Split(",".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        msg.CC.Add(ccEmail);
+                    }
+                }
+                    
                 msg.Subject = subject;
                 msg.IsBodyHtml = true;
                 msg.Body = body;

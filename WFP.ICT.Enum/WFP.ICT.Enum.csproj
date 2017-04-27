@@ -44,8 +44,10 @@
     <Compile Include="EnumHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectItemPair.cs" />
+    <Compile Include="StringConstants.cs" />
     <Compile Include="TestingUrgencyEnum.cs" />
     <Compile Include="TextValuePair.cs" />
+    <Compile Include="UserTypeEnum.cs" />
     <Compile Include="UserStatusEnum.cs" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

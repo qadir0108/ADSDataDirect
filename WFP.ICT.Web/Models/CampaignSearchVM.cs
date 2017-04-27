@@ -12,5 +12,8 @@
         public string IsTested { get; set; }
         public string dateFrom { get; set; }
         public string dateTo { get; set; }
+
+        public string Status { get; set; }
+        public string clearSessionId { get; set; }
     }
 }

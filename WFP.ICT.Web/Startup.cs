@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
-using Nelibur.ObjectMapper;
 using Owin;
 using System;
 using System.Globalization;

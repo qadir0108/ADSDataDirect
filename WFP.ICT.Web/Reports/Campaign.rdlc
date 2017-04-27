@@ -911,8 +911,8 @@
       <PrintOnLastPage>true</PrintOnLastPage>
       <ReportItems>
         <Image Name="Image1">
-          <Source>Embedded</Source>
-          <Value>img</Value>
+          <Source>External</Source>
+          <Value>=Parameters!pLogoUrl.Value</Value>
           <Sizing>FitProportional</Sizing>
           <Left>0.00868in</Left>
           <Height>1.00569in</Height>
@@ -1133,6 +1133,13 @@
       </rd:DataSetInfo>
     </DataSet>
   </DataSets>
+  <ReportParameters>
+    <ReportParameter Name="pLogoUrl">
+      <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+  </ReportParameters>
   <EmbeddedImages>
     <EmbeddedImage Name="img">
       <MIMEType>image/png</MIMEType>

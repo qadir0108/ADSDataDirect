@@ -30,7 +30,8 @@ namespace WFP.ICT.Web.Controllers
 
         public void SetupLoggedInUser(string UserName)
         {
-            Session["user"] = CurrentContextFromOwin.Users.Include(u => u.Roles).FirstOrDefault(x => x.UserName == UserName);
+            var user = CurrentContextFromOwin.Users.Include(u => u.Roles).FirstOrDefault(x => x.UserName == UserName);
+            Session["user"] = user;
         }
 
         public WFPUser LoggedInUser
@@ -41,16 +42,11 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        static WFPUser _userICT;
-        public WFPUser UserICT
+        public bool IsAdmin
         {
             get
             {
-                if (_userICT == null)
-                {
-                    _userICT = CurrentContextFromOwin.Users.FirstOrDefault(x => x.UserName.Equals("ictpak"));
-                }
-                return _userICT;
+                return LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
             }
         }
 

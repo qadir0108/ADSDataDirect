@@ -15,7 +15,9 @@ namespace WFP.ICT.Data.Entities
         public string CompanyName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-
+        public string APIKey { get; set; }
+        public string CCEmails { get; set; }
+        
         public Vendor()
         {
         }

@@ -4,9 +4,11 @@ using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
@@ -204,21 +206,26 @@ namespace WFP.ICT.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new WFPUser { UserName = model.UserName, Email = model.Email };
-                var result = await UserManager.CreateAsync(user, model.Password);
-                if (result.Succeeded)
+                //var user = new WFPUser { UserName = model.UserName, Email = model.Email };
+                //var UserManager = new UserManager<Data.Entities.WFPUser>(new UserStore<Data.Entities.WFPUser>(context));
+
+                var appUser = new WFPUser
                 {
-                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-
-                    // For more information on how to enable account confirmation and password reset please visit http://go.microsoft.com/fwlink/?LinkID=320771
-                    // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    return RedirectToAction("Index", "Home");
+                    Id = Guid.NewGuid().ToString(),
+                    CreatedAt = DateTime.Now,
+                    UserName = model.UserName,
+                    Email = model.Email,
+                    Status = (int)UserStatusEnum.Active,
+                    UserType = model.IsAdminUser ? (int)UserTypeEnum.Admin: (int)UserTypeEnum.User,
+                    IsUsesAPI = model.IsUsesAPI,
+                    IsTestsCreatives = model.IsTestsCreatives
+                };
+                var result = UserManager.CreateAsync(appUser, model.Password);
+                if (result.Result == IdentityResult.Success)
+                {
+                    return RedirectToAction("Users", "Home");
                 }
-                AddErrors(result);
+                AddErrors(result.Result);
             }
 
             // If we got this far, something failed, redisplay form

@@ -16,7 +16,6 @@
     var columnSortParams2 = new { sortOrder = ViewBag.BroadcastDateSortParm };
     var columnSortParams3 = new { sortOrder = ViewBag.RepresentativeNameSortParm };
     var columnSortParams4 = new { sortOrder = ViewBag.RepresentativeEmailSortParm };
-    var columnSortParams5 = new { sortOrder = ViewBag.ReferenceNumberSortParm };
     var columnSortParams6 = new { sortOrder = ViewBag.OrderNumberSortParm };
 
 }
@@ -52,6 +51,9 @@
         <table class="table">
             <tr>
                 <th>
+                    Order Number
+                </th>
+                <th>
                     ReBroadcast Order Number
                 </th>
                 <th>
@@ -73,6 +75,9 @@
             {
                 <tr>
                     <td>
+                        @Html.DisplayFor(modelItem => item.OrderNumber)
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.ReBroadcastOrderNumber)
                     </td>
                     <td>
@@ -88,7 +93,7 @@
                         @Html.DisplayFor(modelItem => item.ReBroadQuantity)
                     </td>
                     <td>
-                        @Html.ActionLink("Edit", "Edit", "Copy", new { id = item.Id, from = "Rebroadcast" }, null)
+                        @Html.ActionLink("Edit", "Edit", "Copy", new {id = item.Id, from = "Rebroadcast"}, null)
                     </td>
                 </tr>
             }

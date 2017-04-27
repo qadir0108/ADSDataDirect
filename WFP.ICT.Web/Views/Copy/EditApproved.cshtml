@@ -1,0 +1,238 @@
+﻿@model WFP.ICT.Data.Entities.CampaignApproved
+
+@{
+    Html.RenderPartial("_HeaderCopy");
+}
+
+@using (Html.BeginForm("EditApproved", "Copy"))
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+
+    <div class="form-horizontal">
+        <br />
+        @if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
+        }
+        <div class="row">
+            <div class="col-md-6">
+
+                <div class="headertab">
+                    Campaign Approved - Details
+                </div>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.Id)
+                @Html.HiddenFor(model => model.CampaignId)
+                @Html.HiddenFor(model => model.CreatedAt)
+                @Html.HiddenFor(model => model.CreatedBy)
+                @Html.HiddenFor(model => model.OrderNumber)
+                @Html.HiddenFor(model => model.ReBroadcastDate)
+                @Html.HiddenFor(model => model.HtmlImageFiles)
+
+                <div class="form-group">
+                    <label class="control-label col-md-2 pre">Campaign Name</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CampaignName, new {htmlAttributes = new {@class = "form-control"}})
+                        @Html.ValidationMessageFor(model => model.CampaignName, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.WhiteLabel, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.WhiteLabel, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReBroadCast, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="">
+                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                <label class="btn btn-primary">
+                                    @Html.RadioButtonFor(model => model.ReBroadCast, "True")Yes
+                                </label>
+                                <label class="btn btn-primary">
+                                    @Html.RadioButtonFor(model => model.ReBroadCast, "False")No
+                                </label>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.ReBroadCast, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FromLine, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.FromLine, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.FromLine, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.SubjectLine, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.SubjectLine, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.SubjectLine, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.CreativeURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.CreativeURL, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.CreativeURL, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2 pre">Deploy Date Time</label>
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.DeployDate, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DeployDate, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+            <div class="col-md-6">
+
+                <div class="headertab">
+                    Campaign Approved - Demographics Details
+                </div><hr />
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ZipURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ZipURL, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ZipURL, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.GeoDetails, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.GeoDetails, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.GeoDetails, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Demographics, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Demographics, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Demographics, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label class="control-label col-md-2 pre">Special Instructions</label>
+                    <div class="col-md-10">
+                        @Html.TextAreaFor(model => model.SpecialInstructions, new {@class = "form-control", rows = "6", cols = "10"})
+                        @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new {@class = "text-danger"})
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.LinkBreakout, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.LinkBreakout, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.LinkBreakout, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ReportSiteLink, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        @Html.EditorFor(model => model.ReportSiteLink, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ReportSiteLink, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <br />
+
+                <div class="row">
+                    <div class="col-md-offset-8 col-md-2">
+                        <div class="form-group">
+                            <input type="submit" value="Save" class="btn btn-default" />
+                        </div>
+                    </div>
+                    <div class="col-md-2">
+                        <div class="form-group">
+                            <a href="#" class="btn btn-default" id="btnSendToVendor" data-tooltip="tooltip" title="Send to Vendor"><span class="glyphicon glyphicon-envelope"></span></a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+}
+
+<script type="text/javascript">
+
+        var wfp = wfp || {};
+
+        $(function () {
+
+            $('#DeployDate').datetimepicker({
+                format: 'M/DD/YYYY hh:mm:ss A'
+            });
+
+            $("input[name='ReBroadCast']:checked").closest("label.btn").addClass("active");
+
+            $('#btnSendToVendor').click(function (e) {
+                debugger;
+                e.preventDefault();
+                var dataToPost = {
+                    Id: $('#CampaignId').val()
+                };
+
+                wfp.showSwal("Are you sure to send to vendor?",
+               function () {
+
+                   debugger;
+                   $.ajax({
+                       type: "POST",
+                       url: "/Copy/SendToVendor",
+                       data: JSON.stringify(dataToPost),
+                       contentType: "application/json; charset=utf-8",
+                       success: function (response) {
+                           debugger;
+                           if (response === "") wfp.reload();
+                           if (response.IsSucess) {
+                               wfp.showSuccess('Approved order has been sent to vendor successfully.');
+                               wfp.redirectTo();
+                           } else {
+                               wfp.showError(response.ErrorMessage);
+                           }
+                       },
+                       failure: function (response) {
+                           wfp.showError('There is erorr in service call.');
+                       },
+                       complete: function () {
+                       }
+                   });
+               });
+
+            });
+
+        });
+    </script>
+

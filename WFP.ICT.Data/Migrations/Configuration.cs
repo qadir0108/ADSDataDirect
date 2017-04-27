@@ -34,7 +34,8 @@ namespace WFP.ICT.Data.Migrations
                 CreatedAt = DateTime.Now,
                 UserName = "josh.silver",
                 Email = "josh.silver@adsdatadirect.com",
-                Status = (int)UserStatusEnum.Active
+                Status = (int)UserStatusEnum.Active,
+                UserType = (int)UserTypeEnum.Admin
             };
             var result = UserManager.CreateAsync(appUser, "P@kistan1");
             if (result.Result == IdentityResult.Success)
@@ -47,7 +48,8 @@ namespace WFP.ICT.Data.Migrations
                 CreatedAt = DateTime.Now,
                 UserName = "test.user",
                 Email = "qadir0108@gmail.com",
-                Status = (int)UserStatusEnum.Active
+                Status = (int)UserStatusEnum.Active,
+                UserType = (int)UserTypeEnum.User
             };
             result = UserManager.CreateAsync(appUser, "P@kistan1");
             if (result.Result == IdentityResult.Success)
@@ -93,8 +95,7 @@ namespace WFP.ICT.Data.Migrations
                     OptOut = "MM",
                     SpecialInstructions = "Hello, this is special instructions, please do it quickly",
                     
-                    OrderNumber = "2500",
-                    ReferenceNumber = 8662551
+                    OrderNumber = "2500"
                 }
             };
             foreach (var campaign in campaigns)
@@ -108,11 +109,13 @@ namespace WFP.ICT.Data.Migrations
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
                 Email = "qadir0108@gmail.com",
+                CCEmails = @"jkorkin@prodata.media,josh.silver@adsdatdirect.com,jkorkin@safedatatech.onmicrosoft.com,eric@adsdatadirect.com,john.benuck@amelioratedata.com",
                 Name = "Vendor",
                 CompanyName = "Vendor Company"
             };
             context.Vendors.Add(vendor);
             context.SaveChanges();
+            
         }
     }
 }

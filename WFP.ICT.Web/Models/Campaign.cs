@@ -59,11 +59,11 @@ namespace ADS.API.Models
             {
                 clicked = campaign.ProDatas.Sum(x => x.ClickCount);
                 startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
-                opened = GetOpens(campaign.Copy.Quantity, startDateTime);
+                opened = GetOpens(campaign.Testing.Quantity, startDateTime);
             }
             var model = new ADS.API.Models.Campaign()
             {
-                CampaignName = campaign.Copy.CampaignName,
+                CampaignName = campaign.Testing.CampaignName,
                 EmailsClicked = clicked == 0 ? "NA" : clicked.ToString(),
                 EmailsOpened = opened == 0 ? "NA" : opened.ToString(),
                 IONumber = campaign.ProDatas.FirstOrDefault().IO,

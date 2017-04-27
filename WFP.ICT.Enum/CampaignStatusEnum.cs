@@ -11,7 +11,9 @@ namespace ADSDataDirect.Enums
         Rebroadcasted,
         Testing,
         Approved,
+        Traffic,
         Tracking,
-        Completed
+        Completed,
+        Cancelled
     }
 }

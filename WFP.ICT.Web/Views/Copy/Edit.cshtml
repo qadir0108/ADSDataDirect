@@ -1,268 +1,34 @@
-﻿@model WFP.ICT.Data.Entities.Campaign
+﻿@using WFP.ICT.Web.Helpers
+@model WFP.ICT.Data.Entities.Campaign
 
 @{
     ViewBag.Title = "Edit";
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-@using (Html.BeginForm())
-{
-    @Html.AntiForgeryToken()
-
-    <div class="container">
+<div class="container">
         <ul class="nav nav-tabs">
             <li class="nav active"><a href="#divTesting" data-toggle="tab" id="tabTesting">Testing</a></li>
             <li class="nav"><a href="#divApproved" data-toggle="tab" id="tabApproved">Approved</a></li>
             <li class="nav"><a href="#divTracking" data-toggle="tab" id="tabTracking">Tracking</a></li>
-            @if (Session["from"].ToString() == "ReBroadcast")
-            {
-                <li class="nav"><a href="#divRebroadcast" data-toggle="tab" id="tabRebroadcast">ReBroadcast</a></li>
-            }
+            <li class="nav"><a href="#divRebroadcast" data-toggle="tab" id="tabRebroadcast">ReBroadcast</a></li>
         </ul>
 
         <!-- Tab panes -->
         <div class="tab-content">
             <div class="tab-pane fade in active" id="divTesting">
                 
-                <br/>
-                <h2>Edit Testing</h2>
-
-                <div class="form-horizontal">
-                   
-                    <div class="headertab">
-                        Campaign Testing
-                    </div>
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.Id)
-                    @Html.HiddenFor(model => model.ParentId)
-                    @Html.HiddenFor(model => model.ReBroadcastOrderNumber)
-                    @Html.HiddenFor(model => model.CreatedAt)
-                    @Html.HiddenFor(model => model.CreatedBy)
-                    @Html.HiddenFor(model => model.Status)
-                    @Html.HiddenFor(model => model.ReferenceNumber)
-                    @Html.HiddenFor(model => model.OrderNumber)
-                    @Html.HiddenFor(model => model.RepresentativeName)
-                    @Html.HiddenFor(model => model.RepresentativeEmail)
-                    @Html.HiddenFor(model => model.ReBroadCast)
-                    @Html.HiddenFor(model => model.Price)
-                    
-                    @Html.HiddenFor(model => model.IsSuppression)
-                    @Html.HiddenFor(model => model.SuppressionFile)
-                    @Html.HiddenFor(model => model.IsPersonalization)
-                    @Html.HiddenFor(model => model.OptOut)
-                    @Html.HiddenFor(model => model.AssignedToCustomer)
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CampaignName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.CampaignName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.CampaignName, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.WhiteLabel, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.WhiteLabel, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.FromLine, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.FromLine, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.FromLine, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.SubjectLine, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.SubjectLine, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.SubjectLine, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.HtmlImageFiles, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.HtmlImageFiles, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "HtmlImageFiles")
-                            @Html.ValidationMessageFor(model => model.HtmlImageFiles, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CreativeURL, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.CreativeURL, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.CreativeURL, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TestSeedList, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.TestSeedList, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "TestSeedList")
-                            @Html.ValidationMessageFor(model => model.TestSeedList, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.FinalSeedList, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.FinalSeedList, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "FinalSeedList")
-                            @Html.ValidationMessageFor(model => model.FinalSeedList, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.IsTested, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            <div class="">
-                                <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsTested, "True")Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsTested, "False")No
-                                    </label>
-                                </div>
-                                @*@Html.EditorFor(model => model.IsPersonalization)*@
-                                @Html.ValidationMessageFor(model => model.IsTested, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TestingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.TestingTime, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.TestingTime, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TestingUrgency, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @*@Html.EditorFor(model => model.TestingUrgency, new { htmlAttributes = new { @class = "form-control" } })*@
-                            @Html.DropDownList("TestingUrgency", null, htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TestingUrgency, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">DeployDateTime</label>
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.BroadcastDate, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.BroadcastDate, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <hr />
-                    <div class="headertab">
-                        Campaign Demographics
-                    </div><hr />
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ZipCodeFile, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ZipCodeFile, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "ZipCodeFile")
-                            @Html.ValidationMessageFor(model => model.ZipCodeFile, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ZipURL, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ZipURL, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ZipURL, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.GeoDetails, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.GeoDetails, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.GeoDetails, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Demographics, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Demographics, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Demographics, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.SpecialInstructions, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.TextAreaFor(model => model.SpecialInstructions, new { @class = "form-control", rows = "6", cols = "10" })
-                            @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                </div>
-
+                    @Html.PartialFor(m => Model.Testing);
+                
             </div>
            
             <div class="tab-pane fade" id="divApproved">
             
                 <div class="form-horizontal">
-                    <br />
-                    <h2>Edit Approved</h2>
-                    <hr />
-
                     <div class="headertab">
                         Campaign Approved
                     </div><hr />
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CampaignName, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.CampaignName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.CampaignName, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.IsMatchback, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            <div class="">
-                                <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsMatchback, "True")Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsMatchback, "False")No
-                                    </label>
-                                </div>
-                                @*@Html.EditorFor(model => model.IsPersonalization)*@
-                                @Html.ValidationMessageFor(model => model.IsMatchback, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-                
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.LinkBreakout, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.LinkBreakout, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.LinkBreakout, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
+                    
                 </div>
             </div>
         
@@ -276,21 +42,7 @@
                     Campaign Approved
                 </div><hr />
                 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.ReportSiteLink, htmlAttributes: new {@class = "control-label col-md-2"})
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.ReportSiteLink, new {htmlAttributes = new {@class = "form-control"}})
-                        @Html.ValidationMessageFor(model => model.ReportSiteLink, "", new {@class = "text-danger"})
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.IONumber, htmlAttributes: new {@class = "control-label col-md-2"})
-                    <div class="col-md-10">
-                        @Html.EditorFor(model => model.IONumber, new {htmlAttributes = new {@class = "form-control"}})
-                        @Html.ValidationMessageFor(model => model.IONumber, "", new {@class = "text-danger"})
-                    </div>
-                </div>
+               
             </div>
                 
 
@@ -306,36 +58,13 @@
                         Campaign Rebroadcast
                     </div><hr />
 
-                    <div class="form-group">
-                        <label class="control-label col-md-2">ReBroadcast Deploy DateTime</label>
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ReBroadcastDate, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.ReBroadcastDate, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ReBroadQuantity, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ReBroadQuantity, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ReBroadQuantity, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
                 </div>
 
 
             </div>
         </div>
    
-        <div class="form-group">
-            <div class="col-md-offset-2 col-md-10">
-                <input type="submit" value="Save" class="btn btn-default" />
-            </div>
-        </div>
-
     </div>
-}
 
 <script type="text/javascript">
 

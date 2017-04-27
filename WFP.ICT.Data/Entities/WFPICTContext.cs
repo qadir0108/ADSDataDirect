@@ -22,14 +22,13 @@ namespace WFP.ICT.Data.Entities
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             // The rest should not be needed - it should be done by conventions
-            //modelBuilder.Entity<StationeryRequest>()
-            //            .HasMany(s => s.RequestedItems)
-            //            .WithRequired(si => si.Request)
-            //            .HasForeignKey(si => si.StationeryRequestID);
-            //modelBuilder.Entity<StationeryItem>()
-            //            .HasMany(s => s.Requests)
-            //            .WithRequired(si => si.Item)
-            //            .HasForeignKey(si => si.StationeryItemID);
+            //modelBuilder.Entity<Campaign>()
+            //    .HasOptional(s => s.Testing)
+            //    .WithRequired(si => si.Campaign);
+
+            //modelBuilder.Entity<Campaign>()
+            //    .HasOptional(s => s.Approved)
+            //    .WithRequired(si => si.Campaign);
 
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
@@ -39,6 +38,9 @@ namespace WFP.ICT.Data.Entities
         public DbSet<AspNetRoleClaims> RoleClaims { get; set; }
 
         public DbSet<Campaign> Campaigns { get; set; }
+        public DbSet<CampaignTesting> CampaignsTesting { get; set; }
+        public DbSet<CampaignApproved> CampaignsApproved { get; set; }
+        public DbSet<ProDataAPILog> ProDataAPILogs { get; set; }
         public DbSet<ProData> ProDatas { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
 

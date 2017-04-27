@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.IO;
 using System.Linq;
 using System.Net.Http;
-using System.Threading.Tasks;
-using System.Web;
-using ADSDataDirect.Enums;
 using Newtonsoft.Json;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Web.Models;
@@ -47,10 +43,25 @@ namespace WFP.ICT.Web.Helpers
             }
             
         }
-        
+
+        private static void AddLog(WFPICTContext db, string OrderNumber, string Message)
+        {
+            db.ProDataAPILogs.Add(new ProDataAPILog()
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
+                OrderNumber = OrderNumber,
+                Message = Message
+            });
+            db.SaveChanges();
+        }
+
         public static void FetchAndUpdate(WFPICTContext db, string OrderNumber)
         {
-            var campagin = db.Campaigns.FirstOrDefault(x => x.OrderNumber == OrderNumber && x.ParentId == null);
+            AddLog(db, OrderNumber, string.Format("Order Number:{0}, Starting refresh at {1} ", OrderNumber, DateTime.Now));
+            AddLog(db, OrderNumber, string.Format("Order Number:{0}, Deleting Old ProData ", OrderNumber));
+
+            var campagin = db.Campaigns.FirstOrDefault(x => x.OrderNumber == OrderNumber);
             var proDatas = db.ProDatas.Where(x => x.CampaignId == campagin.Id);
             foreach (var proData in proDatas)
             {
@@ -58,7 +69,9 @@ namespace WFP.ICT.Web.Helpers
             }
             db.SaveChanges();
 
-            foreach (var report in Fetch(OrderNumber).reports.report)
+            var reports = Fetch(OrderNumber).reports.report;
+            AddLog(db, OrderNumber, string.Format("Order Number:{0}, {1} records fetched from ProData ", OrderNumber, reports.Length));
+            foreach (var report in reports)
             {
                 db.ProDatas.Add(new ProData()
                 {
@@ -77,6 +90,7 @@ namespace WFP.ICT.Web.Helpers
                 });
             }
             db.SaveChanges();
+            AddLog(db, OrderNumber, string.Format("Order Number:{0}, Refresh completed successfully at {1} ", OrderNumber, DateTime.Now));
         }
     }
 }

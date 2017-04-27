@@ -48,30 +48,55 @@ namespace WFP.ICT.Data.Migrations
                         WhiteLabel = c.String(),
                         OptOut = c.String(),
                         SpecialInstructions = c.String(),
-                        ReferenceNumber = c.Long(nullable: false),
-                        OrderNumber = c.String(),
-                        AssignedToCustomer = c.String(),
-                        IsTested = c.Boolean(nullable: false),
-                        TestingTime = c.DateTime(),
-                        CreativeURL = c.String(),
-                        ZipURL = c.String(),
-                        LinkBreakout = c.String(),
-                        ReportSiteLink = c.String(),
-                        IONumber = c.String(),
-                        ParentId = c.Guid(),
-                        ReBroadcastOrderNumber = c.String(),
-                        ReBroadQuantity = c.Long(nullable: false),
                         IP = c.String(),
                         Browser = c.String(),
                         OS = c.String(),
                         Referrer = c.String(),
+                        OrderNumber = c.String(),
+                        AssignedToCustomer = c.String(),
+                        IONumber = c.String(),
+                        RebroadId = c.Guid(),
+                        TestingId = c.Guid(),
+                        ApprovedId = c.Guid(),
                         CreatedAt = c.DateTime(nullable: false),
                         CreatedBy = c.String(),
-                        Copy_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.Campaign", t => t.Copy_Id)
-                .Index(t => t.Copy_Id);
+                .ForeignKey("dbo.CampaignApproved", t => t.ApprovedId)
+                .ForeignKey("dbo.Campaign", t => t.RebroadId)
+                .ForeignKey("dbo.CampaignTesting", t => t.TestingId)
+                .Index(t => t.RebroadId)
+                .Index(t => t.TestingId)
+                .Index(t => t.ApprovedId);
+            
+            CreateTable(
+                "dbo.CampaignApproved",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        CampaignId = c.Guid(),
+                        ReferenceNumber = c.Long(nullable: false),
+                        OrderNumber = c.String(),
+                        CampaignName = c.String(),
+                        WhiteLabel = c.String(),
+                        ReBroadCast = c.Boolean(nullable: false),
+                        ReBroadcastDate = c.DateTime(),
+                        FromLine = c.String(),
+                        SubjectLine = c.String(),
+                        HtmlImageFiles = c.String(),
+                        CreativeURL = c.String(),
+                        DeployDate = c.DateTime(),
+                        ZipURL = c.String(),
+                        GeoDetails = c.String(),
+                        Demographics = c.String(),
+                        Quantity = c.Long(nullable: false),
+                        SpecialInstructions = c.String(),
+                        LinkBreakout = c.String(),
+                        ReportSiteLink = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                        CreatedBy = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.ProData",
@@ -94,6 +119,38 @@ namespace WFP.ICT.Data.Migrations
                 .PrimaryKey(t => t.Id)
                 .ForeignKey("dbo.Campaign", t => t.CampaignId)
                 .Index(t => t.CampaignId);
+            
+            CreateTable(
+                "dbo.CampaignTesting",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        CampaignId = c.Guid(),
+                        OrderNumber = c.String(),
+                        CampaignName = c.String(),
+                        WhiteLabel = c.String(),
+                        ReBroadCast = c.Boolean(nullable: false),
+                        ReBroadcastDate = c.DateTime(),
+                        FromLine = c.String(),
+                        SubjectLine = c.String(),
+                        HtmlImageFiles = c.String(),
+                        CreativeURL = c.String(),
+                        TestSeedList = c.String(),
+                        FinalSeedList = c.String(),
+                        IsTested = c.Boolean(nullable: false),
+                        TestingTime = c.DateTime(),
+                        TestingUrgency = c.Int(nullable: false),
+                        DeployDate = c.DateTime(),
+                        ZipCodeFile = c.String(),
+                        ZipURL = c.String(),
+                        GeoDetails = c.String(),
+                        Demographics = c.String(),
+                        Quantity = c.Long(nullable: false),
+                        SpecialInstructions = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                        CreatedBy = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
             
             CreateTable(
                 "dbo.AspNetClaims",
@@ -151,6 +208,30 @@ namespace WFP.ICT.Data.Migrations
                 .Index(t => t.RoleId);
             
             CreateTable(
+                "dbo.ProDataAPILog",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        OrderNumber = c.String(),
+                        Message = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                        CreatedBy = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
+                "dbo.Settings",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        Key = c.String(),
+                        Value = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                        CreatedBy = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
+            CreateTable(
                 "dbo.AspNetUsers",
                 c => new
                     {
@@ -160,7 +241,7 @@ namespace WFP.ICT.Data.Migrations
                         APIKey = c.String(),
                         LastLogin = c.DateTime(),
                         Status = c.Int(nullable: false),
-                        IsLocalUser = c.Boolean(nullable: false),
+                        UserType = c.Int(nullable: false),
                         CreatedAt = c.DateTime(nullable: false),
                         CreatedByID = c.String(maxLength: 128),
                         Email = c.String(maxLength: 256),
@@ -214,6 +295,8 @@ namespace WFP.ICT.Data.Migrations
                         CompanyName = c.String(),
                         Email = c.String(),
                         Phone = c.String(),
+                        IsUsesAPI = c.Boolean(nullable: false),
+                        APIKey = c.String(),
                         CreatedAt = c.DateTime(nullable: false),
                         CreatedBy = c.String(),
                     })
@@ -230,8 +313,10 @@ namespace WFP.ICT.Data.Migrations
             DropForeignKey("dbo.AspNetUserRoles", "RoleId", "dbo.AspNetRoles");
             DropForeignKey("dbo.AspNetRoleClaims", "RoleID", "dbo.AspNetRoles");
             DropForeignKey("dbo.AspNetRoleClaims", "ClaimID", "dbo.AspNetClaims");
+            DropForeignKey("dbo.Campaign", "TestingId", "dbo.CampaignTesting");
+            DropForeignKey("dbo.Campaign", "RebroadId", "dbo.Campaign");
             DropForeignKey("dbo.ProData", "CampaignId", "dbo.Campaign");
-            DropForeignKey("dbo.Campaign", "Copy_Id", "dbo.Campaign");
+            DropForeignKey("dbo.Campaign", "ApprovedId", "dbo.CampaignApproved");
             DropIndex("dbo.AspNetUserLogins", new[] { "UserId" });
             DropIndex("dbo.AspNetUserClaims", new[] { "UserId" });
             DropIndex("dbo.AspNetUsers", "UserNameIndex");
@@ -242,16 +327,22 @@ namespace WFP.ICT.Data.Migrations
             DropIndex("dbo.AspNetRoleClaims", new[] { "RoleID" });
             DropIndex("dbo.AspNetRoleClaims", new[] { "ClaimID" });
             DropIndex("dbo.ProData", new[] { "CampaignId" });
-            DropIndex("dbo.Campaign", new[] { "Copy_Id" });
+            DropIndex("dbo.Campaign", new[] { "ApprovedId" });
+            DropIndex("dbo.Campaign", new[] { "TestingId" });
+            DropIndex("dbo.Campaign", new[] { "RebroadId" });
             DropTable("dbo.Vendor");
             DropTable("dbo.AspNetUserLogins");
             DropTable("dbo.AspNetUserClaims");
             DropTable("dbo.AspNetUsers");
+            DropTable("dbo.Settings");
+            DropTable("dbo.ProDataAPILog");
             DropTable("dbo.AspNetUserRoles");
             DropTable("dbo.AspNetRoles");
             DropTable("dbo.AspNetRoleClaims");
             DropTable("dbo.AspNetClaims");
+            DropTable("dbo.CampaignTesting");
             DropTable("dbo.ProData");
+            DropTable("dbo.CampaignApproved");
             DropTable("dbo.Campaign");
             DropTable("dbo.APIRequest");
         }

@@ -69,6 +69,18 @@ namespace WFP.ICT.Web.Models
         public string UserName { get; set; }
 
         [Required]
+        [Display(Name = "Is Admin User")]
+        public bool IsAdminUser { get; set; }
+
+        [Required]
+        [Display(Name = "Is Uses API")]
+        public bool IsUsesAPI { get; set; }
+
+        [Required]
+        [Display(Name = "Is able to test Creative")]
+        public bool IsTestsCreatives { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }

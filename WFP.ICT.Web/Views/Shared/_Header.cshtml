@@ -1,7 +1,14 @@
 ﻿@using System.Linq;
 @using System.Security.Claims;
+@using WFP.ICT.Data.Entities
+@using WFP.ICT.Enum
+@{
+    var LoggedInUser = Session["user"] as WFPUser;
+    var IsLoggedIn = LoggedInUser != null;
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+}
 
-<div class="header print-hide">
+<div class="header">
 	<div class="container">
 		<div class="row">
 			<div class="col-md-2">
@@ -17,7 +24,7 @@
 						WFP Pakistan Apps
 					</div>
 					<ul data-breakpoint="800" class="flexnav">
-						@if (Session["user"] != null)
+						@if (IsLoggedIn)
                         {
                             var userIdentity = HttpContext.Current.User.Identity as ClaimsIdentity;
                             var roles = userIdentity.Claims.Where(x => x.Type == ClaimTypes.Role).Select(claim => claim.Value).ToArray();
@@ -26,25 +33,16 @@
                             <li class="active">
                                 <a href="~/Campaigns/Index">Campaign Orders</a>
                             </li>
-                            @*if (User.Identity.Name.Equals("josh.silver"))
-                            {
-                                 <li class="active">
-                                     <a href="~/Testing/Index">Testing</a>
-                                 </li>
-                                <li class="active">
-                                    <a href="~/Approved/Index">Approved</a>
-                                </li>
-                                <li class="active">
-                                    <a href="~/Tracking/Index">Tracking</a>
-                                </li>
-                            }*@
+                            <li class="active">
+                                <a href="~/CampaignStatus">Campaigns Status</a>
+                            </li>
                             <li>
                                 <a href="#">@HttpContext.Current.User.Identity.Name</a>
                                 <ul>
-                                    @if(User.Identity.Name.Equals("josh.silver"))
+                                    @if(IsAdmin)
                                     {
-                                        <li><a href="/Account/Register" title="Create Account" class="animsition-link"><span class="glyphicon glyphicon-user"></span> Create Account</a></li>
-                                        <li><a href="/Home/Vendor" title="Vendor" class="animsition-link"><span class="glyphicon glyphicon-cog"></span> Vendor</a></li>
+                                        <li><a href="/Home/Users" title="Users" class="animsition-link"><span class="glyphicon glyphicon-user"></span> Users</a></li>
+                                        <li><a href="/Home/Vendors" title="Vendors" class="animsition-link"><span class="glyphicon glyphicon-cog"></span> Vendors</a></li>
                                     }
                                     <li><a href="/Home/Settings" title="Settings" class="animsition-link"><span class="glyphicon glyphicon-lock"></span> Settings</a></li>
                                     <li><a href="/Account/LogOff" title="Logout" class="animsition-link"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

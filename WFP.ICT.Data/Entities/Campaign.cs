@@ -47,32 +47,25 @@ namespace WFP.ICT.Data.Entities
 
         public string SpecialInstructions { get; set; }
 
-        // #s
-        public long ReferenceNumber { get; set; }
-        public string OrderNumber { get; set; }
-
-        public string AssignedToCustomer { get; set; }
-
-        public bool IsTested { get; set; }
-        public DateTime? TestingTime { get; set; }
-
-        public string CreativeURL { get; set; }
-        public string ZipURL { get; set; }
-
-        public string LinkBreakout { get; set; }
-        public string ReportSiteLink { get; set; }
-        public string IONumber { get; set; }
-
-        public Guid? ParentId { get; set; }
-        public virtual Campaign Copy { get; set; }
-
-        public string ReBroadcastOrderNumber { get; set; }
-        public long ReBroadQuantity { get; set; }
-
         public string IP { get; set; }
         public string Browser { get; set; }
         public string OS { get; set; }
         public string Referrer { get; set; }
+
+        // #s
+        public string OrderNumber { get; set; }
+
+        public string AssignedToCustomer { get; set; }
+        public string IONumber { get; set; }
+        
+        public Guid? RebroadId { get; set; }
+        public virtual Campaign Rebroad { get; set; }
+
+        public Guid? TestingId { get; set; }
+        public virtual CampaignTesting Testing { get; set; }
+
+        public Guid? ApprovedId { get; set; }
+        public virtual CampaignApproved Approved { get; set; }
 
         public virtual ICollection<ProData> ProDatas { get; set; }
 

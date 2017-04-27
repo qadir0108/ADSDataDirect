@@ -5,8 +5,7 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 
-<h2>Delete <span class="small">Campaign</span></h2>
-
+<h2>Delete Campaign<span class="small"></span></h2>
 <h3>Are you sure you want to delete this?</h3>
 <div>
     <hr />
@@ -28,14 +27,6 @@
             @Html.DisplayFor(model => model.OrderNumber)
         </dd>
     <dt>
-            @Html.DisplayNameFor(model => model.ReferenceNumber)
-        </dt>
-
-        <dd>
-            @Html.DisplayFor(model => model.ReferenceNumber)
-        </dd>
-
-    <dt>
             @Html.DisplayNameFor(model => model.CampaignName)
         </dt>
 
@@ -52,19 +43,19 @@
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RepresentativeName)
+            User Name
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RepresentativeName)
+            @Html.DisplayFor(model => model.CreatedBy)
         </dd>
 
         <dt>
-            @Html.DisplayNameFor(model => model.RepresentativeEmail)
+            Order Date
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.RepresentativeEmail)
+            @Html.DisplayFor(model => model.CreatedAt)
         </dd>
 
         @*<dt>
