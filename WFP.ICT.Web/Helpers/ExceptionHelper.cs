@@ -17,6 +17,13 @@ namespace WFP.ICT.Web.Helpers
             var message = (customMessage != "")
                 ? customMessage + " " + ex.GetBaseException().Message
                 : ex.GetBaseException().Message;
+
+            while (ex.InnerException != null)
+            {
+                message += "</br>" + ex.InnerException.Message;
+                ex = ex.InnerException;
+            }
+
             if (ex is SqlException)
             {
                 return "Could not connect to database" + message;

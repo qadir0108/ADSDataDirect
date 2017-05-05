@@ -18,8 +18,6 @@ namespace WFP.ICT.Web.Controllers
     public class HomeController : BaseController
     {
         int pageSize = 15;
-        private WFPICTContext db = new WFPICTContext();
-
         private ApplicationUserManager _userManager;
         public ApplicationUserManager UserManager
         {
@@ -132,7 +130,7 @@ namespace WFP.ICT.Web.Controllers
                         UserManager.Delete(user);
                         break;
                 }
-                CurrentContextFromOwin.SaveChanges();
+                base.db.SaveChanges();
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -146,9 +144,9 @@ namespace WFP.ICT.Web.Controllers
         {
             if (string.IsNullOrEmpty(LoggedInUser.APIKey))
             {
-                var user = CurrentContextFromOwin.Users.FirstOrDefault(x => x.Id == LoggedInUser.Id);
+                var user = base.db.Users.FirstOrDefault(x => x.Id == LoggedInUser.Id);
                 user.APIKey = KeyGenerator.GetUniqueKey(32);
-                CurrentContextFromOwin.SaveChanges();
+                base.db.SaveChanges();
                 SetupLoggedInUser(LoggedInUser.UserName);
             }
             UserProfileVM profile = new UserProfileVM()
@@ -167,10 +165,10 @@ namespace WFP.ICT.Web.Controllers
         {
             try
             {
-                var user = CurrentContextFromOwin.Users.FirstOrDefault(x => x.Id == LoggedInUser.Id);
+                var user = base.db.Users.FirstOrDefault(x => x.Id == LoggedInUser.Id);
                 user.Email = profile.Email;
                 user.CompanyLogo = profile.CompanyLogo;
-                CurrentContextFromOwin.SaveChanges();
+                base.db.SaveChanges();
 
                 SetupLoggedInUser(LoggedInUser.UserName);
                 

@@ -1,17 +1,17 @@
 ﻿using System;
+using System.Configuration;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using Microsoft.AspNet.Identity.Owin;
-using WFP.ICT.Data.Entities;
 using System.Web.Http;
-using System.Web.Routing;
+using WFP.ICT.Web.Controllers;
+using WFP.ICT.Web.Helpers;
 
 namespace WFP.ICT.Web
 {
-    public class MvcApplication : System.Web.HttpApplication
+    public class MvcApplication : HttpApplication
     {
         protected void Application_Start()
         {
@@ -39,19 +39,27 @@ namespace WFP.ICT.Web
 
             if (currentRouteData != null)
             {
-                if (currentRouteData.Values["controller"] != null && !String.IsNullOrEmpty(currentRouteData.Values["controller"].ToString()))
+                if (currentRouteData.Values["controller"] != null && !string.IsNullOrEmpty(currentRouteData.Values["controller"].ToString()))
                 {
                     currentController = currentRouteData.Values["controller"].ToString();
                 }
 
-                if (currentRouteData.Values["action"] != null && !String.IsNullOrEmpty(currentRouteData.Values["action"].ToString()))
+                if (currentRouteData.Values["action"] != null && !string.IsNullOrEmpty(currentRouteData.Values["action"].ToString()))
                 {
                     currentAction = currentRouteData.Values["action"].ToString();
                 }
             }
-
             var ex = Server.GetLastError();
-            //var controller = new ErrorController();
+
+            try
+            {
+                EmailHelper.SendErrorEmail(ConfigurationManager.AppSettings["ErrorEmailAddress"], ex, currentController,
+                    currentAction);
+            }
+            catch (Exception exx)
+            {
+            }
+
             var routeData = new RouteData();
             var action = "GenericError";
 
@@ -77,10 +85,10 @@ namespace WFP.ICT.Web
             routeData.Values["action"] = action;
             routeData.Values["exception"] = new HandleErrorInfo(ex, currentController, currentAction);
 
-            IController errormanagerController = new Controllers.ErrorController();
+            IController errorController = new ErrorController();
             HttpContextWrapper wrapper = new HttpContextWrapper(httpContext);
             var rc = new RequestContext(wrapper, routeData);
-            errormanagerController.Execute(rc);
+            errorController.Execute(rc);
         }
     }
 }

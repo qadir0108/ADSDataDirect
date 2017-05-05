@@ -11,15 +11,16 @@ using ADSDataDirect.Enums;
 using PagedList;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
+using WFP.ICT.S3;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
+using System.IO;
 
 namespace WFP.ICT.Web.Controllers
 {
     [Authorize]
-    public class CopyController : Controller
+    public class CopyController : BaseController
     {
-        private WFPICTContext db = new WFPICTContext();
         int pageSize = 10;
 
         public ActionResult MoveTo(Guid id, string to)
@@ -59,16 +60,14 @@ namespace WFP.ICT.Web.Controllers
                             FromLine = campaign.FromLine,
                             SubjectLine = campaign.SubjectLine,
                             HtmlImageFiles = campaign.HtmlImageFiles,
-                            CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm",
-                            campaign.OrderNumber),
+                            //CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm", campaign.OrderNumber),
                             TestSeedList = campaign.TestSeedList,
                             FinalSeedList = campaign.FinalSeedList,
                             TestingUrgency = campaign.TestingUrgency,
                             DeployDate = campaign.BroadcastDate,
 
                             ZipCodeFile = campaign.ZipCodeFile,
-                            ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv",
-                            campaign.OrderNumber),
+                            //ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv",campaign.OrderNumber),
                             GeoDetails = campaign.GeoDetails,
                             Demographics = campaign.Demographics,
                             Quantity = campaign.Quantity,
@@ -80,9 +79,9 @@ namespace WFP.ICT.Web.Controllers
                         campaign.TestingId = testingId;
                         db.SaveChanges();
                     }
-                    campaign.Status = (int)CampaignStatusEnum.Testing;
+                    campaign.Status = (int) CampaignStatusEnum.Testing;
                     db.SaveChanges();
-                    return RedirectToAction("EditTesting", "Copy", new { id = campaign.TestingId });
+                    return RedirectToAction("EditTesting", "Copy", new {id = campaign.TestingId});
                     break;
                 case "Approved":
 
@@ -118,7 +117,9 @@ namespace WFP.ICT.Web.Controllers
                             Demographics = testing.Demographics,
                             Quantity = testing.Quantity,
                             SpecialInstructions = testing.SpecialInstructions,
-                            LinkBreakout = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}linkr.csv", campaign.OrderNumber),
+                            LinkBreakout =
+                                string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}linkr.csv",
+                                    campaign.OrderNumber),
                             ReportSiteLink = string.Format("http://report-site.com/c/ADS{0}", campaign.OrderNumber)
                         };
                         db.CampaignsApproved.Add(approved);
@@ -126,14 +127,14 @@ namespace WFP.ICT.Web.Controllers
                         campaign.ApprovedId = approvedId;
                         db.SaveChanges();
                     }
-                    campaign.Status = (int)CampaignStatusEnum.Approved;
+                    campaign.Status = (int) CampaignStatusEnum.Approved;
                     db.SaveChanges();
-                    return RedirectToAction("EditApproved", "Copy", new { id = campaign.ApprovedId});
+                    return RedirectToAction("EditApproved", "Copy", new {id = campaign.ApprovedId});
                     break;
                 case "Tracking":
-                    campaign.Status = (int)CampaignStatusEnum.Tracking;
+                    campaign.Status = (int) CampaignStatusEnum.Tracking;
                     db.SaveChanges();
-                    return RedirectToAction("ViewReport", "Report", new { id = campaign.Id });
+                    return RedirectToAction("ViewReport", "Report", new {id = campaign.Id});
                     break;
                 case "ReBroadcast":
                     if (campaign.OrderNumber.EndsWith("RDP"))
@@ -156,7 +157,7 @@ namespace WFP.ICT.Web.Controllers
                         copy.Id = Guid.NewGuid();
                         copy.CreatedAt = DateTime.Now;
                         copy.OrderNumber = campaign.Approved.OrderNumber + "RDP";
-                        copy.Status = (int)CampaignStatusEnum.Rebroadcasted;
+                        copy.Status = (int) CampaignStatusEnum.Rebroadcasted;
                         db.SaveChanges();
 
                         var testingId = Guid.NewGuid();
@@ -169,7 +170,8 @@ namespace WFP.ICT.Web.Controllers
                         copyTesting.OrderNumber = campaign.Approved.OrderNumber + "RDP";
                         db.SaveChanges();
 
-                        var approvedId = Guid.NewGuid();;
+                        var approvedId = Guid.NewGuid();
+                        ;
                         var copyApproved = new CampaignApproved();
                         db.CampaignsApproved.Add(copyApproved);
                         db.Entry(copyApproved).CurrentValues.SetValues(db.Entry(campaign.Approved).CurrentValues);
@@ -186,10 +188,10 @@ namespace WFP.ICT.Web.Controllers
                         campaign.RebroadId = copy.Id;
                         db.SaveChanges();
                     }
-                    return RedirectToAction("MoveTo", "Copy", new { id = campaign.RebroadId, to = "Testing" });
+                    return RedirectToAction("MoveTo", "Copy", new {id = campaign.RebroadId, to = "Testing"});
                     break;
                 case "Complete":
-                    campaign.Status = (int)CampaignStatusEnum.Completed;
+                    campaign.Status = (int) CampaignStatusEnum.Completed;
                     db.SaveChanges();
                     TempData["Success"] = "Campaign " + campaign.CampaignName + " has been completed sucessfully.";
                     return RedirectToAction("Index", "Campaigns");
@@ -198,7 +200,7 @@ namespace WFP.ICT.Web.Controllers
 
             return null;
         }
-        
+
         // GET: Copy/Edit/5
         public ActionResult EditTesting(Guid? id)
         {
@@ -212,7 +214,8 @@ namespace WFP.ICT.Web.Controllers
             {
                 return HttpNotFound();
             }
-            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value", "Text", campaignTesting.TestingUrgency);
+            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
+                "Text", campaignTesting.TestingUrgency);
             return View(campaignTesting);
         }
 
@@ -220,7 +223,11 @@ namespace WFP.ICT.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [MultipleButton(Name = "action", Argument = "EditTesting")]
-        public ActionResult EditTesting([Bind(Include = "Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy")] CampaignTesting campaignTesting)
+        public ActionResult EditTesting(
+            [Bind(
+                 Include =
+                     "Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy"
+             )] CampaignTesting campaignTesting)
         {
             if (ModelState.IsValid)
             {
@@ -231,33 +238,39 @@ namespace WFP.ICT.Web.Controllers
             else
             {
                 var errorList = (from item in ModelState.Values
-                                 from error in item.Errors
-                                 select error.ErrorMessage).ToList();
+                    from error in item.Errors
+                    select error.ErrorMessage).ToList();
                 TempData["Error"] = "There is error in saving data." + string.Join("<br/>", errorList);
             }
-            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value", "Text", campaignTesting.TestingUrgency);
+            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
+                "Text", campaignTesting.TestingUrgency);
             return View("EditTesting", campaignTesting);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
         [MultipleButton(Name = "action", Argument = "Approve")]
-        public ActionResult Approve([Bind(Include = "Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy")] CampaignTesting campaignTesting)
+        public ActionResult Approve(
+            [Bind(
+                 Include =
+                     "Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy"
+             )] CampaignTesting campaignTesting)
         {
             if (ModelState.IsValid)
             {
                 db.Entry(campaignTesting).State = EntityState.Modified;
                 db.SaveChanges();
-                return RedirectToAction("MoveTo", new { id = Session["id"], to = "Approved" });
+                return RedirectToAction("MoveTo", new {id = Session["id"], to = "Approved"});
             }
             else
             {
                 var errorList = (from item in ModelState.Values
-                                 from error in item.Errors
-                                 select error.ErrorMessage).ToList();
+                    from error in item.Errors
+                    select error.ErrorMessage).ToList();
                 TempData["Error"] = "There is error in saving data." + string.Join("<br/>", errorList);
             }
-            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value", "Text", campaignTesting.TestingUrgency);
+            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
+                "Text", campaignTesting.TestingUrgency);
             return View("EditTesting", campaignTesting);
         }
 
@@ -271,6 +284,20 @@ namespace WFP.ICT.Web.Controllers
             db.SaveChanges();
             TempData["Success"] = "Order :" + campaign.OrderNumber + " has been cancelled succesfully.";
             return RedirectToAction("Index", "Campaigns");
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [MultipleButton(Name = "action", Argument = "Process")]
+        public ActionResult Process([Bind(Include = "Id,CampaignId")] CampaignTesting campaignTesting)
+        {
+            var threadParams = new EmailThreadParams() {id = campaignTesting.CampaignId, user = LoggedInUser, UploadPath = UploadPath};
+            ParameterizedThreadStart p = new ParameterizedThreadStart(o => FileProcessor.ProcessFiles((EmailThreadParams)o));
+            Thread thread = new Thread(p);
+            thread.Start(threadParams);
+
+            TempData["Success"] = "File Processing has been started succesfully.";
+            return RedirectToAction("EditTesting", new {id = campaignTesting.Id});
         }
 
         // GET: CampaignApproveds/Edit/5
@@ -325,14 +352,10 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Campagin: " + campaign.CampaignName + " is not yet approved.");
                 }
 
-                var vendor = db.Vendors.FirstOrDefault();
-
-                new Thread(() =>
-                {
-                    EmailHelper.SendApprovedToVendor(vendor, campaign);
-                }).Start();
-                campaign.Status = (int)CampaignStatusEnum.Traffic;
-                db.SaveChanges();
+                var threadParams = new EmailThreadParams() { id = campaign.Id, user = LoggedInUser };
+                Thread thread = new Thread(new ParameterizedThreadStart(SendVendorEmail));
+                thread.Start(threadParams);
+                
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -342,13 +365,21 @@ namespace WFP.ICT.Web.Controllers
 
         }
 
-        protected override void Dispose(bool disposing)
+        public void SendVendorEmail(object o)
         {
-            if (disposing)
+            using (var db = new WFPICTContext())
             {
-                db.Dispose();
+                var threadParams = (EmailThreadParams)o;
+                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.id);
+                var vendor = db.Vendors.FirstOrDefault();
+
+                EmailHelper.SendApprovedToVendor(vendor, campaign);
+
+                campaign.Status = (int)CampaignStatusEnum.Traffic;
+                db.SaveChanges();
             }
-            base.Dispose(disposing);
         }
+
+
     }
 }

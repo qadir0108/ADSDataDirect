@@ -45,6 +45,9 @@ namespace WFP.ICT.Data.Entities
         public string WhiteLabel { get; set; }
         public string OptOut { get; set; }
 
+        public bool IsAddViewInBrowser { get; set; }
+        public bool IsAddOptOut { get; set; }
+
         public string SpecialInstructions { get; set; }
 
         public string IP { get; set; }

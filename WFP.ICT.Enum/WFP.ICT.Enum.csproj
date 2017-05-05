@@ -47,6 +47,8 @@
     <Compile Include="StringConstants.cs" />
     <Compile Include="TestingUrgencyEnum.cs" />
     <Compile Include="TextValuePair.cs" />
+    <Compile Include="UploadFileTypeEnum.cs" />
+    <Compile Include="UploadFileStatusEnum.cs" />
     <Compile Include="UserTypeEnum.cs" />
     <Compile Include="UserStatusEnum.cs" />
   </ItemGroup>

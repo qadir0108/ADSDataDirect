@@ -44,6 +44,16 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core">
+      <HintPath>C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.S3">
+      <HintPath>C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.S3.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -112,6 +122,8 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
     <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
       <Private>True</Private>
@@ -253,11 +265,16 @@
     <Compile Include="Helpers\AjaxAuthorizeAttribute.cs" />
     <Compile Include="Helpers\AuthorizeRole.cs" />
     <Compile Include="Helpers\AuthorizeClaim.cs" />
+    <Compile Include="Helpers\EmailThreadParams.cs" />
     <Compile Include="Helpers\ExcelUtility.cs" />
+    <Compile Include="Helpers\FileManager.cs" />
+    <Compile Include="Helpers\FileProcessor.cs" />
+    <Compile Include="Helpers\FileUploader.cs" />
     <Compile Include="Helpers\KeyGenerator.cs" />
     <Compile Include="Helpers\ListExtensions.cs" />
     <Compile Include="Helpers\MultipleButtonAttribute.cs" />
     <Compile Include="Helpers\ProDataHelper.cs" />
+    <Compile Include="Helpers\S3FileManager.cs" />
     <Compile Include="Helpers\SortSearchExtension.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\Extensions.cs" />
@@ -270,6 +287,7 @@
     <Compile Include="Models\CampaignReportVM.cs" />
     <Compile Include="Models\CompanyUnitVM.cs" />
     <Compile Include="Models\CommonVM.cs" />
+    <Compile Include="Models\HtmlProcessResult.cs" />
     <Compile Include="Models\ProDataResponse.cs" />
     <Compile Include="Models\VisitSearchVM.cs" />
     <Compile Include="Models\VisitorVM.cs" />

@@ -10,6 +10,7 @@ using ADSDataDirect.Enums;
 using PagedList;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
+using WFP.ICT.S3;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using WFP.ICT.Web.Reports;
@@ -19,13 +20,14 @@ namespace WFP.ICT.Web.Controllers
     [Authorize]
     public class CampaignsController : BaseController
     {
-        private WFPICTContext db = new WFPICTContext();
         int pageSize = 10;
         
         // GET: Campaigns
         public ActionResult Index(CampaignSearchVM sc)
         {
-            if(LoggedInUser == null) return RedirectToAction("LogOff", "Account");
+            //FileManager.ProcessHtml("C:\\123.htm", "C:\\1.htm");
+            //FileManager.UploadFile(UploadFileType.ZipFile, @"C:\\zip_codesCopy.csv", "123");
+            if (LoggedInUser == null) return RedirectToAction("LogOff", "Account");
 
             ViewBag.CurrentSort = sc.sortOrder;
             ViewBag.CampaignNameSortParm = sc.sortOrder == "CampaignName" ? "CampaignName_desc" : "CampaignName";
@@ -129,7 +131,7 @@ namespace WFP.ICT.Web.Controllers
                 campagins = campagins.Where(x => x.Status != (int) CampaignStatusEnum.Completed).ToList();
             }
 
-            ViewBag.Status = new SelectList(EnumHelper.GetEnumTextValues(typeof(CampaignStatusEnum)), "Value", "Text");
+            ViewBag.Status = StatusList;
 
             // Paging
             int pageNumber = (sc.page ?? 1);
@@ -159,8 +161,8 @@ namespace WFP.ICT.Web.Controllers
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
                 OrderNumber = "",
-                RepresentativeName = LoggedInUser.UserName,
-                RepresentativeEmail = LoggedInUser.Email
+                RepresentativeName = LoggedInUser?.UserName,
+                RepresentativeEmail = LoggedInUser?.Email
             };
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", model.TestingUrgency);
@@ -175,34 +177,97 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Create(
             [Bind(
                  Include =
-                     "ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber")] Campaign campaign)
+                     "ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber,IsAddViewInBrowser,IsAddOptOut")] Campaign campaign)
         {
             if (ModelState.IsValid)
             {
-                var camps = db.Campaigns.ToList();
-                int newOrderNumber = camps.Count > 0 ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1 : 2500;
-                campaign.Id = Guid.NewGuid();
-                campaign.CreatedAt = DateTime.Now;
-                campaign.CreatedBy = LoggedInUser.UserName;
-                campaign.OrderNumber = newOrderNumber.ToString();
-                campaign.IP = Request.ServerVariables["REMOTE_ADDR"];
-                campaign.Browser = Request.UserAgent;
-                campaign.OS = Environment.OSVersion.Platform + " " + Environment.OSVersion.VersionString;
-                campaign.Referrer = Request.UrlReferrer.AbsolutePath;
-
-                db.Campaigns.Add(campaign);
-                db.SaveChanges();
-
-                new Thread(() =>
+                try
                 {
-                   EmailHelper.SendOrderEmailToClient(LoggedInUser, campaign);
-                }).Start();
 
+                    var camps = db.Campaigns.ToList();
+                    int newOrderNumber = camps.Count > 0
+                        ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1
+                        : 2500;
+                    campaign.Id = Guid.NewGuid();
+                    campaign.CreatedAt = DateTime.Now;
+                    campaign.CreatedBy = LoggedInUser.UserName;
+                    campaign.OrderNumber = newOrderNumber.ToString();
+                    campaign.IP = Request.ServerVariables["REMOTE_ADDR"];
+                    campaign.Browser = Request.UserAgent;
+                    campaign.OS = Environment.OSVersion.Platform + " " + Environment.OSVersion.VersionString;
+                    campaign.Referrer = Request.UrlReferrer.AbsolutePath;
+                    
+                    db.Campaigns.Add(campaign);
+                    db.SaveChanges();
+
+                    var threadParams = new EmailThreadParams() { id = campaign.Id, user = LoggedInUser};
+                    Thread thread = new Thread(new ParameterizedThreadStart(SendOrderEmail));
+                    thread.Start(threadParams);
+                    
+                    TempData["Success"] = "Order #: "+ campaign.OrderNumber + " , Campaign " + campaign.CampaignName + " has been submitted sucessfully.";
+                }
+                catch (Exception ex)
+                {
+                    TempData["Error"] = "This is error while creating order." + ex.Message;
+                }
                 return RedirectToAction("Index");
             }
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", campaign.TestingUrgency);
             return View(campaign);
+        }
+
+        public void SendOrderEmail(object o)
+        {
+            using (var db = new WFPICTContext())
+            {
+                var threadParams = (EmailThreadParams)o;
+                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.id);
+
+                if (!string.IsNullOrEmpty(campaign.HtmlImageFiles))
+                {
+                    string oldFile = campaign.HtmlImageFiles;
+                    string newFile = string.Format("{0}/{1}_html.zip", campaign.OrderNumber, campaign.OrderNumber);
+                    campaign.HtmlImageFiles = newFile;
+                    S3FileManager.Move(oldFile, newFile, campaign.OrderNumber);
+                }
+
+                if (!string.IsNullOrEmpty(campaign.ZipCodeFile))
+                {
+                    string oldFile = campaign.ZipCodeFile;
+                    string newFile = string.Format("{0}/{1}zip.csv", campaign.OrderNumber, campaign.OrderNumber);
+                    campaign.ZipCodeFile = newFile;
+                    S3FileManager.Move(oldFile, newFile, campaign.OrderNumber);
+                }
+
+                if (!string.IsNullOrEmpty(campaign.TestSeedList))
+                {
+                    string oldFile = campaign.TestSeedList;
+                    string newFile = string.Format("{0}/{1}test.csv", campaign.OrderNumber, campaign.OrderNumber);
+                    campaign.TestSeedList = newFile;
+                    S3FileManager.Move(oldFile, newFile, campaign.OrderNumber);
+                }
+
+                if (!string.IsNullOrEmpty(campaign.FinalSeedList))
+                {
+                    string oldFile = campaign.FinalSeedList;
+                    string newFile = string.Format("{0}/{1}live.csv", campaign.OrderNumber, campaign.OrderNumber);
+                    campaign.FinalSeedList = newFile;
+                    S3FileManager.Move(oldFile, newFile, campaign.OrderNumber);
+                }
+
+                if (!string.IsNullOrEmpty(campaign.SuppressionFile))
+                {
+                    string oldFile = campaign.SuppressionFile;
+                    string newFile = string.Format("{0}/{1}supp.csv", campaign.OrderNumber, campaign.OrderNumber);
+                    campaign.SuppressionFile = newFile;
+                    S3FileManager.Move(oldFile, newFile, campaign.OrderNumber);
+                }
+
+                db.SaveChanges();
+              
+                EmailHelper.SendOrderEmailToClient(threadParams.user, campaign);
+            }
         }
 
         // GET: Campaigns/Edit/5
@@ -360,13 +425,5 @@ namespace WFP.ICT.Web.Controllers
             return RedirectToAction("Index");
         }
 
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
-        }
     }
 }

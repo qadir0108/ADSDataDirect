@@ -79,6 +79,10 @@
     <Compile Include="Migrations\201704270518420_DeletedSettings.Designer.cs">
       <DependentUpon>201704270518420_DeletedSettings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201705050934215_CampaginChanges.cs" />
+    <Compile Include="Migrations\201705050934215_CampaginChanges.Designer.cs">
+      <DependentUpon>201705050934215_CampaginChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
     <Compile Include="Entities\WFPRole.cs" />
@@ -112,6 +116,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201704270518420_DeletedSettings.resx">
       <DependentUpon>201704270518420_DeletedSettings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201705050934215_CampaginChanges.resx">
+      <DependentUpon>201705050934215_CampaginChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

@@ -6,6 +6,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using WFP.ICT.S3;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
@@ -18,7 +19,7 @@ namespace WFP.ICT.Web.Controllers
         {
             try
             {
-                string fileName = "";
+                string amazonFileKey = "";
                 foreach (string selectedFile in Request.Files)
                 {
                     var fileContent = Request.Files[selectedFile];
@@ -30,11 +31,19 @@ namespace WFP.ICT.Web.Controllers
                         {
                             stream.CopyTo(fileStream);
                         }
-                        fileName = fileContent.FileName;
+
+                        amazonFileKey = string.Format("{0:yyyyMMdd_HHmmss}_{1}", DateTime.Now, fileContent.FileName);
+
+                        S3FileManager.Upload(amazonFileKey, filePath);
+
+                        // Delete local
+                        //string fullPath = Path.Combine(UploadPath, fileContent.FileName);
+                        //if (System.IO.File.Exists(fullPath))
+                        //    System.IO.File.Delete(fullPath);
                     }
                 }
 
-                return Json(new JsonResponse() { IsSucess = true, Result = fileName });
+                return Json(new JsonResponse() { IsSucess = true, Result = amazonFileKey });
             }
             catch (Exception ex)
             {
@@ -46,11 +55,13 @@ namespace WFP.ICT.Web.Controllers
         [HttpGet]
         public virtual ActionResult DownloadFile(string file)
         {
-            string fullPath = Path.Combine(UploadPath, Server.UrlEncode(file));
-            if (!System.IO.File.Exists(fullPath))
-                return null;
+            string filePath = Path.Combine(UploadPath, Server.UrlEncode(file));
+            //if (!System.IO.File.Exists(filePath))
+            // return null;
 
-            return File(fullPath, "text/csv", file);
+            S3FileManager.Download(file, filePath);
+
+            return File(filePath, "text/csv", file);
         }
 
         [HttpPost]
@@ -58,11 +69,13 @@ namespace WFP.ICT.Web.Controllers
         {
             try
             {
-                string fullPath = Path.Combine(UploadPath, Server.UrlEncode(file));
-                if (!System.IO.File.Exists(fullPath))
-                    throw new Exception("File does not exists.");
+                S3FileManager.Delete(file);
 
-                System.IO.File.Delete(fullPath);
+                //string fullPath = Path.Combine(UploadPath, Server.UrlEncode(file));
+                //if (!System.IO.File.Exists(fullPath))
+                //    throw new Exception("File does not exists.");
+                //System.IO.File.Delete(fullPath);
+
                 return Json(new JsonResponse() {IsSucess = true});
             }
             catch (Exception ex)

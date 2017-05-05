@@ -19,7 +19,6 @@ namespace WFP.ICT.Web.Controllers
     [Authorize]
     public class CampaignStatusController : BaseController
     {
-        private WFPICTContext db = new WFPICTContext();
         int pageSize = 10;
         
         // GET: Campaigns
@@ -173,15 +172,6 @@ namespace WFP.ICT.Web.Controllers
             {
                 return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
             }
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }

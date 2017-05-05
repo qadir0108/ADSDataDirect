@@ -1,4 +1,5 @@
-﻿@model WFP.ICT.Data.Entities.CampaignTesting
+﻿@using WFP.ICT.Enum
+@model WFP.ICT.Data.Entities.CampaignTesting
 
 @{
     Html.RenderPartial("_HeaderCopy");
@@ -64,6 +65,14 @@
                                 </div>
                                 @Html.ValidationMessageFor(model => model.ReBroadCast, "", new { @class = "text-danger" })
                             </div>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        @Html.LabelFor(model => model.ReBroadcastDate, htmlAttributes: new { @class = "control-label col-md-3" })
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.ReBroadcastDate, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ReBroadcastDate, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
@@ -214,7 +223,46 @@
                             @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new {@class = "text-danger"})
                         </div>
                     </div>
+                    
+                    <hr />
+                    <div class="headertab">
+                        File Management
+                    </div><hr />
+                    
+                    <div class="form-group">
+                        <label class = "control-label col-md-2">@UploadFileTypeEnum.HtmlImagesFile</label>
+                        <label class="control-label col-md-8"><a target="_blank" href="@Model.CreativeURL">@Model.CreativeURL</a></label>
+                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.HtmlImagesStatus) </label>
+                    </div>
 
+                    <div class="form-group">
+                        <label class="control-label col-md-2">@UploadFileTypeEnum.ZipFile</label>
+                        <label class="control-label col-md-8"><a target="_blank" href="@Model.ZipURL">@Model.ZipURL</a></label>
+                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.ZipURLStatus) </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-md-2">@UploadFileTypeEnum.TestSeedFile</label>
+                        <label class="control-label col-md-8"><a target="_blank" href="@Model.TestSeedURL">@Model.TestSeedURL</a></label>
+                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.TestSeedStatus) </label>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2">@UploadFileTypeEnum.LiveSeedFile</label>
+                        <label class="control-label col-md-8"><a target="_blank" href="@Model.LiveSeedURL">@Model.LiveSeedURL</a></label>
+                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.LiveSeedStatus) </label>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="control-label col-md-2">@UploadFileTypeEnum.SuppressionFile</label>
+                        <label class="control-label col-md-8"><a target="_blank" href="@Model.LiveSeedURL">@Model.SuppressionURL</a></label>
+                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.SuppressionStatus) </label>
+                    </div>
+                    <div class="form-group pull-right">
+                        <div class="">
+                            <input type="submit" value="Process" class="btn btn-default" name="action:Process" />
+                        </div>
+                    </div>
                     <br />
                     <br />
 
@@ -255,6 +303,10 @@
     $(function () {
 
         $('#TestingTime').datetimepicker({
+            format: 'M/DD/YYYY hh:mm:ss A'
+        });
+
+        $('#ReBroadcastDate').datetimepicker({
             format: 'M/DD/YYYY hh:mm:ss A'
         });
 

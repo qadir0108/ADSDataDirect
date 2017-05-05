@@ -6,6 +6,7 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
+using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Data.EntityManager;
 using WFP.ICT.Enum;
@@ -15,22 +16,22 @@ namespace WFP.ICT.Web.Controllers
 {
     public class BaseController : Controller
     {
-        private WFPICTContext _dbContext;
-        public WFPICTContext CurrentContextFromOwin
+        private WFPICTContext _db;
+        public WFPICTContext db
         {
             get
             {
-                return _dbContext ?? HttpContext.GetOwinContext().Get<WFPICTContext>();
+                return _db ?? HttpContext.GetOwinContext().Get<WFPICTContext>();
             }
             private set
             {
-                _dbContext = value;
+                _db = value;
             }
         }
 
         public void SetupLoggedInUser(string UserName)
         {
-            var user = CurrentContextFromOwin.Users.Include(u => u.Roles).FirstOrDefault(x => x.UserName == UserName);
+            var user = db.Users.Include(u => u.Roles).FirstOrDefault(x => x.UserName == UserName);
             Session["user"] = user;
         }
 
@@ -58,6 +59,25 @@ namespace WFP.ICT.Web.Controllers
                 string uploadPath = Server.MapPath(_uploadPath);
                 if (!System.IO.Directory.Exists(uploadPath)) System.IO.Directory.CreateDirectory(uploadPath);
                 return uploadPath;
+            }
+        }
+
+        public SelectList StatusList
+        {
+            get
+            {
+                var items = EnumHelper.GetEnumTextValues(typeof(CampaignStatusEnum))
+                    .Select(x => new SelectListItem()
+                    {
+                        Text = x.Text,
+                        Value = x.Value
+                    }).ToList();
+                items.Insert(0, new SelectListItem()
+                {
+                    Text = "Select Status",
+                    Value = string.Empty
+                });
+                return new SelectList(items, "Value", "Text");
             }
         }
 
@@ -91,7 +111,7 @@ namespace WFP.ICT.Web.Controllers
                 if (_users == null)
                 {
                     var user = Session["user"] as WFPUser;
-                    _users = CurrentContextFromOwin.Users
+                    _users = db.Users
                         .OrderBy(x => x.CreatedAt).Select(
                              x => new SelectListItem()
                              {

@@ -14,7 +14,6 @@ namespace WFP.ICT.Web.Controllers
 {
     public class ReportController : BaseController
     {
-        private WFPICTContext db = new WFPICTContext();
         public ActionResult ViewReport(Guid? id)
         {
             if (id == null)

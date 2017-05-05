@@ -38,6 +38,20 @@ namespace WFP.ICT.Data.Entities
         public long Quantity { get; set; }
         public string SpecialInstructions { get; set; }
 
+        // File Management
+        public int HtmlImagesStatus { get; set; } // UploadFileStatusEnum
+
+        public int ZipURLStatus { get; set; } // UploadFileStatusEnum
+
+        public string TestSeedURL { get; set; }
+        public int TestSeedStatus { get; set; } // UploadFileStatusEnum
+
+        public string LiveSeedURL { get; set; }
+        public int LiveSeedStatus { get; set; } // UploadFileStatusEnum
+
+        public string SuppressionURL { get; set; }
+        public int SuppressionStatus { get; set; } // UploadFileStatusEnum
+
         public CampaignTesting()
         {
         }
