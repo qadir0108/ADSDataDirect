@@ -18,30 +18,30 @@ namespace WFP.ICT.Web.Helpers
         private static bool _isAddOptout;
         private static bool _isAddViewinBrowser;
 
-        public static HtmlProcessResult ProcessHtmlZip(string tempFolder, string zipFilePath, string orderNumber, bool isAddOptout, bool isAddViewinBrowser)
+        public static HtmlProcessResult ProcessHtmlZip(string UploadPath, string zipFilePath, string orderNumber, bool isAddOptout, bool isAddViewinBrowser)
         {
             _orderNumber = orderNumber;
             _isAddOptout = isAddOptout;
             _isAddViewinBrowser = isAddViewinBrowser;
             FileUploader uploader = new FileUploader();
-            
+
             // Unzip
-            string temp = string.Format("{0}{1}", tempFolder, orderNumber);
-            if (Directory.Exists(temp))
+            var directory = string.Format("{0}\\{1}temp", UploadPath, orderNumber);
+            if (Directory.Exists(directory))
             {
-                new DirectoryInfo(temp).Delete(true);
+                new DirectoryInfo(directory).Delete(true);
             }
             else
             {
-                Directory.CreateDirectory(temp);
+                Directory.CreateDirectory(directory);
             }
-            ZipFile.ExtractToDirectory(zipFilePath, temp);
+            ZipFile.ExtractToDirectory(zipFilePath, directory);
 
             // Change html
             string htmlFileName = string.Format("{0}.htm", orderNumber);
-            string htmlFilePath = string.Format("{0}\\{1}", temp, htmlFileName);
+            string htmlFilePath = string.Format("{0}\\{1}", directory, htmlFileName);
 
-            string htmlFile = Directory.EnumerateFiles(temp).FirstOrDefault(x => x.EndsWith("htm") || x.EndsWith("html"));
+            string htmlFile = Directory.EnumerateFiles(directory).FirstOrDefault(x => x.EndsWith("htm") || x.EndsWith("html"));
             if(string.IsNullOrEmpty(htmlFile))
                 throw new Exception("Html not found");
 
@@ -58,7 +58,7 @@ namespace WFP.ICT.Web.Helpers
             uploader.CreateDirectory(imagesLive);
 
             // Upload Images
-            var images = Directory.EnumerateDirectories(temp).FirstOrDefault();
+            var images = Directory.EnumerateDirectories(directory).FirstOrDefault();
             foreach (var imgFile in Directory.EnumerateFiles(images))
             {
                 var file = new FileInfo(imgFile);
@@ -66,7 +66,7 @@ namespace WFP.ICT.Web.Helpers
             }
 
             // Delete tmp
-            new DirectoryInfo(temp).Delete(true);
+            new DirectoryInfo(directory).Delete(true);
 
             return new HtmlProcessResult() {Status = status, filePathLive = filePathLive};
         }

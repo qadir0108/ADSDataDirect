@@ -43,8 +43,9 @@ namespace WFP.ICT.Web.Helpers
                 {
                     campaignTesting.HtmlImagesStatus = (int)UploadFileStatusEnum.Failed;
                 }
+                db.SaveChanges();
 
-                //ZipCodeFile
+                // ZipCodeFile
                 try
                 {
                     if (!string.IsNullOrEmpty(campaignTesting.ZipCodeFile))
@@ -60,8 +61,9 @@ namespace WFP.ICT.Web.Helpers
                 {
                     campaignTesting.ZipURLStatus = (int)UploadFileStatusEnum.Failed;
                 }
+                db.SaveChanges();
 
-                //TestSeedList
+                // TestSeedList
                 try
                 {
                     if (!string.IsNullOrEmpty(campaignTesting.TestSeedList))
@@ -76,7 +78,9 @@ namespace WFP.ICT.Web.Helpers
                 {
                     campaignTesting.TestSeedStatus = (int)UploadFileStatusEnum.Failed;
                 }
+                db.SaveChanges();
 
+                // Final SeedList
                 try
                 {
                     if (!string.IsNullOrEmpty(campaignTesting.FinalSeedList))
@@ -92,7 +96,9 @@ namespace WFP.ICT.Web.Helpers
                 {
                     campaignTesting.LiveSeedStatus = (int)UploadFileStatusEnum.Failed;
                 }
+                db.SaveChanges();
 
+                // Suppression
                 try
                 {
                     if (!string.IsNullOrEmpty(campaign.SuppressionFile))
@@ -108,7 +114,6 @@ namespace WFP.ICT.Web.Helpers
                 {
                     campaignTesting.SuppressionStatus = (int)UploadFileStatusEnum.Failed;
                 }
-
                 db.SaveChanges();
                 
             }

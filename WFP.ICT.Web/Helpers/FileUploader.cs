@@ -19,6 +19,7 @@ namespace WFP.ICT.Web.Helpers
         private string _ftpUsername;
         private string _ftpPassword;
         private string _baseURL;
+        private string serverPrefix = "http://www.digitaldynamixs.net/ep2/";
 
         public FileUploader()
         {
@@ -32,38 +33,7 @@ namespace WFP.ICT.Web.Helpers
             _ftpServer = ConfigurationManager.AppSettings["FTPServer"];
             _ftpUsername = ConfigurationManager.AppSettings["FTPUsername"];
             _ftpPassword = ConfigurationManager.AppSettings["FTPPassword"];
-            _baseURL = string.Format("ftp://{0}/public_html/ep2/", _ftpServer);
-
-
-        }
-
-        private void FileUploadFileCompleted(object sender, UploadFileCompletedEventArgs e)
-        {
-
-            _status = (e.Cancelled || e.Error == null) ? false : true;
-            _uploadCompleted = true;
-
-            if (e.Error == null)
-            {
-                //_InputFile.Status = FileStatus.Uploaded;
-            }
-            else
-            {
-                //_InputFile.Status = FileStatus.Failed;
-                //_InputFile.Error = e.Error;
-            }
-        }
-
-        private void FileUploadProgressChanged(object sender, UploadProgressChangedEventArgs e)
-        {
-            //if (e.ProgressPercentage % 10 == 0)
-            {
-                //This writes the pecentage data uploaded and downloaded
-                Console.WriteLine("Send: {0}, Received: {1}", e.BytesSent, e.BytesReceived);
-                //You can have a delegate or a call back to update your UI about the percentage uploaded
-                //If you don't have the condition (i.e e.ProgressPercentage % 10 == 0 )for the pecentage of the process 
-                //the callback will slow you upload process down
-            }
+            _baseURL = String.Format("ftp://{0}/public_html/ep2/", _ftpServer);
         }
 
         public bool DirectoryExists(string directoryPath)
@@ -109,14 +79,12 @@ namespace WFP.ICT.Web.Helpers
             using (WebClient _client = new WebClient())
             {
                 _client.Credentials = new NetworkCredential(_ftpUsername, _ftpPassword);
-                _client.UploadProgressChanged += FileUploadProgressChanged;
-                _client.UploadFileCompleted += FileUploadFileCompleted;
-                string filePathLive = _baseURL + directoryName + "/" + fileName;
-                Uri address = new Uri(filePathLive);
+                string filePathFTP = _baseURL + directoryName + "/" + fileName;
+                Uri address = new Uri(filePathFTP);
                 _client.UploadFile(address, filePath);
+                string filePathLive = serverPrefix + directoryName + "/" + fileName;
                 return filePathLive;
             }
         }
-        
     }
 }

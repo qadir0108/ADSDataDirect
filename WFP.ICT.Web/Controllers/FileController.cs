@@ -37,9 +37,9 @@ namespace WFP.ICT.Web.Controllers
                         S3FileManager.Upload(amazonFileKey, filePath);
 
                         // Delete local
-                        //string fullPath = Path.Combine(UploadPath, fileContent.FileName);
-                        //if (System.IO.File.Exists(fullPath))
-                        //    System.IO.File.Delete(fullPath);
+                        string fullPath = Path.Combine(UploadPath, fileContent.FileName);
+                        if (System.IO.File.Exists(fullPath))
+                            System.IO.File.Delete(fullPath);
                     }
                 }
 
