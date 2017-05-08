@@ -291,7 +291,7 @@ namespace WFP.ICT.Web.Controllers
         [MultipleButton(Name = "action", Argument = "Process")]
         public ActionResult Process([Bind(Include = "Id,CampaignId")] CampaignTesting campaignTesting)
         {
-            var threadParams = new EmailThreadParams() {id = campaignTesting.CampaignId, user = LoggedInUser, UploadPath = UploadPath};
+            var threadParams = new EmailThreadParams() {idFirst = campaignTesting.CampaignId, user = LoggedInUser, UploadPath = UploadPath};
             ParameterizedThreadStart p = new ParameterizedThreadStart(o => FileProcessor.ProcessFiles((EmailThreadParams)o));
             Thread thread = new Thread(p);
             thread.Start(threadParams);
@@ -312,6 +312,8 @@ namespace WFP.ICT.Web.Controllers
             {
                 return HttpNotFound();
             }
+            var proData = VendorsList.FirstOrDefault(x => x.Text.ToLowerInvariant().Contains("pro"));
+            ViewBag.Vendor = new SelectList(VendorsList, "Value","Text", proData);
             return View(campaignApproved);
         }
 
@@ -335,10 +337,12 @@ namespace WFP.ICT.Web.Controllers
                                  select error.ErrorMessage).ToList();
                 TempData["Error"] = "There is error in saving data." + string.Join("<br/>", errorList);
             }
+            var proData = VendorsList.FirstOrDefault(x => x.Text.Contains("pro"));
+            ViewBag.Vendor = new SelectList(VendorsList, "Value", "Text", proData);
             return View(campaignApproved);
         }
         
-        public ActionResult SendToVendor(Guid? Id)
+        public ActionResult SendToVendor(Guid? Id, Guid? VendorId)
         {
             try
             {
@@ -352,7 +356,7 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Campagin: " + campaign.CampaignName + " is not yet approved.");
                 }
 
-                var threadParams = new EmailThreadParams() { id = campaign.Id, user = LoggedInUser };
+                var threadParams = new EmailThreadParams() { idFirst = campaign.Id, idSecond =VendorId, user = LoggedInUser };
                 Thread thread = new Thread(new ParameterizedThreadStart(SendVendorEmail));
                 thread.Start(threadParams);
                 
@@ -370,8 +374,8 @@ namespace WFP.ICT.Web.Controllers
             using (var db = new WFPICTContext())
             {
                 var threadParams = (EmailThreadParams)o;
-                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.id);
-                var vendor = db.Vendors.FirstOrDefault();
+                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.idFirst);
+                var vendor = db.Vendors.FirstOrDefault(x => x.Id == threadParams.idSecond.Value);
 
                 EmailHelper.SendApprovedToVendor(vendor, campaign);
 

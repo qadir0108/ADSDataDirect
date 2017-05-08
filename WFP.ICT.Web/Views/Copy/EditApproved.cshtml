@@ -174,7 +174,10 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <a href="#" class="btn btn-default" id="btnSendToVendor" data-tooltip="tooltip" title="Send to Vendor"><span class="glyphicon glyphicon-envelope"></span></a>
+                            <a href="#" id="" name="" class="btn btn-default" title="Send to Vendor" data-tooltip="tooltip"
+                               data-toggle="modal" data-target="#myModal" data-name="@Model.CampaignName" data-order="@Model.OrderNumber">
+                                <span class="glyphicon glyphicon-envelope"></span>Send
+                            </a>
                         </div>
                     </div>
                 </div>
@@ -184,6 +187,39 @@
     </div>
 </div>
 }
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Send to Vendor</h4>
+            </div>
+            <form id="frm" role="form">
+                <div class="modal-body">
+                    <input id="txtId" name="txtId" type="hidden">
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPasswordRetype">Select Vendor<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                            </div>
+                            @Html.DropDownList("Vendor", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btnSendToVendor" id="btnSendToVendor">Send to Vendor</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -197,11 +233,28 @@
 
             $("input[name='ReBroadCast']:checked").closest("label.btn").addClass("active");
 
+            $('#myModal').on('show.bs.modal', function (event) {
+
+                var button = $(event.relatedTarget);
+                var modal = $(this);
+
+                debugger;
+                modal.find('.modal-title').text('Send to Vendor : ' + button.data('name') + ', Order Number : ' + button.data('order'));
+            });
+
             $('#btnSendToVendor').click(function (e) {
                 debugger;
+
                 e.preventDefault();
+
+                if ($('#Vendor').find('option:selected').val() === '') {
+                    wfp.showError("Please select Vendor");
+                    return;
+                }
+                
                 var dataToPost = {
-                    Id: $('#CampaignId').val()
+                    Id: $('#CampaignId').val(),
+                    VendorId: $('#Vendor').find('option:selected').val()
                 };
 
                 wfp.showSwal("Are you sure to send to vendor?",

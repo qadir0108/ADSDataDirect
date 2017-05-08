@@ -274,6 +274,8 @@ namespace WFP.ICT.Web.Controllers
                 vendor.Phone = profile.Phone;
                 db.SaveChanges();
                 TempData["Success"] = "Vendor settings has been updated successfully!";
+
+                _forceVendors = true;
                 return RedirectToAction("Vendors");
             }
             catch (Exception ex)

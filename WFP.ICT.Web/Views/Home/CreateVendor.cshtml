@@ -9,7 +9,7 @@
             <div class="col-md-8 col-md-push-2">
                 <div class="dashboard-page-head">
                     <div class="page-header">
-                        <h1>@(Model.Id == null ? "New" : "Edit")  Vendor<small></small></h1>
+                        <h1>@(Model == null ? "New" : "Edit")  Vendor<small></small></h1>
                     </div>
                 </div>
             </div>
@@ -86,7 +86,7 @@
                                     <div class="col-md-12">
                                         <div class="form-group">
                                             <div class="text-right">
-                                                <button id="btnUpdateProfile" name="btnUpdateProfile" class="btn btn-default" type="submit">@(Model.Id == null ? "Create" : "Update")  Vendor</button>
+                                                <button id="btnUpdateProfile" name="btnUpdateProfile" class="btn btn-default" type="submit">@(Model == null ? "Create" : "Update")  Vendor</button>
                                             </div>
                                         </div>
                                     </div>

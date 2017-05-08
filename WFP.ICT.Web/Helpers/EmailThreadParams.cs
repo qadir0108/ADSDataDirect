@@ -8,7 +8,8 @@ namespace WFP.ICT.Web.Helpers
 {
     public class EmailThreadParams
     {
-        public Guid? id { get; set; }
+        public Guid? idFirst { get; set; }
+        public Guid? idSecond { get; set; }
         public WFPUser user { get; set; }
 
         public string UploadPath { set; get; }

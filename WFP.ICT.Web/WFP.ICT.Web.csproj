@@ -648,7 +648,6 @@
     <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="css\sweetalert.css" />
-    <Content Include="Uploads\TextFile1.txt" />
     <Content Include="Views\Report\Report.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -712,6 +711,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

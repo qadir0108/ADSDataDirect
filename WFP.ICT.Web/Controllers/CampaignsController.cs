@@ -200,7 +200,7 @@ namespace WFP.ICT.Web.Controllers
                     db.Campaigns.Add(campaign);
                     db.SaveChanges();
 
-                    var threadParams = new EmailThreadParams() { id = campaign.Id, user = LoggedInUser};
+                    var threadParams = new EmailThreadParams() { idFirst = campaign.Id, user = LoggedInUser};
                     Thread thread = new Thread(new ParameterizedThreadStart(SendOrderEmail));
                     thread.Start(threadParams);
                     
@@ -222,7 +222,7 @@ namespace WFP.ICT.Web.Controllers
             using (var db = new WFPICTContext())
             {
                 var threadParams = (EmailThreadParams)o;
-                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.id);
+                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.idFirst);
 
                 if (!string.IsNullOrEmpty(campaign.HtmlImageFiles))
                 {

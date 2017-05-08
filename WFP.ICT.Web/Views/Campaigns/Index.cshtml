@@ -112,7 +112,7 @@
                         @Html.DisplayFor(modelItem => item.OrderNumber)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CampaignName)
+                        @(item.Approved != null ? item.Approved.CampaignName : item.Testing  != null ? item.Testing.CampaignName : item.CampaignName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CreatedBy)

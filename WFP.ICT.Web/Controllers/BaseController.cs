@@ -21,7 +21,9 @@ namespace WFP.ICT.Web.Controllers
         {
             get
             {
-                return _db ?? HttpContext.GetOwinContext().Get<WFPICTContext>();
+                if(_db == null)
+                    _db = HttpContext.GetOwinContext().Get<WFPICTContext>();
+                return _db;
             }
             private set
             {
@@ -125,6 +127,31 @@ namespace WFP.ICT.Web.Controllers
                     });
                 }
                 return _users;
+            }
+        }
+
+        public static bool _forceVendors;
+        private static List<SelectListItem> _vendors;
+        public IEnumerable<SelectListItem> VendorsList
+        {
+            get
+            {
+                if (_vendors == null || _forceVendors)
+                {
+                    _vendors = db.Vendors
+                        .OrderBy(x => x.CreatedAt).Select(
+                             x => new SelectListItem()
+                             {
+                                 Text = x.Name,
+                                 Value = x.Id.ToString()
+                             }).ToList();
+                    _vendors.Insert(0, new SelectListItem()
+                    {
+                        Text = "Select Vendor",
+                        Value = string.Empty
+                    });
+                }
+                return _vendors;
             }
         }
 

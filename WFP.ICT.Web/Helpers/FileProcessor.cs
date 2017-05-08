@@ -21,8 +21,8 @@ namespace WFP.ICT.Web.Helpers
             var UploadPath = threadParams.UploadPath;
             using (var db = new WFPICTContext())
             {
-                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.id);
-                var campaignTesting = db.CampaignsTesting.FirstOrDefault(x => x.CampaignId == threadParams.id);
+                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.idFirst);
+                var campaignTesting = db.CampaignsTesting.FirstOrDefault(x => x.CampaignId == threadParams.idFirst);
 
                 var directory = string.Format("{0}\\{1}", UploadPath, campaign.OrderNumber);
                 if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
