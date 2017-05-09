@@ -58,6 +58,13 @@ namespace WFP.ICT.Web.Helpers
 
         public static void FetchAndUpdate(WFPICTContext db, string OrderNumber)
         {
+            var logs = db.ProDataAPILogs.Where(x => x.OrderNumber == OrderNumber);
+            foreach (var log in logs)
+            {
+                db.ProDataAPILogs.Remove(log);
+            }
+            db.SaveChanges();
+
             AddLog(db, OrderNumber, string.Format("Order Number:{0}, Starting refresh at {1} ", OrderNumber, DateTime.Now));
             AddLog(db, OrderNumber, string.Format("Order Number:{0}, Deleting Old ProData ", OrderNumber));
 
@@ -69,28 +76,38 @@ namespace WFP.ICT.Web.Helpers
             }
             db.SaveChanges();
 
-            var reports = Fetch(OrderNumber).reports.report;
-            AddLog(db, OrderNumber, string.Format("Order Number:{0}, {1} records fetched from ProData ", OrderNumber, reports.Length));
-            foreach (var report in reports)
+            var data = Fetch(OrderNumber);
+            if (data.reports != null && data.reports.report != null)
             {
-                db.ProDatas.Add(new ProData()
+                var reports = data.reports.report;
+                AddLog(db, OrderNumber, string.Format("Order Number:{0}, {1} records fetched from ProData ", OrderNumber, reports.Length));
+                foreach (var report in reports)
                 {
-                    Id = Guid.NewGuid(),
-                    CreatedAt = DateTime.Now,
-                    CampaignId = campagin.Id,
-                    CampaignName = report.CampaignName,
-                    Reportsite_URL = report.Reportsite_URL,
-                    Destination_URL = report.Destination_URL,
-                    CampaignStartDate = report.CampaignStartDate,
-                    ClickCount = long.Parse(report.ClickCount),
-                    UniqueCnt = report.UniqueCnt,
-                    MobileCnt = report.MobileCnt,
-                    ImpressionCnt = report.ImpressionCnt,
-                    IO = report.IO
-                });
+                    db.ProDatas.Add(new ProData()
+                    {
+                        Id = Guid.NewGuid(),
+                        CreatedAt = DateTime.Now,
+                        CampaignId = campagin.Id,
+                        CampaignName = report.CampaignName,
+                        Reportsite_URL = report.Reportsite_URL,
+                        Destination_URL = report.Destination_URL,
+                        CampaignStartDate = report.CampaignStartDate,
+                        ClickCount = long.Parse(report.ClickCount),
+                        UniqueCnt = report.UniqueCnt,
+                        MobileCnt = report.MobileCnt,
+                        ImpressionCnt = report.ImpressionCnt,
+                        IO = report.IO
+                    });
+                }
+                db.SaveChanges();
+                AddLog(db, OrderNumber, string.Format("Order Number:{0}, Refresh completed successfully at {1} ", OrderNumber, DateTime.Now));
             }
-            db.SaveChanges();
-            AddLog(db, OrderNumber, string.Format("Order Number:{0}, Refresh completed successfully at {1} ", OrderNumber, DateTime.Now));
+            else
+            {
+                AddLog(db, OrderNumber, string.Format("Order Number:{0}, Prodata response. {1} ", OrderNumber, data.ToJson()));
+                throw new Exception("There is error in getting data from ProData. Problem in ProData API.");
+            }
+            
         }
     }
 }

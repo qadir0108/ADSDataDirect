@@ -18,11 +18,7 @@ namespace WFP.ICT.Web.Helpers
                 ? customMessage + " " + ex.GetBaseException().Message
                 : ex.GetBaseException().Message;
 
-            while (ex.InnerException != null)
-            {
-                message += "</br>" + ex.InnerException.Message;
-                ex = ex.InnerException;
-            }
+            message += "</br><pre>" + ex.StackTrace+ "</pre>";
 
             if (ex is SqlException)
             {

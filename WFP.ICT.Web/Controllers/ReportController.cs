@@ -137,7 +137,7 @@ namespace WFP.ICT.Web.Controllers
             };
 
             string logoPath;
-            if(!string.IsNullOrEmpty(LoggedInUser.CompanyLogo))
+            if(LoggedInUser != null && !string.IsNullOrEmpty(LoggedInUser.CompanyLogo))
                 logoPath = Url.Content("~/Uploads/" + LoggedInUser.CompanyLogo);
             else
                 logoPath = Url.Content("~/images/logo.png");

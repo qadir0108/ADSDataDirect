@@ -15,6 +15,9 @@ using WFP.ICT.S3;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using System.IO;
+using System.Threading.Tasks;
+using System.Web.Hosting;
+using Hangfire;
 
 namespace WFP.ICT.Web.Controllers
 {
@@ -292,9 +295,11 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Process([Bind(Include = "Id,CampaignId")] CampaignTesting campaignTesting)
         {
             var threadParams = new EmailThreadParams() {idFirst = campaignTesting.CampaignId, user = LoggedInUser, UploadPath = UploadPath};
-            ParameterizedThreadStart p = new ParameterizedThreadStart(o => FileProcessor.ProcessFiles((EmailThreadParams)o));
-            Thread thread = new Thread(p);
-            thread.Start(threadParams);
+            //ParameterizedThreadStart p = new ParameterizedThreadStart(o => FileProcessor.ProcessFiles((EmailThreadParams)o));
+            //Thread thread = new Thread(p);
+            //thread.Start(threadParams);
+
+            BackgroundJob.Enqueue(() => FileProcessor.ProcessFiles(threadParams));
 
             TempData["Success"] = "File Processing has been started succesfully.";
             return RedirectToAction("EditTesting", new {id = campaignTesting.Id});

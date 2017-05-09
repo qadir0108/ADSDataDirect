@@ -50,6 +50,14 @@
     <Reference Include="AWSSDK.S3">
       <HintPath>C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.S3.dll</HintPath>
     </Reference>
+    <Reference Include="Hangfire.Core, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.Core.1.6.12\lib\net45\Hangfire.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Hangfire.SqlServer, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Hangfire.SqlServer.1.6.12\lib\net45\Hangfire.SqlServer.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
       <Private>True</Private>
@@ -268,11 +276,13 @@
     <Compile Include="Helpers\EmailThreadParams.cs" />
     <Compile Include="Helpers\ExcelUtility.cs" />
     <Compile Include="Helpers\FileManager.cs" />
+    <Compile Include="Helpers\FileManagerFTP.cs" />
     <Compile Include="Helpers\FileProcessor.cs" />
     <Compile Include="Helpers\FileUploader.cs" />
     <Compile Include="Helpers\KeyGenerator.cs" />
     <Compile Include="Helpers\ListExtensions.cs" />
     <Compile Include="Helpers\MultipleButtonAttribute.cs" />
+    <Compile Include="Helpers\MyAuthorizationFilter.cs" />
     <Compile Include="Helpers\ProDataHelper.cs" />
     <Compile Include="Helpers\S3FileManager.cs" />
     <Compile Include="Helpers\SortSearchExtension.cs" />

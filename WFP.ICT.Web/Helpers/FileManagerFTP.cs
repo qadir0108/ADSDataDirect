@@ -6,38 +6,39 @@ using System.Linq;
 using System.Web;
 using HtmlAgilityPack;
 using WFP.ICT.Enum;
-using WFP.ICT.S3;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Helpers
 {
-    public class FileManager
+    public class FileManagerFTP
     {
         static string OptOut = @"<center><p style='text-align:center;'><br><br><span style='font-size:12px;'>[~Physical_Mailing_Address~]<br>[~Optout style = ""~]Opt Out[~EndOptout~]</span></p></center>";
         static string ViewInBrowser = @"<center>[~ViewInBrowser style=""~]If you cannot view this email  please click here.[~EndViewInBrowser~]</center>";
         private static string _orderNumber;
         private static bool _isAddOptout;
         private static bool _isAddViewinBrowser;
-        private static string serverPrefix = "https://adsdatadirect.s3.amazonaws.com/";
 
         public static HtmlProcessResult ProcessHtmlZip(string UploadPath, string zipFilePath, string orderNumber, bool isAddOptout, bool isAddViewinBrowser)
         {
             _orderNumber = orderNumber;
             _isAddOptout = isAddOptout;
             _isAddViewinBrowser = isAddViewinBrowser;
+            FileUploader uploader = new FileUploader();
 
             // Unzip
-            var directory = string.Format("{0}\\{1}", UploadPath, orderNumber);
-            if (!Directory.Exists(directory))
+            var directory = string.Format("{0}\\{1}temp", UploadPath, orderNumber);
+            if (Directory.Exists(directory))
+            {
+                new DirectoryInfo(directory).Delete(true);
+            }
+            else
             {
                 Directory.CreateDirectory(directory);
             }
             ZipFile.ExtractToDirectory(zipFilePath, directory);
 
             // Change html
-            var imagesLive = string.Format("{0}/{0}img", orderNumber);
             string htmlFileName = string.Format("{0}.htm", orderNumber);
-            string htmlFileKey = string.Format("{0}/{0}.htm", orderNumber);
             string htmlFilePath = string.Format("{0}\\{1}", directory, htmlFileName);
 
             string htmlFile = Directory.EnumerateFiles(directory).FirstOrDefault(x => x.EndsWith("htm") || x.EndsWith("html"));
@@ -47,22 +48,21 @@ namespace WFP.ICT.Web.Helpers
             UploadFileStatusEnum status = ProcessHtml(htmlFile, htmlFilePath);
 
             // Create 2501 directory
-            S3FileManager.CreateDirectory(orderNumber);
+            uploader.CreateDirectory(orderNumber);
 
             // Upload html
-            S3FileManager.Upload(htmlFileKey, htmlFilePath, true);
-            string filePathLive = string.Format("{0}{1}", serverPrefix, htmlFileKey);
+            string filePathLive = uploader.Upload(orderNumber, htmlFileName, htmlFilePath);
 
             // Create images directory
-            S3FileManager.CreateDirectory(imagesLive);
+            var imagesLive = string.Format("{0}/{0}img", orderNumber);
+            uploader.CreateDirectory(imagesLive);
 
             // Upload Images
             var images = Directory.EnumerateDirectories(directory).FirstOrDefault();
-            if(images != null)
             foreach (var imgFile in Directory.EnumerateFiles(images))
             {
-                var imageLive = string.Format("{0}/{1}", imagesLive, new FileInfo(imgFile).Name);
-                S3FileManager.Upload(imageLive, imgFile, true);
+                var file = new FileInfo(imgFile);
+                uploader.Upload(imagesLive, file.Name, imgFile);
             }
 
             // Delete tmp
@@ -73,7 +73,7 @@ namespace WFP.ICT.Web.Helpers
 
         public static UploadFileStatusEnum ProcessHtml(string htmlFile, string outputFilePath)
         {
-            string imagesPath = string.Format("{0}{1}/{1}img/", serverPrefix, _orderNumber);
+            string imagesPath = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}img/", _orderNumber);
 
             HtmlDocument doc = new HtmlDocument();
             doc.Load(htmlFile);
@@ -116,25 +116,30 @@ namespace WFP.ICT.Web.Helpers
             return alreadyHosted ? UploadFileStatusEnum.HostedWithOutImages :  UploadFileStatusEnum.HostedWithImages;
         }
 
-        public static string GetFilePathLive(UploadFileTypeEnum uploadFileType, string orderNumber)
+        public static string UploadFile(UploadFileTypeEnum uploadFileType, string filePath, string orderNumber)
         {
+            FileUploader uploader = new FileUploader();
+
+            // Create 2501 directory
+            uploader.CreateDirectory(orderNumber);
+
             string fileName = "";
             switch (uploadFileType)
             {
                     case UploadFileTypeEnum.ZipFile:
-                        fileName = string.Format("{0}{1}/{1}zip.csv", serverPrefix, orderNumber);
+                        fileName = string.Format("{0}zip.csv", orderNumber);
                         break;
                     case UploadFileTypeEnum.TestSeedFile:
-                        fileName = string.Format("{0}{1}/{1}test.csv", serverPrefix, orderNumber);
+                        fileName = string.Format("{0}test.csv", orderNumber);
                     break;
                     case UploadFileTypeEnum.LiveSeedFile:
-                        fileName = string.Format("{0}{1}/{1}live.csv", serverPrefix, orderNumber);
+                        fileName = string.Format("{0}live.csv", orderNumber);
                     break;
                     case UploadFileTypeEnum.SuppressionFile:
-                        fileName = string.Format("{0}{1}/{1}supp.csv", serverPrefix, orderNumber);
+                        fileName = string.Format("{0}supp.csv", orderNumber);
                     break;
             }
-            return fileName;
+            return uploader.Upload(orderNumber, fileName, filePath);
         }
     }
 }

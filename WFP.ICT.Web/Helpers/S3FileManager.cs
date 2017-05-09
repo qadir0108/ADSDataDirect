@@ -17,7 +17,7 @@ namespace WFP.ICT.S3
     {
         static string bucket = "adsdatadirect";
 
-        public static void Upload(string fileKey, string localFilePath)
+        public static void Upload(string fileKey, string localFilePath, bool ifMakePublic = false)
         {
             using (IAmazonS3 client = new AmazonS3Client(RegionEndpoint.USWest2))
             {
@@ -27,6 +27,9 @@ namespace WFP.ICT.S3
                 request.FilePath = localFilePath;
                 client.PutObject(request);
             }
+
+            if(ifMakePublic)
+                MakePublic(fileKey);
         }
 
         public static void Download(string fileKey, string localFilePath)
@@ -52,6 +55,15 @@ namespace WFP.ICT.S3
             }
         }
 
+        public static void CreateDirectory(string folderName)
+        {
+            using (IAmazonS3 client = new AmazonS3Client(RegionEndpoint.USWest2))
+            {
+                S3DirectoryInfo destination = new S3DirectoryInfo(client, bucket, folderName);
+                if (!destination.Exists) destination.Create();
+            }
+        }
+
         public static void Move(string oldFileKey,string newFileKey, string folderName)
         {
             if(string.IsNullOrEmpty(oldFileKey)) return;
@@ -62,6 +74,19 @@ namespace WFP.ICT.S3
                 S3DirectoryInfo destination = new S3DirectoryInfo(client, bucket, folderName);
                 if(!destination.Exists) destination.Create();
                 S3FileInfo movedObject = currentObject.MoveTo(bucket, newFileKey);
+            }
+            MakePublic(newFileKey);
+        }
+
+        public static void MakePublic(string fileKey)
+        {
+            using (IAmazonS3 client = new AmazonS3Client(RegionEndpoint.USWest2))
+            {
+                PutACLRequest request = new PutACLRequest();
+                request.BucketName = bucket;
+                request.Key = fileKey;
+                request.CannedACL = S3CannedACL.PublicRead;
+                client.PutACL(request);
             }
         }
     }

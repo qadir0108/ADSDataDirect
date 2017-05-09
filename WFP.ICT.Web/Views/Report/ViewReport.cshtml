@@ -2,6 +2,8 @@
 @using ADSDataDirect.Enums
 @using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
+@using WFP.ICT.Web.Helpers
+
 @model WFP.ICT.Web.Models.CampaignReportVM
 
 @{
@@ -193,7 +195,7 @@
                 @Html.DisplayFor(modelItem => item.IONumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Link)
+                @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item.Link, item.Link.Substring(0, item.Link.Length > 80 ? 80 : item.Link.Length)))
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.QuantityDetail)

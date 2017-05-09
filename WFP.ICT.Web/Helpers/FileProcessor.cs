@@ -2,6 +2,8 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 using System.Web;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
@@ -15,8 +17,8 @@ namespace WFP.ICT.Web.Helpers
         {
             
         }
-
-        public static void ProcessFiles(EmailThreadParams threadParams)
+       
+        public static async Task ProcessFiles(EmailThreadParams threadParams)
         {
             var UploadPath = threadParams.UploadPath;
             using (var db = new WFPICTContext())
@@ -46,76 +48,18 @@ namespace WFP.ICT.Web.Helpers
                 db.SaveChanges();
 
                 // ZipCodeFile
-                try
-                {
-                    if (!string.IsNullOrEmpty(campaignTesting.ZipCodeFile))
-                    {
-                        string filePath = Path.Combine(UploadPath, campaignTesting.ZipCodeFile);
-                        S3FileManager.Download(campaignTesting.ZipCodeFile, filePath);
-                        campaignTesting.ZipURL = FileManager.UploadFile(UploadFileTypeEnum.ZipFile, filePath,
-                            campaign.OrderNumber);
-                        campaignTesting.ZipURLStatus = (int) UploadFileStatusEnum.Completed;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    campaignTesting.ZipURLStatus = (int)UploadFileStatusEnum.Failed;
-                }
-                db.SaveChanges();
-
+                campaignTesting.ZipURL = FileManager.GetFilePathLive(UploadFileTypeEnum.ZipFile, campaign.OrderNumber);
+                campaignTesting.ZipURLStatus = (int)UploadFileStatusEnum.Completed;
                 // TestSeedList
-                try
-                {
-                    if (!string.IsNullOrEmpty(campaignTesting.TestSeedList))
-                    {
-                        string filePath = Path.Combine(UploadPath, campaignTesting.TestSeedList);
-                        S3FileManager.Download(campaignTesting.TestSeedList, filePath);
-                        campaignTesting.TestSeedURL = FileManager.UploadFile(UploadFileTypeEnum.TestSeedFile, filePath, campaign.OrderNumber);
-                        campaignTesting.TestSeedStatus = (int)UploadFileStatusEnum.Completed;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    campaignTesting.TestSeedStatus = (int)UploadFileStatusEnum.Failed;
-                }
-                db.SaveChanges();
-
+                campaignTesting.TestSeedURL = FileManager.GetFilePathLive(UploadFileTypeEnum.TestSeedFile, campaign.OrderNumber);
+                campaignTesting.TestSeedStatus = (int)UploadFileStatusEnum.Completed;
                 // Final SeedList
-                try
-                {
-                    if (!string.IsNullOrEmpty(campaignTesting.FinalSeedList))
-                    {
-                        string filePath = Path.Combine(UploadPath, campaignTesting.FinalSeedList);
-                        S3FileManager.Download(campaignTesting.FinalSeedList, filePath);
-                        campaignTesting.LiveSeedURL = FileManager.UploadFile(UploadFileTypeEnum.LiveSeedFile, filePath,
-                            campaign.OrderNumber);
-                        campaignTesting.LiveSeedStatus = (int) UploadFileStatusEnum.Completed;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    campaignTesting.LiveSeedStatus = (int)UploadFileStatusEnum.Failed;
-                }
-                db.SaveChanges();
-
+                campaignTesting.LiveSeedURL = FileManager.GetFilePathLive(UploadFileTypeEnum.LiveSeedFile, campaign.OrderNumber);
+                campaignTesting.LiveSeedStatus = (int) UploadFileStatusEnum.Completed;
                 // Suppression
-                try
-                {
-                    if (!string.IsNullOrEmpty(campaign.SuppressionFile))
-                    {
-                        string filePath = Path.Combine(UploadPath, campaign.SuppressionFile);
-                        S3FileManager.Download(campaign.SuppressionFile, filePath);
-                        campaignTesting.SuppressionURL = FileManager.UploadFile(UploadFileTypeEnum.SuppressionFile,
-                            filePath, campaign.OrderNumber);
-                        campaignTesting.SuppressionStatus = (int) UploadFileStatusEnum.Completed;
-                    }
-                }
-                catch (Exception ex)
-                {
-                    campaignTesting.SuppressionStatus = (int)UploadFileStatusEnum.Failed;
-                }
+                campaignTesting.SuppressionURL = FileManager.GetFilePathLive(UploadFileTypeEnum.SuppressionFile, campaign.OrderNumber);
+                campaignTesting.SuppressionStatus = (int) UploadFileStatusEnum.Completed;
                 db.SaveChanges();
-                
             }
         }
     }

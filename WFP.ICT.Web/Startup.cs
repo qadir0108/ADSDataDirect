@@ -4,6 +4,7 @@ using Owin;
 using System;
 using System.Globalization;
 using System.Linq;
+using Hangfire;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Web.Helpers;
@@ -19,9 +20,15 @@ namespace WFP.ICT.Web
             CultureInfo.DefaultThreadCurrentUICulture = CultureInfo.GetCultureInfo("en-US");
 
             ConfigureAuth(app);
-            //ADS.API.Models.Campaign.GetPercentage(4);
-            //ADS.API.Models.Campaign.GetPercentage(5);
-            //ADS.API.Models.Campaign.GetPercentage(45);
+
+            GlobalConfiguration.Configuration.UseSqlServerStorage("WFPICTContext");
+            //app.UseHangfireDashboard();
+            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            {
+                Authorization = new[] { new MyAuthorizationFilter() }
+            });
+            app.UseHangfireServer();
+
             SetupInitialSettings();
         }
 

@@ -226,6 +226,9 @@ namespace WFP.ICT.Web.Controllers
                 };
                 db.Vendors.Add(vendor);
                 db.SaveChanges();
+
+                _forceVendors = true;
+
                 TempData["Success"] = "Vendor settings has been added successfully!";
                 return RedirectToAction("Vendors");
             }
@@ -296,6 +299,9 @@ namespace WFP.ICT.Web.Controllers
                         break;
                 }
                 db.SaveChanges();
+
+                _forceVendors = true;
+
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
