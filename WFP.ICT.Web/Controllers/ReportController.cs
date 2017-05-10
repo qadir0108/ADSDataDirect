@@ -6,6 +6,7 @@ using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using WFP.ICT.Web.Reports;
@@ -156,7 +157,7 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Order Number missing");
                 }
                 
-                ProDataHelper.FetchAndUpdate(db, OrderNumber);
+                ProDataAPIManager.FetchAndUpdate(db, OrderNumber);
 
                 return Json(new JsonResponse() { IsSucess = true });
             }

@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
-using System.Web;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
-using WFP.ICT.S3;
 
-namespace WFP.ICT.Web.Helpers
+namespace WFP.ICT.Web.Async
 {
     public class FileProcessor
     {

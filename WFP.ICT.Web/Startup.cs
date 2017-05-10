@@ -25,7 +25,7 @@ namespace WFP.ICT.Web
             //app.UseHangfireDashboard();
             app.UseHangfireDashboard("/hangfire", new DashboardOptions
             {
-                Authorization = new[] { new MyAuthorizationFilter() }
+                Authorization = new[] { new HangfireAuthorizationFilter() }
             });
             app.UseHangfireServer();
 

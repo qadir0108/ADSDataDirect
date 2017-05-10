@@ -5,8 +5,9 @@ using System.Net.Mail;
 using System.Threading.Tasks;
 using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Web.Helpers;
 
-namespace WFP.ICT.Web.Helpers
+namespace WFP.ICT.Web.Async
 {
     public class EmailHelper
     {

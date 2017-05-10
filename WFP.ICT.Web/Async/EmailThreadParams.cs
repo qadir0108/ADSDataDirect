@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using WFP.ICT.Data.Entities;
 
-namespace WFP.ICT.Web.Helpers
+namespace WFP.ICT.Web.Async
 {
     public class EmailThreadParams
     {

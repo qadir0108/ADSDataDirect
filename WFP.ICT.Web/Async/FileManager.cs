@@ -1,15 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
-using System.Web;
 using HtmlAgilityPack;
 using WFP.ICT.Enum;
-using WFP.ICT.S3;
 using WFP.ICT.Web.Models;
 
-namespace WFP.ICT.Web.Helpers
+namespace WFP.ICT.Web.Async
 {
     public class FileManager
     {

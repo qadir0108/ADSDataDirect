@@ -1,14 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.IO;
-using System.Linq;
 using System.Net;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
-namespace WFP.ICT.Web.Helpers
+namespace WFP.ICT.Web.Async
 {
     public class FileUploader
     {

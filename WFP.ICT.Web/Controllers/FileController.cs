@@ -6,7 +6,7 @@ using System.IO;
 using System.Net;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using WFP.ICT.S3;
+using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers

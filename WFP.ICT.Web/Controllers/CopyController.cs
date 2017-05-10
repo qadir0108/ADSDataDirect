@@ -11,13 +11,13 @@ using ADSDataDirect.Enums;
 using PagedList;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
-using WFP.ICT.S3;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web.Hosting;
 using Hangfire;
+using WFP.ICT.Web.Async;
 
 namespace WFP.ICT.Web.Controllers
 {
@@ -362,9 +362,8 @@ namespace WFP.ICT.Web.Controllers
                 }
 
                 var threadParams = new EmailThreadParams() { idFirst = campaign.Id, idSecond =VendorId, user = LoggedInUser };
-                Thread thread = new Thread(new ParameterizedThreadStart(SendVendorEmail));
-                thread.Start(threadParams);
-                
+                BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(threadParams));
+
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -374,21 +373,7 @@ namespace WFP.ICT.Web.Controllers
 
         }
 
-        public void SendVendorEmail(object o)
-        {
-            using (var db = new WFPICTContext())
-            {
-                var threadParams = (EmailThreadParams)o;
-                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.idFirst);
-                var vendor = db.Vendors.FirstOrDefault(x => x.Id == threadParams.idSecond.Value);
-
-                EmailHelper.SendApprovedToVendor(vendor, campaign);
-
-                campaign.Status = (int)CampaignStatusEnum.Traffic;
-                db.SaveChanges();
-            }
-        }
-
+        
 
     }
 }

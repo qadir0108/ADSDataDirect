@@ -7,7 +7,7 @@ using Microsoft.Owin;
 
 namespace WFP.ICT.Web.Helpers
 {
-    public class MyAuthorizationFilter : IDashboardAuthorizationFilter
+    public class HangfireAuthorizationFilter : IDashboardAuthorizationFilter
     {
         public bool Authorize(DashboardContext context)
         {

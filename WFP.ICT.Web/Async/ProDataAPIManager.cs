@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Configuration;
 using System.IO;
 using System.Linq;
@@ -7,9 +7,9 @@ using Newtonsoft.Json;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Web.Models;
 
-namespace WFP.ICT.Web.Helpers
+namespace WFP.ICT.Web.Async
 {
-    public class ProDataHelper
+    public class ProDataAPIManager
     {
         private static string _url = "http://campaign-data-analytics.com/report_api/tracking/io/ADS{0}.json";
         private static string prodataAuth = "44d4a9a18500122703d608ed62c0c881";
