@@ -94,7 +94,8 @@ namespace WFP.ICT.Web.Controllers
 
                 if (!string.IsNullOrEmpty(sc.IsTested))
                 {
-                    campagins = campagins.Where(s => s.Testing.IsTested == Boolean.Parse(sc.IsTested)).ToList();
+                    campagins = campagins.Where(s => s.Testing != null
+                                                  && s.Testing.IsTested == Boolean.Parse(sc.IsTested)).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(sc.dateFrom))

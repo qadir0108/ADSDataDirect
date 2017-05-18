@@ -1,0 +1,230 @@
+﻿@model IEnumerable<MailChimp.Net.Models.List>
+@using ADSDataDirect.Enums
+@using PagedList.Mvc
+@using WFP.ICT.Data.Entities
+@using WFP.ICT.Enum
+@*@model PagedList.IPagedList<WFP.ICT.Data.Entities.Campaign>*@
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string currentSort = ViewBag.CurrentSort;
+    if (string.IsNullOrEmpty(currentSort))
+    {
+        currentSort = "OrderNumber_desc";
+    }
+
+    var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
+    var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
+    var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.BroadcastDateSortParm };
+    var columnSortParams5 = new { sortOrder = ViewBag.StatusSortParm };
+
+    var LoggedInUser = Session["user"] as WFPUser;
+    var IsLoggedIn = LoggedInUser != null;
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+}
+
+@if (TempData["Success"] != null)
+{
+    <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+}
+@if (TempData["Error"] != null)
+{
+    <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
+}
+
+<div class="row">
+    <div class="col-md-5">
+        <div class="dashboard-page-head">
+            <div class="page-header">
+                <h1>Campaign Orders<small></small></h1>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-3 no-left-padding" id="divSearch" data-tooltip="tooltip" title="Search">
+        <form id="frmSearch" method="post">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-search"></span>
+                </div>
+                <input type="hidden" id="searchType" name="searchType" value="basic" />
+                <input type="text" id="searchString" name="searchString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
+                <div class="input-group-addon">
+                    <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-1" id="divTools" style="text-align:left">
+        <button class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
+            <span class="glyphicon glyphicon-search"></span>
+        </button>
+    </div>
+    <div class="col-md-2 no-left-padding " data-tooltip="tooltip" title="Search">
+        <form id="frmSearch2" method="post">
+            @*@Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control" })*@
+        </form>
+    </div>
+    <div class="col-md-1 listing-action" id="divTools1" style="text-align:left">
+        @Html.ActionLink("New Order", "Create", null, new { @class = "btn btn-default", @title = "Place New Order" })
+    </div>
+    </div>
+        
+        <table class="table">
+            <tr>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.CreatedAt)
+                    </th>*@
+                <td>
+                    @Html.SortIdentifier(currentSort, "OrderNumber")
+                    @Html.ActionLink("Order Number", "Index", columnSortParams1)
+                    @*@Html.DisplayNameFor(model => model.OrderNumber)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CampaignName")
+                    @Html.ActionLink("Campaign Name", "Index", columnSortParams2)
+                    @*@Html.DisplayNameFor(model => model.CampaignName)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CreatedBy")
+                    @Html.ActionLink("User Name", "Index", columnSortParams3)
+                    @*@Html.DisplayNameFor(model => model.RepresentativeName)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "BroadcastDate")
+                    @Html.ActionLink("Broadcast Date", "Index", columnSortParams4)
+                    @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "Status")
+                    @Html.ActionLink("Status", "Index", columnSortParams5)
+                </td>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    @*<td>
+        @Html.DisplayFor(modelItem => item.Stats.ToJson())
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.CampaignDefaults.ToJson())
+    </td>
+    <td>
+        @Html.DisplayFor(modelItem => item.Contact.ToJson())
+    </td>
+    <td>
+    </td>*@
+                    <td>
+                        @*<div class="row">
+                            <div class="col-md-12">
+                                <div class="col-md-3">
+                                    @if (!IsAdmin && item.Testing == null)
+                                    {
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "pull-right" })
+                                    }
+                                    else
+                                    {
+                                        @Html.ActionLink("Clone", "Clone", new { id = item.Id }, new { @class = "btn btn-default btn-sm" })
+                                    }
+                                </div>
+                                <div class="col-md-3">
+                                    @if (IsAdmin || item.Testing == null)
+                                    {
+                                        @Html.ActionLink("Delete", "Delete", new {id = item.Id}, new {@class = ""})
+                                    }
+                                    else
+                                    {
+                                        @Html.Raw("&nbsp;")
+                                    }
+                                </div>
+                                <div class="col-md-3">
+                                    @if (IsAdmin)
+                                    {
+                                        @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = item.Id, to = "Testing"}, new {@class = "btn btn-default btn-sm"})
+                                    }
+                                </div>
+                                <div class="col-md-3">
+                                    @if (IsAdmin)
+                                    {
+                                        @Html.ActionLink("Creative", "MoveTo", "Copy", new {id = item.Id, to = "Creative"}, new {@class = "btn btn-default btn-sm"})
+                                    }
+                                </div>
+                            </div>
+                        </div>*@
+                        @if (IsAdmin)
+                        {
+                            <div class="row" style="margin-top: 3px">
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        @Html.ActionLink("Approved", "MoveTo", "Copy", new { id = item.Id, to = "Approved" }, new { @class = "btn btn-default btn-sm" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.ActionLink("Tracking", "MoveTo", "Copy", new {id = item.Id, to = "Tracking" }, new {@class = "btn btn-default btn-sm" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.ActionLink("Re-broad", "MoveTo", "Copy", new {id = item.Id, to = "ReBroadcast"}, new {@class = "btn btn-default btn-sm"})
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.ActionLink("Complete", "MoveTo", "Copy", new {id = item.Id, to = "Complete"}, new {@class = "btn btn-default btn-sm"})
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        @*<div class="row">
+            <div class="col-md-12 text-center">
+                <div class="page-count">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                </div>
+                <div class="tp-pagination">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, Status = ViewBag.StatusSearched }), new PagedListRenderOptions() { })
+                </div>
+            </div>
+        </div>*@
+
+<!-- Modal -->
+@{
+    //Html.RenderPartial("_Search", new WFP.ICT.Web.Models.CampaignSearchVM());
+}
+<script type="text/javascript">
+
+        var wfp = wfp || {};
+
+        $(document).ready(function () {
+
+            $('#searchString').keypress(function (e) {
+                if (e.which === 13) {
+                    $('form#frmSearch').submit();
+                    return false;
+                }
+            });
+
+            $('#btnClearSearch').click(function () {
+                debugger;
+                wfp.reload('/Campaigns/Index');
+                return false;
+            });
+
+            $("#Status").select2().on("change", function (e) {
+                debugger;
+
+                $('form#frmSearch2').submit();
+                return;
+
+            });
+        });
+
+</script>

@@ -12,10 +12,10 @@ namespace WFP.ICT.Web.Async
     {
         static string OptOut = @"<center><p style='text-align:center;'><br><br><span style='font-size:12px;'>[~Physical_Mailing_Address~]<br>[~Optout style = ""~]Opt Out[~EndOptout~]</span></p></center>";
         static string ViewInBrowser = @"<center>[~ViewInBrowser style=""~]If you cannot view this email  please click here.[~EndViewInBrowser~]</center>";
-        private static string _orderNumber;
-        private static bool _isAddOptout;
-        private static bool _isAddViewinBrowser;
-        private static string serverPrefix = "https://adsdatadirect.s3.amazonaws.com/";
+        static string _orderNumber;
+        static bool _isAddOptout;
+        static bool _isAddViewinBrowser;
+        static string serverPrefix = string.Format("https://{0}.s3.amazonaws.com/", S3FileManager.bucket);
 
         public static HtmlProcessResult ProcessHtmlZip(string UploadPath, string zipFilePath, string orderNumber, bool isAddOptout, bool isAddViewinBrowser)
         {

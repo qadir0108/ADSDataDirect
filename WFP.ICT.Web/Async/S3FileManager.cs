@@ -7,7 +7,7 @@ namespace WFP.ICT.Web.Async
 {
     public class S3FileManager
     {
-        static string bucket = "adsdatadirect";
+        public readonly static string bucket = "marketing247";
 
         public static void Upload(string fileKey, string localFilePath, bool ifMakePublic = false)
         {

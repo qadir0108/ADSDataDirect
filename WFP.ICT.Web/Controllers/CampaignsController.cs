@@ -84,7 +84,8 @@ namespace WFP.ICT.Web.Controllers
                 ViewBag.SearchString = sc.searchString;
                 if (!string.IsNullOrEmpty(sc.searchString))
                 {
-                    campagins = campagins.Where(s => s.OrderNumber.ToString().Equals(sc.searchString)).ToList();
+                    var searchRDP = sc.searchString + "RDP";
+                    campagins = campagins.Where(s => s.OrderNumber.Equals(sc.searchString) || s.OrderNumber.Equals(searchRDP)).ToList();
                 }
             }
             else if (sc.searchType == "advanced")
@@ -97,7 +98,9 @@ namespace WFP.ICT.Web.Controllers
 
                 if (!string.IsNullOrEmpty(sc.IsTested))
                 {
-                    campagins = campagins.Where(s => s.Testing.IsTested == Boolean.Parse(sc.IsTested)).ToList();
+                    bool IsTested = Boolean.Parse(sc.IsTested);
+                    campagins = campagins.Where(s => s.Testing != null 
+                                                  && s.Testing.IsTested == IsTested).ToList();
                 }
 
                 if (!string.IsNullOrEmpty(sc.dateFrom))
@@ -124,7 +127,10 @@ namespace WFP.ICT.Web.Controllers
             if (!string.IsNullOrEmpty(sc.Status))
             {
                 int status = int.Parse(sc.Status);
-                campagins = campagins.Where(s => s.Status == status).ToList();
+                if(status == (int)CampaignStatusEnum.Rebroadcasted)
+                    campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                else
+                    campagins = campagins.Where(s => s.Status == status).ToList();
                 ViewBag.StatusSearched = sc.Status;
             }
             else
@@ -201,8 +207,7 @@ namespace WFP.ICT.Web.Controllers
                     db.Campaigns.Add(campaign);
                     db.SaveChanges();
 
-                    var threadParams = new EmailThreadParams() { idFirst = campaign.Id, user = LoggedInUser};
-                    BackgroundJob.Enqueue(() => CampaignProcessor.ProcessNewOrder(threadParams));
+                    BackgroundJob.Enqueue(() => CampaignProcessor.ProcessNewOrder(campaign.OrderNumber, LoggedInUser));
 
                     TempData["Success"] = "Order #: "+ campaign.OrderNumber + " , Campaign " + campaign.CampaignName + " has been submitted sucessfully.";
                 }

@@ -10,11 +10,12 @@ namespace WFP.ICT.Web.Async
 {
     public class CampaignProcessor
     {
-        public static void ProcessNewOrder(EmailThreadParams threadParams)
+        public static void ProcessNewOrder(string OrderNumber, WFPUser user)
         {
             using (var db = new WFPICTContext())
             {
-                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.idFirst);
+                var campaign = db.Campaigns
+                                 .FirstOrDefault(x => x.OrderNumber == OrderNumber);
 
                 if (!string.IsNullOrEmpty(campaign.HtmlImageFiles))
                 {
@@ -58,16 +59,19 @@ namespace WFP.ICT.Web.Async
 
                 db.SaveChanges();
 
-                EmailHelper.SendOrderEmailToClient(threadParams.user, campaign);
+                EmailHelper.SendOrderEmailToClient(user, campaign);
             }
         }
 
-        public static void SendVendorEmail(EmailThreadParams threadParams)
+        public static void SendVendorEmail(string OrderNumber, Guid? vendorId)
         {
             using (var db = new WFPICTContext())
             {
-                Campaign campaign = db.Campaigns.Include(x => x.Approved).FirstOrDefault(x => x.Id == threadParams.idFirst.Value);
-                var vendor = db.Vendors.FirstOrDefault(x => x.Id == threadParams.idSecond.Value);
+                Campaign campaign = db.Campaigns
+                    .Include(x => x.Approved)
+                    .FirstOrDefault(x => x.OrderNumber == OrderNumber);
+
+                var vendor = db.Vendors.FirstOrDefault(x => x.Id == vendorId);
 
                 EmailHelper.SendApprovedToVendor(vendor, campaign);
 

@@ -14,13 +14,12 @@ namespace WFP.ICT.Web.Async
             
         }
        
-        public static async Task ProcessFiles(EmailThreadParams threadParams)
+        public static async Task ProcessFiles(string UploadPath, string OrderNumber)
         {
-            var UploadPath = threadParams.UploadPath;
             using (var db = new WFPICTContext())
             {
-                var campaign = db.Campaigns.FirstOrDefault(x => x.Id == threadParams.idFirst);
-                var campaignTesting = db.CampaignsTesting.FirstOrDefault(x => x.CampaignId == threadParams.idFirst);
+                var campaign = db.Campaigns.FirstOrDefault(x => x.OrderNumber == OrderNumber);
+                var campaignTesting = db.CampaignsTesting.FirstOrDefault(x => x.OrderNumber == OrderNumber);
 
                 var directory = string.Format("{0}\\{1}", UploadPath, campaign.OrderNumber);
                 if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);

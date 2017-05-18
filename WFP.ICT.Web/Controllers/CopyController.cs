@@ -292,14 +292,9 @@ namespace WFP.ICT.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [MultipleButton(Name = "action", Argument = "Process")]
-        public ActionResult Process([Bind(Include = "Id,CampaignId")] CampaignTesting campaignTesting)
+        public ActionResult Process([Bind(Include = "Id,CampaignId,OrderNumber")] CampaignTesting campaignTesting)
         {
-            var threadParams = new EmailThreadParams() {idFirst = campaignTesting.CampaignId, user = LoggedInUser, UploadPath = UploadPath};
-            //ParameterizedThreadStart p = new ParameterizedThreadStart(o => FileProcessor.ProcessFiles((EmailThreadParams)o));
-            //Thread thread = new Thread(p);
-            //thread.Start(threadParams);
-
-            BackgroundJob.Enqueue(() => FileProcessor.ProcessFiles(threadParams));
+            BackgroundJob.Enqueue(() => FileProcessor.ProcessFiles(UploadPath, campaignTesting.OrderNumber));
 
             TempData["Success"] = "File Processing has been started succesfully.";
             return RedirectToAction("EditTesting", new {id = campaignTesting.Id});
@@ -361,8 +356,7 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Campagin: " + campaign.CampaignName + " is not yet approved.");
                 }
 
-                var threadParams = new EmailThreadParams() { idFirst = campaign.Id, idSecond =VendorId, user = LoggedInUser };
-                BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(threadParams));
+                BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(campaign.OrderNumber, VendorId));
 
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
