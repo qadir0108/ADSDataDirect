@@ -278,6 +278,7 @@
     <Compile Include="Helpers\AjaxAuthorizeAttribute.cs" />
     <Compile Include="Helpers\AuthorizeRole.cs" />
     <Compile Include="Helpers\AuthorizeClaim.cs" />
+    <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\ExcelUtility.cs" />
     <Compile Include="Async\FileManager.cs" />
     <Compile Include="Async\FileManagerFTP.cs" />
@@ -709,7 +710,7 @@
     <Content Include="Views\Shared\_UploadFile.cshtml" />
     <Content Include="Views\Report\ViewReport.cshtml" />
     <Content Include="Views\CampaignStatus\Index.cshtml" />
-    <Content Include="Views\Campaigns\_Search.cshtml" />
+    <Content Include="Views\Shared\_Search.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />
     <Content Include="Views\Home\CreateVendor.cshtml" />
     <Content Include="Views\Home\Vendors.cshtml" />
@@ -723,9 +724,11 @@
     <Content Include="Views\Copy\EditApproved.cshtml" />
     <Content Include="Views\Campaigns\Clone.cshtml" />
     <Content Include="Views\Mailchimp\Index.cshtml" />
+    <Content Include="Views\Report\Tracking.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Downloads\" />
     <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>

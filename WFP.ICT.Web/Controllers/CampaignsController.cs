@@ -135,14 +135,58 @@ namespace WFP.ICT.Web.Controllers
             }
             else
             {
-                campagins = campagins.Where(x => x.Status != (int) CampaignStatusEnum.Completed).ToList();
+                //campagins = campagins.Where(x => x.Status != (int) CampaignStatusEnum.Completed).ToList();
             }
 
             ViewBag.Status = StatusList;
 
+            string idsForPrint = string.IsNullOrEmpty(ViewBag.SearchIds) ?
+                                    string.Join(",", campagins.Select(x => x.Id.ToString()))
+                                    : ViewBag.SearchIds;
+            Session["idsForPrint"] = idsForPrint;
+
             // Paging
             int pageNumber = (sc.page ?? 1);
             return View(campagins.ToPagedList(pageNumber, pageSize));
+        }
+
+        public ActionResult Download()
+        {
+            string fileName = string.Format("Orders_{0:yyyyMMdd_HHmmss}.csv", DateTime.Now);
+            var filePath = string.Format("{0}\\{1}", DownloadPath, fileName);
+            if (Session["idsForPrint"] != null)
+            {
+                List<Guid> ids;
+                try
+                {
+                    ids =
+                        (Session["idsForPrint"] as string).Split(",".ToCharArray()).Select(x => Guid.Parse(x)).ToList();
+                    var campagins = db.Campaigns
+                        .Include(x => x.Testing).Include(x => x.Approved)
+                        .Where(x => ids.Contains(x.Id))
+                        .ToList()
+                        .Select(x => new CampaignReportVM()
+                        {
+                            OrderNumber = x.OrderNumber,
+                            CampaignName = x.CampaignName,
+                            BroadcastDate = x.BroadcastDate?.ToString(),
+                            Status = System.Enum.GetName(typeof(CampaignStatusEnum), x.Status)
+                        });
+
+                    campagins.ToCsv(filePath, new CsvDefinition()
+                    {
+                        EndOfLine = "\r\n",
+                        FieldSeparator = ',',
+                        TextQualifier = '"',
+                        Columns   = new List<string> { "OrderNumber", "CampaignName", "BroadcastDate", "Status" }
+                    });
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Wrong Numbers" + ex.Message);
+                }
+            }
+            return File(filePath, "text/csv", fileName);
         }
 
         // GET: Campaigns/Details/5

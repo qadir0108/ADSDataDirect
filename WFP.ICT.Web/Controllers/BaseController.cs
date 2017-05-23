@@ -64,6 +64,17 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
+        string _downloadPath = "~/Downloads";
+        public string DownloadPath
+        {
+            get
+            {
+                string downloadPath = Server.MapPath(_downloadPath);
+                if (!System.IO.Directory.Exists(downloadPath)) System.IO.Directory.CreateDirectory(downloadPath);
+                return downloadPath;
+            }
+        }
+
         public SelectList StatusList
         {
             get

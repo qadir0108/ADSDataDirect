@@ -116,8 +116,15 @@ namespace WFP.ICT.Web.Controllers
             if (!string.IsNullOrEmpty(sc.Status))
             {
                 int status = int.Parse(sc.Status);
-                campagins = campagins.Where(s => s.Status == status).ToList();
+                if (status == (int)CampaignStatusEnum.Rebroadcasted)
+                    campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                else
+                    campagins = campagins.Where(s => s.Status == status).ToList();
                 ViewBag.StatusSearched = sc.Status;
+            }
+            else
+            {
+                //campagins = campagins.Where(x => x.Status != (int)CampaignStatusEnum.Completed).ToList();
             }
 
             if (!IsAdmin)

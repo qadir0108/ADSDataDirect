@@ -36,7 +36,7 @@
 }
 
 <div class="row">
-    <div class="col-md-5">
+    <div class="col-md-4">
         <div class="dashboard-page-head">
             <div class="page-header">
                 <h1>Campaign Orders<small></small></h1>
@@ -58,19 +58,21 @@
             </div>
         </form>
     </div>
-    <div class="col-md-1" id="divTools" style="text-align:left">
-        <button class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
-            <span class="glyphicon glyphicon-search"></span>
-        </button>
-    </div>
     <div class="col-md-2 no-left-padding " data-tooltip="tooltip" title="Search">
         <form id="frmSearch2" method="post">
             @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control" })
         </form>
     </div>
-    <div class="col-md-1 listing-action" id="divTools1" style="text-align:left">
-        @Html.ActionLink("New Order", "Create", null, new { @class = "btn btn-default", @title = "Place New Order" })
+    <div class="col-md-3" id="divTools" style="text-align: left">
+        <a class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
+            <span class="glyphicon glyphicon-search"></span>
+        </a>
+        <a class="btn btn-default" href="/Campaigns/Download" data-tooltip="tooltip" title="Download">
+            <span class="glyphicon glyphicon-download"></span>
+        </a>
+        @Html.ActionLink("New", "Create", null, new { @class = "btn btn-default", @data_tooltip = "tooltip",  @title = "Place New Order" })
     </div>
+    
     </div>
         
         <table class="table">

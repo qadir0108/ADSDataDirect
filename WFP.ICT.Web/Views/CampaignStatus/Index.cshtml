@@ -32,7 +32,7 @@
 }
 
 <div class="row" style="margin-top: 5px">
-    <div class="col-md-9">
+    <div class="col-md-8">
         <div class="headertab">
             Campaign Status
         </div>
@@ -58,6 +58,11 @@
                 </div>
             </div>
         </form>
+    </div>
+    <div class="col-md-1" id="divTools" style="text-align:left">
+        <button class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
+            <span class="glyphicon glyphicon-search"></span>
+        </button>
     </div>
 </div>
         
@@ -97,13 +102,13 @@
                 @Enum.GetName(typeof(CampaignStatusEnum), item.Status)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Approved.OrderNumber)
+                @Html.DisplayFor(modelItem => item.OrderNumber)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Approved.CampaignName)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.CreatedAt)
+                @Html.DisplayFor(modelItem => item.Approved.CreatedAt)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Approved.DeployDate)
@@ -137,7 +142,10 @@
                 </div>
             </div>
         </div>
-
+<!-- Modal -->
+@{
+    Html.RenderPartial("_Search", new WFP.ICT.Web.Models.CampaignSearchVM());
+}
 <script type="text/javascript">
 
         var wfp = wfp || {};

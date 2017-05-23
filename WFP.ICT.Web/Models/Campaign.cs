@@ -10,7 +10,7 @@ namespace ADS.API.Models
 
         public static SortedDictionary<int, double> hoursPercentageDictionary = new SortedDictionary<int, double>()
         {
-            {1, 0.0139 }, {5, 0.0395}, {8, 0.0613}, {12, 0.0823}, {18, 0.0934}, {24, 0.1023}, {30, 0.1082}, {36, 0.1094}, {44, 1127}
+            {1, 0.0136 }, {5, 0.0593}, {8, 0.0927}, {12, 0.1173}, {18, 0.1324}, {24, 0.1413}, {30, 0.1475}, {36, 0.1486}, {44, 0.1519}
         };
 
         // 4 = 1
@@ -59,11 +59,11 @@ namespace ADS.API.Models
             {
                 clicked = campaign.ProDatas.Sum(x => x.ClickCount);
                 startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
-                opened = GetOpens(campaign.Testing.Quantity, startDateTime);
+                opened = GetOpens(campaign.Approved.Quantity, startDateTime);
             }
             var model = new ADS.API.Models.Campaign()
             {
-                CampaignName = campaign.Testing.CampaignName,
+                CampaignName = campaign.Approved.CampaignName,
                 EmailsClicked = clicked == 0 ? "NA" : clicked.ToString(),
                 EmailsOpened = opened == 0 ? "NA" : opened.ToString(),
                 IONumber = campaign.ProDatas.FirstOrDefault().IO,

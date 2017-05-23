@@ -63,14 +63,14 @@ namespace WFP.ICT.Web.Controllers
                             FromLine = campaign.FromLine,
                             SubjectLine = campaign.SubjectLine,
                             HtmlImageFiles = campaign.HtmlImageFiles,
-                            //CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm", campaign.OrderNumber),
+                            CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm", campaign.OrderNumber),
                             TestSeedList = campaign.TestSeedList,
                             FinalSeedList = campaign.FinalSeedList,
                             TestingUrgency = campaign.TestingUrgency,
                             DeployDate = campaign.BroadcastDate,
 
                             ZipCodeFile = campaign.ZipCodeFile,
-                            //ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv",campaign.OrderNumber),
+                            ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv",campaign.OrderNumber),
                             GeoDetails = campaign.GeoDetails,
                             Demographics = campaign.Demographics,
                             Quantity = campaign.Quantity,
@@ -135,8 +135,8 @@ namespace WFP.ICT.Web.Controllers
                     return RedirectToAction("EditApproved", "Copy", new {id = campaign.ApprovedId});
                     break;
                 case "Tracking":
-                    campaign.Status = (int) CampaignStatusEnum.Tracking;
-                    db.SaveChanges();
+                    //campaign.Status = (int) CampaignStatusEnum.Tracking;
+                    //db.SaveChanges();
                     return RedirectToAction("ViewReport", "Report", new {id = campaign.Id});
                     break;
                 case "ReBroadcast":
@@ -164,28 +164,37 @@ namespace WFP.ICT.Web.Controllers
                         db.SaveChanges();
 
                         var testingId = Guid.NewGuid();
-                        var copyTesting = new CampaignTesting();
-                        db.CampaignsTesting.Add(copyTesting);
-                        db.Entry(copyTesting).CurrentValues.SetValues(db.Entry(campaign.Testing).CurrentValues);
-                        copyTesting.Id = testingId;
-                        copyTesting.CreatedAt = DateTime.Now;
-                        copyTesting.CampaignId = copy.Id;
-                        copyTesting.OrderNumber = campaign.Approved.OrderNumber + "RDP";
-                        db.SaveChanges();
+                        var testing = new CampaignTesting()
+                        {
+                            Id = testingId,
+                            CampaignId = copy.Id,
+                            CreatedAt = DateTime.Now,
+                            CreatedBy = copy.CreatedBy,
+                            OrderNumber = copy.OrderNumber,
+                            CampaignName = campaign.Approved.CampaignName,
+                            WhiteLabel = campaign.Approved.WhiteLabel,
+                            ReBroadCast = campaign.Approved.ReBroadCast,
+                            ReBroadcastDate = campaign.Approved.ReBroadcastDate,
+                            FromLine = campaign.Approved.FromLine,
+                            SubjectLine = campaign.Approved.SubjectLine,
+                            HtmlImageFiles = campaign.Approved.HtmlImageFiles,
+                            CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm", campaign.OrderNumber),
+                            TestSeedList = campaign.Testing.TestSeedList,
+                            FinalSeedList = campaign.Testing.FinalSeedList,
+                            TestingUrgency = campaign.Testing.TestingUrgency,
+                            DeployDate = campaign.Approved.DeployDate,
 
-                        var approvedId = Guid.NewGuid();
-                        ;
-                        var copyApproved = new CampaignApproved();
-                        db.CampaignsApproved.Add(copyApproved);
-                        db.Entry(copyApproved).CurrentValues.SetValues(db.Entry(campaign.Approved).CurrentValues);
-                        copyApproved.Id = approvedId;
-                        copyApproved.CreatedAt = DateTime.Now;
-                        copyApproved.CampaignId = copy.Id;
-                        copyApproved.OrderNumber = campaign.Approved.OrderNumber + "RDP";
+                            ZipCodeFile = campaign.Testing.ZipCodeFile,
+                            ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv",campaign.OrderNumber),
+                            GeoDetails = campaign.Approved.GeoDetails,
+                            Demographics = campaign.Approved.Demographics,
+                            Quantity = campaign.Approved.Quantity,
+                            SpecialInstructions = campaign.Approved.SpecialInstructions
+                        };
+                        db.CampaignsTesting.Add(testing);
                         db.SaveChanges();
 
                         copy.TestingId = testingId;
-                        copy.ApprovedId = approvedId;
                         db.SaveChanges();
 
                         campaign.RebroadId = copy.Id;

@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Data.Entity;
 using System.Net;
 using System.Net.Http;
 using System.Web.Http;
 using System.Web.Http.Results;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using ADSDataDirect.Enums;
 using Newtonsoft.Json;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Web.Models;
@@ -56,8 +58,11 @@ namespace WFP.ICT.Web.Controllers
                 });
                 db.SaveChanges();
 
-                var campaigns = db.Campaigns.Include("ProDatas").Include("Copy")
-                    .Where(x => x.AssignedToCustomer == user.Id)
+                var campaigns = db.Campaigns
+                    .Include(x => x.ProDatas)
+                    .Include(x => x.Testing)
+                    .Include(x => x.Approved)
+                    .Where(x => x.AssignedToCustomer == user.Id && x.Status == (int)CampaignStatusEnum.Completed)
                     .ToList()
                     .Select(x => ADS.API.Models.Campaign.FromCampaign(x));
 

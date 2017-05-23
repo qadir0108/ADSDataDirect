@@ -31,10 +31,13 @@
                             var claims = userIdentity.Claims.Where(x => x.Type == ClaimTypes.UserData).Select(claim => claim.Value).ToList();
                             
                             <li class="active">
-                                <a href="~/Campaigns/Index">Campaign Orders</a>
+                                <a href="~/Campaigns/Index">Orders</a>
                             </li>
                             <li class="active">
-                                <a href="~/CampaignStatus">Campaigns Status</a>
+                                <a href="~/CampaignStatus">Status</a>
+                            </li>
+                            <li class="active">
+                                <a href="~/Report/Tracking">Tracking</a>
                             </li>
                             <li class="active">
                                 <a href="~/Mailchimp/Index">Mailchimp</a>
