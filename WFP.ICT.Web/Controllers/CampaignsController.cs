@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
 using Hangfire;
@@ -170,6 +171,7 @@ namespace WFP.ICT.Web.Controllers
                             OrderNumber = x.OrderNumber,
                             CampaignName = x.CampaignName,
                             BroadcastDate = x.BroadcastDate?.ToString(),
+                            Quantity = x.Approved != null ? x.Approved.Quantity.ToString() : x.Testing != null ? x.Testing.Quantity.ToString() : x.Quantity.ToString(),
                             Status = System.Enum.GetName(typeof(CampaignStatusEnum), x.Status)
                         });
 
@@ -178,7 +180,7 @@ namespace WFP.ICT.Web.Controllers
                         EndOfLine = "\r\n",
                         FieldSeparator = ',',
                         TextQualifier = '"',
-                        Columns   = new List<string> { "OrderNumber", "CampaignName", "BroadcastDate", "Status" }
+                        Columns   = new List<string> { "OrderNumber", "CampaignName", "BroadcastDate", "Quantity", "Status" }
                     });
                 }
                 catch (Exception ex)
@@ -194,12 +196,12 @@ namespace WFP.ICT.Web.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             Campaign campaign = db.Campaigns.Find(id);
             if (campaign == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             return View(campaign);
         }
@@ -272,12 +274,12 @@ namespace WFP.ICT.Web.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             Campaign campaign = db.Campaigns.Find(id);
             if (campaign == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", campaign.TestingUrgency);
@@ -315,12 +317,12 @@ namespace WFP.ICT.Web.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             Campaign campaign = db.Campaigns.Find(id);
             if (campaign == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             return View(campaign);
         }
@@ -359,12 +361,12 @@ namespace WFP.ICT.Web.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             Campaign campaign = db.Campaigns.Find(id);
             if (campaign == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             return View(campaign);
         }

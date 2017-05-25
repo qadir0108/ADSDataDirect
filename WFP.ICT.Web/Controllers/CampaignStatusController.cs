@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Net;
 using System.Threading;
+using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
 using PagedList;
@@ -148,7 +149,7 @@ namespace WFP.ICT.Web.Controllers
             Campaign campaign = db.Campaigns.FirstOrDefault(x => x.Id == Id);
             if (campaign == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             try
             {
@@ -167,7 +168,7 @@ namespace WFP.ICT.Web.Controllers
             Campaign campaign = db.Campaigns.FirstOrDefault(x => x.Id == Id);
             if (campaign == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             try
             {

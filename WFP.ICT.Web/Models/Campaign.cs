@@ -7,10 +7,54 @@ namespace ADS.API.Models
 {
     public class Campaign
     {
-
-        public static SortedDictionary<int, double> hoursPercentageDictionary = new SortedDictionary<int, double>()
+        public static readonly SortedDictionary<int, KeyValuePair<int, int>> hoursPercentageDictionaryDynamic 
+            = new SortedDictionary<int, KeyValuePair<int, int>>()
         {
-            {1, 0.0136 }, {5, 0.0593}, {8, 0.0927}, {12, 0.1173}, {18, 0.1324}, {24, 0.1413}, {30, 0.1475}, {36, 0.1486}, {44, 0.1519}
+            {1, new KeyValuePair<int, int>(100, 300) },
+            {3, new KeyValuePair<int, int>(95, 150) },
+            {5, new KeyValuePair<int, int>(75, 200) },
+            {7, new KeyValuePair<int, int>(100, 200) },
+            {9, new KeyValuePair<int, int>(100, 170) },
+            {12, new KeyValuePair<int, int>(70, 150) },
+            {18, new KeyValuePair<int, int>(50, 100) },
+            {24, new KeyValuePair<int, int>(60, 120) },
+            {30, new KeyValuePair<int, int>(50, 90) },
+            {36, new KeyValuePair<int, int>(30, 70) },
+            {42, new KeyValuePair<int, int>(20, 60) }
+        };
+
+        public static double GetPercentageDynamic(int hr)
+        {
+            var r = new Random();
+            double finalPercentage = 0.0;
+            if (hr >= 1)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[1].Key, hoursPercentageDictionaryDynamic[1].Value) / 10000.0;
+            if (hr >= 3)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[3].Key, hoursPercentageDictionaryDynamic[3].Value) / 10000.0;
+            if (hr >= 5)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[5].Key, hoursPercentageDictionaryDynamic[5].Value) / 10000.0;
+            if (hr >= 7)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[7].Key, hoursPercentageDictionaryDynamic[7].Value) / 10000.0;
+            if (hr >= 9)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[9].Key, hoursPercentageDictionaryDynamic[9].Value) / 10000.0;
+            if (hr >= 12)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[12].Key, hoursPercentageDictionaryDynamic[12].Value) / 10000.0;
+            if (hr >= 18)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[18].Key, hoursPercentageDictionaryDynamic[18].Value) / 10000.0;
+            if (hr >= 24)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[24].Key, hoursPercentageDictionaryDynamic[24].Value) / 10000.0;
+            if (hr >= 30)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[30].Key, hoursPercentageDictionaryDynamic[30].Value) / 10000.0;
+            if (hr >= 36)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[36].Key, hoursPercentageDictionaryDynamic[36].Value) / 10000.0;
+            if (hr >= 42)
+                finalPercentage += r.Next(hoursPercentageDictionaryDynamic[42].Key, hoursPercentageDictionaryDynamic[42].Value) / 10000.0;
+            return finalPercentage;
+        }
+
+        public static readonly SortedDictionary<int, double> hoursPercentageDictionary = new SortedDictionary<int, double>()
+        {
+            {1, 0.0179 }, {5, 0.0479}, {8, 0.0678}, {12, 0.0818}, {18, 0.0893}, {24, 0.1013}, {30, 0.1173}, {36, 0.1184}, {44, 0.1206}
         };
 
         // 4 = 1
@@ -33,11 +77,11 @@ namespace ADS.API.Models
             }
             return hoursPercentageDictionary[actualHr];
         }
-
+        
         public static int GetOpens(long Quantity, DateTime startDateTime)
         {
             int hrsPassed = (int)Math.Round((DateTime.Now - startDateTime).TotalHours);
-            return (int) Math.Round(Quantity * GetPercentage(hrsPassed));
+            return (int) Math.Round(Quantity * GetPercentageDynamic(hrsPassed));
         }
 
         public string CampaignName { get; set; }

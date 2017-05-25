@@ -101,6 +101,10 @@
                     @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
                 </td>
                 <td>
+                    @Html.SortIdentifier(currentSort, "Quantity")
+                    @Html.ActionLink("Quantity", "Index", columnSortParams5)
+                </td>
+                <td>
                     @Html.SortIdentifier(currentSort, "Status")
                     @Html.ActionLink("Status", "Index", columnSortParams5)
                 </td>
@@ -122,20 +126,24 @@
                     <td>
                         @Html.DisplayFor(modelItem => item.BroadcastDate)
                     </td>
-                    <td>
+                    <td class="no-right-padding no-left-padding">
+                        @(item.Approved != null ? item.Approved.Quantity : item.Testing != null ? item.Testing.Quantity : item.Quantity)
+                    </td>
+
+                    <td class="no-right-padding no-left-padding">
                         @Enum.GetName(typeof(CampaignStatusEnum), item.Status)
                     </td>
-                    <td>
+                    <td class="no-right-padding no-left-padding">
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="col-md-3">
                                     @if (!IsAdmin && item.Testing == null)
                                     {
-                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "pull-right" })
+                                        @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "pull-right no-left-padding no-right-padding" })
                                     }
                                     else
                                     {
-                                        @Html.ActionLink("Clone", "Clone", new { id = item.Id }, new { @class = "btn btn-default btn-sm" })
+                                        @Html.ActionLink("Clone", "Clone", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     }
                                 </div>
                                 <div class="col-md-3">
@@ -151,13 +159,13 @@
                                 <div class="col-md-3">
                                     @if (IsAdmin)
                                     {
-                                        @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = item.Id, to = "Testing"}, new {@class = "btn btn-default btn-sm"})
+                                        @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = item.Id, to = "Testing"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     }
                                 </div>
                                 <div class="col-md-3">
                                     @if (IsAdmin)
                                     {
-                                        @Html.ActionLink("Creative", "MoveTo", "Copy", new {id = item.Id, to = "Creative"}, new {@class = "btn btn-default btn-sm"})
+                                        @Html.ActionLink("Creative", "MoveTo", "Copy", new {id = item.Id, to = "Creative"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     }
                                 </div>
                             </div>
@@ -167,16 +175,16 @@
                             <div class="row" style="margin-top: 3px">
                                 <div class="col-md-12">
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Approved", "MoveTo", "Copy", new { id = item.Id, to = "Approved" }, new { @class = "btn btn-default btn-sm" })
+                                        @Html.ActionLink("Approved", "MoveTo", "Copy", new { id = item.Id, to = "Approved" }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Tracking", "MoveTo", "Copy", new {id = item.Id, to = "Tracking" }, new {@class = "btn btn-default btn-sm" })
+                                        @Html.ActionLink("Tracking", "MoveTo", "Copy", new {id = item.Id, to = "Tracking" }, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Re-broad", "MoveTo", "Copy", new {id = item.Id, to = "ReBroadcast"}, new {@class = "btn btn-default btn-sm"})
+                                        @Html.ActionLink("Re-broad", "MoveTo", "Copy", new {id = item.Id, to = "ReBroadcast"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Complete", "MoveTo", "Copy", new {id = item.Id, to = "Complete"}, new {@class = "btn btn-default btn-sm"})
+                                        @Html.ActionLink("Complete", "MoveTo", "Copy", new {id = item.Id, to = "Complete"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     </div>
                                 </div>
                             </div>

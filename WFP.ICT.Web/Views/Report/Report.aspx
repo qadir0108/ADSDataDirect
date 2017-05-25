@@ -24,6 +24,7 @@
 
                     var parametersCollection = new List<ReportParameter>();
                     parametersCollection.Add(new ReportParameter("pLogoUrl", Model.Parameters["pLogoUrl"].ToString(), false));
+                    parametersCollection.Add(new ReportParameter("pCapturedUrl", Model.Parameters["pCapturedUrl"].ToString(), false));
                     ReportViewer1.LocalReport.SetParameters(parametersCollection);
 
                     ReportViewer1.LocalReport.Refresh();

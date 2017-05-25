@@ -23,6 +23,12 @@ namespace WFP.ICT.Web.Controllers
             return View("Error", new HandleErrorInfo(new HttpException(404, "404. Not Found"), "ErrorController", "Index"));
         }
 
+        public ViewResult BadRequest(HandleErrorInfo exception)
+        {
+            ViewBag.Title = "400. Bad Request";
+            return View("Error", new HandleErrorInfo(new HttpException(400, "400. Bad Request"), "ErrorController", "Index"));
+        }
+
         public ViewResult NotAuthorized()
         {
             ViewBag.Title = "You are not authorized";

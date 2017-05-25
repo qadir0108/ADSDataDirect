@@ -218,13 +218,13 @@ namespace WFP.ICT.Web.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             var campaignTesting = db.CampaignsTesting.FirstOrDefault(c => c.Id == id);
 
             if (campaignTesting == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", campaignTesting.TestingUrgency);
@@ -314,12 +314,12 @@ namespace WFP.ICT.Web.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             CampaignApproved campaignApproved = db.CampaignsApproved.Find(id);
             if (campaignApproved == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             var proData = VendorsList.FirstOrDefault(x => x.Text.ToLowerInvariant().Contains("pro"));
             ViewBag.Vendor = new SelectList(VendorsList, "Value","Text", proData);

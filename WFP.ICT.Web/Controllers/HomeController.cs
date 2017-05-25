@@ -242,12 +242,12 @@ namespace WFP.ICT.Web.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             var x = db.Vendors.Find(id);
             if (x == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             var vendor= new UserProfileVM()
             {

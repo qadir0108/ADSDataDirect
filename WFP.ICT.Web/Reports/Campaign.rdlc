@@ -889,6 +889,21 @@
               </Border>
             </Style>
           </Tablix>
+          <Image Name="Image2">
+            <Source>External</Source>
+            <Value>=Parameters!pCapturedUrl.Value</Value>
+            <Sizing>FitProportional</Sizing>
+            <Top>3.79514in</Top>
+            <Left>1.37375in</Left>
+            <Height>3.84375in</Height>
+            <Width>2.65625in</Width>
+            <ZIndex>24</ZIndex>
+            <Style>
+              <Border>
+                <Style>None</Style>
+              </Border>
+            </Style>
+          </Image>
         </ReportItems>
         <Top>0.04167in</Top>
         <Height>8.06597in</Height>
@@ -900,7 +915,7 @@
         </Style>
       </Rectangle>
     </ReportItems>
-    <Height>8.31597in</Height>
+    <Height>8.5243in</Height>
     <Style />
   </Body>
   <Width>6.12153in</Width>
@@ -1136,6 +1151,12 @@
   <ReportParameters>
     <ReportParameter Name="pLogoUrl">
       <DataType>String</DataType>
+      <AllowBlank>true</AllowBlank>
+      <Prompt>ReportParameter1</Prompt>
+    </ReportParameter>
+    <ReportParameter Name="pCapturedUrl">
+      <DataType>String</DataType>
+      <Nullable>true</Nullable>
       <AllowBlank>true</AllowBlank>
       <Prompt>ReportParameter1</Prompt>
     </ReportParameter>

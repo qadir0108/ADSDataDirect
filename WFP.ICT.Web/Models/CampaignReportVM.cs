@@ -23,7 +23,7 @@ namespace WFP.ICT.Web.Models
         public string CTRPercentage { get; set; }
 
         public string BroadcastDate { get; set; }
-
+        
         public List<CampaignReportDetailVM> PerLink { get; set; }
     }
 }

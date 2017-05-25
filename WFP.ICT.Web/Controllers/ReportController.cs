@@ -2,7 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
+using System.Drawing;
+using System.IO;
 using System.Net;
+using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
@@ -54,7 +57,7 @@ namespace WFP.ICT.Web.Controllers
                     OrderNumber = campaign.OrderNumber,
                     CampaignName = campaign.CampaignName,
                     OrderDate = campaign.CreatedAt.ToString(),
-                    Status = ((CampaignStatusEnum)campaign.Status).ToString(),
+                    Status = ((CampaignStatusEnum) campaign.Status).ToString(),
                     WhiteLabel = campaign.WhiteLabel,
                     Quantity = campaign.Approved?.Quantity.ToString(),
                     Clicked = clicked == 0 ? "NA" : clicked.ToString(),
@@ -63,9 +66,15 @@ namespace WFP.ICT.Web.Controllers
                     IONumber = IONumber,
                     StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
                     EmailsSent = campaign.Approved?.Quantity.ToString(),
-                    OpenedPercentage = campaign.Approved?.Quantity == 0 ? "NA" : ((double)opened / campaign.Approved?.Quantity)?.ToString("0.00%"),
-                    ClickedPercentage = campaign.Approved?.Quantity == 0 ? "NA" : ((double)clicked / campaign.Approved?.Quantity)?.ToString("0.00%"),
-                    CTRPercentage = opened == 0 ? "NA" : ((double)clicked / opened).ToString("0.00%"),
+                    OpenedPercentage =
+                        campaign.Approved?.Quantity == 0
+                            ? "NA"
+                            : ((double) opened/campaign.Approved?.Quantity)?.ToString("0.00%"),
+                    ClickedPercentage =
+                        campaign.Approved?.Quantity == 0
+                            ? "NA"
+                            : ((double) clicked/campaign.Approved?.Quantity)?.ToString("0.00%"),
+                    CTRPercentage = opened == 0 ? "NA" : ((double) clicked/opened).ToString("0.00%"),
                 };
                 model.PerLink = new List<CampaignReportDetailVM>();
                 foreach (var proData in campaign.ProDatas)
@@ -90,7 +99,7 @@ namespace WFP.ICT.Web.Controllers
         {
             if (id == null)
             {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+                throw new HttpException(400, "Bad Request");
             }
             Campaign campaign = db.Campaigns
                 .Include(x => x.ProDatas)
@@ -99,7 +108,7 @@ namespace WFP.ICT.Web.Controllers
                 .FirstOrDefault(x => x.Id == id);
             if (campaign == null)
             {
-                return HttpNotFound();
+                throw new HttpException(404, "Not found");
             }
             if (campaign.Approved == null)
             {
@@ -122,7 +131,7 @@ namespace WFP.ICT.Web.Controllers
                 OrderNumber = campaign.OrderNumber,
                 CampaignName = campaign.CampaignName,
                 OrderDate = campaign.CreatedAt.ToString(),
-                Status = ((CampaignStatusEnum)campaign.Status).ToString(),
+                Status = ((CampaignStatusEnum) campaign.Status).ToString(),
                 WhiteLabel = campaign.WhiteLabel,
                 Quantity = campaign.Approved.Quantity.ToString(),
                 Clicked = clicked == 0 ? "NA" : clicked.ToString(),
@@ -131,9 +140,15 @@ namespace WFP.ICT.Web.Controllers
                 IONumber = IONumber,
                 StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
                 EmailsSent = campaign.Approved.Quantity.ToString(),
-                OpenedPercentage = campaign.Approved.Quantity == 0 ? "NA" : ((double)opened / campaign.Approved.Quantity).ToString("0.00%"),
-                ClickedPercentage = campaign.Approved.Quantity == 0 ? "NA" : ((double)clicked / campaign.Approved.Quantity).ToString("0.00%"),
-                CTRPercentage = opened == 0 ? "NA" : ((double)clicked / opened).ToString("0.00%"),
+                OpenedPercentage =
+                    campaign.Approved.Quantity == 0
+                        ? "NA"
+                        : ((double) opened/campaign.Approved.Quantity).ToString("0.00%"),
+                ClickedPercentage =
+                    campaign.Approved.Quantity == 0
+                        ? "NA"
+                        : ((double) clicked/campaign.Approved.Quantity).ToString("0.00%"),
+                CTRPercentage = opened == 0 ? "NA" : ((double) clicked/opened).ToString("0.00%"),
             };
             model.PerLink = new List<CampaignReportDetailVM>();
             foreach (var proData in campaign.ProDatas)
@@ -151,6 +166,7 @@ namespace WFP.ICT.Web.Controllers
 
         public ActionResult Report()
         {
+            string creativeURL = "", imagePath = "", imageURL = "";
             var reportDatas = new List<CampaignReportDetailVM>();
             if (Request.Params["id"] != null)
             {
@@ -164,11 +180,20 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Wrong Input" + ex.Message);
                 }
 
-                Campaign campaign = db.Campaigns.Include("ProDatas").Include("Testing").Include("Approved").FirstOrDefault(x => x.Id == id);
+                Campaign campaign =
+                    db.Campaigns.Include("ProDatas")
+                        .Include("Testing")
+                        .Include("Approved")
+                        .FirstOrDefault(x => x.Id == id);
+
                 if (campaign == null)
                 {
-                    return HttpNotFound();
+                    throw new HttpException(404, "Not found");
                 }
+
+                creativeURL = campaign.Approved.CreativeURL;
+                imagePath = string.Format("{0}\\{1}.png", UploadPath, campaign.OrderNumber);
+                imageURL = new Uri(Request.Url, Url.Content(string.Format("~/Uploads/{0}.png", campaign.OrderNumber))).AbsoluteUri;
 
                 long clicked = 0, opened = 0;
                 DateTime startDateTime = DateTime.MinValue;
@@ -189,19 +214,25 @@ namespace WFP.ICT.Web.Controllers
                         OrderNumber = campaign.OrderNumber,
                         CampaignName = campaign.CampaignName,
                         OrderDate = campaign.CreatedAt.ToString(),
-                        Status = ((CampaignStatusEnum)campaign.Status).ToString(),
+                        Status = ((CampaignStatusEnum) campaign.Status).ToString(),
                         WhiteLabel = campaign.WhiteLabel,
                         Quantity = campaign.Approved.Quantity.ToString(),
                         Clicked = clicked == 0 ? "NA" : clicked.ToString(),
                         Opened = opened == 0 ? "NA" : opened.ToString(),
                         StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
                         EmailsSent = campaign.Approved.Quantity.ToString(),
-                        OpenedPercentage = campaign.Approved.Quantity == 0 ? "NA" : ((double)opened / campaign.Approved.Quantity).ToString("0.00%"),
-                        ClickedPercentage = campaign.Approved.Quantity == 0 ? "NA" : ((double)clicked / campaign.Approved.Quantity).ToString("0.00%"),
-                        CTRPercentage = opened == 0 ? "NA" : ((double)clicked / opened).ToString("0.00%"),
+                        OpenedPercentage =
+                            campaign.Approved.Quantity == 0
+                                ? "NA"
+                                : ((double) opened/campaign.Approved.Quantity).ToString("0.00%"),
+                        ClickedPercentage =
+                            campaign.Approved.Quantity == 0
+                                ? "NA"
+                                : ((double) clicked/campaign.Approved.Quantity).ToString("0.00%"),
+                        CTRPercentage = opened == 0 ? "NA" : ((double) clicked/opened).ToString("0.00%"),
                         IONumber = IONumber,
                         Link = proData.Destination_URL,
-                        QuantityDetail = proData.ClickCount.ToString()
+                        QuantityDetail = proData.ClickCount.ToString(),
                     });
                 }
             }
@@ -212,15 +243,20 @@ namespace WFP.ICT.Web.Controllers
             };
 
             string logoPath;
-            if(LoggedInUser != null && !string.IsNullOrEmpty(LoggedInUser.CompanyLogo))
+            if (LoggedInUser != null && !string.IsNullOrEmpty(LoggedInUser.CompanyLogo))
                 logoPath = Url.Content("~/Uploads/" + LoggedInUser.CompanyLogo);
             else
                 logoPath = Url.Content("~/images/logo.png");
 
-            var logoUrl = new Uri(Request.Url, logoPath).AbsoluteUri;
-            reportModel.Parameters.Add("pLogoUrl", logoUrl);
+            reportModel.Parameters.Add("pLogoUrl", new Uri(Request.Url, logoPath).AbsoluteUri);
+
+            new ImageHelper(creativeURL, imagePath).Capture();
+            reportModel.Parameters.Add("pCapturedUrl", imageURL);
+
             return View("Report", reportModel);
         }
+
+        
 
         public JsonResult RefreshProData(string OrderNumber)
         {

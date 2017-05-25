@@ -22,7 +22,7 @@ namespace WFP.ICT.Web
             FilterConfig.RegisterGlobalFilters(GlobalFilters.Filters);
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
-            
+
             //ViewEngines.Engines.Clear();
             //ViewEngines.Engines.Add(new RazorViewEngine());
         }
@@ -70,6 +70,9 @@ namespace WFP.ICT.Web
 
                 switch (httpEx.GetHttpCode())
                 {
+                    case 400:
+                        action = "BadRequest";
+                        break;
                     case 404:
                         action = "NotFound";
                         break;
