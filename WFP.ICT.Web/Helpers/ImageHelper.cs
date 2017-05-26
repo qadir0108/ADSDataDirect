@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.Drawing.Imaging;
 using System.IO;
-using System.Linq;
 using System.Net;
 using System.Threading;
-using System.Web;
 using System.Windows.Forms;
 
 namespace WFP.ICT.Web.Helpers

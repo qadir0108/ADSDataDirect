@@ -3,8 +3,6 @@ using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
@@ -15,7 +13,6 @@ using WFP.ICT.Enum;
 using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
-using WFP.ICT.Web.Reports;
 
 namespace WFP.ICT.Web.Controllers
 {
@@ -79,14 +76,17 @@ namespace WFP.ICT.Web.Controllers
                     campagins = campagins.OrderByDescending(s => s.CreatedAt).ToList();
                     break;
             }
-
+            ViewBag.SearchType = sc.searchType;
             if (sc.searchType == "basic")
             {
                 ViewBag.SearchString = sc.searchString;
                 if (!string.IsNullOrEmpty(sc.searchString))
                 {
                     var searchRDP = sc.searchString + "RDP";
-                    campagins = campagins.Where(s => s.OrderNumber.Equals(sc.searchString) || s.OrderNumber.Equals(searchRDP)).ToList();
+                    campagins = campagins.Where(s => 
+                    s.OrderNumber.Equals(sc.searchString) || 
+                    s.OrderNumber.Equals(searchRDP) ||
+                    s.CampaignName.Contains(sc.searchString)).ToList();
                 }
             }
             else if (sc.searchType == "advanced")
@@ -95,13 +95,15 @@ namespace WFP.ICT.Web.Controllers
                 {
                     sc.campaignName = sc.campaignName.ToLowerInvariant();
                     campagins = campagins.Where(s => s.CampaignName.IndexOf(sc.campaignName, StringComparison.CurrentCultureIgnoreCase) >= 0).ToList();
+                    ViewBag.CampaignName = sc.campaignName;
                 }
 
-                if (!string.IsNullOrEmpty(sc.IsTested))
+                if (!string.IsNullOrEmpty(sc.isTested))
                 {
-                    bool IsTested = Boolean.Parse(sc.IsTested);
+                    bool IsTested = Boolean.Parse(sc.isTested);
                     campagins = campagins.Where(s => s.Testing != null 
                                                   && s.Testing.IsTested == IsTested).ToList();
+                    ViewBag.IsTested = sc.isTested;
                 }
 
                 if (!string.IsNullOrEmpty(sc.dateFrom))

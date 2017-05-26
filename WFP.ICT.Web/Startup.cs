@@ -1,9 +1,7 @@
 ﻿using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Owin;
-using System;
 using System.Globalization;
-using System.Linq;
 using Hangfire;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WFP.ICT.Data.Entities;

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using WFP.ICT.Data.Entities;
-
-namespace WFP.ICT.Web.Models
+﻿namespace WFP.ICT.Web.Models
 {
     public class ProDataResponse
     {

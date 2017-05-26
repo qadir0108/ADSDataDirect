@@ -2,10 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Data.Entity;
-using System.Drawing;
-using System.IO;
-using System.Net;
-using System.Net.Mime;
 using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;

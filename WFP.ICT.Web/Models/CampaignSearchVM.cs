@@ -9,7 +9,7 @@
         public string searchString { get; set; }
 
         public string campaignName { get; set; }
-        public string IsTested { get; set; }
+        public string isTested { get; set; }
         public string dateFrom { get; set; }
         public string dateTo { get; set; }
 

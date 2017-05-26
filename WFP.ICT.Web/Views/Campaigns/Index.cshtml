@@ -201,7 +201,10 @@
                     Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
                 </div>
                 <div class="tp-pagination">
-                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort, Status = ViewBag.StatusSearched }), new PagedListRenderOptions() { })
+                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort,
+                   searchType = ViewBag.SearchType, searchString = ViewBag.SearchString,
+                   campaignName = ViewBag.CampaignName, isTested = ViewBag.IsTested,
+                   dateFrom = ViewBag.DateFrom, dateTo = ViewBag.DateTo, Status = ViewBag.StatusSearched }), new PagedListRenderOptions() { })
                 </div>
             </div>
         </div>

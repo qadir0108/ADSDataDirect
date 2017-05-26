@@ -1,19 +1,14 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
 using PagedList;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
-using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
-using WFP.ICT.Web.Reports;
 
 namespace WFP.ICT.Web.Controllers
 {
@@ -77,12 +72,17 @@ namespace WFP.ICT.Web.Controllers
                     break;
             }
 
+            ViewBag.SearchType = sc.searchType;
             if (sc.searchType == "basic")
             {
                 ViewBag.SearchString = sc.searchString;
                 if (!string.IsNullOrEmpty(sc.searchString))
                 {
-                    campagins = campagins.Where(s => s.OrderNumber.ToString().Equals(sc.searchString)).ToList();
+                    var searchRDP = sc.searchString + "RDP";
+                    campagins = campagins.Where(s =>
+                    s.OrderNumber.Equals(sc.searchString) ||
+                    s.OrderNumber.Equals(searchRDP) ||
+                    s.CampaignName.Contains(sc.searchString)).ToList();
                 }
             }
             else if (sc.searchType == "advanced")
@@ -91,12 +91,14 @@ namespace WFP.ICT.Web.Controllers
                 {
                     sc.campaignName = sc.campaignName.ToLowerInvariant();
                     campagins = campagins.Where(s => s.CampaignName.IndexOf(sc.campaignName, StringComparison.CurrentCultureIgnoreCase) >= 0).ToList();
+                    ViewBag.CampaignName = sc.campaignName;
                 }
 
-                if (!string.IsNullOrEmpty(sc.IsTested))
+                if (!string.IsNullOrEmpty(sc.isTested))
                 {
                     campagins = campagins.Where(s => s.Testing != null
-                                                  && s.Testing.IsTested == Boolean.Parse(sc.IsTested)).ToList();
+                                                  && s.Testing.IsTested == Boolean.Parse(sc.isTested)).ToList();
+                    ViewBag.IsTested = sc.isTested;
                 }
 
                 if (!string.IsNullOrEmpty(sc.dateFrom))

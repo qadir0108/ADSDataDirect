@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNet.Identity.Owin;
-using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
@@ -10,7 +9,6 @@ using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Data.EntityManager;
 using WFP.ICT.Enum;
-using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
 {

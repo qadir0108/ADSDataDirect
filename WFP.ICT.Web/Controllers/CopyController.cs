@@ -1,21 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Data;
 using System.Data.Entity;
 using System.Linq;
-using System.Net;
-using System.Threading;
 using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
-using PagedList;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
-using System.IO;
-using System.Threading.Tasks;
-using System.Web.Hosting;
 using Hangfire;
 using WFP.ICT.Web.Async;
 

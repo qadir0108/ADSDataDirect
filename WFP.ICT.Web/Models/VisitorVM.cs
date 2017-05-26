@@ -1,5 +1,4 @@
 ﻿using System;
-using WFP.ICT.Enum;
 
 namespace WFP.ICT.Web.Models
 {

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Configuration;
-using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
@@ -8,7 +7,6 @@ using System.Web.Routing;
 using System.Web.Http;
 using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Controllers;
-using WFP.ICT.Web.Helpers;
 
 namespace WFP.ICT.Web
 {

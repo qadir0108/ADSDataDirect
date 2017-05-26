@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using WFP.ICT.Enum;
+﻿using WFP.ICT.Enum;
 
 namespace WFP.ICT.Web.Models
 {

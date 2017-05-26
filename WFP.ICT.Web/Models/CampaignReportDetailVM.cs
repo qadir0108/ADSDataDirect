@@ -1,7 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Web.Mvc;
-
-namespace WFP.ICT.Web.Models
+﻿namespace WFP.ICT.Web.Models
 {
     public class CampaignReportDetailVM : CampaignReportVM
     {
