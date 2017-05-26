@@ -32,7 +32,7 @@
         </dt>
 
         <dd>
-            @Html.DisplayFor(model => model.CampaignName)
+            @(Model.Approved != null ? Model.Approved.CampaignName : Model.Testing != null ? Model.Testing.CampaignName : Model.CampaignName)
         </dd>
 
         <dt>

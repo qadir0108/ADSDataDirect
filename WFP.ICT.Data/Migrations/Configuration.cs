@@ -110,7 +110,7 @@ namespace WFP.ICT.Data.Migrations
                 CreatedAt = DateTime.Now,
                 Email = "qadir0108@gmail.com",
                 CCEmails = @"jkorkin@prodata.media,josh.silver@adsdatdirect.com,jkorkin@safedatatech.onmicrosoft.com,eric@adsdatadirect.com,john.benuck@amelioratedata.com",
-                Name = "Vendor",
+                Name = "Test Vendor",
                 CompanyName = "Vendor Company"
             };
             context.Vendors.Add(vendor);

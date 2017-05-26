@@ -161,6 +161,8 @@ namespace WFP.ICT.Web.Controllers
                         copy.CreatedAt = DateTime.Now;
                         copy.OrderNumber = campaign.Approved.OrderNumber + "RDP";
                         copy.Status = (int) CampaignStatusEnum.Rebroadcasted;
+                        copy.TestingId = null;
+                        copy.ApprovedId = null;
                         db.SaveChanges();
 
                         var testingId = Guid.NewGuid();

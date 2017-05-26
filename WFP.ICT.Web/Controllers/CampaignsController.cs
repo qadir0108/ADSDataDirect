@@ -344,12 +344,15 @@ namespace WFP.ICT.Web.Controllers
             {
                 Campaign campaign1 = db.Campaigns.Include(x => x.Testing).Include(x => x.Approved)
                     .FirstOrDefault(x => x.RebroadId == campaign.Id);
-                campaign1.RebroadId = null;
-                db.SaveChanges();
+                if (campaign1 != null)
+                {
+                    campaign1.RebroadId = null;
+                    db.SaveChanges();
 
-                db.CampaignsTesting.Remove(campaign1.Testing);
-                db.CampaignsApproved.Remove(campaign1.Approved);
-                db.SaveChanges();
+                    db.CampaignsTesting.Remove(campaign1.Testing);
+                    db.CampaignsApproved.Remove(campaign1.Approved);
+                    db.SaveChanges();
+                }
             }
             db.Campaigns.Remove(campaign);
             db.SaveChanges();
