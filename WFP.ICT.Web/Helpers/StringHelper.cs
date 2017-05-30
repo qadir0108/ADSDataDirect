@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace WFP.ICT.Web.Helpers
 {
@@ -14,6 +16,13 @@ namespace WFP.ICT.Web.Helpers
         {
             var parts = Source.Split("//".ToCharArray());
             return string.Join("/", parts.ToList().Skip(parts.Length - 3));
+        }
+
+        public static string Trim(string source)
+        {
+            var lineTrimmed = Regex.Replace(source, @"[^\w\.@-]", "",
+                               RegexOptions.None, TimeSpan.FromSeconds(1.5));
+            return lineTrimmed.Trim();
         }
     }
 }

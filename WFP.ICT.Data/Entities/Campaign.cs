@@ -70,6 +70,9 @@ namespace WFP.ICT.Data.Entities
         public Guid? ApprovedId { get; set; }
         public virtual CampaignApproved Approved { get; set; }
 
+        public Guid? CreativeId { get; set; }
+        public virtual CampaignCreative Creative { get; set; }
+
         public virtual ICollection<ProData> ProDatas { get; set; }
 
         public Campaign()

@@ -165,7 +165,7 @@
                                 <div class="col-md-3">
                                     @if (IsAdmin)
                                     {
-                                        @Html.ActionLink("Creative", "MoveTo", "Copy", new {id = item.Id, to = "Creative"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
+                                        @Html.ActionLink("Creative", "Index", "Creative", new {id = item.Id}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     }
                                 </div>
                             </div>

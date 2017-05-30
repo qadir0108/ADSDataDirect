@@ -383,7 +383,10 @@ namespace WFP.ICT.Web.Controllers
             var camps = db.Campaigns.ToList();
             int newOrderNumber = camps.Count > 0 ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1 : 2500;
 
-            Campaign campaign = db.Campaigns.Include(x => x.Testing).Include(x => x.Approved).FirstOrDefault(x => x.Id == id);
+            Campaign campaign = db.Campaigns
+                .Include(x => x.Testing)
+                .Include(x => x.Approved)
+                .FirstOrDefault(x => x.Id == id);
 
             var copy = new Campaign();
             db.Campaigns.Add(copy);
@@ -392,18 +395,20 @@ namespace WFP.ICT.Web.Controllers
             copy.CreatedAt = DateTime.Now;
             copy.OrderNumber = newOrderNumber.ToString();
             copy.Status = (int)CampaignStatusEnum.OrderRecevied;
+            copy.TestingId = null;
+            copy.ApprovedId = null;
             db.SaveChanges();
 
             if (campaign.Testing != null)
             {
                 var testingId = Guid.NewGuid();
-                var copyTesting = new CampaignTesting();
-                db.CampaignsTesting.Add(copyTesting);
-                db.Entry(copyTesting).CurrentValues.SetValues(db.Entry(campaign.Testing).CurrentValues);
-                copyTesting.Id = testingId;
-                copyTesting.CreatedAt = DateTime.Now;
-                copyTesting.CampaignId = copy.Id;
-                copyTesting.OrderNumber = newOrderNumber.ToString();
+                var testing = new CampaignTesting();
+                db.CampaignsTesting.Add(testing);
+                db.Entry(testing).CurrentValues.SetValues(db.Entry(campaign.Testing).CurrentValues);
+                testing.Id = testingId;
+                testing.CreatedAt = DateTime.Now;
+                testing.CampaignId = copy.Id;
+                testing.OrderNumber = newOrderNumber.ToString();
                 db.SaveChanges();
 
                 copy.TestingId = testingId;
@@ -413,13 +418,13 @@ namespace WFP.ICT.Web.Controllers
             if (campaign.Approved != null)
             {
                 var approvedId = Guid.NewGuid();
-                var copyApproved = new CampaignApproved();
-                db.CampaignsApproved.Add(copyApproved);
-                db.Entry(copyApproved).CurrentValues.SetValues(db.Entry(campaign.Approved).CurrentValues);
-                copyApproved.Id = approvedId;
-                copyApproved.CreatedAt = DateTime.Now;
-                copyApproved.CampaignId = copy.Id;
-                copyApproved.OrderNumber = newOrderNumber.ToString();
+                var approved = new CampaignApproved();
+                db.CampaignsApproved.Add(approved);
+                db.Entry(approved).CurrentValues.SetValues(db.Entry(campaign.Approved).CurrentValues);
+                approved.Id = approvedId;
+                approved.CreatedAt = DateTime.Now;
+                approved.CampaignId = copy.Id;
+                approved.OrderNumber = newOrderNumber.ToString();
                 db.SaveChanges();
 
                 copy.ApprovedId = approvedId;

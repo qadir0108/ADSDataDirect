@@ -34,7 +34,7 @@ namespace WFP.ICT.Web.Controllers
             return RedirectToAction("Index", "Campaigns");
         }
 
-        public ActionResult Users(GatepassSearchVM sc)
+        public ActionResult Users(CampaignSearchVM sc)
         {
             var model = UserManager.Users.Select(x =>
             new UserProfileVM()
@@ -180,7 +180,7 @@ namespace WFP.ICT.Web.Controllers
             return View("Error");
         }
 
-        public ActionResult Vendors(GatepassSearchVM sc)
+        public ActionResult Vendors(CampaignSearchVM sc)
         {
             var vendors = db.Vendors.Select(x =>
             new UserProfileVM()

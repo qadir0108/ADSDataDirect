@@ -24,7 +24,7 @@
                 @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = Session["id"], to = "Testing"}, new {@class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-2">
-                @Html.ActionLink("Creative", "MoveTo", "Copy", new {id = Session["id"], to = "Creative"}, new {@class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Creative", "Index", "Creative", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-2">
                 @Html.ActionLink("Approved", "MoveTo", "Copy", new {id = Session["id"], to = "Approved"}, new {@class = "btn btn-default btn-sm" })

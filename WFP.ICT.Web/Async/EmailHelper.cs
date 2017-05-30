@@ -66,7 +66,7 @@ namespace WFP.ICT.Web.Async
             string quantity = campaign.Approved.Quantity.ToString();
 
             string subject = string.Format("{0} Order {1}, Order # {2}",
-                                    newOld, campaign.CampaignName, campaign.OrderNumber);
+                                    newOld, campaign.Approved.CampaignName, campaign.OrderNumber);
 
             string body = string.Format(@"<br/><p>Dear {0}</p><br/>
                                        Please find below Order details<br/><br/>

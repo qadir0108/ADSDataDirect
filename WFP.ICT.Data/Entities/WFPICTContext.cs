@@ -40,11 +40,14 @@ namespace WFP.ICT.Data.Entities
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<CampaignTesting> CampaignsTesting { get; set; }
         public DbSet<CampaignApproved> CampaignsApproved { get; set; }
+        public DbSet<CampaignCreative> CampaignCreatives { get; set; }
         public DbSet<ProDataAPILog> ProDataAPILogs { get; set; }
         public DbSet<ProData> ProDatas { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
 
         public DbSet<APIRequest> ApiRequests { get; set; }
+
+        public DbSet<MailChimpAPILog> MailChimpAPILogs { get; set; }
 
         public static WFPICTContext Create()
         {
