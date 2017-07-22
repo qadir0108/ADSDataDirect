@@ -1,4 +1,5 @@
 ﻿@using WFP.ICT.Enum
+@using MyToolkit.Html
 @model WFP.ICT.Data.Entities.CampaignTesting
 
 @{
@@ -20,277 +21,364 @@
             {
                 <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
             }
-            <div class="row">
-                <div class="col-md-6">
+        <div class="row">
+        <div class="col-md-6">
 
-                    <div class="headertab">
-                        Campaign Testing - Details
-                    </div>
-                    <hr />
-                    @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-                    @Html.HiddenFor(model => model.Id)
-                    @Html.HiddenFor(model => model.CampaignId)
-                    @Html.HiddenFor(model => model.CreatedAt)
-                    @Html.HiddenFor(model => model.CreatedBy)
-                    @Html.HiddenFor(model => model.OrderNumber)
-                    @Html.HiddenFor(model => model.ReBroadcastDate)
+            <div class="headertab">
+                Campaign Testing - Details
+            </div>
+            <hr />
+            @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+            @Html.HiddenFor(model => model.CampaignId)
+            @Html.HiddenFor(model => model.CreatedAt)
+            @Html.HiddenFor(model => model.CreatedBy)
+            @Html.HiddenFor(model => model.OrderNumber)
+            @*@Html.HiddenFor(model => model.ReBroadcastDate)*@
 
-                    <div class="form-group">
-                        <label class="control-label col-md-2 pre">Campaign Name</label>
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.CampaignName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.CampaignName, "", new { @class = "text-danger" })
+            <div class="form-group">
+                <label class="control-label col-md-2 pre">Campaign Name</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CampaignName, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CampaignName, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.WhiteLabel, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.WhiteLabel, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ReBroadCast, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="">
+                        <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                            <label class="btn btn-primary">
+                                @Html.RadioButtonFor(model => model.ReBroadCast, "True")Yes
+                            </label>
+                            <label class="btn btn-primary">
+                                @Html.RadioButtonFor(model => model.ReBroadCast, "False")No
+                            </label>
                         </div>
+                        @Html.ValidationMessageFor(model => model.ReBroadCast, "", new { @class = "text-danger" })
                     </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.WhiteLabel, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.WhiteLabel, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ReBroadCast, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            <div class="">
-                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.ReBroadCast, "True")Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.ReBroadCast, "False")No
-                                    </label>
-                                </div>
-                                @Html.ValidationMessageFor(model => model.ReBroadCast, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
+                </div>
+            </div>
                     
+            <div class="form-group">
+                <label class="control-label col-md-2 pre">ReBroadcast Date</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ReBroadcastDate, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => model.ReBroadcastDate, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.FromLine, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FromLine, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.FromLine, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.SubjectLine, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.SubjectLine, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.SubjectLine, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2 pre">HtmlImage Files</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.HtmlImageFiles, new {disabled = "disabled", htmlAttributes = new {@class = "form-control"}})
+                    @Html.Partial("_UploadFile", "HtmlImageFiles")
+                    @Html.ValidationMessageFor(model => model.HtmlImageFiles, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.CreativeURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.CreativeURL, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.CreativeURL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TestSeedList, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.TestSeedList, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.Partial("_UploadFile", "TestSeedList")
+                    @Html.ValidationMessageFor(model => model.TestSeedList, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.FinalSeedList, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.FinalSeedList, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.Partial("_UploadFile", "FinalSeedList")
+                    @Html.ValidationMessageFor(model => model.FinalSeedList, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.IsTested, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    <div class="">
+                        <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                            <label class="btn btn-primary">
+                                @Html.RadioButtonFor(model => model.IsTested, "True")Yes
+                            </label>
+                            <label class="btn btn-primary">
+                                @Html.RadioButtonFor(model => model.IsTested, "False")No
+                            </label>
+                        </div>
+                        @Html.ValidationMessageFor(model => model.IsTested, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.TestingTime, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.TestingTime, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.TestingTime, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2 pre">Testing Urgency</label>
+                <div class="col-md-10">
+                    @Html.DropDownList("TestingUrgency", null, htmlAttributes: new {@class = "form-control"})
+                    @Html.ValidationMessageFor(model => model.TestingUrgency, "", new {@class = "text-danger"})
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2 pre">Deploy Date Time</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.DeployDate, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.DeployDate, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+        </div>
+        <div class="col-md-6">
+
+            <div class="headertab">
+                Campaign Demographics
+            </div><hr />
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ZipCodeFile, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ZipCodeFile, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.Partial("_UploadFile", "ZipCodeFile")
+                    @Html.ValidationMessageFor(model => model.ZipCodeFile, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.ZipURL, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.ZipURL, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.ZipURL, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.GeoDetails, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.GeoDetails, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.GeoDetails, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2 pre">Demo</label>
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Demographics, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Demographics, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
+                <div class="col-md-10">
+                    @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2 pre">Special Instructions</label>
+                <div class="col-md-10">
+                    @Html.TextAreaFor(model => model.SpecialInstructions, new {@class = "form-control", rows = "6", cols = "10"})
+                    @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new {@class = "text-danger"})
+                </div>
+            </div>
+                    
+            <hr />
+            <div class="headertab">
+                File Management
+            </div><hr />
+                    
+            <div class="form-group">
+                <label class = "control-label col-md-2">@UploadFileTypeEnum.HtmlImagesFile</label>
+                <label class="control-label col-md-8"><a target="_blank" href="@Model.CreativeURL">@Model.CreativeURL</a></label>
+                <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.HtmlImagesStatus) </label>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">@UploadFileTypeEnum.ZipFile</label>
+                <label class="control-label col-md-8"><a target="_blank" href="@Model.ZipURL">@Model.ZipURL</a></label>
+                <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.ZipURLStatus) </label>
+            </div>
+                    
+            <div class="form-group">
+                <label class="control-label col-md-2">@UploadFileTypeEnum.TestSeedFile</label>
+                <label class="control-label col-md-8"><a target="_blank" href="@Model.TestSeedURL">@Model.TestSeedURL</a></label>
+                <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.TestSeedStatus) </label>
+            </div>
+
+            <div class="form-group">
+                <label class="control-label col-md-2">@UploadFileTypeEnum.LiveSeedFile</label>
+                <label class="control-label col-md-8"><a target="_blank" href="@Model.LiveSeedURL">@Model.LiveSeedURL</a></label>
+                <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.LiveSeedStatus) </label>
+            </div>
+                    
+            <div class="form-group">
+                <label class="control-label col-md-2">@UploadFileTypeEnum.SuppressionFile</label>
+                <label class="control-label col-md-8"><a target="_blank" href="@Model.LiveSeedURL">@Model.SuppressionURL</a></label>
+                <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.SuppressionStatus) </label>
+            </div>
+            
+        </div>
+        </div>
+            
+            <div class="row">
+                <hr />
+                <div class="headertab">
+                    Data Fields
+                </div><hr />
+
+                <div class="col-md-4">
+
                     <div class="form-group">
-                        <label class="control-label col-md-2 pre">ReBroadcast Date</label>
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ReBroadcastDate, new {htmlAttributes = new {@class = "form-control"}})
-                            @Html.ValidationMessageFor(model => model.ReBroadcastDate, "", new {@class = "text-danger"})
+                        <div class="control-label col-md-5">
+                            Open Goals
+                            <div id="divOpenGoalPercentage">0%</div>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(model => model.OpenGoals, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.OpenGoals, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.FromLine, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.FromLine, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.FromLine, "", new { @class = "text-danger" })
+                        <div class="control-label col-md-5">
+                            Click Goals
+                            <div id="divClickGoalPercentage">0%</div>
+                        </div>
+                        <div class="col-md-7">
+                            @Html.EditorFor(model => model.ClickGoals, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.ClickGoals, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        @Html.LabelFor(model => model.SubjectLine, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.SubjectLine, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.SubjectLine, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.DataFileQuantity, htmlAttributes: new { @class = "control-label col-md-5" })
+                        <div class="col-md-7">
+                            @Html.EditorFor(model => model.DataFileQuantity, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.DataFileQuantity, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                     <div class="form-group">
-                        <label class="control-label col-md-2 pre">HtmlImage Files</label>
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.HtmlImageFiles, new {disabled = "disabled", htmlAttributes = new {@class = "form-control"}})
-                            @Html.Partial("_UploadFile", "HtmlImageFiles")
-                            @Html.ValidationMessageFor(model => model.HtmlImageFiles, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CreativeURL, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.CreativeURL, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.CreativeURL, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TestSeedList, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.TestSeedList, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "TestSeedList")
-                            @Html.ValidationMessageFor(model => model.TestSeedList, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.FinalSeedList, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.FinalSeedList, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "FinalSeedList")
-                            @Html.ValidationMessageFor(model => model.FinalSeedList, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.IsTested, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            <div class="">
-                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsTested, "True")Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsTested, "False")No
-                                    </label>
-                                </div>
-                                @Html.ValidationMessageFor(model => model.IsTested, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TestingTime, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.TestingTime, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.TestingTime, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2 pre">Testing Urgency</label>
-                        <div class="col-md-10">
-                            @Html.DropDownList("TestingUrgency", null, htmlAttributes: new {@class = "form-control"})
-                            @Html.ValidationMessageFor(model => model.TestingUrgency, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2 pre">Deploy Date Time</label>
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.DeployDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.DeployDate, "", new { @class = "text-danger" })
+                        @Html.LabelFor(model => model.DataFileSegments, htmlAttributes: new { @class = "control-label col-md-5" })
+                        <div class="col-md-7">
+                            @Html.EditorFor(model => model.DataFileSegments, new { htmlAttributes = new { @class = "form-control", @min = "1", @max = "10" } })
+                            @Html.ValidationMessageFor(model => model.DataFileSegments, "", new { @class = "text-danger" })
                         </div>
                     </div>
 
                 </div>
-                <div class="col-md-6">
 
-                    <div class="headertab">
-                        Campaign Demographics
-                    </div><hr />
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ZipCodeFile, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ZipCodeFile, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "ZipCodeFile")
-                            @Html.ValidationMessageFor(model => model.ZipCodeFile, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ZipURL, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.ZipURL, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ZipURL, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.GeoDetails, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.GeoDetails, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.GeoDetails, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2 pre">Demo</label>
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Demographics, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Demographics, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-2" })
-                        <div class="col-md-10">
-                            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2 pre">Special Instructions</label>
-                        <div class="col-md-10">
-                            @Html.TextAreaFor(model => model.SpecialInstructions, new {@class = "form-control", rows = "6", cols = "10"})
-                            @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new {@class = "text-danger"})
-                        </div>
-                    </div>
-                    
-                    <hr />
-                    <div class="headertab">
-                        File Management
-                    </div><hr />
-                    
-                    <div class="form-group">
-                        <label class = "control-label col-md-2">@UploadFileTypeEnum.HtmlImagesFile</label>
-                        <label class="control-label col-md-8"><a target="_blank" href="@Model.CreativeURL">@Model.CreativeURL</a></label>
-                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.HtmlImagesStatus) </label>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">@UploadFileTypeEnum.ZipFile</label>
-                        <label class="control-label col-md-8"><a target="_blank" href="@Model.ZipURL">@Model.ZipURL</a></label>
-                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.ZipURLStatus) </label>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="control-label col-md-2">@UploadFileTypeEnum.TestSeedFile</label>
-                        <label class="control-label col-md-8"><a target="_blank" href="@Model.TestSeedURL">@Model.TestSeedURL</a></label>
-                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.TestSeedStatus) </label>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-2">@UploadFileTypeEnum.LiveSeedFile</label>
-                        <label class="control-label col-md-8"><a target="_blank" href="@Model.LiveSeedURL">@Model.LiveSeedURL</a></label>
-                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.LiveSeedStatus) </label>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label class="control-label col-md-2">@UploadFileTypeEnum.SuppressionFile</label>
-                        <label class="control-label col-md-8"><a target="_blank" href="@Model.LiveSeedURL">@Model.SuppressionURL</a></label>
-                        <label class="control-label col-md-2">@((UploadFileStatusEnum)Model.SuppressionStatus) </label>
-                    </div>
-                    <div class="form-group pull-right">
-                        <div class="">
-                            <input type="submit" value="Process" class="btn btn-default" name="action:Process" />
-                        </div>
-                    </div>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
+                <div class="col-md-8">
                     <div class="row">
-                        <div class="col-md-offset-3 col-md-3">
-                            <div class="form-group">
-                                <div class="">
-                                    <input type="submit" value="Cancel" class="btn btn-default" name="action:Cancel" />
-                                </div>
+                        <div class="col-md-12">
+                            <div class="col-md-2">
+                                #
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <div class="">
-                                    <input type="submit" value="Save" class="btn btn-default" name="action:EditTesting"/>
-                                </div>
+                            <div class="col-md-2">
+                                First Start
                             </div>
-                        </div>
-                        <div class="col-md-2">
-                            <div class="form-group">
-                                <div class="">
-                                    <input type="submit" value="Approve" class="btn btn-default" name="action:Approve"/>
-                                </div>
+                            <div class="col-md-2">
+                                First End
+                            </div>
+                            <div class="col-md-2">
+                                Second Start
+                            </div>
+                            <div class="col-md-2">
+                                Second End
+                            </div>
+                            <div class="col-md-2">
                             </div>
                         </div>
                     </div>
+@using (Html.BeginCollectionItem("Segments"))
+{
+    if (Model.Segments != null)
+    {
+        foreach (var segment in Model.Segments.OrderBy(x => x.SegmentIoNumber))
+        {
+            Html.RenderPartial("Editors/_Segment", segment);
+        }
+    }
+}
+                </div>
+            </div>
+            
 
+            <br />
+            <br />
+            <div class="row">
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Save" class="btn btn-default" name="action:EditTesting" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Cancel" class="btn btn-default" name="action:Cancel" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Process Files" class="btn btn-default" name="action:ProcessFiles" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Fetch SQL File" class="btn btn-default" name="action:FetchDataFile" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Process Data" class="btn btn-default" name="action:ProcessDataFiles" />
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Approve" class="btn btn-default" name="action:Approve" />
+                    </div>
                 </div>
             </div>
         </div>
@@ -306,15 +394,16 @@
         $('#TestingTime').datetimepicker({
             format: 'M/DD/YYYY hh:mm:ss A'
         });
-
         $('#ReBroadcastDate').datetimepicker({
             format: 'M/DD/YYYY hh:mm:ss A'
         });
-
         $('#DeployDate').datetimepicker({
             format: 'M/DD/YYYY hh:mm:ss A'
         });
+        $("#divOpenGoalPercentage").text('Open Goal %: ' + $.percentage($("#OpenGoals").val(), $("#Quantity").val()).toFixed(0));
+        $("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
 
+        
         $('#ZipCodeFile').prop('readonly', "readonly");
         $('#HtmlImageFiles').prop('readonly', "readonly");
         $('#TestSeedList').prop('readonly', "readonly");
@@ -322,6 +411,49 @@
 
         $("input[name='IsTested']:checked").closest("label.btn").addClass("active");
         $("input[name='ReBroadCast']:checked").closest("label.btn").addClass("active");
+
+        $("#OpenGoals").on("keyup keydown change mouseup", function (event) {
+            debugger;
+            $("#divOpenGoalPercentage").text('Open Goal %: ' + $.percentage($("#OpenGoals").val(), $("#Quantity").val()).toFixed(0));
+        });
+
+        $("#ClickGoals").on("keyup keydown change mouseup", function (event) {
+            $("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
+        });
+
+        var oldValue = parseInt($("#DataFileSegments").val());
+        $("#DataFileSegments").on("change", function (event) {
+
+            event.preventDefault();
+
+            var newValue = parseInt($("#DataFileSegments").val());
+            if (newValue < 1 || newValue > 10) {
+                $("#DataFileSegments").val(oldValue);
+                wfp.showError("Please select between 1 and 10");
+                return;
+            }
+            debugger;
+            if (!(oldValue + 1 === newValue || oldValue - 1 === newValue)) {
+                debugger;
+                $("#DataFileSegments").val(oldValue);
+                wfp.showError("Please add segments one by one.");
+                return;
+            }
+
+            if (newValue !== oldValue) {
+                debugger;
+                $.post("/Copy/UpdateSegments", { Id: $("#Id").val(), oldValue: oldValue, newValue: newValue }, function (response) {
+                    if (response.IsSucess) {
+                        wfp.showSuccess('updated successfully.');
+                        wfp.redirectTo();
+                    } else {
+                        wfp.showError(response.ErrorMessage);
+                    }
+                });
+               
+            }
+            //$("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
+        });
 
         //// Javascript to enable link to tab
         //var url = document.location.toString();

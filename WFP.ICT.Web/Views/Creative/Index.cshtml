@@ -11,8 +11,9 @@
         overflow-y: auto;
     } 
 </style>
-@{ Html.RenderPartial("_HeaderCopy"); }
 
+@{ Html.RenderPartial("_HeaderCopy"); }
+<br/>
 @using (Html.BeginForm())
 {
     Html.AntiForgeryToken();
@@ -141,7 +142,7 @@
                     </div>
                     <div class="form-group">
                         <div class="col-md-12">
-                            @Html.TextAreaFor(model => model.Creatives, new { @class = "form-control", rows = "6", cols = "10" })
+                            @Html.TextAreaFor(model => model.Creatives, new { @class = "form-control", rows = "10", cols = "10" })
                             @Html.ValidationMessageFor(model => model.Creatives, "", new { @class = "text-danger" })
                         </div>
                     </div>
@@ -227,37 +228,26 @@
 
             e.preventDefault();
 
-            wfp.showSwal("Are you sure?", function () {
-                debugger;
-                currentVals.push(roleId);
-                select.append('<option value="' + roleId + '" selected="">' + roleId + '</option>');
-
-                $.ajax({
-                    type: "POST",
-                    url: "/Creative/AddToList",
-                    data: dataToPost,
-                    success: function (response) {
-                        debugger;
-                        if (response === "") wfp.reload();
-                        if (response.IsSucess) {
-                            wfp.showSuccess('Email ' +roleId + ' has been added in Test list successfully.');
-                        } else {
-                            wfp.showError(response.ErrorMessage);
-                        }
-                    },
-                    failure: function (response) {
-                        wfp.showError('There is erorr in service call.');
-                    },
-                    complete: function () {
+            $.ajax({
+                type: "POST",
+                url: "/Creative/AddToList",
+                data: dataToPost,
+                success: function (response) {
+                    debugger;
+                    if (response === "") wfp.reload();
+                    if (response.IsSucess) {
+                        wfp.showSuccess('Email ' + roleId + ' has been added in Test list successfully.');
+                    } else {
+                        wfp.showError(response.ErrorMessage);
                     }
-                });
-                return true;
-
-            }, function () {
-                debugger;
-                select.select2("close");
-                return false;
+                },
+                failure: function (response) {
+                    wfp.showError('There is erorr in service call.');
+                },
+                complete: function () {
+                }
             });
+
         });
         $('#testEmails').on("select2:unselecting", function (e) {
 
@@ -323,37 +313,26 @@
 
             e.preventDefault();
 
-            wfp.showSwal("Are you sure?", function () {
-                debugger;
-                currentVals.push(roleId);
-                select.append('<option value="' + roleId + '" selected="">' + roleId + '</option>');
-
-                $.ajax({
-                    type: "POST",
-                    url: "/Creative/AddToList",
-                    data: dataToPost,
-                    success: function (response) {
-                        debugger;
-                        if (response === "") wfp.reload();
-                        if (response.IsSucess) {
-                            wfp.showSuccess('Email ' + roleId + ' has been added in Live list successfully.');
-                        } else {
-                            wfp.showError(response.ErrorMessage);
-                        }
-                    },
-                    failure: function (response) {
-                        wfp.showError('There is erorr in service call.');
-                    },
-                    complete: function () {
+            $.ajax({
+                type: "POST",
+                url: "/Creative/AddToList",
+                data: dataToPost,
+                success: function (response) {
+                    debugger;
+                    if (response === "") wfp.reload();
+                    if (response.IsSucess) {
+                        wfp.showSuccess('Email ' + roleId + ' has been added in Live list successfully.');
+                    } else {
+                        wfp.showError(response.ErrorMessage);
                     }
-                });
-                return true;
-
-            }, function () {
-                debugger;
-                select.select2("close");
-                return false;
+                },
+                failure: function (response) {
+                    wfp.showError('There is erorr in service call.');
+                },
+                complete: function () {
+                }
             });
+
         });
         $('#liveEmails').on("select2:unselecting", function (e) {
 

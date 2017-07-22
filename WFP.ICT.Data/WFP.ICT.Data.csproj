@@ -48,6 +48,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -60,6 +61,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB\SegmentsData.cs" />
+    <Compile Include="Entities\CampaignSegment.cs" />
     <Compile Include="Entities\CampaignCreative.cs" />
     <Compile Include="Entities\MailChimpAPILog.cs" />
     <Compile Include="Entities\ProDataAPILog.cs" />
@@ -88,6 +91,10 @@
     <Compile Include="Migrations\201705300431369_MailChimp.cs" />
     <Compile Include="Migrations\201705300431369_MailChimp.Designer.cs">
       <DependentUpon>201705300431369_MailChimp.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201707220546364_DataSegment.cs" />
+    <Compile Include="Migrations\201707220546364_DataSegment.Designer.cs">
+      <DependentUpon>201707220546364_DataSegment.cs</DependentUpon>
     </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
@@ -128,6 +135,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201705300431369_MailChimp.resx">
       <DependentUpon>201705300431369_MailChimp.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201707220546364_DataSegment.resx">
+      <DependentUpon>201707220546364_DataSegment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

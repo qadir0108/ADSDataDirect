@@ -73,6 +73,15 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
+        string _imagesPath = "~/images";
+        public string ImagesPath
+        {
+            get
+            {
+                return Server.MapPath(_imagesPath);
+            }
+        }
+
         public SelectList StatusList
         {
             get

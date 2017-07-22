@@ -10,10 +10,13 @@
 
         public string campaignName { get; set; }
         public string isTested { get; set; }
-        public string dateFrom { get; set; }
-        public string dateTo { get; set; }
+        public string orderedFrom { get; set; }
+        public string orderedTo { get; set; }
+        public string broadcastFrom { get; set; }
+        public string broadcastTo { get; set; }
 
         public string Status { get; set; }
+        public string SearchStatus { get; set; }
         public string clearSessionId { get; set; }
     }
 }

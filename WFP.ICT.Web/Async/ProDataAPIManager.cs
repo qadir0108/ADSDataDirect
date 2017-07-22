@@ -24,9 +24,9 @@ namespace WFP.ICT.Web.Async
         {
             if (ConfigurationManager.AppSettings["IsLive"] == "false")
             {
-                OrderNumber = "2199";
+                OrderNumber = "2752";
             }
-            
+
             ProDataResponse proDataResponse;
             string url = string.Format(_url, OrderNumber);
             using (HttpClient client = new HttpClient())
@@ -37,7 +37,15 @@ namespace WFP.ICT.Web.Async
                 using (HttpContent content = response.Content)
                 {
                     string responseContent = content.ReadAsStringAsync().Result;
-                    proDataResponse = JsonConvert.DeserializeObject<ProDataResponse>(responseContent);
+                    try
+                    {
+                        proDataResponse = JsonConvert.DeserializeObject<ProDataResponse>(responseContent);
+                    }
+                    catch (Exception ex)
+                    {
+                        throw new Exception("There is error in parsing data from ProData. Problem in ProData API.");
+                    }
+
                     return proDataResponse;
                 }
             }

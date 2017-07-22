@@ -8,6 +8,9 @@ namespace WFP.ICT.Web.Models
         public string OrderNumber { get; set; }
         public string CampaignName { get; set; }
         public string WhiteLabel { get; set; }
+        public string FromLine { get; set; }
+        public string SubjectLine { get; set; }
+
         public string Quantity { get; set; }
         public string Opened { get; set; }
         public string Clicked { get; set; }
@@ -20,6 +23,9 @@ namespace WFP.ICT.Web.Models
         public string OpenedPercentage { get; set; }
         public string ClickedPercentage { get; set; }
         public string CTRPercentage { get; set; }
+
+        public string Desktop { get; set; }
+        public string Mobile { get; set; }
 
         public string BroadcastDate { get; set; }
         

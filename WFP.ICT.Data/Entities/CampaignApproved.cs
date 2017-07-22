@@ -36,6 +36,16 @@ namespace WFP.ICT.Data.Entities
         public string LinkBreakout { get; set; }
         public string ReportSiteLink { get; set; }
 
+        // New Fields
+        public bool IsOpenPixel { get; set; }
+        public string OpenPixelUrl { get; set; }
+        public long OpenGoals { get; set; }
+        public long ClickGoals { get; set; }
+        public long DataFileQuantity { get; set; }
+        public string DataFileUrl { get; set; }
+        public int DataFileSegments { get; set; } // NumberOfIOsToBeGenerated
+        public bool IsUseApiDataForOpen { get; set; } // Or API/Open Metric formula
+
         public CampaignApproved()
         {
         }

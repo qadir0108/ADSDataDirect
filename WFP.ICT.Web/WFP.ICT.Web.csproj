@@ -50,6 +50,7 @@
     <Reference Include="AWSSDK.S3">
       <HintPath>C:\Program Files (x86)\AWS SDK for .NET\bin\Net45\AWSSDK.S3.dll</HintPath>
     </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.5.5631.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL" />
     <Reference Include="Hangfire.Core, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Core.1.6.12\lib\net45\Hangfire.Core.dll</HintPath>
       <Private>True</Private>
@@ -117,6 +118,14 @@
     </Reference>
     <Reference Include="Microsoft.SqlServer.Types, Version=14.0.0.0, Culture=neutral, PublicKeyToken=89845dcd8080cc91, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.ReportingServices.ReportViewerControl.WebForms.140.1.291.2731477-rc\lib\net40\Microsoft.SqlServer.Types.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MyToolkit, Version=2.5.16.0, Culture=neutral, PublicKeyToken=3e349a1360994d26, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyToolkit.2.5.16\lib\portable-net45+wp8+win8+wpa81\MyToolkit.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MyToolkit.AspNetMvc, Version=2.5.16.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\MyToolkit.AspNet.Mvc.2.5.16\lib\net45\MyToolkit.AspNetMvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
@@ -266,10 +275,11 @@
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Async\CampaignProcessor.cs" />
     <Compile Include="Async\MailChimpProcessor.cs" />
+    <Compile Include="Async\ProDataHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\adsController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
-    <Compile Include="Controllers\CampaignStatusController.cs" />
+    <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\CampaignsController.cs" />
     <Compile Include="Controllers\CopyController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
@@ -277,7 +287,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CreativeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
-    <Compile Include="Controllers\ReportController.cs" />
+    <Compile Include="Controllers\TrackingController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -285,6 +295,8 @@
     <Compile Include="Helpers\AuthorizeRole.cs" />
     <Compile Include="Helpers\AuthorizeClaim.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
+    <Compile Include="Helpers\EmailChecker.cs" />
+    <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\ExcelUtility.cs" />
     <Compile Include="Async\FileManager.cs" />
     <Compile Include="Async\FileManagerFTP.cs" />
@@ -306,6 +318,7 @@
     <Compile Include="Helpers\GatePassGenerator.cs" />
     <Compile Include="Models\Campaign.cs" />
     <Compile Include="Models\CampaignReportDetailVM.cs" />
+    <Compile Include="Models\CampaignSegmentVM.cs" />
     <Compile Include="Models\CreativeUtility.cs" />
     <Compile Include="Models\CreativeVM.cs" />
     <Compile Include="Models\CampaignReportVM.cs" />
@@ -796,7 +809,7 @@
     <Content Include="Scripts\tinymce\tinymce.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="css\sweetalert.css" />
-    <Content Include="Views\Report\Report.aspx" />
+    <Content Include="Views\Tracking\Report.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -841,22 +854,17 @@
     <Content Include="Views\Campaigns\Edit.cshtml" />
     <Content Include="Views\Campaigns\Index.cshtml" />
     <Content Include="Views\Shared\_UploadFile.cshtml" />
-    <Content Include="Views\Report\ViewReport.cshtml" />
-    <Content Include="Views\CampaignStatus\Index.cshtml" />
+    <Content Include="Views\Tracking\ViewReport.cshtml" />
+    <Content Include="Views\Status\Index.cshtml" />
     <Content Include="Views\Shared\_Search.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />
     <Content Include="Views\Home\CreateVendor.cshtml" />
     <Content Include="Views\Home\Vendors.cshtml" />
-    <Content Include="Views\Copy\Edit.cshtml" />
-    <Content Include="Views\Copy\Approved.cshtml" />
-    <Content Include="Views\Copy\Rebroadcast.cshtml" />
-    <Content Include="Views\Copy\Testing.cshtml" />
-    <Content Include="Views\Copy\Tracking.cshtml" />
     <Content Include="Views\Copy\EditTesting.cshtml" />
     <Content Include="Views\Shared\_HeaderCopy.cshtml" />
     <Content Include="Views\Copy\EditApproved.cshtml" />
     <Content Include="Views\Campaigns\Clone.cshtml" />
-    <Content Include="Views\Report\Tracking.cshtml" />
+    <Content Include="Views\Tracking\Index.cshtml" />
     <Content Include="Views\Creative\Index.cshtml" />
     <Content Include="Views\Shared\_HeaderCreative.cshtml" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce.woff" />
@@ -866,6 +874,13 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
+    <Content Include="Templates\Tracking.xlsx" />
+    <Content Include="Templates\SampleZipFile.csv" />
+    <Content Include="Templates\SampleLiveSeed.csv" />
+    <Content Include="Templates\SampleTestSeed.csv" />
+    <Content Include="Templates\SampleSuppression.csv" />
+    <Content Include="Views\Shared\Editors\_Segment.cshtml" />
+    <Content Include="Views\Shared\Editors\_SegmentView.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -891,6 +906,7 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="Reports\Campaigns.rdlc" />
     <EmbeddedResource Include="Reports\Campaign.rdlc" />
   </ItemGroup>
   <PropertyGroup>

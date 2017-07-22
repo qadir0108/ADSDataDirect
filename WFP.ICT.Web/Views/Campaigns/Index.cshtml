@@ -18,8 +18,10 @@
     var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
     var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
     var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
-    var columnSortParams4 = new { sortOrder = ViewBag.BroadcastDateSortParm };
-    var columnSortParams5 = new { sortOrder = ViewBag.StatusSortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.CreatedAtSortParm };
+    var columnSortParams5 = new { sortOrder = ViewBag.BroadcastDateSortParm };
+    var columnSortParams6 = new { sortOrder = ViewBag.QuantitySortParm };
+    var columnSortParams7 = new { sortOrder = ViewBag.StatusSortParm };
 
     var LoggedInUser = Session["user"] as WFPUser;
     var IsLoggedIn = LoggedInUser != null;
@@ -82,7 +84,7 @@
                     </th>*@
                 <td>
                     @Html.SortIdentifier(currentSort, "OrderNumber")
-                    @Html.ActionLink("Order Number", "Index", columnSortParams1)
+                    @Html.ActionLink("#", "Index", columnSortParams1)
                     @*@Html.DisplayNameFor(model => model.OrderNumber)*@
                 </td>
                 <td>
@@ -92,21 +94,26 @@
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "CreatedBy")
-                    @Html.ActionLink("User Name", "Index", columnSortParams3)
+                    @Html.ActionLink("Order by", "Index", columnSortParams3)
                     @*@Html.DisplayNameFor(model => model.RepresentativeName)*@
                 </td>
                 <td>
+                    @Html.SortIdentifier(currentSort, "CreatedAt")
+                    @Html.ActionLink("Ordered At", "Index", columnSortParams4)
+                    @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
+                </td>
+                <td>
                     @Html.SortIdentifier(currentSort, "BroadcastDate")
-                    @Html.ActionLink("Broadcast Date", "Index", columnSortParams4)
+                    @Html.ActionLink("Broadcast Date", "Index", columnSortParams5)
                     @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "Quantity")
-                    @Html.ActionLink("Quantity", "Index", columnSortParams5)
+                    @Html.ActionLink("Quantity", "Index", columnSortParams6)
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "Status")
-                    @Html.ActionLink("Status", "Index", columnSortParams5)
+                    @Html.ActionLink("Status", "Index", columnSortParams7)
                 </td>
                 <th></th>
             </tr>
@@ -122,6 +129,9 @@
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.CreatedBy)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CreatedAt)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.BroadcastDate)
@@ -202,9 +212,11 @@
                 </div>
                 <div class="tp-pagination">
                 @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort,
-                   searchType = ViewBag.SearchType, searchString = ViewBag.SearchString,
-                   campaignName = ViewBag.CampaignName, isTested = ViewBag.IsTested,
-                   dateFrom = ViewBag.DateFrom, dateTo = ViewBag.DateTo, Status = ViewBag.StatusSearched }), new PagedListRenderOptions() { })
+               searchType = ViewBag.SearchType, searchString = ViewBag.SearchString,
+               campaignName = ViewBag.CampaignName, isTested = ViewBag.IsTested,
+               orderedFrom = ViewBag.OrderedFrom, orderedTo = ViewBag.OrderedTo,
+               broadcastFrom = ViewBag.BroadcastFrom, broadcastTo = ViewBag.BroadcastTo,
+               Status = ViewBag.StatusSearched }), new PagedListRenderOptions() { })
                 </div>
             </div>
         </div>

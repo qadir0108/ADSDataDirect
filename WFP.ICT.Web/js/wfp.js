@@ -271,3 +271,9 @@ Array.prototype.remove = function () {
     }
     return this;
 };
+
+jQuery.extend({
+    percentage: function (a, b) {
+        return Math.round((a / b) * 100);
+    }
+});

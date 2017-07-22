@@ -35,7 +35,7 @@
             var btnUpload = $('#btnUpload_@Model');
             var linkDownload = $('#linkDownload_@Model');
             var linkDelete = $('#linkDelete_@Model');
-            var ifHtmlImageFiles = '@(Model == "HtmlImageFiles" || Model == "CompanyLogo")';
+            var ifHtmlImageFiles = '@(Model == "HtmlImageFiles" || Model == "CompanyLogo" || Model == "BannersFile" || Model == "MiscFile")';
 
             //debugger;
             if (txtSelectedFile.val() === '') {

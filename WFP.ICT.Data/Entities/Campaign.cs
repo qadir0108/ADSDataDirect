@@ -55,12 +55,25 @@ namespace WFP.ICT.Data.Entities
         public string OS { get; set; }
         public string Referrer { get; set; }
 
-        // #s
         public string OrderNumber { get; set; }
-
         public string AssignedToCustomer { get; set; }
         public string IONumber { get; set; }
-        
+
+        // New Fields
+        public bool IsAccessCreativeManager { get; set; }
+        public bool IsOpenPixel { get; set; }
+        public string OpenPixelUrl { get; set; }
+        public long OpenGoals { get; set; }
+        public long ClickGoals { get; set; }
+        public string BannersFile { get; set; }
+        public string BannersLinksFile { get; set; }
+        public string MiscFile { get; set; }
+        public int OrderType { get; set; } // CampaignOrderTypeEnum
+        public long DataFileQuantity { get; set; }
+
+        [Range(0, 10)]
+        public int DataFileSegments { get; set; } // NumberOfIOsToBeGenerated
+
         public Guid? RebroadId { get; set; }
         public virtual Campaign Rebroad { get; set; }
 

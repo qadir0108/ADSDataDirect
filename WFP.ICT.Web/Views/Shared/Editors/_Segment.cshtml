@@ -1,0 +1,42 @@
+﻿@model WFP.ICT.Data.Entities.CampaignSegment
+@using MyToolkit.Html
+@using WFP.ICT.Enum
+
+  <!-- Start Piano -->
+@using (Html.BeginCollectionItem("Segments"))
+{
+        <div class="row">
+            <div class="col-md-12">
+                @Html.HiddenFor(Model => Model.Id)
+                @Html.HiddenFor(Model => Model.CreatedAt)
+                @Html.HiddenFor(Model => Model.CampaignId)
+                @Html.HiddenFor(Model => Model.CampaignTestingId)
+                @Html.HiddenFor(Model => Model.SegmentIoNumber)
+                @Html.HiddenFor(Model => Model.DateSent)
+                <div class="col-md-2">
+                    @Model.SegmentIoNumber
+                </div>
+                <div class="col-md-2">
+                    @Html.EditorFor(Model => Model.FirstRangeStart, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => Model.FirstRangeStart, "", new {@class = "text-danger"})
+                </div>
+                <div class="col-md-2">
+                    @Html.EditorFor(Model => Model.FirstRangeEnd, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => Model.FirstRangeEnd, "", new {@class = "text-danger"})
+                </div>
+                <div class="col-md-2">
+                    @Html.EditorFor(Model => Model.SecondRangeStart, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => Model.SecondRangeStart, "", new {@class = "text-danger"})
+                </div>
+                <div class="col-md-2">
+                    @Html.EditorFor(Model => Model.SecondRangeEnd, new {htmlAttributes = new {@class = "form-control"}})
+                    @Html.ValidationMessageFor(model => Model.SecondRangeEnd, "", new {@class = "text-danger"})
+                </div>
+                <div class="col-md-2">
+                    @Model.SegmentDataFileUrl (@((UploadFileStatusEnum)Model.DataFileStatus))
+                </div>
+            </div>
+        </div>
+
+}
+   <!-- End Piano -->

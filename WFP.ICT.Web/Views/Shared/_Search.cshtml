@@ -15,22 +15,58 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
-                                        <label class="control-label" for="dateFrom">From</label>
+                                        <label class="control-label" for="orderedFrom">Status</label>
                                         <div class="input-group">
                                             <div class="input-group-addon">
-                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                <span class="glyphicon glyphicon"></span>
                                             </div>
-                                            <input id="dateFrom" name="dateFrom" type="text" class="form-control input-md" placeholder="From">
+                                            @Html.DropDownList("SearchStatus", null, htmlAttributes: new { @class = "form-control" })
                                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6 form-group">
-                                        <label class="control-label" for="dateTo">To</label>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="control-label" for="orderedFrom">Ordered From</label>
                                         <div class="input-group">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
                                             </div>
-                                            <input id="dateTo" name="dateTo" type="text" class="form-control input-md" placeholder="To">
+                                            <input id="orderedFrom" name="orderedFrom" type="text" class="form-control input-md" placeholder="From">
+                                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="control-label" for="orderedTo">Ordered To</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </div>
+                                            <input id="orderedTo" name="orderedTo" type="text" class="form-control input-md" placeholder="To">
+                                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
+                                        <label class="control-label" for="broadcastFrom">Broadcast From</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </div>
+                                            <input id="broadcastFrom" name="broadcastFrom" type="text" class="form-control input-md" placeholder="From">
+                                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="control-label" for="broadcastTo">Broadcast To</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon-calendar"></span>
+                                            </div>
+                                            <input id="broadcastTo" name="broadcastTo" type="text" class="form-control input-md" placeholder="To">
                                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                         </div>
                                     </div>
@@ -38,13 +74,14 @@
                                 <div class="row">
                                     <div class="col-md-6 form-group">
                                         <label class="control-label" for="campaignName">Campaign Name</label>
-                                        <div class="input-group">
+                                        <div class="input-group" style="width: 100%;">
                                             <input id="campaignName" name="campaignName" type="text" class="form-control input-md" placeholder="Name">
                                         </div>
                                     </div>
                                     <div class="col-md-6 form-group">
                                         <label class="control-label" for="txtName">Tested?</label>
-                                        <div class="btn-group" data-toggle="buttons" style="padding-top:10px">
+                                        <br />
+                                        <div class="btn-group" data-toggle="buttons">
                                             <label class="btn btn-primary">
                                                 @Html.RadioButtonFor(model => model.isTested, "True")Yes
                                             </label>
@@ -74,10 +111,16 @@
 
     $(document).ready(function () {
 
-        $("#dateFrom").datepicker({
+        $("#orderedFrom").datepicker({
             dateFormat: 'mm/dd/yy'
         });
-        $("#dateTo").datepicker({
+        $("#orderedTo").datepicker({
+            dateFormat: 'mm/dd/yy'
+        });
+        $("#broadcastFrom").datepicker({
+            dateFormat: 'mm/dd/yy'
+        });
+        $("#broadcastTo").datepicker({
             dateFormat: 'mm/dd/yy'
         });
         

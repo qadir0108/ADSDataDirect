@@ -13,7 +13,7 @@ using WFP.ICT.Web.Models;
 namespace WFP.ICT.Web.Controllers
 {
     [Authorize]
-    public class CampaignStatusController : BaseController
+    public class StatusController : BaseController
     {
         int pageSize = 10;
         
@@ -82,11 +82,21 @@ namespace WFP.ICT.Web.Controllers
                     campagins = campagins.Where(s =>
                     s.OrderNumber.Equals(sc.searchString) ||
                     s.OrderNumber.Equals(searchRDP) ||
-                    s.CampaignName.Contains(sc.searchString)).ToList();
+                    s.CampaignName.IndexOf(sc.searchString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
                 }
             }
             else if (sc.searchType == "advanced")
             {
+                if (!string.IsNullOrEmpty(sc.SearchStatus))
+                {
+                    int status = int.Parse(sc.SearchStatus);
+                    if (status == (int)CampaignStatusEnum.Rebroadcasted)
+                        campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                    else
+                        campagins = campagins.Where(s => s.Status == status).ToList();
+                    ViewBag.SearchStatus = sc.SearchStatus;
+                }
+
                 if (!string.IsNullOrEmpty(sc.campaignName))
                 {
                     sc.campaignName = sc.campaignName.ToLowerInvariant();
@@ -97,22 +107,36 @@ namespace WFP.ICT.Web.Controllers
                 if (!string.IsNullOrEmpty(sc.isTested))
                 {
                     campagins = campagins.Where(s => s.Testing != null
-                                                  && s.Testing.IsTested == Boolean.Parse(sc.isTested)).ToList();
+                                                  && s.Testing?.IsTested == Boolean.Parse(sc.isTested)).ToList();
                     ViewBag.IsTested = sc.isTested;
                 }
 
-                if (!string.IsNullOrEmpty(sc.dateFrom))
+                if (!string.IsNullOrEmpty(sc.orderedFrom))
                 {
-                    DateTime dateFrom = DateTime.ParseExact(sc.dateFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    DateTime dateFrom = DateTime.ParseExact(sc.orderedFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
                     campagins = campagins.Where(s => s.CreatedAt.Date >= dateFrom.Date).ToList();
-                    ViewBag.DateFrom = sc.dateFrom;
+                    ViewBag.OrderedFrom = sc.orderedFrom;
                 }
 
-                if (!string.IsNullOrEmpty(sc.dateTo))
+                if (!string.IsNullOrEmpty(sc.orderedTo))
                 {
-                    DateTime dateTo = DateTime.ParseExact(sc.dateTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    DateTime dateTo = DateTime.ParseExact(sc.orderedTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
                     campagins = campagins.Where(s => s.CreatedAt.Date <= dateTo.Date).ToList();
-                    ViewBag.DateTo = sc.dateTo;
+                    ViewBag.OrderedTo = sc.orderedTo;
+                }
+
+                if (!string.IsNullOrEmpty(sc.broadcastFrom))
+                {
+                    DateTime dateFrom = DateTime.ParseExact(sc.broadcastFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    campagins = campagins.Where(s => s.BroadcastDate?.Date >= dateFrom.Date).ToList();
+                    ViewBag.BroadcastFrom = sc.broadcastFrom;
+                }
+
+                if (!string.IsNullOrEmpty(sc.broadcastTo))
+                {
+                    DateTime dateTo = DateTime.ParseExact(sc.broadcastTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    campagins = campagins.Where(s => s.BroadcastDate?.Date <= dateTo.Date).ToList();
+                    ViewBag.BroadcastTo = sc.broadcastTo;
                 }
             }
 
@@ -132,10 +156,11 @@ namespace WFP.ICT.Web.Controllers
 
             if (!IsAdmin)
             {
-                campagins = campagins.Where(s => s.CreatedBy == LoggedInUser.UserName).ToList();
+                campagins = campagins.Where(s => s.CreatedBy == LoggedInUser?.UserName).ToList();
             }
-
-            ViewBag.Status = new SelectList(EnumHelper.GetEnumTextValues(typeof(CampaignStatusEnum)), "Value", "Text");
+            
+            ViewBag.Status = StatusList;
+            ViewBag.SearchStatus = StatusList;
 
             var allUsers = db.Users.Where(x => x.UserType == (int)UserTypeEnum.User).ToList();
             allUsers.Insert(0, new WFPUser() { Id = "", UserName = "Select User" });

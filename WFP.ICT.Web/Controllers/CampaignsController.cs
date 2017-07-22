@@ -16,7 +16,7 @@ using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CampaignsController : BaseController
     {
         int pageSize = 10;
@@ -29,11 +29,13 @@ namespace WFP.ICT.Web.Controllers
             if (LoggedInUser == null) return RedirectToAction("LogOff", "Account");
 
             ViewBag.CurrentSort = sc.sortOrder;
-            ViewBag.CampaignNameSortParm = sc.sortOrder == "CampaignName" ? "CampaignName_desc" : "CampaignName";
-            ViewBag.BroadcastDateSortParm = sc.sortOrder == "BroadcastDate" ? "BroadcastDate_desc" : "BroadcastDate";
-            ViewBag.CreatedBySortParm = sc.sortOrder == "CreatedBy" ? "CreatedBy_desc" : "CreatedBy";
-            ViewBag.StatusSortParm = sc.sortOrder == "Status" ? "Status_desc" : "Status";
             ViewBag.OrderNumberSortParm = sc.sortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
+            ViewBag.CampaignNameSortParm = sc.sortOrder == "CampaignName" ? "CampaignName_desc" : "CampaignName";
+            ViewBag.CreatedBySortParm = sc.sortOrder == "CreatedBy" ? "CreatedBy_desc" : "CreatedBy";
+            ViewBag.CreatedAtSortParm = sc.sortOrder == "CreatedAt" ? "CreatedAt_desc" : "CreatedAt";
+            ViewBag.BroadcastDateSortParm = sc.sortOrder == "BroadcastDate" ? "BroadcastDate_desc" : "BroadcastDate";
+            ViewBag.QuantitySortParm = sc.sortOrder == "Quantity" ? "Quantity_desc" : "Quantity";
+            ViewBag.StatusSortParm = sc.sortOrder == "Status" ? "Status_desc" : "Status";
 
             var campagins =
                 db.Campaigns
@@ -42,17 +44,17 @@ namespace WFP.ICT.Web.Controllers
 
             switch (sc.sortOrder)
             {
+                case "OrderNumber":
+                    campagins = campagins.OrderBy(s => s.OrderNumber).ToList();
+                    break;
+                case "OrderNumber_desc":
+                    campagins = campagins.OrderByDescending(s => s.OrderNumber).ToList();
+                    break;
                 case "CampaignName":
                     campagins = campagins.OrderBy(s => s.CampaignName).ToList();
                     break;
                 case "CampaignName_desc":
                     campagins = campagins.OrderByDescending(s => s.CampaignName).ToList();
-                    break;
-                case "BroadcastDate":
-                    campagins = campagins.OrderBy(s => s.BroadcastDate).ToList();
-                    break;
-                case "BroadcastDate_desc":
-                    campagins = campagins.OrderByDescending(s => s.BroadcastDate).ToList();
                     break;
                 case "CreatedBy":
                     campagins = campagins.OrderBy(s => s.CreatedBy).ToList();
@@ -60,17 +62,29 @@ namespace WFP.ICT.Web.Controllers
                 case "CreatedBy_desc":
                     campagins = campagins.OrderByDescending(s => s.CreatedBy).ToList();
                     break;
+                case "CreatedAt":
+                    campagins = campagins.OrderBy(s => s.CreatedAt).ToList();
+                    break;
+                case "CreatedAt_desc":
+                    campagins = campagins.OrderByDescending(s => s.CreatedAt).ToList();
+                    break;
+                case "BroadcastDate":
+                    campagins = campagins.OrderBy(s => s.BroadcastDate).ToList();
+                    break;
+                case "BroadcastDate_desc":
+                    campagins = campagins.OrderByDescending(s => s.BroadcastDate).ToList();
+                    break;
+                case "Quantity":
+                    campagins = campagins.OrderBy(s => s.Quantity).ToList();
+                    break;
+                case "Quantity_desc":
+                    campagins = campagins.OrderByDescending(s => s.Quantity).ToList();
+                    break;
                 case "Status":
                     campagins = campagins.OrderBy(s => s.Status).ToList();
                     break;
                 case "Status_desc":
                     campagins = campagins.OrderByDescending(s => s.Status).ToList();
-                    break;
-                case "OrderNumber":
-                    campagins = campagins.OrderBy(s => s.OrderNumber).ToList();
-                    break;
-                case "OrderNumber_desc":
-                    campagins = campagins.OrderByDescending(s => s.OrderNumber).ToList();
                     break;
                 default:
                     campagins = campagins.OrderByDescending(s => s.CreatedAt).ToList();
@@ -86,11 +100,21 @@ namespace WFP.ICT.Web.Controllers
                     campagins = campagins.Where(s => 
                     s.OrderNumber.Equals(sc.searchString) || 
                     s.OrderNumber.Equals(searchRDP) ||
-                    s.CampaignName.Contains(sc.searchString)).ToList();
+                    s.CampaignName.IndexOf(sc.searchString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
                 }
             }
             else if (sc.searchType == "advanced")
             {
+                if (!string.IsNullOrEmpty(sc.SearchStatus))
+                {
+                    int status = int.Parse(sc.SearchStatus);
+                    if (status == (int)CampaignStatusEnum.Rebroadcasted)
+                        campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                    else
+                        campagins = campagins.Where(s => s.Status == status).ToList();
+                    ViewBag.SearchStatus = sc.SearchStatus;
+                }
+
                 if (!string.IsNullOrEmpty(sc.campaignName))
                 {
                     sc.campaignName = sc.campaignName.ToLowerInvariant();
@@ -102,24 +126,37 @@ namespace WFP.ICT.Web.Controllers
                 {
                     bool IsTested = Boolean.Parse(sc.isTested);
                     campagins = campagins.Where(s => s.Testing != null 
-                                                  && s.Testing.IsTested == IsTested).ToList();
+                                                  && s.Testing?.IsTested == IsTested).ToList();
                     ViewBag.IsTested = sc.isTested;
                 }
 
-                if (!string.IsNullOrEmpty(sc.dateFrom))
+                if (!string.IsNullOrEmpty(sc.orderedFrom))
                 {
-                    DateTime dateFrom = DateTime.ParseExact(sc.dateFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    DateTime dateFrom = DateTime.ParseExact(sc.orderedFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
                     campagins = campagins.Where(s => s.CreatedAt.Date >= dateFrom.Date).ToList();
-                    ViewBag.DateFrom = sc.dateFrom;
+                    ViewBag.OrderedFrom = sc.orderedFrom;
                 }
 
-                if (!string.IsNullOrEmpty(sc.dateTo))
+                if (!string.IsNullOrEmpty(sc.orderedTo))
                 {
-                    DateTime dateTo = DateTime.ParseExact(sc.dateTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    DateTime dateTo = DateTime.ParseExact(sc.orderedTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
                     campagins = campagins.Where(s => s.CreatedAt.Date <= dateTo.Date).ToList();
-                    ViewBag.DateTo = sc.dateTo;
+                    ViewBag.OrderedTo = sc.orderedTo;
                 }
-                
+
+                if (!string.IsNullOrEmpty(sc.broadcastFrom))
+                {
+                    DateTime dateFrom = DateTime.ParseExact(sc.broadcastFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    campagins = campagins.Where(s => s.BroadcastDate?.Date >= dateFrom.Date).ToList();
+                    ViewBag.BroadcastFrom = sc.broadcastFrom;
+                }
+
+                if (!string.IsNullOrEmpty(sc.broadcastTo))
+                {
+                    DateTime dateTo = DateTime.ParseExact(sc.broadcastTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                    campagins = campagins.Where(s => s.BroadcastDate?.Date <= dateTo.Date).ToList();
+                    ViewBag.BroadcastTo = sc.broadcastTo;
+                }
             }
 
             if (LoggedInUser != null && !IsAdmin)
@@ -142,6 +179,7 @@ namespace WFP.ICT.Web.Controllers
             }
 
             ViewBag.Status = StatusList;
+            ViewBag.SearchStatus = StatusList;
 
             string idsForPrint = string.IsNullOrEmpty(ViewBag.SearchIds) ?
                                     string.Join(",", campagins.Select(x => x.Id.ToString()))
@@ -221,6 +259,8 @@ namespace WFP.ICT.Web.Controllers
             };
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", model.TestingUrgency);
+            ViewBag.OrderType = new SelectList(EnumHelper.GetEnumTextValues(typeof(OrderTypeEnum)), "Value",
+                "Text", model.OrderType);
             return View(model);
         }
 
@@ -232,13 +272,13 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Create(
             [Bind(
                  Include =
-                     "ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber,IsAddViewInBrowser,IsAddOptOut")] Campaign campaign)
+                     "ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber,IsAddViewInBrowser,IsAddOptOut,OrderType,IsAccessCreativeManager,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,BannersFile,BannersLinksFile,MiscFile,DataFileQuantity,DataFileSegments")] Campaign campaign)
         {
             if (ModelState.IsValid)
             {
                 try
                 {
-
+                    
                     var camps = db.Campaigns.ToList();
                     int newOrderNumber = camps.Count > 0
                         ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1
@@ -267,6 +307,8 @@ namespace WFP.ICT.Web.Controllers
             }
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", campaign.TestingUrgency);
+            ViewBag.OrderType = new SelectList(EnumHelper.GetEnumTextValues(typeof(OrderTypeEnum)), "Value",
+                "Text", campaign.OrderType);
             return View(campaign);
         }
 

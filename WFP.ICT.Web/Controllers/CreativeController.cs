@@ -22,8 +22,6 @@ namespace WFP.ICT.Web.Controllers
         // Creative
         public ActionResult Index(Guid id)
         {
-            IMailChimpManager manager = new MailChimpManager();
-
             var campaign = db.Campaigns
                 .Include(c => c.Testing)
                 .Include(c => c.Approved)
@@ -34,16 +32,6 @@ namespace WFP.ICT.Web.Controllers
             Session["id"] = id;
             Session["OrderNumber"] = campaign.OrderNumber;
 
-            string filePath = Path.Combine(UploadPath, campaign.TestSeedList);
-            if (!string.IsNullOrEmpty(campaign.Testing.TestSeedURL))
-            {
-                S3FileManager.Download(campaign.Testing.TestSeedList, filePath);
-            }
-            string filePathLive = Path.Combine(UploadPath, campaign.FinalSeedList);
-            if (!string.IsNullOrEmpty(campaign.Testing.LiveSeedURL))
-            {
-                S3FileManager.Download(campaign.Testing.FinalSeedList, filePathLive);
-            }
             var creative = new CreativeVM()
             {
                 CampaignId = campaign.Id.ToString(),
@@ -53,12 +41,31 @@ namespace WFP.ICT.Web.Controllers
                 SubjectLine = campaign.Testing.SubjectLine,
                 TestSeedList = campaign.Testing.TestSeedList,
                 FinalSeedList = campaign.Testing.FinalSeedList,
-                TestEmails = CreativeUtility.ReadEmails(filePath),
-                LiveEmails = CreativeUtility.ReadEmails(filePathLive),
-                Creatives = campaign.Creative?.CreativeHtml
+                Creatives = campaign.Creative?.CreativeHtml,
+                TestEmails = new List<SelectItemPair>(),
+                LiveEmails = new List<SelectItemPair>()
             };
+
+            if (!string.IsNullOrEmpty(campaign.TestSeedList))
+            {
+                string filePath = Path.Combine(UploadPath, campaign.TestSeedList);
+                if(!System.IO.File.Exists(filePath) && !string.IsNullOrEmpty(campaign.Testing.TestSeedURL))
+                    S3FileManager.Download(campaign.Testing.TestSeedURL, filePath);
+                creative.TestEmails = CreativeUtility.ReadEmails(filePath);
+            }
+            
+            if (!string.IsNullOrEmpty(campaign.FinalSeedList))
+            {
+                string filePathLive = Path.Combine(UploadPath, campaign.FinalSeedList);
+                if (!System.IO.File.Exists(filePathLive) && !string.IsNullOrEmpty(campaign.Testing.LiveSeedURL))
+                    S3FileManager.Download(campaign.Testing.LiveSeedURL, filePathLive);
+                creative.LiveEmails = CreativeUtility.ReadEmails(filePathLive);
+            }
+            
             Session["TestSeedList"] = campaign.Testing.TestSeedList;
             Session["FinalSeedList"] = campaign.Testing.FinalSeedList;
+            Session["TestSeedURL"] = campaign.Testing.TestSeedURL;
+            Session["LiveSeedURL"] = campaign.Testing.LiveSeedURL;
             return View(creative);
         }
 
@@ -107,12 +114,12 @@ namespace WFP.ICT.Web.Controllers
                     case "test":
                         string filePath = Path.Combine(UploadPath, (string)Session["TestSeedList"]);
                         new CreativeUtility().Add(filePath, email);
-                        S3FileManager.Upload((string)Session["TestSeedList"], filePath, true);
+                        S3FileManager.Upload((string)Session["TestSeedURL"], filePath, true);
                         break;
                     case "live":
                         string filePathLive = Path.Combine(UploadPath, (string)Session["FinalSeedList"]);
                         new CreativeUtility().Add(filePathLive, email);
-                        S3FileManager.Upload((string)Session["FinalSeedList"], filePathLive, true);
+                        S3FileManager.Upload((string)Session["LiveSeedURL"], filePathLive, true);
                         break;
                 }
                 return Json(new JsonResponse() {IsSucess = true});
@@ -132,12 +139,12 @@ namespace WFP.ICT.Web.Controllers
                     case "test":
                         string filePath = Path.Combine(UploadPath, (string)Session["TestSeedList"]);
                         new CreativeUtility().Remove(filePath, email);
-                        S3FileManager.Upload((string)Session["TestSeedList"], filePath, true);
+                        S3FileManager.Upload((string)Session["TestSeedURL"], filePath, true);
                         break;
                     case "live":
                         string filePathLive = Path.Combine(UploadPath, (string)Session["FinalSeedList"]);
                         new CreativeUtility().Remove(filePathLive, email);
-                        S3FileManager.Upload((string)Session["FinalSeedList"], filePathLive, true);
+                        S3FileManager.Upload((string)Session["LiveSeedURL"], filePathLive, true);
                         break;
                 }
                 return Json(new JsonResponse() { IsSucess = true });

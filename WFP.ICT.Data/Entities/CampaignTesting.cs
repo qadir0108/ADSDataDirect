@@ -40,20 +40,27 @@ namespace WFP.ICT.Data.Entities
 
         // File Management
         public int HtmlImagesStatus { get; set; } // UploadFileStatusEnum
-
         public int ZipURLStatus { get; set; } // UploadFileStatusEnum
-
         public string TestSeedURL { get; set; }
         public int TestSeedStatus { get; set; } // UploadFileStatusEnum
-
         public string LiveSeedURL { get; set; }
         public int LiveSeedStatus { get; set; } // UploadFileStatusEnum
-
         public string SuppressionURL { get; set; }
         public int SuppressionStatus { get; set; } // UploadFileStatusEnum
 
+        // New Fields
+        public long OpenGoals { get; set; }
+        public long ClickGoals { get; set; }
+        public long DataFileQuantity { get; set; }
+        public int DataFileSegments { get; set; } // NumberOfIOsToBeGenerated
+        public string DataFileUrl { get; set; } // aws/2500data.csv
+        public DateTime? DateFetched { get; set; }
+
+        public virtual ICollection<CampaignSegment> Segments { get; set; }
+
         public CampaignTesting()
         {
+            Segments = new HashSet<CampaignSegment>();
         }
     }
 }

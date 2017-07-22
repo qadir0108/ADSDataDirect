@@ -20,6 +20,8 @@ namespace WFP.ICT.Web.Models
             {
                 var trimmed = StringHelper.Trim(line);
                 if (string.IsNullOrEmpty(trimmed)) continue;
+                if(!EmailChecker.IsValidEmail(trimmed)) continue;
+
                 emails.Add(new SelectItemPair() { Selected = true, Text = trimmed, Value = trimmed });
             }
             return emails;

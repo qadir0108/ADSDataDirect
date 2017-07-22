@@ -36,12 +36,6 @@
         <div class="headertab">
             Campaign Status
         </div>
-        @*<div class="dashboard-page-head">
-            <div class="page-header">
-                <h1>Campaigns <small></small>
-                </h1>
-            </div>
-        </div>*@
     </div>
 
     <div class="col-md-3 no-left-padding" id="divSearch" data-tooltip="tooltip" title="Search">
@@ -139,17 +133,19 @@
                 </div>
                 <div class="tp-pagination">
                     @Html.PagedListPager(Model, page => Url.Action("Index", new
-           {
-               page,
-               sortOrder = ViewBag.CurrentSort,
-               searchType = ViewBag.SearchType,
-               searchString = ViewBag.SearchString,
-               campaignName = ViewBag.CampaignName,
-               isTested = ViewBag.IsTested,
-               dateFrom = ViewBag.DateFrom,
-               dateTo = ViewBag.DateTo,
-               Status = ViewBag.StatusSearched
-           }), new PagedListRenderOptions() { })
+               {
+                   page,
+                   sortOrder = ViewBag.CurrentSort,
+                   searchType = ViewBag.SearchType,
+                   searchString = ViewBag.SearchString,
+                   campaignName = ViewBag.CampaignName,
+                   isTested = ViewBag.IsTested,
+                   orderedFrom = ViewBag.OrderedFrom,
+                   orderedTo = ViewBag.OrderedTo,
+                   broadcastFrom = ViewBag.BroadcastFrom,
+                   broadcastTo = ViewBag.BroadcastTo,
+                   Status = ViewBag.StatusSearched
+               }), new PagedListRenderOptions() { })
                 </div>
             </div>
         </div>
@@ -174,7 +170,7 @@
                 debugger;
                 $('#clearSessionId').val('1');
                 $('form#frmSearch').submit();
-                //wfp.reload('/CampaignStatus/Index');
+                //wfp.reload('/Status/Index');
                 return false;
             });
 
@@ -203,7 +199,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/CampaignStatus/SendToTracking",
+                    url: "/Status/SendToTracking",
                     data: dataToPost,
                     success: function (response) {
                         debugger;
@@ -234,7 +230,7 @@
 
                 $.ajax({
                     type: "POST",
-                    url: "/CampaignStatus/ChangeAssigned",
+                    url: "/Status/ChangeAssigned",
                     data: dataToPost,
                     success: function (response) {
                         debugger;

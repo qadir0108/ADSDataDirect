@@ -27,10 +27,33 @@
         {
             <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
         }
+    
+    <div class="row" style="margin-top: 5px">
+        <div class="col-md-8">
+            <div class="headertab">
+                Campaign Tracking
+            </div>
+        </div>
 
-    <div class="row">
-        <div class="col-md-12 headertab">
-            Campaign Tracking
+        <div class="col-md-3 no-left-padding" id="divSearch" data-tooltip="tooltip" title="Search">
+            <form id="frmSearch" method="post">
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </div>
+                    <input type="hidden" id="searchType" name="searchType" value="basic" />
+                    <input type="hidden" id="clearSessionId" name="clearSessionId" value="" />
+                    <input type="text" id="searchString" name="searchString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
+                    <div class="input-group-addon">
+                        <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-1" id="divTools" style="text-align:left">
+            <button class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
         </div>
     </div>
 
@@ -93,14 +116,14 @@
                     @if (item.Status == "Completed")
                     {
                         <a href="#" class="btn btn-default btnDrill" data-id="@item.Id" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
-                        <a href="~/Report/Report?id=@item.Id" target="_blank" class="btn btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
+                        <a href="~/Tracking/DownloadReport?id=@item.Id" target="_blank" class="btn btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
                     }
                 </td>
             </tr>
             <tr><td colspan="8">
                 <div id="@divDrillDownId" class="divDrillDown">
                     <div class="row">
-                        <div class="col-md-6">
+                        <div class="col-md-4">
 
                             <dl class="dl-horizontal">
                                 <dt>
@@ -155,7 +178,7 @@
                             </dl>
 
                         </div>
-                        <div class="col-md-6">
+                        <div class="col-md-8">
 
                             <table class="table">
                                 <thead>
@@ -180,11 +203,12 @@
                                             <td>
                                                 @Html.DisplayFor(modelItem => item1.IONumber)
                                             </td>
-                                            <td>
-                                                @Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item1.Link, item1.Link.Substring(0, item1.Link.Length > 80 ? 80 : item1.Link.Length)))
+                                            <td style="word-wrap:break-word;word-break:break-all;">
+                                                @item1.Link
+                                                @*@Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item1.Link, item1.Link.Substring(0, item1.Link.Length > 80 ? 80 : item1.Link.Length)))*@
                                             </td>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item1.QuantityDetail)
+                                                @Html.DisplayFor(modelItem => item1.ClickCount)
                                             </td>
                                         </tr>
                                     }
@@ -206,18 +230,49 @@
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
             </div>
             <div class="tp-pagination">
-                @Html.PagedListPager(Model, page => Url.Action("Tracking", new { page, sortOrder = ViewBag.CurrentSort, Status = ViewBag.StatusSearched }), new PagedListRenderOptions() { })
+                @Html.PagedListPager(Model, page => Url.Action("Index", new
+            {
+                page,
+                sortOrder = ViewBag.CurrentSort,
+                searchType = ViewBag.SearchType,
+                searchString = ViewBag.SearchString,
+                campaignName = ViewBag.CampaignName,
+                isTested = ViewBag.IsTested,
+                orderedFrom = ViewBag.OrderedFrom,
+                orderedTo = ViewBag.OrderedTo,
+                broadcastFrom = ViewBag.BroadcastFrom,
+                broadcastTo = ViewBag.BroadcastTo,
+                Status = ViewBag.StatusSearched
+            }), new PagedListRenderOptions() { })
             </div>
         </div>
     </div>
 
 </div>
-
+<!-- Modal -->
+@{
+    Html.RenderPartial("_Search", new WFP.ICT.Web.Models.CampaignSearchVM());
+}
 <script type="text/javascript">
 
                 var wfp = wfp || {};
 
                 $(document).ready(function () {
+
+                    $('#searchString').keypress(function (e) {
+                        if (e.which === 13) {
+                            $('form#frmSearch').submit();
+                            return false;
+                        }
+                    });
+
+                    $('#btnClearSearch').click(function () {
+                        debugger;
+                        $('#clearSessionId').val('1');
+                        $('form#frmSearch').submit();
+                        //wfp.reload('/Status/Index');
+                        return false;
+                    });
 
                     $(".divDrillDown").hide();
 

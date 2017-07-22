@@ -15,6 +15,12 @@ public static class Extensions
         return CultureInfo.CurrentCulture.TextInfo.ToTitleCase(value.Replace(".",""));
     }
 
+    public static bool Contains(this string source, string search
+                                                    , StringComparison compare)
+    {
+        return source.IndexOf(search, compare) >= 0;
+    }
+
     static Regex r = new Regex(@"
                 (?<=[A-Z])(?=[A-Z][a-z]) |
                  (?<=[^A-Z])(?=[A-Z]) |

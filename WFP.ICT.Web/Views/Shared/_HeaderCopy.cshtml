@@ -30,10 +30,10 @@
                 @Html.ActionLink("Approved", "MoveTo", "Copy", new {id = Session["id"], to = "Approved"}, new {@class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-2">
-                @Html.ActionLink("Status", "Index", "CampaignStatus", new { searchType = "basic", searchString = Session["OrderNumber"] }, new {@class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Status", "Index", "Status", new { searchType = "basic", searchString = Session["OrderNumber"] }, new {@class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-2">
-                @Html.ActionLink("Tracking", "ViewReport", "Report", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Tracking", "Index", "Tracking", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-2">
                 @Html.ActionLink("ReBroadcast", "MoveTo", "Copy", new {id = Session["id"], to = "ReBroadcast"}, new {@class = "btn btn-default btn-sm" })

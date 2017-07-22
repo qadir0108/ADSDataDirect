@@ -8,6 +8,10 @@ namespace WFP.ICT.Enum
         ZipFile,
         TestSeedFile,
         LiveSeedFile,
-        SuppressionFile
+        SuppressionFile,
+        DataFile,
+        BannersFile,
+        BannersLinksFile,
+        MiscFile
     }
 }

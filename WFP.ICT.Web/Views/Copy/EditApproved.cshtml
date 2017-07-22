@@ -1,4 +1,8 @@
-﻿@model WFP.ICT.Data.Entities.CampaignApproved
+﻿@using System.Linq
+@using System.Web.Mvc.Html
+@using MyToolkit.Html
+@using WFP.ICT.Data.Entities
+@model WFP.ICT.Data.Entities.CampaignApproved
 
 @{
     Html.RenderPartial("_HeaderCopy");
@@ -165,23 +169,140 @@
                 </div>
 
                 <br />
+               
+            </div>
+        </div>
+        
 
-                <div class="row">
-                    <div class="col-md-offset-8 col-md-2">
-                        <div class="form-group">
-                            <input type="submit" value="Save" class="btn btn-default" />
-                        </div>
-                    </div>
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <a href="#" id="" name="" class="btn btn-default" title="Send to Vendor" data-tooltip="tooltip"
-                               data-toggle="modal" data-target="#myModal" data-name="@Model.CampaignName" data-order="@Model.OrderNumber">
-                                <span class="glyphicon glyphicon-envelope"></span>Send
-                            </a>
+        <div class="row">
+            <hr />
+            <div class="headertab">
+                Data Fields
+            </div><hr />
+
+            <div class="col-md-4">
+                
+                <div class="form-group">
+                    @Html.LabelFor(model => model.IsUseApiDataForOpen, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        <div class="">
+                            <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
+                                <label class="btn btn-primary">
+                                    @Html.RadioButtonFor(model => model.IsUseApiDataForOpen, "True")Yes
+                                </label>
+                                <label class="btn btn-primary">
+                                    @Html.RadioButtonFor(model => model.IsUseApiDataForOpen, "False")No
+                                </label>
+                            </div>
+                            @Html.ValidationMessageFor(model => model.IsUseApiDataForOpen, "", new { @class = "text-danger" })
                         </div>
                     </div>
                 </div>
+                <div class="form-group">
+                    <div class="control-label col-md-5">
+                        Open Goals
+                        <div id="divOpenGoalPercentage">0%</div>
+                    </div>
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.OpenGoals, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.OpenGoals, "", new { @class = "text-danger" })
+                    </div>
+                </div>
 
+                <div class="form-group">
+                    <div class="control-label col-md-5">
+                        Click Goals
+                        <div id="divClickGoalPercentage">0%</div>
+                    </div>
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.ClickGoals, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.ClickGoals, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DataFileQuantity, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.DataFileQuantity, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => model.DataFileQuantity, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.DataFileSegments, htmlAttributes: new { @class = "control-label col-md-5" })
+                    <div class="col-md-7">
+                        @Html.EditorFor(model => model.DataFileSegments, new { htmlAttributes = new { @class = "form-control", @min = "1", @max = "10" } })
+                        @Html.ValidationMessageFor(model => model.DataFileSegments, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="col-md-8">
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="col-md-2">
+                            #
+                        </div>
+                        <div class="col-md-2">
+                            First Start
+                        </div>
+                        <div class="col-md-2">
+                            First End
+                        </div>
+                        <div class="col-md-2">
+                            Second Start
+                        </div>
+                        <div class="col-md-2">
+                            Second End
+                        </div>
+                        <div class="col-md-2">
+                        </div>
+                    </div>
+                </div>
+                @{
+                    List<CampaignSegment> Segments;
+                    using (var db = new WFPICTContext())
+                    {
+                        Segments = db.CampaignSegments
+                               .Where(c => c.CampaignId == Model.CampaignId)
+                               .ToList();
+                    }
+                }
+                @using (Html.BeginCollectionItem("Segments"))
+                {
+                    foreach (var segment in Segments.OrderBy(x => x.SegmentIoNumber))
+                    {
+                        Html.RenderPartial("Editors/_SegmentView", segment);
+                    }
+                }
+                <br />
+                <br />
+                
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-offset-6 col-md-2">
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <a href="#" id="" name="" class="btn btn-default" title="Send to Vendor" data-tooltip="tooltip"
+                       data-toggle="modal" data-target="#myModal" data-name="@Model.CampaignName" data-order="@Model.OrderNumber">
+                        <span class="glyphicon glyphicon-envelope"></span>Send
+                    </a>
+                </div>
+            </div>
+            <div class="col-md-2">
+                <div class="form-group">
+                    <a href="#" id="" name="" class="btn btn-default" title="Send via API" data-tooltip="tooltip"
+                       data-toggle="modal" data-target="#myModal" data-name="@Model.CampaignName" data-order="@Model.OrderNumber">
+                        <span class="glyphicon glyphicon-cog"></span>Send
+                    </a>
+                </div>
             </div>
         </div>
     </div>
@@ -211,6 +332,18 @@
                         </div>
                         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPasswordRetype">Select Data File<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                            </div>
+                            @Html.DropDownList("DataFiles", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
                 </div>
                 <div class="modal-footer">
                     <button type="submit" class="btn btn-primary btnSendToVendor" id="btnSendToVendor">Send to Vendor</button>
@@ -230,8 +363,20 @@
             $('#DeployDate').datetimepicker({
                 format: 'M/DD/YYYY hh:mm:ss A'
             });
+            $("#divOpenGoalPercentage").text('Open Goal %: ' + $.percentage($("#OpenGoals").val(), $("#Quantity").val()).toFixed(0));
+            $("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
 
+            $("input[name='IsUseApiDataForOpen']:checked").closest("label.btn").addClass("active");
             $("input[name='ReBroadCast']:checked").closest("label.btn").addClass("active");
+
+            $("#OpenGoals").on("keyup keydown change mouseup", function (event) {
+                debugger;
+                $("#divOpenGoalPercentage").text('Open Goal %: ' + $.percentage($("#OpenGoals").val(), $("#Quantity").val()).toFixed(0));
+            });
+
+            $("#ClickGoals").on("keyup keydown change mouseup", function (event) {
+                $("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
+            });
 
             $('#myModal').on('show.bs.modal', function (event) {
 

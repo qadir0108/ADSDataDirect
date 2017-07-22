@@ -79,7 +79,7 @@ namespace WFP.ICT.Data.Migrations
                     ZipCodeFile = "zipcodes_1.csv",
                     GeoDetails = "1 km around 5432",
                     Demographics = "NY",
-                    Quantity = 5000000,
+                    Quantity = 100000,
 
                     FromLine = "Testing",
                     SubjectLine = "This is testing",
@@ -95,7 +95,12 @@ namespace WFP.ICT.Data.Migrations
                     OptOut = "MM",
                     SpecialInstructions = "Hello, this is special instructions, please do it quickly",
                     
-                    OrderNumber = "2500"
+                    OrderNumber = "2500",
+
+                    OpenGoals = 5000,
+                    ClickGoals = 4000,
+                    DataFileQuantity = 180000,
+                    DataFileSegments = 3,
                 }
             };
             foreach (var campaign in campaigns)

@@ -39,6 +39,7 @@ namespace WFP.ICT.Data.Entities
 
         public DbSet<Campaign> Campaigns { get; set; }
         public DbSet<CampaignTesting> CampaignsTesting { get; set; }
+        public DbSet<CampaignSegment> CampaignSegments { get; set; }
         public DbSet<CampaignApproved> CampaignsApproved { get; set; }
         public DbSet<CampaignCreative> CampaignCreatives { get; set; }
         public DbSet<ProDataAPILog> ProDataAPILogs { get; set; }
