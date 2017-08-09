@@ -78,26 +78,45 @@ namespace WFP.ICT.Web.Controllers
             ViewBag.SearchType = sc.searchType;
             if (sc.searchType == "basic")
             {
-                ViewBag.SearchString = sc.searchString;
-                if (!string.IsNullOrEmpty(sc.searchString))
+                if (!string.IsNullOrEmpty(sc.basicString))
                 {
-                    var searchRDP = sc.searchString + "RDP";
+                    var searchRDP = sc.basicString + "RDP";
                     campagins = campagins.Where(s =>
-                    s.OrderNumber.Equals(sc.searchString) ||
+                    s.OrderNumber.Equals(sc.basicString) ||
                     s.OrderNumber.Equals(searchRDP) ||
-                    s.CampaignName.IndexOf(sc.searchString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
+                    s.CampaignName.IndexOf(sc.basicString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
+                    ViewBag.BasicStringSearched = sc.basicString;
                 }
-            }
-            else if (sc.searchType == "advanced")
-            {
-                if (!string.IsNullOrEmpty(sc.SearchStatus))
+                else if (!string.IsNullOrEmpty(sc.basicStatus))
                 {
-                    int status = int.Parse(sc.SearchStatus);
+                    int status = int.Parse(sc.basicStatus);
                     if (status == (int)CampaignStatusEnum.Rebroadcasted)
                         campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
                     else
                         campagins = campagins.Where(s => s.Status == status).ToList();
-                    ViewBag.SearchStatus = sc.SearchStatus;
+                    ViewBag.BasicStatusSearched = sc.basicStatus;
+                }
+                else if (!string.IsNullOrEmpty(sc.basicOrderNumber))
+                {
+                    campagins = campagins.Where(s => s.Id.ToString().Equals(sc.basicOrderNumber)).ToList();
+                }
+
+            }
+            else if (sc.searchType == "advanced")
+            {
+                if (!string.IsNullOrEmpty(sc.advancedStatus))
+                {
+                    int status = int.Parse(sc.advancedStatus);
+                    if (status == (int)CampaignStatusEnum.Rebroadcasted)
+                        campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                    else
+                        campagins = campagins.Where(s => s.Status == status).ToList();
+                    ViewBag.AdvancedStatusSearched = sc.advancedStatus;
+                }
+                if (!string.IsNullOrEmpty(sc.advancedUser))
+                {
+                    campagins = campagins.Where(s => s.CreatedBy == sc.advancedUser).ToList();
+                    ViewBag.AdvancedUserSearched = sc.advancedUser;
                 }
 
                 if (!string.IsNullOrEmpty(sc.campaignName))
@@ -109,8 +128,9 @@ namespace WFP.ICT.Web.Controllers
 
                 if (!string.IsNullOrEmpty(sc.isTested))
                 {
+                    bool IsTested = Boolean.Parse(sc.isTested);
                     campagins = campagins.Where(s => s.Testing != null
-                                                  && s.Testing?.IsTested == Boolean.Parse(sc.isTested)).ToList();
+                                                  && s.Testing?.IsTested == IsTested).ToList();
                     ViewBag.IsTested = sc.isTested;
                 }
 
@@ -143,10 +163,15 @@ namespace WFP.ICT.Web.Controllers
                 }
             }
 
-            if (!IsAdmin)
+            if (LoggedInUser != null && !IsAdmin)
             {
-                campagins = campagins.Where(s => s.CreatedBy == LoggedInUser?.UserName).ToList();
+                campagins = campagins.Where(s => s.CreatedBy == LoggedInUser.UserName).ToList();
             }
+
+            ViewBag.BasicOrderNumber = OrderNumberList;
+            ViewBag.BasicStatus = StatusList;
+            ViewBag.AdvancedStatus = StatusList;
+            ViewBag.AdvancedUser = UsersList;
 
             var reportVms = new List<CampaignReportVM>();
             foreach (var campaign in campagins)
@@ -159,7 +184,7 @@ namespace WFP.ICT.Web.Controllers
                     clicked = campaign.ProDatas.Sum(x => x.ClickCount);
                     startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
                     IONumber = campaign.ProDatas.FirstOrDefault().IO;
-                    opened = ADS.API.Models.Campaign.GetOpens(campaign.Approved.Quantity, startDateTime);
+                    opened = campaign.Approved.IsUseApiDataForOpen ? campaign.ProDatas.FirstOrDefault().ImpressionCnt : ADS.API.Models.Campaign.GetOpens(campaign.Approved.Quantity, startDateTime);
                 }
                 var model = new CampaignReportVM()
                 {
@@ -236,7 +261,7 @@ namespace WFP.ICT.Web.Controllers
                 clicked = campaign.ProDatas.Sum(x => x.ClickCount);
                 startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
                 IONumber = campaign.ProDatas.FirstOrDefault().IO;
-                opened = ADS.API.Models.Campaign.GetOpens(campaign.Approved.Quantity, startDateTime);
+                opened = campaign.Approved.IsUseApiDataForOpen ? campaign.ProDatas.FirstOrDefault().ImpressionCnt : ADS.API.Models.Campaign.GetOpens(campaign.Approved.Quantity, startDateTime);
             }
             var model = new CampaignReportVM()
             {
@@ -276,98 +301,6 @@ namespace WFP.ICT.Web.Controllers
             }
 
             return View(model);
-        }
-
-        public ActionResult Report()
-        {
-            string creativeURL = "", imagePath = "", imageURL = "";
-            var reportDatas = new List<CampaignReportDetailVM>();
-            if (Request.Params["id"] != null)
-            {
-                Guid id;
-                try
-                {
-                    Guid.TryParse(Request.Params["id"], out id);
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("Wrong Input" + ex.Message);
-                }
-
-                Campaign campaign =
-                    db.Campaigns.Include("ProDatas")
-                        .Include("Testing")
-                        .Include("Approved")
-                        .FirstOrDefault(x => x.Id == id);
-
-                if (campaign == null)
-                {
-                    throw new HttpException(404, "Not found");
-                }
-
-                creativeURL = campaign.Approved.CreativeURL;
-                imagePath = string.Format("{0}\\{1}.png", UploadPath, campaign.OrderNumber);
-                imageURL = new Uri(Request.Url, Url.Content(string.Format("~/Uploads/{0}.png", campaign.OrderNumber))).AbsoluteUri;
-
-                long clicked = 0, opened = 0;
-                DateTime startDateTime = DateTime.MinValue;
-                string IONumber = "NA";
-                if (campaign.ProDatas.Count > 0)
-                {
-                    clicked = campaign.ProDatas.Sum(x => x.ClickCount);
-                    startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
-                    IONumber = campaign.ProDatas.FirstOrDefault().IO;
-                    opened = ADS.API.Models.Campaign.GetOpens(campaign.Approved.Quantity, startDateTime);
-                }
-
-                foreach (var proData in campaign.ProDatas.OrderBy(x => ProDataHelper.GetIndex(x.Reportsite_URL)))
-                {
-                    reportDatas.Add(new CampaignReportDetailVM()
-                    {
-                        Id = campaign.Id.ToString(),
-                        OrderNumber = campaign.OrderNumber,
-                        CampaignName = campaign.CampaignName,
-                        OrderDate = campaign.CreatedAt.ToString(),
-                        Status = ((CampaignStatusEnum) campaign.Status).ToString(),
-                        WhiteLabel = campaign.WhiteLabel,
-                        Quantity = campaign.Approved.Quantity.ToString(),
-                        Clicked = clicked == 0 ? "NA" : clicked.ToString(),
-                        Opened = opened == 0 ? "NA" : opened.ToString(),
-                        StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
-                        EmailsSent = campaign.Approved.Quantity.ToString(),
-                        OpenedPercentage =
-                            campaign.Approved.Quantity == 0
-                                ? "NA"
-                                : ((double) opened/campaign.Approved.Quantity).ToString("0.00%"),
-                        ClickedPercentage =
-                            campaign.Approved.Quantity == 0
-                                ? "NA"
-                                : ((double) clicked/campaign.Approved.Quantity).ToString("0.00%"),
-                        CTRPercentage = opened == 0 ? "NA" : ((double) clicked/opened).ToString("0.00%"),
-                        IONumber = IONumber,
-                        Link = proData.Destination_URL,
-                        ClickCount = proData.ClickCount.ToString(),
-                    });
-                }
-            }
-            var reportModel = new ReportModel
-            {
-                DataSet = reportDatas.ToDataSet(),
-                Parameters = new Dictionary<string, object>()
-            };
-
-            string logoPath;
-            if (LoggedInUser != null && !string.IsNullOrEmpty(LoggedInUser.CompanyLogo))
-                logoPath = Url.Content("~/Uploads/" + LoggedInUser.CompanyLogo);
-            else
-                logoPath = Url.Content("~/images/logo.png");
-
-            reportModel.Parameters.Add("pLogoUrl", new Uri(Request.Url, logoPath).AbsoluteUri);
-
-            new ImageHelper(creativeURL, imagePath).Capture();
-            reportModel.Parameters.Add("pCapturedUrl", imageURL);
-
-            return View("Report", reportModel);
         }
 
         public ActionResult DownloadReport(Guid? id)
@@ -450,7 +383,8 @@ namespace WFP.ICT.Web.Controllers
             string fileName = "", filePath = "";
             Dictionary<string, string> keyValues = new Dictionary<string, string>();
               
-            creativeURL = campaign.Approved.CreativeURL;
+            creativeURL = campaign.Assets.CreativeUrl;
+            string imagePathTemp = string.Format("{0}\\{1}t.png", UploadPath, campaign.OrderNumber);
             imagePath = string.Format("{0}\\{1}.png", UploadPath, campaign.OrderNumber);
             imageURL = new Uri(Request.Url, Url.Content(string.Format("~/Uploads/{0}.png", campaign.OrderNumber))).AbsoluteUri;
 
@@ -464,8 +398,20 @@ namespace WFP.ICT.Web.Controllers
             else
                 logoFilePath = string.Format("{0}\\logo1.png", ImagesPath);
 
-            new ImageHelper(creativeURL, imagePath).Capture();
-
+            var helper = new ImageHelper(creativeURL, imagePathTemp);
+            if (!System.IO.File.Exists(imagePath))
+            {
+                helper.Capture();
+                helper.ResizeImage(imagePathTemp, imagePath, 600, 750, true);
+                if (System.IO.File.Exists(imagePathTemp))
+                    System.IO.File.Delete(imagePathTemp);
+            }
+            string logoFilePathTemp = string.Format("{0}\\logoResized.png", ImagesPath);
+            if (!System.IO.File.Exists(logoFilePathTemp))
+            {
+                helper.ResizeImage(logoFilePath, logoFilePathTemp, 700, 116, true);
+            }
+            
             ExcelHelper.GenerateTrackingReport(model, logoFilePath, imagePath, filePath);
             return File(filePath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
@@ -479,7 +425,7 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Order Number missing");
                 }
                 
-                ProDataAPIManager.FetchAndUpdate(db, OrderNumber);
+                ProDataAPIManager.FetchAndUpdateProDatas(db, OrderNumber);
 
                 return Json(new JsonResponse() { IsSucess = true });
             }
@@ -511,5 +457,100 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
+        #region NotUsed
+
+        //public ActionResult Report()
+        //{
+        //    string creativeURL = "", imagePath = "", imageURL = "";
+        //    var reportDatas = new List<CampaignReportDetailVM>();
+        //    if (Request.Params["id"] != null)
+        //    {
+        //        Guid id;
+        //        try
+        //        {
+        //            Guid.TryParse(Request.Params["id"], out id);
+        //        }
+        //        catch (Exception ex)
+        //        {
+        //            throw new Exception("Wrong Input" + ex.Message);
+        //        }
+
+        //        Campaign campaign =
+        //            db.Campaigns.Include("ProDatas")
+        //                .Include("Testing")
+        //                .Include("Approved")
+        //                .FirstOrDefault(x => x.Id == id);
+
+        //        if (campaign == null)
+        //        {
+        //            throw new HttpException(404, "Not found");
+        //        }
+
+        //        creativeURL = campaign.Approved.CreativeURL;
+        //        imagePath = string.Format("{0}\\{1}.png", UploadPath, campaign.OrderNumber);
+        //        imageURL = new Uri(Request.Url, Url.Content(string.Format("~/Uploads/{0}.png", campaign.OrderNumber))).AbsoluteUri;
+
+        //        long clicked = 0, opened = 0;
+        //        DateTime startDateTime = DateTime.MinValue;
+        //        string IONumber = "NA";
+        //        if (campaign.ProDatas.Count > 0)
+        //        {
+        //            clicked = campaign.ProDatas.Sum(x => x.ClickCount);
+        //            startDateTime = DateTime.Parse(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
+        //            IONumber = campaign.ProDatas.FirstOrDefault().IO;
+        //            opened = ADS.API.Models.Campaign.GetOpens(campaign.Approved.Quantity, startDateTime);
+        //        }
+
+        //        foreach (var proData in campaign.ProDatas.OrderBy(x => ProDataHelper.GetIndex(x.Reportsite_URL)))
+        //        {
+        //            reportDatas.Add(new CampaignReportDetailVM()
+        //            {
+        //                Id = campaign.Id.ToString(),
+        //                OrderNumber = campaign.OrderNumber,
+        //                CampaignName = campaign.CampaignName,
+        //                OrderDate = campaign.CreatedAt.ToString(),
+        //                Status = ((CampaignStatusEnum)campaign.Status).ToString(),
+        //                WhiteLabel = campaign.WhiteLabel,
+        //                Quantity = campaign.Approved.Quantity.ToString(),
+        //                Clicked = clicked == 0 ? "NA" : clicked.ToString(),
+        //                Opened = opened == 0 ? "NA" : opened.ToString(),
+        //                StartDate = startDateTime == DateTime.MinValue ? "NA" : startDateTime.ToString(),
+        //                EmailsSent = campaign.Approved.Quantity.ToString(),
+        //                OpenedPercentage =
+        //                    campaign.Approved.Quantity == 0
+        //                        ? "NA"
+        //                        : ((double)opened / campaign.Approved.Quantity).ToString("0.00%"),
+        //                ClickedPercentage =
+        //                    campaign.Approved.Quantity == 0
+        //                        ? "NA"
+        //                        : ((double)clicked / campaign.Approved.Quantity).ToString("0.00%"),
+        //                CTRPercentage = opened == 0 ? "NA" : ((double)clicked / opened).ToString("0.00%"),
+        //                IONumber = IONumber,
+        //                Link = proData.Destination_URL,
+        //                ClickCount = proData.ClickCount.ToString(),
+        //            });
+        //        }
+        //    }
+        //    var reportModel = new ReportModel
+        //    {
+        //        DataSet = reportDatas.ToDataSet(),
+        //        Parameters = new Dictionary<string, object>()
+        //    };
+
+        //    string logoPath;
+        //    if (LoggedInUser != null && !string.IsNullOrEmpty(LoggedInUser.CompanyLogo))
+        //        logoPath = Url.Content("~/Uploads/" + LoggedInUser.CompanyLogo);
+        //    else
+        //        logoPath = Url.Content("~/images/logo.png");
+
+        //    reportModel.Parameters.Add("pLogoUrl", new Uri(Request.Url, logoPath).AbsoluteUri);
+
+        //    new ImageHelper(creativeURL, imagePath).Capture();
+        //    reportModel.Parameters.Add("pCapturedUrl", imageURL);
+
+        //    return View("Report", reportModel);
+        //}
+
+        #endregion
     }
 }

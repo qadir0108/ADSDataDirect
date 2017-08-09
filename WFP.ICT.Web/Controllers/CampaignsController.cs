@@ -26,7 +26,7 @@ namespace WFP.ICT.Web.Controllers
         {
             //FileManager.ProcessHtml("C:\\123.htm", "C:\\1.htm");
             //FileManager.UploadFile(UploadFileType.ZipFile, @"C:\\zip_codesCopy.csv", "123");
-            if (LoggedInUser == null) return RedirectToAction("LogOff", "Account");
+            //if (LoggedInUser == null) return RedirectToAction("LogOff", "Account");
 
             ViewBag.CurrentSort = sc.sortOrder;
             ViewBag.OrderNumberSortParm = sc.sortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
@@ -90,31 +90,49 @@ namespace WFP.ICT.Web.Controllers
                     campagins = campagins.OrderByDescending(s => s.CreatedAt).ToList();
                     break;
             }
+
             ViewBag.SearchType = sc.searchType;
             if (sc.searchType == "basic")
             {
-                ViewBag.SearchString = sc.searchString;
-                if (!string.IsNullOrEmpty(sc.searchString))
+                if (!string.IsNullOrEmpty(sc.basicString))
                 {
-                    var searchRDP = sc.searchString + "RDP";
+                    var searchRDP = sc.basicString + "RDP";
                     campagins = campagins.Where(s => 
-                    s.OrderNumber.Equals(sc.searchString) || 
+                    s.OrderNumber.Equals(sc.basicString) || 
                     s.OrderNumber.Equals(searchRDP) ||
-                    s.CampaignName.IndexOf(sc.searchString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
-                }
-            }
-            else if (sc.searchType == "advanced")
-            {
-                if (!string.IsNullOrEmpty(sc.SearchStatus))
+                    s.CampaignName.IndexOf(sc.basicString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
+                    ViewBag.BasicStringSearched = sc.basicString;
+                } else if (!string.IsNullOrEmpty(sc.basicStatus))
                 {
-                    int status = int.Parse(sc.SearchStatus);
+                    int status = int.Parse(sc.basicStatus);
                     if (status == (int)CampaignStatusEnum.Rebroadcasted)
                         campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
                     else
                         campagins = campagins.Where(s => s.Status == status).ToList();
-                    ViewBag.SearchStatus = sc.SearchStatus;
+                    ViewBag.BasicStatusSearched = sc.basicStatus;
+                } else if (!string.IsNullOrEmpty(sc.basicOrderNumber))
+                {
+                    campagins = campagins.Where(s => s.Id.ToString().Equals(sc.basicOrderNumber)).ToList();
                 }
 
+            }
+            else if (sc.searchType == "advanced")
+            {
+                if (!string.IsNullOrEmpty(sc.advancedStatus))
+                {
+                    int status = int.Parse(sc.advancedStatus);
+                    if (status == (int)CampaignStatusEnum.Rebroadcasted)
+                        campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                    else
+                        campagins = campagins.Where(s => s.Status == status).ToList();
+                    ViewBag.AdvancedStatusSearched = sc.advancedStatus;
+                }
+                if (!string.IsNullOrEmpty(sc.advancedUser))
+                {
+                    campagins = campagins.Where(s => s.CreatedBy == sc.advancedUser).ToList();
+                    ViewBag.AdvancedUserSearched = sc.advancedUser;
+                }
+                
                 if (!string.IsNullOrEmpty(sc.campaignName))
                 {
                     sc.campaignName = sc.campaignName.ToLowerInvariant();
@@ -164,22 +182,10 @@ namespace WFP.ICT.Web.Controllers
                 campagins = campagins.Where(s => s.CreatedBy == LoggedInUser.UserName).ToList();
             }
 
-            if (!string.IsNullOrEmpty(sc.Status))
-            {
-                int status = int.Parse(sc.Status);
-                if(status == (int)CampaignStatusEnum.Rebroadcasted)
-                    campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
-                else
-                    campagins = campagins.Where(s => s.Status == status).ToList();
-                ViewBag.StatusSearched = sc.Status;
-            }
-            else
-            {
-                //campagins = campagins.Where(x => x.Status != (int) CampaignStatusEnum.Completed).ToList();
-            }
-
-            ViewBag.Status = StatusList;
-            ViewBag.SearchStatus = StatusList;
+            ViewBag.BasicOrderNumber = OrderNumberList;
+            ViewBag.BasicStatus = StatusList;
+            ViewBag.AdvancedStatus = StatusList;
+            ViewBag.AdvancedUser = UsersList;
 
             string idsForPrint = string.IsNullOrEmpty(ViewBag.SearchIds) ?
                                     string.Join(",", campagins.Select(x => x.Id.ToString()))
@@ -255,12 +261,14 @@ namespace WFP.ICT.Web.Controllers
                 CreatedAt = DateTime.Now,
                 OrderNumber = "",
                 RepresentativeName = LoggedInUser?.UserName,
-                RepresentativeEmail = LoggedInUser?.Email
+                RepresentativeEmail = LoggedInUser?.Email,
+                DataFileSegments = 1
             };
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", model.TestingUrgency);
-            ViewBag.OrderType = new SelectList(EnumHelper.GetEnumTextValues(typeof(OrderTypeEnum)), "Value",
-                "Text", model.OrderType);
+            ViewBag.Retargeting = new SelectList(EnumHelper.GetEnumTextValues(typeof(RetargetingEnum)), "Value",
+                "Text", model.TestingUrgency);
+            
             return View(model);
         }
 
@@ -272,7 +280,7 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Create(
             [Bind(
                  Include =
-                     "ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,ZipCodeFile,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,HtmlImageFiles,TestSeedList,FinalSeedList,SuppressionFile,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber,IsAddViewInBrowser,IsAddOptOut,OrderType,IsAccessCreativeManager,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,BannersFile,BannersLinksFile,MiscFile,DataFileQuantity,DataFileSegments")] Campaign campaign)
+                     "Assets,ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber,IsAddViewInBrowser,IsAddOptOut,DataFileQuantity,DataFileSegments,IsAccessCreativeManager,IsOpenPixel,OpenPixelUrl,IsOmniOrder,OmniDeployDate,Impressions,Retargeting")] Campaign campaign)
         {
             if (ModelState.IsValid)
             {
@@ -285,18 +293,24 @@ namespace WFP.ICT.Web.Controllers
                         : 2500;
                     campaign.Id = Guid.NewGuid();
                     campaign.CreatedAt = DateTime.Now;
-                    campaign.CreatedBy = LoggedInUser.UserName;
+                    campaign.CreatedBy = LoggedInUser?.UserName;
                     campaign.OrderNumber = newOrderNumber.ToString();
                     campaign.IP = Request.ServerVariables["REMOTE_ADDR"];
                     campaign.Browser = Request.UserAgent;
                     campaign.OS = Environment.OSVersion.Platform + " " + Environment.OSVersion.VersionString;
                     campaign.Referrer = Request.UrlReferrer.AbsolutePath;
-                    
+
+                    campaign.Assets.Id = Guid.NewGuid();
+                    campaign.Assets.CampaignId = campaign.Id;
+                    campaign.Assets.CreatedAt = DateTime.Now;
+                    campaign.Assets.CreatedBy = LoggedInUser?.UserName;
+
                     db.Campaigns.Add(campaign);
                     db.SaveChanges();
 
-                    BackgroundJob.Enqueue(() => CampaignProcessor.ProcessNewOrder(campaign.OrderNumber, LoggedInUser));
+                    BackgroundJob.Enqueue(() => FileProcessor.ProcessNewOrder(campaign.OrderNumber, LoggedInUser));
 
+                    _forceOrders = true;
                     TempData["Success"] = "Order #: "+ campaign.OrderNumber + " , Campaign " + campaign.CampaignName + " has been submitted sucessfully.";
                 }
                 catch (Exception ex)
@@ -307,8 +321,8 @@ namespace WFP.ICT.Web.Controllers
             }
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
                 "Text", campaign.TestingUrgency);
-            ViewBag.OrderType = new SelectList(EnumHelper.GetEnumTextValues(typeof(OrderTypeEnum)), "Value",
-                "Text", campaign.OrderType);
+            ViewBag.Retargeting = new SelectList(EnumHelper.GetEnumTextValues(typeof(RetargetingEnum)), "Value",
+               "Text", campaign.TestingUrgency);
             return View(campaign);
         }
 
@@ -384,22 +398,9 @@ namespace WFP.ICT.Web.Controllers
             }
             db.SaveChanges();
 
-            if (campaign.OrderNumber.EndsWith("RDP"))
-            {
-                Campaign campaign1 = db.Campaigns.Include(x => x.Testing).Include(x => x.Approved)
-                    .FirstOrDefault(x => x.RebroadId == campaign.Id);
-                if (campaign1 != null)
-                {
-                    campaign1.RebroadId = null;
-                    db.SaveChanges();
-
-                    db.CampaignsTesting.Remove(campaign1.Testing);
-                    db.CampaignsApproved.Remove(campaign1.Approved);
-                    db.SaveChanges();
-                }
-            }
             db.Campaigns.Remove(campaign);
             db.SaveChanges();
+            _forceOrders = true;
             return RedirectToAction("Index");
         }
 
@@ -450,7 +451,6 @@ namespace WFP.ICT.Web.Controllers
                 testing.Id = testingId;
                 testing.CreatedAt = DateTime.Now;
                 testing.CampaignId = copy.Id;
-                testing.OrderNumber = newOrderNumber.ToString();
                 db.SaveChanges();
 
                 copy.TestingId = testingId;
@@ -466,12 +466,12 @@ namespace WFP.ICT.Web.Controllers
                 approved.Id = approvedId;
                 approved.CreatedAt = DateTime.Now;
                 approved.CampaignId = copy.Id;
-                approved.OrderNumber = newOrderNumber.ToString();
                 db.SaveChanges();
 
                 copy.ApprovedId = approvedId;
                 db.SaveChanges();
             }
+            _forceOrders = true;
             TempData["Success"] = "Order : " + campaign.OrderNumber + " has been cloned to Order: " + newOrderNumber + " sucessfully.";
             return RedirectToAction("Index");
         }

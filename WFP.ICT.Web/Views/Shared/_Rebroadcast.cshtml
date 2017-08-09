@@ -1,0 +1,136 @@
+﻿@{
+//    // Rebroad QTY = opens from Old order
+//    long opened = 0;
+//    if (campaign.ProDatas.Count > 0)
+//    {
+//        var startDateTime = DateTime.Parse
+
+//(campaign.ProDatas.FirstOrDefault().CampaignStartDate);
+//        opened =
+
+//campaign.Approved.IsUseApiDataForOpen ?
+
+//campaign.ProDatas.FirstOrDefault().ImpressionCnt :
+
+//ADS.API.Models.Campaign.GetOpens(campaign.Approved.Quantity,
+
+//startDateTime);
+//    }
+}
+<!-- Modal -->
+<div class="modal fade" id="rebroadcastModal" role="dialog" aria-labelledby="myModalLabel" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Rebroadcast</h4>
+            </div>
+            <form id="frm" role="form">
+                <div class="modal-body">
+                    <input id="txtId" name="txtId" type="hidden">
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="rebroadcastDate">Rebroadcast Date<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                            </div>
+                            <input type="text" id="rebroadcastDate" class="form-control text-box single-line"/>
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="rebroadcastQuantity">Rebroadcast Quantity<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-briefcase"></i>
+                            </div>
+                            <input type="text" id="rebroadcastQuantity" class="form-control text-box single-line" />
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btnSendToVendor" id="btnSendToVendor">Send to Vendor</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+            var wfp = wfp || {};
+
+            $(function () {
+
+                $('#rebroadcastDate').datetimepicker({
+                    format: 'M/DD/YYYY hh:mm:ss A'
+                });
+                
+                $('#rebroadcastModal').on('show.bs.modal', function (event) {
+
+                    var button = $(event.relatedTarget);
+                    var modal = $(this);
+                    $('#frm')[0].reset();
+                    debugger;
+                    modal.find('.modal-title').text('Rebroadcast : ' + button.data('name') + ', Order Number : ' + button.data('order'));
+                });
+
+                $('#btnSendToVendor').click(function (e) {
+                    debugger;
+                    e.preventDefault();
+
+                    if ($('#Vendor').find('option:selected').val() === '') {
+                        wfp.showError("Please select Vendor");
+                        return;
+                    }
+
+                    var segmentsSelected = [];
+                    $('#SegmentsSelected input:checked').each(function () {
+                        segmentsSelected.push(this.value);
+                    });
+
+                    var dataToPost = {
+                        VendorId: $('#Vendor').find('option:selected').val(),
+                        Id: $('#CampaignId').val(),
+                        SegmentsSelected: segmentsSelected
+                    };
+
+                    wfp.showSwal("Are you sure to send to vendor?",
+                       function () {
+
+                           debugger;
+                           $.ajax({
+                               type: "POST",
+                               url: "/Copy/SendToVendor",
+                               data: JSON.stringify(dataToPost),
+                               contentType: "application/json; charset=utf-8",
+                               success: function (response) {
+                                   debugger;
+                                   if (response === "") wfp.reload();
+                                   if (response.IsSucess) {
+                                       wfp.showSuccess('Approved order has been sent to vendor successfully.');
+                                       $('#myModal').modal('hide');
+                                       wfp.redirectTo();
+                                   } else {
+                                       wfp.showError(response.ErrorMessage);
+                                   }
+                               },
+                               failure: function (response) {
+                                   wfp.showError('There is erorr in service call.');
+                               },
+                               complete: function () {
+                               }
+                           });
+                       });
+
+                });
+
+
+            });
+</script>

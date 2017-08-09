@@ -1,14 +1,13 @@
 ﻿using System;
-using System.Linq;
 using System.Data.Entity;
+using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
-using System.Web.UI.WebControls;
 using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Web.Models;
 
-namespace WFP.ICT.Web.Controllers
+namespace WFP.ICT.Web.API
 {
     public class adsController : ApiController
     {
@@ -104,15 +103,15 @@ namespace WFP.ICT.Web.Controllers
                 });
                 db.SaveChanges();
 
-                var campaignInDatabase = db.Campaigns
-                                .FirstOrDefault(x => x.OrderNumber == campagin.OrderNumber.Trim());
+                var campaignTracking = db.CampaignTrackings
+                                .FirstOrDefault(x => x.SegmentNumber == campagin.OrderNumber.Trim());
 
-                if (campaignInDatabase == null)
+                if (campaignTracking == null)
                 {
                     throw new Exception("Campaign with Order Number " + campagin.OrderNumber + " does not exists");
                 }
 
-                campaignInDatabase.IONumber = campagin.IONumber.Trim();
+                campaignTracking.IONumber = campagin.IONumber.Trim();
                 db.SaveChanges();
 
                 string message = "Campaign with Order Number " + campagin.OrderNumber +

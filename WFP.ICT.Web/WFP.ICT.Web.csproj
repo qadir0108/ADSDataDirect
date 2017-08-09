@@ -273,12 +273,15 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
+    <Compile Include="Async\NotificationsProcessor.cs" />
     <Compile Include="Async\CampaignProcessor.cs" />
+    <Compile Include="Async\DataFileProcessor.cs" />
     <Compile Include="Async\MailChimpProcessor.cs" />
-    <Compile Include="Async\ProDataHelper.cs" />
+    <Compile Include="Async\Helpers\ProDataHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="Controllers\adsController.cs" />
+    <Compile Include="API\adsController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\CampaignsController.cs" />
     <Compile Include="Controllers\CopyController.cs" />
@@ -298,21 +301,23 @@
     <Compile Include="Helpers\EmailChecker.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\ExcelUtility.cs" />
-    <Compile Include="Async\FileManager.cs" />
-    <Compile Include="Async\FileManagerFTP.cs" />
+    <Compile Include="Async\Helpers\FileManager.cs" />
+    <Compile Include="Async\Helpers\FileManagerFTP.cs" />
     <Compile Include="Async\FileProcessor.cs" />
-    <Compile Include="Async\FileUploader.cs" />
+    <Compile Include="Async\Helpers\FileUploader.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\KeyGenerator.cs" />
     <Compile Include="Helpers\ListExtensions.cs" />
     <Compile Include="Helpers\MultipleButtonAttribute.cs" />
     <Compile Include="Helpers\HangfireAuthorizationFilter.cs" />
     <Compile Include="Async\ProDataAPIManager.cs" />
-    <Compile Include="Async\S3FileManager.cs" />
+    <Compile Include="Async\Helpers\S3FileManager.cs" />
+    <Compile Include="Helpers\NumberHelper.cs" />
+    <Compile Include="Helpers\QCRuleUtility.cs" />
     <Compile Include="Helpers\SortSearchExtension.cs" />
     <Compile Include="Helpers\StringHelper.cs" />
     <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Async\EmailHelper.cs" />
+    <Compile Include="Async\Helpers\EmailHelper.cs" />
     <Compile Include="Helpers\ExceptionHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\GatePassGenerator.cs" />
@@ -323,6 +328,7 @@
     <Compile Include="Models\CreativeVM.cs" />
     <Compile Include="Models\CampaignReportVM.cs" />
     <Compile Include="Models\HtmlProcessResult.cs" />
+    <Compile Include="Models\ProDataRequest.cs" />
     <Compile Include="Models\ProDataResponse.cs" />
     <Compile Include="Models\CompanyPermissionVM.cs" />
     <Compile Include="Models\CompanyRoleVM.cs" />
@@ -331,6 +337,7 @@
     <Compile Include="Models\CompanyUsersVM.cs" />
     <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\UploadFileVM.cs" />
     <Compile Include="Models\UserProfileVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Reports\CampaignDatasetType.Designer.cs">
@@ -881,6 +888,8 @@
     <Content Include="Templates\SampleSuppression.csv" />
     <Content Include="Views\Shared\Editors\_Segment.cshtml" />
     <Content Include="Views\Shared\Editors\_SegmentView.cshtml" />
+    <Content Include="Views\Notification\Index.cshtml" />
+    <Content Include="Views\Shared\_Rebroadcast.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
@@ -906,7 +915,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Reports\Campaigns.rdlc" />
     <EmbeddedResource Include="Reports\Campaign.rdlc" />
   </ItemGroup>
   <PropertyGroup>

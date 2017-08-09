@@ -32,6 +32,7 @@
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Deployment" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -40,7 +41,10 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="OrderTypeEnum.cs" />
+    <Compile Include="RetargetingEnum.cs" />
+    <Compile Include="NotificationStatusEnum.cs" />
+    <Compile Include="QCRuleEnum.cs" />
+    <Compile Include="SegmentStatusEnum.cs" />
     <Compile Include="CampaignStatusEnum.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

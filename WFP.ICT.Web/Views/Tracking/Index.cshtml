@@ -70,6 +70,9 @@
                     White Label
                 </th>
                 <th>
+                    Deploy Date
+                </th>
+                <th>
                     Quantity
                 </th>
                 <th>
@@ -99,6 +102,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.WhiteLabel)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Quantity)
@@ -230,20 +236,22 @@
                 Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
             </div>
             <div class="tp-pagination">
-                @Html.PagedListPager(Model, page => Url.Action("Index", new
-            {
-                page,
-                sortOrder = ViewBag.CurrentSort,
-                searchType = ViewBag.SearchType,
-                searchString = ViewBag.SearchString,
-                campaignName = ViewBag.CampaignName,
-                isTested = ViewBag.IsTested,
-                orderedFrom = ViewBag.OrderedFrom,
-                orderedTo = ViewBag.OrderedTo,
-                broadcastFrom = ViewBag.BroadcastFrom,
-                broadcastTo = ViewBag.BroadcastTo,
-                Status = ViewBag.StatusSearched
-            }), new PagedListRenderOptions() { })
+               @Html.PagedListPager(Model, page => Url.Action("Index", new
+          {
+              page,
+              sortOrder = ViewBag.CurrentSort,
+              searchType = ViewBag.SearchType,
+              basicString = ViewBag.BasicStringSearched,
+              basicStatus = ViewBag.BasicStatusSearched,
+              advancedStatus = ViewBag.AdvancedStatusSearched,
+              advancedUser = ViewBag.AdvancedUserSearched,
+              campaignName = ViewBag.CampaignName,
+              isTested = ViewBag.IsTested,
+              orderedFrom = ViewBag.OrderedFrom,
+              orderedTo = ViewBag.OrderedTo,
+              broadcastFrom = ViewBag.BroadcastFrom,
+              broadcastTo = ViewBag.BroadcastTo
+          }), new PagedListRenderOptions() { })
             </div>
         </div>
     </div>

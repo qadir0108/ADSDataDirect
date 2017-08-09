@@ -57,6 +57,16 @@ namespace WFP.ICT.Data.Migrations
             }
 
             var compaignId = Guid.NewGuid();
+            var asset = new CampaignAsset()
+            {
+                Id = Guid.NewGuid(),
+                CampaignId = compaignId,
+                ZipCodeFile = "2500/2500zip.csv",
+                CreativeFiles = "2500/2500_html.zip",
+                TestSeedFile = "2500/2500test.csv",
+                LiveSeedFile = "2500/2500live.csv",
+                SuppressionFile = "2500/2500supp.csv",
+            };
             var campaigns = new Campaign[]
             {
                 new Campaign
@@ -66,7 +76,6 @@ namespace WFP.ICT.Data.Migrations
                     CreatedBy = "josh.silver",
 
                     Status = (int)CampaignStatusEnum.OrderRecevied,
-
                     CampaignName = "Car Dealership 123",
                     BroadcastDate = DateTime.Now.AddDays(5),
                     RepresentativeName = "Josh Silver",
@@ -75,32 +84,23 @@ namespace WFP.ICT.Data.Migrations
                     ReBroadcastDate = DateTime.Now.AddMonths(1),
                     Price = 10000,
                     TestingUrgency = (int)TestingUrgencyEnum.One_Three_Hour,
-
-                    ZipCodeFile = "zipcodes_1.csv",
                     GeoDetails = "1 km around 5432",
                     Demographics = "NY",
                     Quantity = 100000,
-
                     FromLine = "Testing",
                     SubjectLine = "This is testing",
-                    HtmlImageFiles = "test.html",
-                    TestSeedList = "testSeed.csv",
-                    FinalSeedList = "finalSeed.csv",
-
-                    SuppressionFile = "suppression.csv",
                     IsPersonalization = true,
                     IsMatchback = false,
                     IsSuppression = true,
-                    WhiteLabel = "MM",
+                    WhiteLabel = "reporting.consumermkts.com",
                     OptOut = "MM",
                     SpecialInstructions = "Hello, this is special instructions, please do it quickly",
-                    
                     OrderNumber = "2500",
-
-                    OpenGoals = 5000,
-                    ClickGoals = 4000,
-                    DataFileQuantity = 180000,
+                    IsOpenPixel = true,
+                    OpenPixelUrl = "http://www.opened.com/pix101",
+                    DataFileQuantity = 1800,
                     DataFileSegments = 3,
+                    Assets = asset
                 }
             };
             foreach (var campaign in campaigns)

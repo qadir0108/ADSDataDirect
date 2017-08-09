@@ -23,9 +23,9 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Index(Guid id)
         {
             var campaign = db.Campaigns
+                .Include(c => c.Assets)
                 .Include(c => c.Testing)
                 .Include(c => c.Approved)
-                .Include(c => c.Rebroad)
                 .Include(c => c.Creative)
                 .FirstOrDefault(c => c.Id == id);
 
@@ -39,33 +39,33 @@ namespace WFP.ICT.Web.Controllers
                 CampaignName = campaign.Testing.CampaignName,
                 FromLine = campaign.Testing.FromLine,
                 SubjectLine = campaign.Testing.SubjectLine,
-                TestSeedList = campaign.Testing.TestSeedList,
-                FinalSeedList = campaign.Testing.FinalSeedList,
+                TestSeedFile = campaign.Assets.TestSeedFile,
+                LiveSeedFile = campaign.Assets.LiveSeedFile,
                 Creatives = campaign.Creative?.CreativeHtml,
                 TestEmails = new List<SelectItemPair>(),
                 LiveEmails = new List<SelectItemPair>()
             };
 
-            if (!string.IsNullOrEmpty(campaign.TestSeedList))
+            if (!string.IsNullOrEmpty(campaign.Assets.TestSeedFile))
             {
-                string filePath = Path.Combine(UploadPath, campaign.TestSeedList);
-                if(!System.IO.File.Exists(filePath) && !string.IsNullOrEmpty(campaign.Testing.TestSeedURL))
-                    S3FileManager.Download(campaign.Testing.TestSeedURL, filePath);
+                string filePath = Path.Combine(UploadPath, campaign.Assets.TestSeedFile);
+                if(!System.IO.File.Exists(filePath) && !string.IsNullOrEmpty(campaign.Assets.TestSeedFile))
+                    S3FileManager.Download(campaign.Assets.TestSeedFile, filePath);
                 creative.TestEmails = CreativeUtility.ReadEmails(filePath);
             }
             
-            if (!string.IsNullOrEmpty(campaign.FinalSeedList))
+            if (!string.IsNullOrEmpty(campaign.Assets.LiveSeedFile))
             {
-                string filePathLive = Path.Combine(UploadPath, campaign.FinalSeedList);
-                if (!System.IO.File.Exists(filePathLive) && !string.IsNullOrEmpty(campaign.Testing.LiveSeedURL))
-                    S3FileManager.Download(campaign.Testing.LiveSeedURL, filePathLive);
+                string filePathLive = Path.Combine(UploadPath, campaign.Assets.LiveSeedFile);
+                if (!System.IO.File.Exists(filePathLive) && !string.IsNullOrEmpty(campaign.Assets.LiveSeedFile))
+                    S3FileManager.Download(campaign.Assets.LiveSeedFile, filePathLive);
                 creative.LiveEmails = CreativeUtility.ReadEmails(filePathLive);
             }
-            
-            Session["TestSeedList"] = campaign.Testing.TestSeedList;
-            Session["FinalSeedList"] = campaign.Testing.FinalSeedList;
-            Session["TestSeedURL"] = campaign.Testing.TestSeedURL;
-            Session["LiveSeedURL"] = campaign.Testing.LiveSeedURL;
+
+            Session["TestSeedFile"] = campaign.Assets.TestSeedFile;
+            Session["TestSeedUrl"] = campaign.Assets.TestSeedUrl;
+            Session["LiveSeedFile"] = campaign.Assets.LiveSeedFile;
+            Session["LiveSeedUrl"] = campaign.Assets.LiveSeedUrl;
             return View(creative);
         }
 

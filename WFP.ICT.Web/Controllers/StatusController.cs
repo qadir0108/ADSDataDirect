@@ -23,7 +23,7 @@ namespace WFP.ICT.Web.Controllers
             if (!string.IsNullOrEmpty(sc.clearSessionId))
             {
                 Session["id"] = null;
-                sc.searchString = string.Empty;
+                sc.basicString = string.Empty;
             }
 
             ViewBag.CurrentSort = sc.sortOrder;
@@ -33,7 +33,11 @@ namespace WFP.ICT.Web.Controllers
             ViewBag.StatusSortParm = sc.sortOrder == "Status" ? "Status_desc" : "Status";
             ViewBag.OrderNumberSortParm = sc.sortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
 
-            var campagins = db.Campaigns.Include(x => x.Testing).Include(x => x.Approved).ToList();
+            var campagins = db.Campaigns
+                .Include(x => x.Testing)
+                .Include(x => x.Approved)
+                .Include(x => x.Trackings)
+                .ToList();
 
             switch (sc.sortOrder)
             {
@@ -75,26 +79,45 @@ namespace WFP.ICT.Web.Controllers
             ViewBag.SearchType = sc.searchType;
             if (sc.searchType == "basic")
             {
-                ViewBag.SearchString = sc.searchString;
-                if (!string.IsNullOrEmpty(sc.searchString))
+                if (!string.IsNullOrEmpty(sc.basicString))
                 {
-                    var searchRDP = sc.searchString + "RDP";
+                    var searchRDP = sc.basicString + "RDP";
                     campagins = campagins.Where(s =>
-                    s.OrderNumber.Equals(sc.searchString) ||
+                    s.OrderNumber.Equals(sc.basicString) ||
                     s.OrderNumber.Equals(searchRDP) ||
-                    s.CampaignName.IndexOf(sc.searchString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
+                    s.CampaignName.IndexOf(sc.basicString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
+                    ViewBag.BasicStringSearched = sc.basicString;
                 }
-            }
-            else if (sc.searchType == "advanced")
-            {
-                if (!string.IsNullOrEmpty(sc.SearchStatus))
+                else if (!string.IsNullOrEmpty(sc.basicStatus))
                 {
-                    int status = int.Parse(sc.SearchStatus);
+                    int status = int.Parse(sc.basicStatus);
                     if (status == (int)CampaignStatusEnum.Rebroadcasted)
                         campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
                     else
                         campagins = campagins.Where(s => s.Status == status).ToList();
-                    ViewBag.SearchStatus = sc.SearchStatus;
+                    ViewBag.BasicStatusSearched = sc.basicStatus;
+                }
+                else if (!string.IsNullOrEmpty(sc.basicOrderNumber))
+                {
+                    campagins = campagins.Where(s => s.Id.ToString().Equals(sc.basicOrderNumber)).ToList();
+                }
+
+            }
+            else if (sc.searchType == "advanced")
+            {
+                if (!string.IsNullOrEmpty(sc.advancedStatus))
+                {
+                    int status = int.Parse(sc.advancedStatus);
+                    if (status == (int)CampaignStatusEnum.Rebroadcasted)
+                        campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                    else
+                        campagins = campagins.Where(s => s.Status == status).ToList();
+                    ViewBag.AdvancedStatusSearched = sc.advancedStatus;
+                }
+                if (!string.IsNullOrEmpty(sc.advancedUser))
+                {
+                    campagins = campagins.Where(s => s.CreatedBy == sc.advancedUser).ToList();
+                    ViewBag.AdvancedUserSearched = sc.advancedUser;
                 }
 
                 if (!string.IsNullOrEmpty(sc.campaignName))
@@ -106,8 +129,9 @@ namespace WFP.ICT.Web.Controllers
 
                 if (!string.IsNullOrEmpty(sc.isTested))
                 {
+                    bool IsTested = Boolean.Parse(sc.isTested);
                     campagins = campagins.Where(s => s.Testing != null
-                                                  && s.Testing?.IsTested == Boolean.Parse(sc.isTested)).ToList();
+                                                  && s.Testing?.IsTested == IsTested).ToList();
                     ViewBag.IsTested = sc.isTested;
                 }
 
@@ -140,31 +164,16 @@ namespace WFP.ICT.Web.Controllers
                 }
             }
 
-            if (!string.IsNullOrEmpty(sc.Status))
-            {
-                int status = int.Parse(sc.Status);
-                if (status == (int)CampaignStatusEnum.Rebroadcasted)
-                    campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
-                else
-                    campagins = campagins.Where(s => s.Status == status).ToList();
-                ViewBag.StatusSearched = sc.Status;
-            }
-            else
-            {
-                //campagins = campagins.Where(x => x.Status != (int)CampaignStatusEnum.Completed).ToList();
-            }
-
             if (!IsAdmin)
             {
                 campagins = campagins.Where(s => s.CreatedBy == LoggedInUser?.UserName).ToList();
             }
-            
-            ViewBag.Status = StatusList;
-            ViewBag.SearchStatus = StatusList;
 
-            var allUsers = db.Users.Where(x => x.UserType == (int)UserTypeEnum.User).ToList();
-            allUsers.Insert(0, new WFPUser() { Id = "", UserName = "Select User" });
-            ViewBag.Customer = new SelectList(allUsers, "UserName", "UserName");
+            ViewBag.BasicOrderNumber = OrderNumberList;
+            ViewBag.BasicStatus = StatusList;
+            ViewBag.AdvancedStatus = StatusList;
+            ViewBag.AdvancedUser = UsersList;
+            ViewBag.Customer = UsersList;
 
             // Paging
             int pageNumber = (sc.page ?? 1);
@@ -190,7 +199,7 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        public ActionResult SendToTracking(Guid? Id, string IONumber)
+        public ActionResult SendToTracking(Guid? Id, string SegmentNumber, string IONumber)
         {
             Campaign campaign = db.Campaigns.FirstOrDefault(x => x.Id == Id);
             if (campaign == null)
@@ -199,8 +208,18 @@ namespace WFP.ICT.Web.Controllers
             }
             try
             {
-                campaign.IONumber = IONumber;
-                campaign.Status = (int) CampaignStatusEnum.Tracking;
+                CampaignTracking campaignTracking = null;
+
+                if(string.IsNullOrEmpty(SegmentNumber))
+                    campaignTracking = db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == Id);
+                else
+                    campaignTracking = db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == Id && x.SegmentNumber == SegmentNumber);
+
+                if (campaignTracking != null)
+                {
+                    campaignTracking.IONumber = IONumber;
+                }
+                campaign.Status = (int) CampaignStatusEnum.Traffic;
                 db.SaveChanges();
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }

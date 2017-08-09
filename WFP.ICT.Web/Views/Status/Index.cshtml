@@ -111,13 +111,13 @@
                 @Html.DisplayFor(modelItem => item.AssignedToCustomer)
                 @if (IsAdmin)
                 {
-                    @Html.DropDownListFor(modelItem => item.AssignedToCustomer, new SelectList(((SelectList)ViewBag.Customer).Items, "UserName", "UserName", item.AssignedToCustomer)
+                    @Html.DropDownListFor(modelItem => item.AssignedToCustomer, new SelectList(ViewBag.Customer, "Value", "Text", item.AssignedToCustomer)
                         , new { @class = "form-control input-md drpCustomer", @id = "drpCustomer", @style = "width:100%" })
                 }
             </td>
             <td>
                 <div class="col-xs-8 no-left-padding">
-                    <input type="text" class="form-control input-md" id="@txtIONumber" value="@item.IONumber"/>    
+                    <input type="text" class="form-control input-md" id="@txtIONumber" value="@(item.Trackings.FirstOrDefault() != null ? item.Trackings.FirstOrDefault().IONumber : "")"/>    
                 </div>
                 <a href="#" class="btn btn-default btnSendToTracking" id="btnSendToTracking" data-tooltip="tooltip" title="Send To Tracking"><span class="glyphicon glyphicon-send"></span></a>
             </td>
@@ -137,14 +137,16 @@
                    page,
                    sortOrder = ViewBag.CurrentSort,
                    searchType = ViewBag.SearchType,
-                   searchString = ViewBag.SearchString,
+                   basicString = ViewBag.BasicStringSearched,
+                   basicStatus = ViewBag.BasicStatusSearched,
+                   advancedStatus = ViewBag.AdvancedStatusSearched,
+                   advancedUser = ViewBag.AdvancedUserSearched,
                    campaignName = ViewBag.CampaignName,
                    isTested = ViewBag.IsTested,
                    orderedFrom = ViewBag.OrderedFrom,
                    orderedTo = ViewBag.OrderedTo,
                    broadcastFrom = ViewBag.BroadcastFrom,
-                   broadcastTo = ViewBag.BroadcastTo,
-                   Status = ViewBag.StatusSearched
+                   broadcastTo = ViewBag.BroadcastTo
                }), new PagedListRenderOptions() { })
                 </div>
             </div>
@@ -194,6 +196,7 @@
 
                 var dataToPost = {
                     Id: Id,
+                    SegmentNumber: '',
                     IONumber: txtIONumber.val()
                 };
 

@@ -9,46 +9,29 @@ namespace WFP.ICT.Data.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
-
         public Guid? CampaignId { get; set; }
 
         // Campaign Testing
-        public string OrderNumber { get; set; }
         public string CampaignName { get; set; }
         public string WhiteLabel { get; set; }
         public bool ReBroadCast { get; set; }
         public DateTime? ReBroadcastDate { get; set; }
         public string FromLine { get; set; }
         public string SubjectLine { get; set; }
-        public string HtmlImageFiles { get; set; }
-        public string CreativeURL { get; set; }
-        public string TestSeedList { get; set; }
-        public string FinalSeedList { get; set; }
+        
         public bool IsTested { get; set; }
         public DateTime? TestingTime { get; set; }
         public int TestingUrgency { get; set; } // TestingUrgencyEnum
         public DateTime? DeployDate { get; set; }
 
         // Campaign Demographics
-        public string ZipCodeFile { get; set; }
-        public string ZipURL { get; set; }
         public string GeoDetails { get; set; }
         public string Demographics { get; set; }
         [Range(1, int.MaxValue, ErrorMessage = "Please enter Quantity to be ordered")]
         public long Quantity { get; set; }
         public string SpecialInstructions { get; set; }
 
-        // File Management
-        public int HtmlImagesStatus { get; set; } // UploadFileStatusEnum
-        public int ZipURLStatus { get; set; } // UploadFileStatusEnum
-        public string TestSeedURL { get; set; }
-        public int TestSeedStatus { get; set; } // UploadFileStatusEnum
-        public string LiveSeedURL { get; set; }
-        public int LiveSeedStatus { get; set; } // UploadFileStatusEnum
-        public string SuppressionURL { get; set; }
-        public int SuppressionStatus { get; set; } // UploadFileStatusEnum
-
-        // New Fields
+        // DataSegment
         public long OpenGoals { get; set; }
         public long ClickGoals { get; set; }
         public long DataFileQuantity { get; set; }
@@ -56,6 +39,14 @@ namespace WFP.ICT.Data.Entities
         public string DataFileUrl { get; set; } // aws/2500data.csv
         public DateTime? DateFetched { get; set; }
 
+        // Digital Plus
+        public bool IsOpenPixel { get; set; }
+        public string OpenPixelUrl { get; set; }
+        public bool IsOmniOrder { get; set; }
+        public DateTime? OmniDeployDate { get; set; }
+        public string Impressions { get; set; }
+        public int Retargeting { get; set; } // RetargetingEnum
+        
         public virtual ICollection<CampaignSegment> Segments { get; set; }
 
         public CampaignTesting()

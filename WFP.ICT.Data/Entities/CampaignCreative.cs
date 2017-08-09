@@ -9,10 +9,8 @@ namespace WFP.ICT.Data.Entities
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
-
         public Guid? CampaignId { get; set; }
 
-        public string OrderNumber { get; set; }
         public string CreativeHtml { get; set; }
         public bool IsTested { get; set; }
         public DateTime? TestDateTime { get; set; }

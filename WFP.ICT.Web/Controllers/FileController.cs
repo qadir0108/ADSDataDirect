@@ -9,9 +9,8 @@ namespace WFP.ICT.Web.Controllers
 {
     public class FileController : BaseController
     {
-
         [HttpPost]
-        public async Task<JsonResult> UploadFile()
+        public async Task<JsonResult> UploadFile(UploadFileVM fileVm)
         {
             try
             {
@@ -28,9 +27,19 @@ namespace WFP.ICT.Web.Controllers
                             stream.CopyTo(fileStream);
                         }
 
-                        amazonFileKey = string.Format("{0:yyyyMMdd_HHmmss}_{1}", DateTime.Now, fileContent.FileName);
-
-                        S3FileManager.Upload(amazonFileKey, filePath);
+                        if (string.IsNullOrEmpty(fileVm.OrderNumber))
+                        {
+                            amazonFileKey = string.Format("{0:yyyyMMddHHmmss}_{1}", DateTime.Now, fileContent.FileName);
+                            S3FileManager.Upload(amazonFileKey, filePath);
+                        } else if (!string.IsNullOrEmpty(fileVm.SegmentNumber)) // Data files Upload only // HtmlImageFiles2500A, HtmlImageFiles2500B
+                        {
+                            amazonFileKey = string.Format("{0}/{1}_html.zip", fileVm.OrderNumber, fileVm.SegmentNumber);
+                            S3FileManager.Upload(amazonFileKey, filePath, true, true);
+                        }
+                        else
+                        {
+                            amazonFileKey = FileProcessor.AdjustNewFile(fileVm, filePath);
+                        }
 
                         // Delete local
                         string fullPath = Path.Combine(UploadPath, fileContent.FileName);

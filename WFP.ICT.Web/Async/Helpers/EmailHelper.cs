@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Configuration;
+using System.Linq;
 using System.Net.Mail;
 using System.Threading.Tasks;
 using ADSDataDirect.Enums;
@@ -50,23 +51,29 @@ namespace WFP.ICT.Web.Async
                                       , loggedInUser.UserName, loggedInUser.Email, campaign.CampaignName, campaign.BroadcastDate.Value.ToString("d")
                                       , campaign.ReBroadCast ? "Yes" : "No", campaign.ReBroadcastDate.HasValue ? campaign.ReBroadcastDate.ToString() : "", campaign.FromLine, campaign.SubjectLine, campaign.IsPersonalization ? "Yes" : "No"
                                       , campaign.IsMatchback ? "Yes" : "No", campaign.IsSuppression ? "Yes" : "No" 
-                                      , campaign.WhiteLabel, campaign.HtmlImageFiles, campaign.TestSeedList, campaign.FinalSeedList, campaign.SpecialInstructions 
+                                      , campaign.WhiteLabel, campaign.Assets.CreativeUrl, campaign.Assets.TestSeedUrl, campaign.Assets.LiveSeedUrl, campaign.SpecialInstructions 
                                       , campaign.CreatedAt.AddMinutes(2).AddSeconds(30).ToString()
                                       , campaign.IP, campaign.Browser, campaign.OS, campaign.Referrer
                                       , Footer);
             await SendEmailAsync(loggedInUser.Email, subject, body);
         }
 
-        public static async Task SendApprovedToVendor(Vendor vendor, Campaign campaign)
+        public static async Task SendApprovedToVendor(Vendor vendor, Campaign campaign, CampaignSegment segment)
         {
-            string newOld = !campaign.RebroadId.HasValue ? "New" : "RDP";
+            string newOld = !campaign.ReBroadCasted ? "New" : "RDP";
             string orderNumber = campaign.OrderNumber;
             string deployDate = campaign.Approved.DeployDate.Value.ToString("d");
             string deployTime = campaign.Approved.DeployDate.Value.ToString("hh:mm");
             string quantity = campaign.Approved.Quantity.ToString();
 
             string subject = string.Format("{0} Order {1}, Order # {2}",
-                                    newOld, campaign.Approved.CampaignName, campaign.OrderNumber);
+                                    newOld, campaign.Approved.CampaignName, segment.SegmentNumber);
+
+            string segmentsHtml = @"<table border=""1""><tr><th>Segment</th><th>Subject Line</th><th>Broadcast Date</th><th>Data File</th><th>Total Records</th></tr>";
+            segmentsHtml += string.Format(@"<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>", segment.SegmentNumber, segment.SubjectLine, segment.BroadcastDate, segment.SegmentDataFileUrl,
+                NumberHelper.GetTotal(segment.FirstRangeStart, segment.FirstRangeEnd,segment.SecondRangeStart, segment.SecondRangeEnd, segment.ThirdRangeStart,segment.ThirdRangeEnd)
+                );
+            segmentsHtml += "</table>";
 
             string body = string.Format(@"<br/><p>Dear {0}</p><br/>
                                        Please find below Order details<br/><br/>
@@ -91,17 +98,50 @@ namespace WFP.ICT.Web.Async
                                         <tr><th>Deploy Time:</th><td>{18}</td></tr>
                                         <tr><th>ReportSite Link:</th><td>{19}</td></tr>
                                         <tr><th>Link Breakout:</th><td>{20}</td></tr>
-                                        </table></p> <p></p> {21}"
+                                        <tr><th>Has Open Pixel:</th><td>{21}</td></tr>
+                                        <tr><th>Open Pixel URL:</th><td>{22}</td></tr>
+                                        <tr><th>Open Goals:</th><td>{23}</td></tr>
+                                        <tr><th>Click Goals:</th><td>{24}</td></tr>
+                                        <tr><th>Segment Data:</th><td>{25}</td></tr>
+                                        </table></p> <p></p> {26}"
                                       , vendor.Name, campaign.Approved.ReferenceNumber, orderNumber, campaign.Approved.CampaignName
                                       , campaign.Approved.ReBroadCast ? "Yes" : "No", campaign.Approved.DeployDate.Value.ToString("d")
                                       , campaign.Approved.FromLine, campaign.Approved.SubjectLine, campaign.OptOut, campaign.Approved.WhiteLabel
-                                      , campaign.IsPersonalization ? "Yes" : "No", campaign.Approved.CreativeURL, quantity
-                                      , campaign.Approved.GeoDetails, campaign.Approved.Demographics, campaign.Approved.ZipURL
+                                      , campaign.IsPersonalization ? "Yes" : "No", campaign.Assets.CreativeUrl, quantity
+                                      , campaign.Approved.GeoDetails, campaign.Approved.Demographics, campaign.Assets.ZipCodeUrl
                                       , campaign.Approved.SpecialInstructions, deployDate, deployTime
                                       , campaign.Approved.ReportSiteLink, campaign.Approved.LinkBreakout
+                                      , campaign.Approved.IsOpenPixel ? "Yes" : "No", campaign.Approved.OpenPixelUrl
+                                      , campaign.Approved.OpenGoals, campaign.Approved.ClickGoals
+                                      , segmentsHtml
                                       , Footer);
             await SendEmailAsync(vendor.Email, subject, body, vendor.CCEmails);
         }
+
+        public static async Task SendNotificationsToVendor(Vendor vendor, List<Campaign> campaigns)
+        {
+            string subject = string.Format("Campaign Issues Notifications");
+
+            string problems = @"<table border=""2""><tr><th>Order #</th><th>Check Time</th><th>Campaign Name</th><th>Problem</th><th>Problem Detail</th></tr>";
+            foreach (var campaign in campaigns)
+            {
+                foreach (var notification in campaign.Notifications)
+                {
+                    problems += string.Format("<tr><td>{0}</td><td>{1}</td><td>{2}</td><td>{3}</td><td>{4}</td></tr>",
+                        campaign.OrderNumber, campaign.CampaignName, (QCRuleEnum)notification.QCRule,
+                        QCRuleUtility.GetString(notification.QCRule), notification.CheckTime);
+                }
+            }
+            problems += "</table>";
+
+            string body = string.Format(@"<br/><p>Dear {0}</p><br/>
+                                       There is problem with these orders<br/><br/>
+                                        </p> <p>{1}</p> {2}"
+                                      , vendor.Name, problems
+                                      , Footer);
+            await SendEmailAsync(vendor.Email, subject, body, vendor.CCEmails);
+        }
+
 
         public static void SendErrorEmail(string to, Exception ex, string currentController, string currentAction)
         {

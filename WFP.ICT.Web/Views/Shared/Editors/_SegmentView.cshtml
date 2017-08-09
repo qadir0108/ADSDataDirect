@@ -1,38 +1,134 @@
 ﻿@model WFP.ICT.Data.Entities.CampaignSegment
+@using ADSDataDirect.Enums
 @using MyToolkit.Html
 @using WFP.ICT.Enum
+@using WFP.ICT.Web.Helpers
+@using WFP.ICT.Web.Models
 
-  <!-- Start Piano -->
+<!-- Start Piano -->
 @using (Html.BeginCollectionItem("Segments"))
 {
-        <div class="row">
-            <div class="col-md-12">
-                @Html.HiddenFor(Model => Model.Id)
-                @Html.HiddenFor(Model => Model.CreatedAt)
-                @Html.HiddenFor(Model => Model.CampaignId)
-                @Html.HiddenFor(Model => Model.CampaignTestingId)
-                @Html.HiddenFor(Model => Model.SegmentIoNumber)
-                @Html.HiddenFor(Model => Model.DateSent)
-                <div class="col-md-2">
-                    @Model.SegmentIoNumber
-                </div>
-                <div class="col-md-2">
-                    @Model.FirstRangeStart
-                </div>
-                <div class="col-md-2">
-                    @Model.FirstRangeEnd                    
-                </div>
-                <div class="col-md-2">
-                    @Model.SecondRangeStart
-                </div>
-                <div class="col-md-2">
-                    @Model.SecondRangeEnd
-                </div>
-                <div class="col-md-2">
-                    @Model.SegmentDataFileUrl (@((UploadFileStatusEnum)Model.DataFileStatus))
-                </div>
+    @Html.HiddenFor(Model => Model.Id)
+    @Html.HiddenFor(Model => Model.CreatedAt)
+    @Html.HiddenFor(Model => Model.CampaignId)
+    @Html.HiddenFor(Model => Model.CampaignTestingId)
+    @Html.HiddenFor(Model => Model.OrderNumber)
+    @Html.HiddenFor(Model => Model.SegmentNumber)
+    @Html.HiddenFor(Model => Model.SegmentDataFileUrl)
+    @Html.HiddenFor(Model => Model.DateFetched)
+    @Html.HiddenFor(Model => Model.UploadStatus)
+    @Html.HiddenFor(Model => Model.SegmentStatus)
+    @Html.HiddenFor(Model => Model.DateApproved)
+    @Html.HiddenFor(Model => Model.DateSent)
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Segment : @Model.SegmentNumber
+            <div class="pull-right">
+                Total: @(NumberHelper.GetTotal(Model.FirstRangeStart, Model.FirstRangeEnd, Model.SecondRangeStart, Model.SecondRangeEnd, Model.ThirdRangeStart, Model.ThirdRangeEnd))
+                <a class="btn btn-primary btn-sm " target="_blank" href="@Model.SegmentDataFileUrl">
+                    View Data
+                </a>
+                <a href="#" class="btn btn-primary btn-sm btnApprove" data-tooltip="tooltip" title="Complete" data-id="@Model.Id" data-segment="@Model.SegmentNumber">
+                    <i class="fa fa-check-square" aria-hidden="true"></i>
+                </a>
             </div>
         </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        Subject Line
+                    </div>
+                    <div class="col-md-2">
+                        Broadcast Date
+                    </div>
+                    <div class="col-md-2">
+                        HtmlImageFiles
+                    </div>
+                    <div class="col-md-2">
+                        Segment Status
+                    </div>
+                    <div class="col-md-2">
+                        Approved at
+                    </div>
+                    <div class="col-md-2">
+                        Sent at
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="col-md-2">
+                        @Model.SubjectLine
+                    </div>
+                    <div class="col-md-2">
+                        @Model.BroadcastDate
+                    </div>
+                    <div class="col-md-2">
+                        @Model.HtmlImageFiles
+                    </div>
+                    <div class="col-md-2">
+                        @((SegmentStatusEnum)Model.SegmentStatus)
+                    </div>
+                    <div class="col-md-2">
+                        @(Model.DateApproved)
+                    </div>
+                    <div class="col-md-2">
+                        @(Model.DateSent)
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        First Start
+                    </div>
+                    <div class="col-md-2">
+                        First End
+                    </div>
+                    <div class="col-md-2">
+                        Second Start
+                    </div>
+                    <div class="col-md-2">
+                        Second End
+                    </div>
+                    <div class="col-md-2">
+                        Third Start
+                    </div>
+                    <div class="col-md-2">
+                        Third End
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        @Model.FirstRangeStart
+                    </div>
+                    <div class="col-md-2">
+                        @Model.FirstRangeEnd
+                    </div>
+                    <div class="col-md-2">
+                        @Model.SecondRangeStart
+                    </div>
+                    <div class="col-md-2">
+                        @Model.SecondRangeEnd
+                    </div>
+                    <div class="col-md-2">
+                        @Model.ThirdRangeStart
+                    </div>
+                    <div class="col-md-2">
+                        @Model.ThirdRangeEnd
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
 
 }
-   <!-- End Piano -->

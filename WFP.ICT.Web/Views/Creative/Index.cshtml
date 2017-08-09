@@ -86,8 +86,8 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Test Seed</label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.TestSeedList, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.TestSeedList, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.TestSeedFile, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.TestSeedFile, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">
@@ -105,8 +105,8 @@
                     <div class="form-group">
                         <label class="control-label col-md-2">Final Seed</label>
                         <div class="col-md-10">
-                            @Html.EditorFor(model => model.FinalSeedList, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.FinalSeedList, "", new { @class = "text-danger" })
+                            @Html.EditorFor(model => model.LiveSeedFile, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.LiveSeedFile, "", new { @class = "text-danger" })
                         </div>
                     </div>
                     <div class="form-group">

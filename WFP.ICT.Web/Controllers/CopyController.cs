@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.IO;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -10,6 +11,7 @@ using WFP.ICT.Enum;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using Hangfire;
+using Microsoft.Reporting.Map.WebForms.VirtualEarth;
 using WFP.ICT.Web.Async;
 
 namespace WFP.ICT.Web.Controllers
@@ -22,9 +24,10 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult MoveTo(Guid id, string to)
         {
             var campaign = db.Campaigns
+                .Include(c => c.Assets)
                 .Include(c => c.Testing)
                 .Include(c => c.Approved)
-                .Include(c => c.Rebroad)
+                .Include(c => c.ProDatas)
                 .FirstOrDefault(c => c.Id == id);
             
             if (string.IsNullOrEmpty(campaign.OrderNumber))
@@ -41,6 +44,11 @@ namespace WFP.ICT.Web.Controllers
                 case "Testing":
                     if (campaign.Testing == null)
                     {
+                        campaign.Assets.ZipCodeUrl = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv",
+                            campaign.OrderNumber);
+                        campaign.Assets.CreativeUrl = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm",
+                           campaign.OrderNumber);
+
                         var testingId = Guid.NewGuid();
                         var testing = new CampaignTesting()
                         {
@@ -48,29 +56,24 @@ namespace WFP.ICT.Web.Controllers
                             CampaignId = campaign.Id,
                             CreatedAt = DateTime.Now,
                             CreatedBy = campaign.CreatedBy,
-                            OrderNumber = campaign.OrderNumber,
                             CampaignName = campaign.CampaignName,
                             WhiteLabel = campaign.WhiteLabel,
                             ReBroadCast = campaign.ReBroadCast,
                             ReBroadcastDate = campaign.ReBroadcastDate,
                             FromLine = campaign.FromLine,
                             SubjectLine = campaign.SubjectLine,
-                            HtmlImageFiles = campaign.HtmlImageFiles,
-                            CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm", campaign.OrderNumber),
-                            TestSeedList = campaign.TestSeedList,
-                            FinalSeedList = campaign.FinalSeedList,
+                            
                             TestingUrgency = campaign.TestingUrgency,
                             DeployDate = campaign.BroadcastDate,
-
-                            ZipCodeFile = campaign.ZipCodeFile,
-                            ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv",campaign.OrderNumber),
                             GeoDetails = campaign.GeoDetails,
                             Demographics = campaign.Demographics,
                             Quantity = campaign.Quantity,
                             SpecialInstructions = campaign.SpecialInstructions,
 
-                            OpenGoals = campaign.OpenGoals,
-                            ClickGoals = campaign.ClickGoals,
+                            IsOpenPixel = campaign.IsOpenPixel,
+                            OpenPixelUrl = campaign.OpenPixelUrl,
+                            OpenGoals = campaign.Quantity * 12 / 100,
+                            ClickGoals = campaign.Quantity * 15 / 100,
                             DataFileQuantity = campaign.DataFileQuantity,
                             DataFileSegments = campaign.DataFileSegments,
                             //DataFileUrl = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}data.csv", campaign.OrderNumber),
@@ -84,11 +87,16 @@ namespace WFP.ICT.Web.Controllers
                                 Id = Guid.NewGuid(),
                                 CreatedAt = DateTime.Now,
                                 CampaignId = campaign.Id,
-                                SegmentIoNumber = campaign.OrderNumber + c1,
+                                SegmentNumber = campaign.OrderNumber + c1,
                                 FirstRangeStart = 1,
-                                FirstRangeEnd = 60000,
-                                SecondRangeStart = 60001,
-                                SecondRangeEnd = 120000
+                                FirstRangeEnd = 600,
+                                SecondRangeStart = 0,
+                                SecondRangeEnd = 0,
+                                ThirdRangeStart = 0,
+                                ThirdRangeEnd = 0,
+                                BroadcastDate = campaign.BroadcastDate,
+                                SubjectLine = campaign.SubjectLine,
+                                HtmlImageFiles = campaign.Assets.CreativeFiles
                             });
                             c1++;
                         }
@@ -121,31 +129,27 @@ namespace WFP.ICT.Web.Controllers
                             CampaignId = campaign.Id,
                             CreatedAt = DateTime.Now,
                             CreatedBy = campaign.CreatedBy,
-                            OrderNumber = testing.OrderNumber,
                             CampaignName = testing.CampaignName,
                             WhiteLabel = testing.WhiteLabel,
                             ReBroadCast = testing.ReBroadCast,
                             ReBroadcastDate = testing.ReBroadcastDate,
                             FromLine = testing.FromLine,
                             SubjectLine = testing.SubjectLine,
-                            HtmlImageFiles = testing.HtmlImageFiles,
-                            CreativeURL = testing.CreativeURL,
                             DeployDate = testing.DeployDate,
 
-                            ZipURL = testing.ZipURL,
                             GeoDetails = testing.GeoDetails,
                             Demographics = testing.Demographics,
                             Quantity = testing.Quantity,
                             SpecialInstructions = testing.SpecialInstructions,
-                            LinkBreakout =
-                                string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}linkr.csv",
-                                    campaign.OrderNumber),
                             ReportSiteLink = string.Format("http://report-site.com/c/ADS{0}", campaign.OrderNumber),
-
+                            LinkBreakout = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}linkr.csv", campaign.OrderNumber),
+                            IsOpenPixel = testing.IsOpenPixel,
+                            OpenPixelUrl = testing.OpenPixelUrl,
                             OpenGoals = testing.OpenGoals,
                             ClickGoals = testing.ClickGoals,
                             DataFileQuantity = testing.DataFileQuantity,
                             DataFileSegments = testing.DataFileSegments,
+                            DataFileUrl = testing.DataFileUrl
                         };
                         db.CampaignsApproved.Add(approved);
                         db.SaveChanges();
@@ -161,72 +165,20 @@ namespace WFP.ICT.Web.Controllers
                     //db.SaveChanges();
                     return RedirectToAction("ViewReport", "Tracking", new {id = campaign.Id});
                     break;
-                case "ReBroadcast":
-                    if (campaign.OrderNumber.EndsWith("RDP"))
+                case "Complete":
+                    if (campaign.Testing == null)
                     {
-                        TempData["Error"] = "This is already broadcasted.";
+                        TempData["Error"] = "Please pass through Testing first.";
                         return RedirectToAction("Index", "Campaigns");
                     }
-
-                    if (!campaign.RebroadId.HasValue)
+                    var notCompletedSegments = db.CampaignSegments
+                        .Where(x => x.CampaignId == campaign.Id && x.SegmentStatus != (int) SegmentStatusEnum.Complete);
+                    if (notCompletedSegments.Any())
                     {
-                        if (campaign.Approved == null)
-                        {
-                            TempData["Error"] = "Please pass through Approved first.";
-                            return RedirectToAction("Index", "Campaigns");
-                        }
-
-                        var copy = new Campaign();
-                        db.Campaigns.Add(copy);
-                        db.Entry(copy).CurrentValues.SetValues(db.Entry(campaign).CurrentValues);
-                        copy.Id = Guid.NewGuid();
-                        copy.CreatedAt = DateTime.Now;
-                        copy.OrderNumber = campaign.Approved.OrderNumber + "RDP";
-                        copy.Status = (int) CampaignStatusEnum.Rebroadcasted;
-                        copy.TestingId = null;
-                        copy.ApprovedId = null;
-                        db.SaveChanges();
-
-                        var testingId = Guid.NewGuid();
-                        var testing = new CampaignTesting()
-                        {
-                            Id = testingId,
-                            CampaignId = copy.Id,
-                            CreatedAt = DateTime.Now,
-                            CreatedBy = copy.CreatedBy,
-                            OrderNumber = copy.OrderNumber,
-                            CampaignName = campaign.Approved.CampaignName,
-                            WhiteLabel = campaign.Approved.WhiteLabel,
-                            ReBroadCast = campaign.Approved.ReBroadCast,
-                            ReBroadcastDate = campaign.Approved.ReBroadcastDate,
-                            FromLine = campaign.Approved.FromLine,
-                            SubjectLine = campaign.Approved.SubjectLine,
-                            HtmlImageFiles = campaign.Approved.HtmlImageFiles,
-                            CreativeURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}.htm", campaign.OrderNumber),
-                            TestSeedList = campaign.Testing.TestSeedList,
-                            FinalSeedList = campaign.Testing.FinalSeedList,
-                            TestingUrgency = campaign.Testing.TestingUrgency,
-                            DeployDate = campaign.Approved.DeployDate,
-
-                            ZipCodeFile = campaign.Testing.ZipCodeFile,
-                            ZipURL = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}zip.csv",campaign.OrderNumber),
-                            GeoDetails = campaign.Approved.GeoDetails,
-                            Demographics = campaign.Approved.Demographics,
-                            Quantity = campaign.Approved.Quantity,
-                            SpecialInstructions = campaign.Approved.SpecialInstructions
-                        };
-                        db.CampaignsTesting.Add(testing);
-                        db.SaveChanges();
-
-                        copy.TestingId = testingId;
-                        db.SaveChanges();
-
-                        campaign.RebroadId = copy.Id;
-                        db.SaveChanges();
+                        string segments = string.Join(",", notCompletedSegments.Select(x => x.SegmentNumber));
+                        TempData["Error"] = "You have " + segments + " in progess and is not complete.";
+                        return RedirectToAction("Index", "Campaigns");
                     }
-                    return RedirectToAction("MoveTo", "Copy", new {id = campaign.RebroadId, to = "Testing"});
-                    break;
-                case "Complete":
                     campaign.Status = (int) CampaignStatusEnum.Completed;
                     db.SaveChanges();
                     TempData["Success"] = "Campaign " + campaign.CampaignName + " has been completed sucessfully.";
@@ -262,34 +214,35 @@ namespace WFP.ICT.Web.Controllers
         {
             try
             {
-                var campaignTesting = db.CampaignsTesting
-                                     .Include(x => x.Segments)
-                                     .FirstOrDefault(c => c.Id == Id);
-                if (campaignTesting == null)
-                {
-                    throw new Exception("Not found");
-                }
+                CampaignTesting campaignTesting = db.CampaignsTesting
+                   .Include(x => x.Segments)
+                   .FirstOrDefault(x => x.Id == Id);
 
-                var lastSegment = campaignTesting.Segments.OrderBy(x => x.SegmentIoNumber).LastOrDefault();
+                Campaign campaign = db.Campaigns
+                   .FirstOrDefault(x => x.Id == campaignTesting.CampaignId);
+
+                var lastSegment = campaignTesting.Segments.OrderBy(x => x.SegmentNumber).LastOrDefault();
                 
                 if (oldValue + 1 == newValue) // add 
                 {
                     char c1 = 'A';
                     if (lastSegment != null)
                     {
-                        c1 = lastSegment.SegmentIoNumber.ToCharArray().Last();
+                        c1 = lastSegment.SegmentNumber.ToCharArray().Last();
                         c1++;
                     }
                     campaignTesting.Segments.Add(new CampaignSegment()
                     {
                         Id = Guid.NewGuid(),
                         CreatedAt = DateTime.Now,
-                        CampaignId = campaignTesting.CampaignId,
-                        SegmentIoNumber = campaignTesting.OrderNumber + c1,
+                        CampaignId = campaign.Id,
+                        SegmentNumber = campaign.OrderNumber + c1,
                         FirstRangeStart = 1,
                         FirstRangeEnd = 60000,
-                        SecondRangeStart = 60001,
-                        SecondRangeEnd = 120000
+                        SecondRangeStart = 0,
+                        SecondRangeEnd = 0,
+                        ThirdRangeStart = 0,
+                        ThirdRangeEnd = 0
                     });
                     campaignTesting.DataFileSegments = newValue;
                     db.SaveChanges();
@@ -326,7 +279,7 @@ namespace WFP.ICT.Web.Controllers
         [MultipleButton(Name = "action", Argument = "EditTesting")]
         public ActionResult EditTesting([Bind(
         Include =
-                     "Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy,OpenGoals,ClickGoals,DataFileQuantity,DataFileSegments,Segments"
+                     "Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,DataFileQuantity,DataFileSegments,Segments"
              )] 
             CampaignTesting campaignTesting)
         {
@@ -355,6 +308,22 @@ namespace WFP.ICT.Web.Controllers
             return View("EditTesting", campaignTesting);
         }
 
+        public ActionResult ApproveSegment(Guid? Id)
+        {
+            try
+            {
+                var segment = db.CampaignSegments.FirstOrDefault(x => x.Id == Id);
+                segment.SegmentStatus = (int)SegmentStatusEnum.Approved;
+                segment.DateApproved = DateTime.Now;
+                db.SaveChanges();
+                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         [MultipleButton(Name = "action", Argument = "Approve")]
@@ -406,7 +375,8 @@ namespace WFP.ICT.Web.Controllers
         [MultipleButton(Name = "action", Argument = "ProcessFiles")]
         public ActionResult ProcessFiles([Bind(Include = "Id,CampaignId,OrderNumber")] CampaignTesting campaignTesting)
         {
-            BackgroundJob.Enqueue(() => FileProcessor.ProcessFiles(UploadPath, campaignTesting.OrderNumber));
+            var campaign = db.Campaigns.FirstOrDefault(x => x.Id == campaignTesting.CampaignId);
+            BackgroundJob.Enqueue(() => FileProcessor.ProcessFiles(UploadPath, campaign.OrderNumber));
 
             TempData["Success"] = "File Processing has been started succesfully.";
             return RedirectToAction("EditTesting", new {id = campaignTesting.Id});
@@ -415,23 +385,14 @@ namespace WFP.ICT.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [MultipleButton(Name = "action", Argument = "FetchDataFile")]
-        public ActionResult FetchDataFile([Bind(Include = "Id,CampaignId,OrderNumber")] CampaignTesting campaignTesting)
+        [MultipleButton(Name = "action", Argument = "FetchProcessDataFiles")]
+        public ActionResult FetchProcessDataFiles([Bind(Include = "Id,CampaignId,OrderNumber,ZipCodeFile, DataFileQuantity,Segments")] CampaignTesting campaignTesting)
         {
-            //BackgroundJob.Enqueue(() => FileProcessor.ProcessFiles(UploadPath, campaignTesting.OrderNumber));
+            var campaign = db.Campaigns.Include(x => x.Assets).FirstOrDefault(x => x.Id == campaignTesting.CampaignId);
 
-            TempData["Success"] = "SQL Data File is being fetched, please wait...";
-            return RedirectToAction("EditTesting", new { id = campaignTesting.Id });
-        }
+            BackgroundJob.Enqueue(() => DataFileProcessor.FetchSQLDataFile(UploadPath, campaign.OrderNumber, campaign.Assets.ZipCodeFile, campaignTesting.DataFileQuantity));
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        [MultipleButton(Name = "action", Argument = "ProcessDataFiles")]
-        public ActionResult ProcessDataFiles([Bind(Include = "Id,CampaignId,OrderNumber")] CampaignTesting campaignTesting)
-        {
-            //BackgroundJob.Enqueue(() => FileProcessor.ProcessFiles(UploadPath, campaignTesting.OrderNumber));
-
-            TempData["Success"] = "Data Files are being generated, please wait...";
+            TempData["Success"] = "SQL Data is being fetched and processed, please wait about 5m ...";
             return RedirectToAction("EditTesting", new { id = campaignTesting.Id });
         }
 
@@ -453,15 +414,26 @@ namespace WFP.ICT.Web.Controllers
             var campaignTesting = db.CampaignsTesting
                                     .Include(x => x.Segments)
                                     .FirstOrDefault(c => c.CampaignId == campaignApproved.CampaignId);
-            var files = campaignTesting.Segments.Select(x => x.SegmentDataFileUrl);
-            ViewBag.DataFiles = new SelectList(files, "Value", "Text", proData);
+            ViewBag.Segments = campaignTesting?.Segments.OrderBy(x => x.SegmentNumber).ToList();
+
+            //var segmentsList = campaignTesting?.Segments.OrderBy(x => x.SegmentNumber).Select(x => new SelectListItem()
+            //{
+            //    Text = x.SegmentNumber,
+            //    Value = x.Id.ToString()
+            //}).ToList();
+            //segmentsList.Insert(0, new SelectListItem()
+            // {
+            //     Text = "Select Segment",
+            //     Value = string.Empty
+            // });
+            //ViewBag.SegmentsList = new SelectList(segmentsList, "Value", "Text");
 
             return View(campaignApproved);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditApproved([Bind(Include = "Id,CampaignId,ReferenceNumber,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,DeployDate,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,LinkBreakout,ReportSiteLink,CreatedAt,CreatedBy,IsUseApiDataForOpen,OpenGoals,ClickGoals,DataFileQuantity,DataFileSegments")] CampaignApproved campaignApproved)
+        public ActionResult EditApproved([Bind(Include = "Id,CampaignId,ReferenceNumber,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,DeployDate,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,LinkBreakout,ReportSiteLink,CreatedAt,CreatedBy,IsUseApiDataForOpen,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,DataFileQuantity,DataFileSegments")] CampaignApproved campaignApproved)
         {
             if (ModelState.IsValid)
             {
@@ -480,14 +452,30 @@ namespace WFP.ICT.Web.Controllers
             ViewBag.Vendor = new SelectList(VendorsList, "Value", "Text", proData);
 
             var campaignTesting = db.CampaignsTesting
-                                    .Include(x => x.Segments)
-                                    .FirstOrDefault(c => c.CampaignId == campaignApproved.CampaignId);
-            var files = campaignTesting.Segments.Select(x => x.SegmentDataFileUrl);
-            ViewBag.DataFiles = new SelectList(files, "Value", "Text", proData);
+                                   .Include(x => x.Segments)
+                                   .FirstOrDefault(c => c.CampaignId == campaignApproved.CampaignId);
+            ViewBag.Segments = campaignTesting?.Segments.OrderBy(x => x.SegmentNumber).ToList();
+
             return View(campaignApproved);
         }
-        
-        public ActionResult SendToVendor(Guid? Id, Guid? VendorId)
+
+        public ActionResult CompleteSegment(Guid? Id)
+        {
+            try
+            {
+                var segment = db.CampaignSegments.FirstOrDefault(x => x.Id == Id);
+                segment.SegmentStatus = (int)SegmentStatusEnum.Complete;
+                segment.DateComplete = DateTime.Now;
+                db.SaveChanges();
+                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
+
+        public ActionResult SendToVendor(Guid? VendorId, Guid? Id, string[] SegmentsSelected)
         {
             try
             {
@@ -501,7 +489,7 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Campagin: " + campaign.CampaignName + " is not yet approved.");
                 }
 
-                BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(campaign.OrderNumber, VendorId));
+                BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(VendorId, campaign.OrderNumber, SegmentsSelected));
 
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
@@ -512,7 +500,65 @@ namespace WFP.ICT.Web.Controllers
 
         }
 
-        
+        public ActionResult SendViaAPI(Guid? Id)
+        {
+            try
+            {
+                Campaign campaign = db.Campaigns.Include(x => x.Approved).FirstOrDefault(x => x.Id == Id);
+                if (campaign == null)
+                {
+                    throw new Exception("Campagin with Id: " + Id + " Not Found.");
+                }
+                if (campaign.Approved == null)
+                {
+                    throw new Exception("Campagin: " + campaign.CampaignName + " is not yet approved.");
+                }
 
+                var segment = db.CampaignSegments
+                    .OrderBy(x => x.SegmentNumber)
+                    .FirstOrDefault(x => x.CampaignId == campaign.Id);
+                var response = ProDataAPIManager.Create(campaign, segment);
+                if (response.status == ProDataAPIManager.SUCCESS)
+                {
+                    var campaignTracking =
+                       db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == campaign.Id && x.SegmentNumber == segment.SegmentNumber);
+
+                    if (campaignTracking == null)
+                    {
+                        var trackingId = Guid.NewGuid();
+                        var tracking = new CampaignTracking()
+                        {
+                            Id = trackingId,
+                            CreatedAt = DateTime.Now,
+                            CampaignId = campaign.Id,
+                            SegmentNumber = segment.SegmentNumber,
+                            DateSent = DateTime.Now,
+                            IsCreatedThroughApi = true,
+                            QueuedCampaignId = response.queued_pending_campaign_id.ToString(),
+                        };
+                        db.CampaignTrackings.Add(tracking);
+                        campaign.Status = (int)CampaignStatusEnum.Traffic;
+                        db.SaveChanges();
+                    }
+                }
+                else
+                {
+                    string message = response.message;
+                    foreach (var field in response.error_fields)
+                    {
+                        message += "<br/>" + field;
+                    }
+                    throw new Exception(message);
+                }
+
+                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+
+        }
+        
     }
 }

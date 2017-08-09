@@ -136,7 +136,7 @@ namespace WFP.ICT.Web.Controllers
                              x => new SelectListItem()
                              {
                                  Text = x.UserName,
-                                 Value = x.Id
+                                 Value = x.UserName
                              }).ToList();
                     _users.Insert(0, new SelectListItem()
                     {
@@ -145,6 +145,31 @@ namespace WFP.ICT.Web.Controllers
                     });
                 }
                 return _users;
+            }
+        }
+
+        public static bool _forceOrders;
+        private static List<SelectListItem> _orderNumbers;
+        public IEnumerable<SelectListItem> OrderNumberList
+        {
+            get
+            {
+                if (_orderNumbers == null || _forceOrders)
+                {
+                    _orderNumbers = db.Campaigns
+                        .OrderBy(x => x.CreatedAt).Select(
+                             x => new SelectListItem()
+                             {
+                                 Text = x.OrderNumber,
+                                 Value = x.Id.ToString()
+                             }).ToList();
+                    _orderNumbers.Insert(0, new SelectListItem()
+                    {
+                        Text = "Select Order #",
+                        Value = string.Empty
+                    });
+                }
+                return _orderNumbers;
             }
         }
 

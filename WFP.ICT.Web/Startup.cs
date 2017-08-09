@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNet.Identity;
+﻿using System;
+using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Owin;
 using System.Globalization;
 using Hangfire;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Helpers;
 
 [assembly: OwinStartup(typeof(WFP.ICT.Web.Startup))]
@@ -28,6 +30,13 @@ namespace WFP.ICT.Web
                 Authorization = new[] { new HangfireAuthorizationFilter() }
             });
             app.UseHangfireServer();
+
+            // CheckForQCRules 
+            //RecurringJob.AddOrUpdate("CheckForQCRules", () => NotificationsProcessor.CheckForQCRules(), Cron.Minutely);
+
+            //RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), "0 8,12,17 * * *");
+            //RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), Cron.Minutely);
+
         }
 
         private void SetupInitialSettings()

@@ -20,11 +20,19 @@
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon"></span>
                                             </div>
-                                            @Html.DropDownList("SearchStatus", null, htmlAttributes: new { @class = "form-control" })
+                                            @Html.DropDownList("AdvancedStatus", null, htmlAttributes: new { @class = "form-control", @id = "advancedStatus" })
                                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                         </div>
                                     </div>
                                     <div class="col-md-6 form-group">
+                                        <label class="control-label" for="orderedFrom">Ordered by</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon"></span>
+                                            </div>
+                                            @Html.DropDownList("AdvancedUser", null, htmlAttributes: new { @class = "form-control", @id = "advancedUser" })
+                                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="row">
@@ -110,6 +118,20 @@
     var wfp = wfp || {};
 
     $(document).ready(function () {
+
+        var form = $('form#frmSearchAdvanced');
+        $('#searchModal').on('show.bs.modal', function (event) {
+            debugger;
+            //var drpUnit = $("#unit").select2({ dropdownParent: $('#searchModal') });
+            //$("#dateFrom").datepicker({
+            //    dateFormat: 'dd/mm/yy'
+            //});
+            //$("#dateTo").datepicker({
+            //    dateFormat: 'dd/mm/yy'
+            //});
+            //drpUnit.val('').trigger("change");
+            form[0].reset();
+        });
 
         $("#orderedFrom").datepicker({
             dateFormat: 'mm/dd/yy'

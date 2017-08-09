@@ -1,10 +1,15 @@
-﻿namespace WFP.ICT.Web.Models
+﻿using System.Collections.Generic;
+
+namespace WFP.ICT.Web.Models
 {
     public class ProDataResponse
     {
         public string status { get; set; }
         public Reports reports { get; set; }
         public string timestamp { get; set; }
+        public string message { get; set; }
+        public List<string> error_fields { get; set; }
+        public long queued_pending_campaign_id { get; set; }
     }
 
     public class Reports

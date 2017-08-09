@@ -1,6 +1,7 @@
 ﻿@*@model IEnumerable<WFP.ICT.Data.Entities.Campaign>*@
 @using ADSDataDirect.Enums
 @using PagedList.Mvc
+@using WFP.ICT
 @using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
 @model PagedList.IPagedList<WFP.ICT.Data.Entities.Campaign>
@@ -38,44 +39,45 @@
 }
 
 <div class="row">
-    <div class="col-md-4">
+    <div class="col-md-2">
         <div class="dashboard-page-head">
             <div class="page-header">
-                <h1>Campaign Orders<small></small></h1>
+                <h1>Orders<small></small></h1>
             </div>
         </div>
     </div>
-
-    <div class="col-md-3 no-left-padding" id="divSearch" data-tooltip="tooltip" title="Search">
-        <form id="frmSearch" method="post">
+    
+    <form id="frmSearch" method="post">
+        <div class="col-md-2 no-left-padding " data-tooltip="tooltip" title="Search">
+            @Html.DropDownList("BasicOrderNumber", null, htmlAttributes: new { @class = "form-control", @id = "basicOrderNumber" })
+        </div>
+        <div class="col-md-2 no-left-padding " data-tooltip="tooltip" title="Search">
+            @Html.DropDownList("BasicStatus", null, htmlAttributes: new { @class = "form-control", @id = "basicStatus" })
+        </div>
+        <div class="col-md-3 no-left-padding" id="divSearch" data-tooltip="tooltip" title="Search">
             <div class="input-group">
                 <div class="input-group-addon">
                     <span class="glyphicon glyphicon-search"></span>
                 </div>
-                <input type="hidden" id="searchType" name="searchType" value="basic" />
-                <input type="text" id="searchString" name="searchString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
+                <input type="hidden" id="searchType" name="searchType" value="basic"/>
+                <input type="text" id="basicString" name="basicString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.BasicStringSearched">
                 <div class="input-group-addon">
                     <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
                 </div>
             </div>
-        </form>
-    </div>
-    <div class="col-md-2 no-left-padding " data-tooltip="tooltip" title="Search">
-        <form id="frmSearch2" method="post">
-            @Html.DropDownList("Status", null, htmlAttributes: new { @class = "form-control" })
-        </form>
-    </div>
-    <div class="col-md-3" id="divTools" style="text-align: left">
-        <a class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
-            <span class="glyphicon glyphicon-search"></span>
-        </a>
-        <a class="btn btn-default" href="/Campaigns/Download" data-tooltip="tooltip" title="Download">
-            <span class="glyphicon glyphicon-download"></span>
-        </a>
-        @Html.ActionLink("New", "Create", null, new { @class = "btn btn-default", @data_tooltip = "tooltip",  @title = "Place New Order" })
-    </div>
-    
-    </div>
+        </div>
+        <div class="col-md-3" id="divTools" style="text-align: left">
+            <a class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
+                <span class="glyphicon glyphicon-search"></span>
+            </a>
+            <a class="btn btn-default" href="/Campaigns/Download" data-tooltip="tooltip" title="Download">
+                <span class="glyphicon glyphicon-download"></span>
+            </a>
+            @Html.ActionLink("New", "Create", null, new {@class = "btn btn-default", @data_tooltip = "tooltip", @title = "Place New Order"})
+        </div>
+    </form>
+
+</div>
         
         <table class="table">
             <tr>
@@ -120,6 +122,11 @@
 
             @foreach (var item in Model)
             {
+                var disabled = "";
+                if ((CampaignStatusEnum)item.Status == CampaignStatusEnum.Traffic || (CampaignStatusEnum)item.Status == CampaignStatusEnum.Completed)
+                {
+                    disabled = "disabled";
+                }
                 <tr>
                     <td>
                         @Html.DisplayFor(modelItem => item.OrderNumber)
@@ -131,10 +138,10 @@
                         @Html.DisplayFor(modelItem => item.CreatedBy)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CreatedAt)
+                        @(item.CreatedAt.ToString(StringConstants.TimeStampFormat))
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.BroadcastDate)
+                        @(item.BroadcastDate?.ToString(StringConstants.TimeStampFormat))
                     </td>
                     <td class="no-right-padding no-left-padding">
                         @(item.Approved != null ? item.Approved.Quantity : item.Testing != null ? item.Testing.Quantity : item.Quantity)
@@ -169,13 +176,13 @@
                                 <div class="col-md-3">
                                     @if (IsAdmin)
                                     {
-                                        @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = item.Id, to = "Testing"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
+                                        @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = item.Id, to = "Testing"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled })
                                     }
                                 </div>
                                 <div class="col-md-3">
                                     @if (IsAdmin)
                                     {
-                                        @Html.ActionLink("Creative", "Index", "Creative", new {id = item.Id}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
+                                        @Html.ActionLink("Creative", "Index", "Creative", new {id = item.Id}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled })
                                     }
                                 </div>
                             </div>
@@ -185,13 +192,16 @@
                             <div class="row" style="margin-top: 3px">
                                 <div class="col-md-12">
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Approved", "MoveTo", "Copy", new { id = item.Id, to = "Approved" }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding" })
+                                        @Html.ActionLink("Approved", "MoveTo", "Copy", new { id = item.Id, to = "Approved" }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled })
                                     </div>
                                     <div class="col-md-3">
                                         @Html.ActionLink("Tracking", "MoveTo", "Copy", new {id = item.Id, to = "Tracking" }, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Re-broad", "MoveTo", "Copy", new {id = item.Id, to = "ReBroadcast"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
+                                        <a href="#" class="btn btn-default btn-sm no-left-padding no-right-padding" title="ReBroadcast" data-tooltip="tooltip"
+                                           data-toggle="modal" data-target="#rebroadcastModal" data-id="@item.Id" data-name="@item.CampaignName" data-order="@item.OrderNumber">
+                                            Re-broad
+                                        </a>
                                     </div>
                                     <div class="col-md-3">
                                         @Html.ActionLink("Complete", "MoveTo", "Copy", new {id = item.Id, to = "Complete"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
@@ -212,11 +222,14 @@
                 </div>
                 <div class="tp-pagination">
                 @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort,
-               searchType = ViewBag.SearchType, searchString = ViewBag.SearchString,
+               searchType = ViewBag.SearchType, basicString = ViewBag.BasicStringSearched,
+               basicStatus = ViewBag.BasicStatusSearched,
+               advancedStatus = ViewBag.AdvancedStatusSearched,
+               advancedUser = ViewBag.AdvancedUserSearched,
                campaignName = ViewBag.CampaignName, isTested = ViewBag.IsTested,
                orderedFrom = ViewBag.OrderedFrom, orderedTo = ViewBag.OrderedTo,
-               broadcastFrom = ViewBag.BroadcastFrom, broadcastTo = ViewBag.BroadcastTo,
-               Status = ViewBag.StatusSearched }), new PagedListRenderOptions() { })
+               broadcastFrom = ViewBag.BroadcastFrom, broadcastTo = ViewBag.BroadcastTo
+                }), new PagedListRenderOptions() { })
                 </div>
             </div>
         </div>
@@ -224,6 +237,7 @@
 <!-- Modal -->
 @{
     Html.RenderPartial("_Search", new WFP.ICT.Web.Models.CampaignSearchVM());
+    Html.RenderPartial("_Rebroadcast");
 }
 <script type="text/javascript">
 
@@ -231,7 +245,7 @@
 
         $(document).ready(function () {
 
-            $('#searchString').keypress(function (e) {
+            $('#basicString').keypress(function (e) {
                 if (e.which === 13) {
                     $('form#frmSearch').submit();
                     return false;
@@ -244,10 +258,14 @@
                 return false;
             });
 
-            $("#Status").select2().on("change", function (e) {
-                debugger;
+            $("#basicOrderNumber").select2().on("change", function (e) {
+                $('form#frmSearch').submit();
+                return;
 
-                $('form#frmSearch2').submit();
+            });
+
+            $("#basicStatus").select2().on("change", function (e) {
+                $('form#frmSearch').submit();
                 return;
 
             });

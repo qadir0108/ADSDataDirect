@@ -12,8 +12,8 @@ namespace WFP.ICT.Web.Models
         public string CampaignName { get; set; }
         public string FromLine { get; set; }
         public string SubjectLine { get; set; }
-        public string TestSeedList { get; set; }
-        public string FinalSeedList { get; set; }
+        public string TestSeedFile { get; set; }
+        public string LiveSeedFile { get; set; }
 
         [AllowHtml]
         public string Creatives { get; set; }

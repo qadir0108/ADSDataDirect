@@ -5,9 +5,9 @@ using System.Threading.Tasks;
 
 namespace ADSDataDirect.Enums
 {
-    public enum OrderTypeEnum
+    public enum RetargetingEnum
     {
-        Single,
-        Multiple
+        Display,
+        Social
     }
 }

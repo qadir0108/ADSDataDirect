@@ -1,5 +1,6 @@
 ﻿@using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
+@using WFP.ICT.Web.Models
 @model WFP.ICT.Data.Entities.Campaign
 
 @{
@@ -13,506 +14,574 @@
 {
     @Html.AntiForgeryToken()
 
-    @*<!-- Nav tabs -->
-    <ul class="nav nav-tabs" role="tablist">
-        <li role="presentation" class="active">
-            <a href="#1" title="Gallery" aria-controls="photo" role="tab" data-toggle="tab">
-                <i class="fa fa-photo"></i> <span class="tab-title">Photo</span>
-            </a>
-        </li>
-        <li role="presentation">
-            <a href="#2" title="about info" aria-controls="about" role="tab" data-toggle="tab">
-                <i class="fa fa-info-circle"></i>
-                <span class="tab-title">About</span>
-            </a>
-        </li>
-    </ul>
-    <!-- Tab panes -->
-    <div class="tab-content">
-        <!-- tab content start-->
-        <div role="tabpanel" class="tab-pane fade" id="1">
-            Photo
+    @*<div class="tabbable-panel">
+        <div class="tabbable-line">
+            <ul class="nav nav-tabs ">
+                <li class="active">
+                    <a href="#tab_default_1" data-toggle="tab">
+                        Details
+                    </a>
+                </li>
+                <li>
+                    <a href="#tab_default_2" data-toggle="tab">
+                        Segment Data
+                    </a>
+                </li>
+                <li>
+                    <a href="#tab_default_3" data-toggle="tab">
+                        Digital Plus
+                    </a>
+                </li>
+            </ul>
+            <div class="tab-content">
+                <div class="tab-pane active" id="tab_default_1">
+                    
+                </div>
+                <div class="tab-pane" id="tab_default_2">
+                    
+                </div>
+                <div class="tab-pane" id="tab_default_3">
+                    
+                </div>
+            </div>
         </div>
-        <div role="tabpanel" class="tab-pane fade" id="2">
-            About
-        </div>
-    </div>
-    <!-- /.tab content start-->*@
+    </div>*@
 
         <div class="form-horizontal">
-            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
             @Html.HiddenFor(model => model.Id)
             @Html.HiddenFor(model => model.CreatedAt)
             @Html.HiddenFor(model => model.OrderNumber)
-            @*<div class="form-group">
-                    @Html.LabelFor(model => model.CreatedAt, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.CreatedAt, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.CreatedAt, "", new { @class = "text-danger" })
-                    </div>
-                </div>*@
-            <div class="row">
-                <div class="col-md-6">
-                    <hr />
-                    <div class="headertab">
-                        Campaign Details
-                    </div>
-                    <hr />
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.CampaignName, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.CampaignName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.CampaignName, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.BroadcastDate, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.BroadcastDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.BroadcastDate, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.RepresentativeName, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.RepresentativeName, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.RepresentativeName, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.RepresentativeEmail, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.RepresentativeEmail, new { @type = "email", htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.RepresentativeEmail, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ReBroadCast, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            <div class="">
-                                <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.ReBroadCast, "True")Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.ReBroadCast, "False")No
-                                    </label>
-                                </div>
-                                @*@Html.CheckBoxFor(model => model.ReBroadCast)*@
-                                @Html.ValidationMessageFor(model => model.ReBroadCast, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.ReBroadcastDate, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.ReBroadcastDate, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.ReBroadcastDate, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.TestingUrgency, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.DropDownList("TestingUrgency", null, htmlAttributes: new { @class = "form-control" })
-                            @Html.ValidationMessageFor(model => model.TestingUrgency, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <hr />
-                    <div class="headertab">
-                        Campaign Demographics
-                    </div><hr />
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.GeoDetails, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.GeoDetails, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.GeoDetails, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Demographics, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.Demographics, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Demographics, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <hr />
-                    <div class="headertab">
-                        Campaign Testing
-                    </div><hr />
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.FromLine, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.FromLine, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.FromLine, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.SubjectLine, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.SubjectLine, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.ValidationMessageFor(model => model.SubjectLine, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                </div>
-
-                <div class="col-md-6">
-                    <hr />
-                    <div class="headertab">
-                        File Management
-                    </div><hr />
-
-                    <div class="form-group">
-                        <div class="control-label col-md-3">
-                            Zip Code File
-                            <a href="/Templates/SampleZipFile.csv">Sample Zip File</a>
-                        </div>
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.ZipCodeFile, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "ZipCodeFile")
-                            @Html.ValidationMessageFor(model => model.ZipCodeFile, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="control-label col-md-3">
-                            Test Seed File
-                            <a href="/Templates/SampleTestSeed.csv">Sample Test Seed File</a>
-                        </div>
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.TestSeedList, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "TestSeedList")
-                            @Html.ValidationMessageFor(model => model.TestSeedList, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="control-label col-md-3">
-                            Final Seed File
-                            <a href="/Templates/SampleLiveSeed.csv">Sample Live Seed File</a>
-                        </div>
-                        @Html.LabelFor(model => model.FinalSeedList, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.FinalSeedList, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "FinalSeedList")
-                            @Html.ValidationMessageFor(model => model.FinalSeedList, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        @Html.LabelFor(model => model.HtmlImageFiles, htmlAttributes: new { @class = "control-label col-md-3" })
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.HtmlImageFiles, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "HtmlImageFiles")
-                            @Html.ValidationMessageFor(model => model.HtmlImageFiles, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <div class="control-label col-md-3">
-                            Suppression File <br />
-                            <a href="/Templates/SampleSuppression.csv">Sample Suppression File</a>
-                        </div>
-                        <div class="col-md-9">
-                            @Html.EditorFor(model => model.SuppressionFile, new { htmlAttributes = new { @class = "form-control" } })
-                            @Html.Partial("_UploadFile", "SuppressionFile")
-                            @Html.ValidationMessageFor(model => model.SuppressionFile, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3">Add OptOut</label>
-                        <div class="col-md-9">
-                            <div class="">
-                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsAddOptOut, "True")Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsAddOptOut, "False")No
-                                    </label>
-                                </div>
-                                @Html.ValidationMessageFor(model => model.IsAddOptOut, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label class="control-label col-md-3">Add ViewInBrowser</label>
-                        <div class="col-md-9">
-                            <div class="">
-                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsAddViewInBrowser, "True")Yes
-                                    </label>
-                                    <label class="btn btn-primary">
-                                        @Html.RadioButtonFor(model => model.IsAddViewInBrowser, "False")No
-                                    </label>
-                                </div>
-                                @Html.ValidationMessageFor(model => model.IsAddViewInBrowser, "", new { @class = "text-danger" })
-                            </div>
-                        </div>
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="row">
-                <div class="col-md-6">
-                </div>
-                <div class="col-md-6">
-                </div>
-            </div>
-
-        <div class="row">
-            <hr />
-            <div class="headertab">
-                Additional Info
-            </div><hr />
-
-            <div class="col-md-6">
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.IsPersonalization, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        <div class="">
-                            <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsPersonalization, "True")Yes
-                                </label>
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsPersonalization, "False")No
-                                </label>
-                            </div>
-                            @*@Html.EditorFor(model => model.IsPersonalization)*@
-                            @Html.ValidationMessageFor(model => model.IsPersonalization, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.IsMatchback, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        <div class="">
-                            <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsMatchback, "True")Yes
-                                </label>
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsMatchback, "False")No
-                                </label>
-                            </div>
-                            @*@Html.EditorFor(model => model.IsMatchback)*@
-                            @Html.ValidationMessageFor(model => model.IsMatchback, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.IsSuppression, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        <div class="">
-                            <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsSuppression, "True")Yes
-                                </label>
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsSuppression, "False")No
-                                </label>
-                            </div>
-                            @*@Html.EditorFor(model => model.IsSuppression)*@
-                            @Html.ValidationMessageFor(model => model.IsSuppression, "", new { @class = "text-danger" })
-                        </div>
-                    </div>
-                </div>
-
-            </div>
-
-            <div class="col-md-6">
-                <div class="form-group">
-                    @Html.LabelFor(model => model.WhiteLabel, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.WhiteLabel, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OptOut, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.OptOut, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.OptOut, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.SpecialInstructions, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.TextAreaFor(model => model.SpecialInstructions, new { @class = "form-control", rows = "6", cols = "10" })
-                        @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-            </div>
-        </div>
             
-        <div class="row">
-            <hr />
-            <div class="headertab">
-                Data Fields
-            </div><hr />
-
-            <div class="col-md-6">
-                
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OrderType, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.DropDownList("OrderType", null, htmlAttributes: new { @class = "form-control" })
-                        @Html.ValidationMessageFor(model => model.OrderType, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <label class="control-label col-md-3">Access Creative Manager</label>
-                    <div class="col-md-9">
-                        <div class="">
-                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsAccessCreativeManager, "True")Yes
-                                </label>
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsAccessCreativeManager, "False")No
-                                </label>
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="#tab_default_1" data-toggle="tab">
+                                Details
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_default_2" data-toggle="tab">
+                                File Management
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_default_3" data-toggle="tab">
+                                Additional Information
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_default_4" data-toggle="tab">
+                                Segment Data
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_default_5" data-toggle="tab">
+                                Digital Plus
+                            </a>
+                        </li>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_default_1">
+                            
+                        <div class="row">
+                        <div class="col-md-6">
+                            <hr />
+                            <div class="headertab">
+                                Campaign Details
                             </div>
-                            @Html.ValidationMessageFor(model => model.IsAccessCreativeManager, "", new { @class = "text-danger" })
+                            <hr />
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.CampaignName, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.CampaignName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.CampaignName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.BroadcastDate, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.BroadcastDate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.BroadcastDate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.RepresentativeName, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.RepresentativeName, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.RepresentativeName, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.RepresentativeEmail, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.RepresentativeEmail, new { @type = "email", htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.RepresentativeEmail, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ReBroadCast, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    <div class="">
+                                        <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
+                                            <label class="btn btn-primary">
+                                                @Html.RadioButtonFor(model => model.ReBroadCast, "True")Yes
+                                            </label>
+                                            <label class="btn btn-primary">
+                                                @Html.RadioButtonFor(model => model.ReBroadCast, "False")No
+                                            </label>
+                                        </div>
+                                        @Html.ValidationMessageFor(model => model.ReBroadCast, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.ReBroadcastDate, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.ReBroadcastDate, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.ReBroadcastDate, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.Price, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.EditorFor(model => model.Price, new { htmlAttributes = new { @class = "form-control" } })
+                                    @Html.ValidationMessageFor(model => model.Price, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                @Html.LabelFor(model => model.TestingUrgency, htmlAttributes: new { @class = "control-label col-md-3" })
+                                <div class="col-md-9">
+                                    @Html.DropDownList("TestingUrgency", null, htmlAttributes: new { @class = "form-control" })
+                                    @Html.ValidationMessageFor(model => model.TestingUrgency, "", new { @class = "text-danger" })
+                                </div>
+                            </div>
+
+                        </div>
+                   
+                            <div class="col-md-6">
+                                
+                                <hr />
+                                <div class="headertab">
+                                    Campaign Demographics
+                                </div><hr />
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.GeoDetails, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.GeoDetails, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.GeoDetails, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Demographics, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.Demographics, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Demographics, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Quantity, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Quantity, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <hr />
+                                <div class="headertab">
+                                    Campaign Testing
+                                </div><hr />
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.FromLine, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.FromLine, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.FromLine, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.SubjectLine, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.SubjectLine, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.SubjectLine, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        </div>
+                        <div class="tab-pane" id="tab_default_2">
+                            
+                                <hr />
+                                <div class="headertab">
+                                    File Management
+                                </div><hr />
+                            
+                            <div class="row">
+                                
+                                <div class="col-md-6">
+                                    
+                                    <div class="form-group">
+                                        <div class="control-label col-md-3">
+                                            Zip Code File
+                                            <a href="/Templates/SampleZipFile.csv">Sample Zip File</a>
+                                        </div>
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.Assets.ZipCodeFile, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_ZipCodeFile", OrderNumber = Model.OrderNumber })
+                                            @Html.ValidationMessageFor(model => model.Assets.ZipCodeFile, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="control-label col-md-3">
+                                            Test Seed File
+                                            <a href="/Templates/SampleTestSeed.csv">Sample Test Seed File</a>
+                                        </div>
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.Assets.TestSeedFile, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_TestSeedFile", OrderNumber = Model.OrderNumber })
+                                            @Html.ValidationMessageFor(model => model.Assets.TestSeedFile, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="control-label col-md-3">
+                                            Final Seed File
+                                            <a href="/Templates/SampleLiveSeed.csv">Sample Live Seed File</a>
+                                        </div>
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.Assets.LiveSeedFile, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_LiveSeedFile", OrderNumber = Model.OrderNumber })
+                                            @Html.ValidationMessageFor(model => model.Assets.LiveSeedFile, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    
+                                </div>
+                                
+                                <div class="col-md-6">
+                                    
+                                    <div class="form-group">
+                                        <div class="control-label col-md-3">
+                                            Suppression File <br />
+                                            <a href="/Templates/SampleSuppression.csv">Sample Suppression File</a>
+                                        </div>
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.Assets.SuppressionFile, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_SuppressionFile", OrderNumber = Model.OrderNumber })
+                                            @Html.ValidationMessageFor(model => model.Assets.SuppressionFile, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <div class="control-label col-md-3">
+                                            HtmlImageFiles
+                                        </div>
+                                        <div class="col-md-9">
+                                            @Html.EditorFor(model => model.Assets.CreativeFiles, new {disabled = "disabled", htmlAttributes = new {@class = "form-control"}})
+                                            @Html.Partial("_UploadFile", new UploadFileVM() {FileType = "Assets_CreativeFiles", OrderNumber = Model.OrderNumber})
+                                            @Html.ValidationMessageFor(model => model.Assets.CreativeFiles, "", new {@class = "text-danger"})
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Add OptOut</label>
+                                        <div class="col-md-9">
+                                            <div class="">
+                                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsAddOptOut, "True")Yes
+                                                    </label>
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsAddOptOut, "False")No
+                                                    </label>
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.IsAddOptOut, "", new {@class = "text-danger"})
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Add ViewInBrowser</label>
+                                        <div class="col-md-9">
+                                            <div class="">
+                                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsAddViewInBrowser, "True")Yes
+                                                    </label>
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsAddViewInBrowser, "False")No
+                                                    </label>
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.IsAddViewInBrowser, "", new {@class = "text-danger"})
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+                          
+                        </div>
+                    <div class="tab-pane" id="tab_default_3">
+                        <hr />
+                        <div class="headertab">
+                            Additional Information
+                        </div><hr />
+                        <div class="row">
+                            <div class="col-md-6">
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.IsPersonalization, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="">
+                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsPersonalization, "True")Yes
+                                                </label>
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsPersonalization, "False")No
+                                                </label>
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.IsPersonalization, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.IsMatchback, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="">
+                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsMatchback, "True")Yes
+                                                </label>
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsMatchback, "False")No
+                                                </label>
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.IsMatchback, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.IsSuppression, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="">
+                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsSuppression, "True")Yes
+                                                </label>
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsSuppression, "False")No
+                                                </label>
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.IsSuppression, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.WhiteLabel, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.WhiteLabel, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.OptOut, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.OptOut, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.OptOut, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.SpecialInstructions, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.TextAreaFor(model => model.SpecialInstructions, new { @class = "form-control", rows = "6", cols = "10" })
+                                        @Html.ValidationMessageFor(model => model.SpecialInstructions, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                         
+                    </div>
+                        
+                    <div class="tab-pane" id="tab_default_4">
+                        <hr />
+                        <div class="headertab">
+                            Segments Data
+                        </div><hr />
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.DataFileQuantity, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.DataFileQuantity, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.DataFileQuantity, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.DataFileSegments, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.DataFileSegments, new { htmlAttributes = new { @class = "form-control", @min = "1", @max = "10" } })
+                                        @Html.ValidationMessageFor(model => model.DataFileSegments, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
+                        
+                    <div class="tab-pane" id="tab_default_5">
+                        
+                        <hr />
+                        <div class="headertab">
+                            Digital Plus
+                        </div><hr />
+                        <div class="row">
+                            <div class="col-md-6">
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.IsOpenPixel, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        <div class="">
-                            <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsOpenPixel, "True")Yes
-                                </label>
-                                <label class="btn btn-primary">
-                                    @Html.RadioButtonFor(model => model.IsOpenPixel, "False")No
-                                </label>
+                                <div class="form-group">
+                                    <label class="control-label col-md-3">Access Creative Manager</label>
+                                    <div class="col-md-9">
+                                        <div class="">
+                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsAccessCreativeManager, "True")Yes
+                                                </label>
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsAccessCreativeManager, "False")No
+                                                </label>
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.IsAccessCreativeManager, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.IsOpenPixel, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="">
+                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsOpenPixel, "True")Yes
+                                                </label>
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsOpenPixel, "False")No
+                                                </label>
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.IsOpenPixel, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.OpenPixelUrl, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.OpenPixelUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.OpenPixelUrl, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.IsOmniOrder, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="">
+                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsOmniOrder, "True")Yes
+                                                </label>
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsOmniOrder, "False")No
+                                                </label>
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.IsOmniOrder, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.OmniDeployDate, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.OmniDeployDate, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.OmniDeployDate, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Impressions, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.Impressions, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.Impressions, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Retargeting, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.DropDownList("Retargeting", null, htmlAttributes: new { @class = "form-control" })
+                                        @Html.ValidationMessageFor(model => model.Retargeting, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
                             </div>
-                            @*@Html.EditorFor(model => model.IsMatchback)*@
-                            @Html.ValidationMessageFor(model => model.IsOpenPixel, "", new { @class = "text-danger" })
+
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Assets.BannersFile, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.Assets.BannersFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
+                                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_BannersFile", OrderNumber = Model.OrderNumber })
+                                        @Html.ValidationMessageFor(model => model.Assets.BannersFile, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Assets.BannerLinksFile, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.Assets.BannerLinksFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
+                                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_BannerLinksFile", OrderNumber = Model.OrderNumber })
+                                        @Html.ValidationMessageFor(model => model.Assets.BannerLinksFile, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.Assets.MiscFile, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.Assets.MiscFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
+                                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_MiscFile", OrderNumber = Model.OrderNumber })
+                                        @Html.ValidationMessageFor(model => model.Assets.MiscFile, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    @Html.LabelFor(model => model.OpenPixelUrl, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.OpenPixelUrl, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.OpenPixelUrl, "", new { @class = "text-danger" })
                     </div>
                 </div>
-                
-                <div class="form-group">
-                    <div class="control-label col-md-3">
-                        Open Goals
-                        <div id="divOpenGoalPercentage">0%</div>
-                    </div>
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.OpenGoals, new {htmlAttributes = new {@class = "form-control"}})
-                        @Html.ValidationMessageFor(model => model.OpenGoals, "", new {@class = "text-danger"})
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    <div class="control-label col-md-3">
-                        Click Goals
-                        <div id="divClickGoalPercentage">0%</div>
-                    </div>
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.ClickGoals, new {htmlAttributes = new {@class = "form-control"}})
-                        @Html.ValidationMessageFor(model => model.ClickGoals, "", new {@class = "text-danger"})
-                    </div>
-                </div>
-               
-                <div class="form-group">
-                    @Html.LabelFor(model => model.DataFileQuantity, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.DataFileQuantity, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => model.DataFileQuantity, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    @Html.LabelFor(model => model.DataFileSegments, htmlAttributes: new { @class = "control-label col-md-3"})
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.DataFileSegments, new { htmlAttributes = new { @class = "form-control", @min = "1", @max = "10" } })
-                        @Html.ValidationMessageFor(model => model.DataFileSegments, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
             </div>
-
-            <div class="col-md-6">
-                
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BannersFile, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.BannersFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                        @Html.Partial("_UploadFile", "BannersFile")
-                        @Html.ValidationMessageFor(model => model.BannersFile, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    @Html.LabelFor(model => model.BannersLinksFile, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.BannersLinksFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                        @Html.Partial("_UploadFile", "BannersLinksFile")
-                        @Html.ValidationMessageFor(model => model.BannersLinksFile, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-                
-                <div class="form-group">
-                    @Html.LabelFor(model => model.MiscFile, htmlAttributes: new { @class = "control-label col-md-3" })
-                    <div class="col-md-9">
-                        @Html.EditorFor(model => model.MiscFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                        @Html.Partial("_UploadFile", "MiscFile")
-                        @Html.ValidationMessageFor(model => model.MiscFile, "", new { @class = "text-danger" })
-                    </div>
-                </div>
-
-            </div>
-        </div>
 
         <div class="row">
                 <div class="col-md-6"></div>
@@ -541,27 +610,30 @@
                 $('#TestingEndTime').datetimepicker({
                     format: 'M/DD/YYYY hh:mm:ss A'
                 });
+                $('#OmniDeployDate').datetimepicker({
+                    format: 'M/DD/YYYY hh:mm:ss A'
+                });
 
                 $('#RepresentativeName').prop('readonly', "readonly");
                 $('#RepresentativeEmail').prop('readonly', "readonly");
 
-                $('#ZipCodeFile').prop('readonly', "readonly");
-                $('#HtmlImageFiles').prop('readonly', "readonly");
-                $('#TestSeedList').prop('readonly', "readonly");
-                $('#FinalSeedList').prop('readonly', "readonly");
-                $('#SuppressionFile').prop('readonly', "readonly");
+                $('#Assets_ZipCodeFile').prop('readonly', "readonly");
+                $('#Assets_CreativeFiles').prop('readonly', "readonly");
+                $('#Assets_TestSeedFile').prop('readonly', "readonly");
+                $('#Assets_LiveSeedFile').prop('readonly', "readonly");
+                $('#Assets_SuppressionFile').prop('readonly', "readonly");
+                $('#Assets_BannersFile').prop('readonly', "readonly");
+                $('#Assets_BannerLinksFile').prop('readonly', "readonly");
+                $('#Assets_MiscFile').prop('readonly', "readonly");
 
                 $("input[name='ReBroadCast']:checked").closest("label.btn").addClass("active");
                 $("input[name='IsPersonalization']:checked").closest("label.btn").addClass("active");
                 $("input[name='IsMatchback']:checked").closest("label.btn").addClass("active");
                 $("input[name='IsSuppression']:checked").closest("label.btn").addClass("active");
-
-                $("#OpenGoals").on("keyup keydown change mouseup", function (event) {
-                    $("#divOpenGoalPercentage").text('Open Goal %: ' + $.percentage($("#OpenGoals").val(), $("#Quantity").val()).toFixed(0));
-                });
-
-                $("#ClickGoals").on("keyup keydown change mouseup", function (event) {
-                    $("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
-                });
+                $("input[name='IsOmniOrder']:checked").closest("label.btn").addClass("active");
+                $("input[name='IsAddOptOut']:checked").closest("label.btn").addClass("active");
+                $("input[name='IsAddViewInBrowser']:checked").closest("label.btn").addClass("active");
+                $("input[name='IsAccessCreativeManager']:checked").closest("label.btn").addClass("active");
+                $("input[name='IsOpenPixel']:checked").closest("label.btn").addClass("active");
             });
         </script>

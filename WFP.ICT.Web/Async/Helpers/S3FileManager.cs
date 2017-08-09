@@ -9,8 +9,10 @@ namespace WFP.ICT.Web.Async
     {
         public readonly static string bucket = "marketing247";
 
-        public static void Upload(string fileKey, string localFilePath, bool ifMakePublic = false)
+        public static void Upload(string fileKey, string localFilePath, bool ifMakePublic = true, bool overWrite = false)
         {
+            if (overWrite) Delete(fileKey);
+
             using (IAmazonS3 client = new AmazonS3Client(RegionEndpoint.USWest2))
             {
                 PutObjectRequest request = new PutObjectRequest();
@@ -56,9 +58,11 @@ namespace WFP.ICT.Web.Async
             }
         }
 
-        public static void Move(string oldFileKey,string newFileKey, string folderName)
+        public static void Move(string oldFileKey,string newFileKey, string folderName, bool overWrite = false)
         {
             if(string.IsNullOrEmpty(oldFileKey)) return;
+
+            if(overWrite) Delete(newFileKey);
 
             using (IAmazonS3 client = new AmazonS3Client(RegionEndpoint.USWest2))
             {
