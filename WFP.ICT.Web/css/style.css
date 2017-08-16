@@ -1241,7 +1241,9 @@ section.module.parallax-2 { background-image: url("../images/parallax-2.jpg");}
     .checkbox input[type="checkbox"]:checked + label::after,
     .checkbox input[type="radio"]:checked + label::after {
       font-family: "FontAwesome";
-      content: "\f00c"; }
+      content: "\f00c";
+      margin-top: 7px;
+    }
     .checkbox input[type="checkbox"]:disabled + label,
     .checkbox input[type="radio"]:disabled + label {
       opacity: 0.65; }
@@ -1388,7 +1390,7 @@ section.module.parallax-2 { background-image: url("../images/parallax-2.jpg");}
 .radio-success input[type="radio"]:checked + label::after {
   background-color: #5cb85c; }
 
-input[type="checkbox"].styled:checked + label:after,
+/*input[type="checkbox"].styled:checked + label:after,
 input[type="radio"].styled:checked + label:after {
   font-family: 'FontAwesome';
   content: "\f00c"; }
@@ -1397,7 +1399,7 @@ input[type="radio"] .styled:checked + label::before {
   color: #fff; }
 input[type="checkbox"] .styled:checked + label::after,
 input[type="radio"] .styled:checked + label::after {
-  color: #fff; }
+  color: #fff; }*/
 /*---------Creative Listing Effect --------*/
 /*
 .grid {

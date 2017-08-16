@@ -65,12 +65,11 @@
     <Compile Include="DB\SegmentParameters.cs" />
     <Compile Include="DB\SegmentDataManager.cs" />
     <Compile Include="Entities\CampaignAsset.cs" />
+    <Compile Include="Entities\SystemLog.cs" />
     <Compile Include="Entities\Notification.cs" />
     <Compile Include="Entities\CampaignTracking.cs" />
     <Compile Include="Entities\CampaignSegment.cs" />
     <Compile Include="Entities\CampaignCreative.cs" />
-    <Compile Include="Entities\MailChimpAPILog.cs" />
-    <Compile Include="Entities\ProDataAPILog.cs" />
     <Compile Include="Entities\AspNetClaims.cs" />
     <Compile Include="Entities\AspNetRoleClaims.cs" />
     <Compile Include="Entities\BaseEntity.cs" />
@@ -97,9 +96,9 @@
     <Compile Include="Migrations\201705300431369_MailChimp.Designer.cs">
       <DependentUpon>201705300431369_MailChimp.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201708090957479_DataSegment.cs" />
-    <Compile Include="Migrations\201708090957479_DataSegment.Designer.cs">
-      <DependentUpon>201708090957479_DataSegment.cs</DependentUpon>
+    <Compile Include="Migrations\201708161637577_DataSegment.cs" />
+    <Compile Include="Migrations\201708161637577_DataSegment.Designer.cs">
+      <DependentUpon>201708161637577_DataSegment.cs</DependentUpon>
     </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
@@ -141,8 +140,8 @@
     <EmbeddedResource Include="Migrations\201705300431369_MailChimp.resx">
       <DependentUpon>201705300431369_MailChimp.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201708090957479_DataSegment.resx">
-      <DependentUpon>201708090957479_DataSegment.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201708161637577_DataSegment.resx">
+      <DependentUpon>201708161637577_DataSegment.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

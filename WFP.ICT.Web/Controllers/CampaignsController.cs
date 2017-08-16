@@ -7,6 +7,7 @@ using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
 using Hangfire;
+using Nelibur.ObjectMapper;
 using PagedList;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
@@ -16,10 +17,11 @@ using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class CampaignsController : BaseController
     {
         int pageSize = 10;
+        static char c1 = 'A';
         
         // GET: Campaigns
         public ActionResult Index(CampaignSearchVM sc)
@@ -96,17 +98,18 @@ namespace WFP.ICT.Web.Controllers
             {
                 if (!string.IsNullOrEmpty(sc.basicString))
                 {
-                    var searchRDP = sc.basicString + "RDP";
                     campagins = campagins.Where(s => 
                     s.OrderNumber.Equals(sc.basicString) || 
-                    s.OrderNumber.Equals(searchRDP) ||
+                    s.ReBroadcastedOrderNumber.Equals(sc.basicString) ||
                     s.CampaignName.IndexOf(sc.basicString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
                     ViewBag.BasicStringSearched = sc.basicString;
                 } else if (!string.IsNullOrEmpty(sc.basicStatus))
                 {
                     int status = int.Parse(sc.basicStatus);
                     if (status == (int)CampaignStatusEnum.Rebroadcasted)
-                        campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                        campagins = campagins.Where(s => s.ReBroadcasted).ToList();
+                    else if (status == (int)CampaignStatusEnum.NotRebroadcasted)
+                        campagins = campagins.Where(s => s.ReBroadCast && !s.ReBroadcasted).ToList();
                     else
                         campagins = campagins.Where(s => s.Status == status).ToList();
                     ViewBag.BasicStatusSearched = sc.basicStatus;
@@ -252,21 +255,29 @@ namespace WFP.ICT.Web.Controllers
             return View(campaign);
         }
 
-        // GET: Campaigns/Create
-        public ActionResult Create()
+        public ActionResult NewSegment()
         {
-            Campaign model = new Campaign()
+            //TempData["PianoMake"] = new SelectList(PianoMakeList, "Value", "Text");
+            var segment = new CampaignSegment()
             {
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
-                OrderNumber = "",
+                SegmentNumber = "" + c1++
+            };
+            return PartialView("NewSegment", segment);
+        }
+
+        // GET: Campaigns/Create
+        public ActionResult Create()
+        {
+            CampaignVM model = new CampaignVM()
+            {
                 RepresentativeName = LoggedInUser?.UserName,
                 RepresentativeEmail = LoggedInUser?.Email,
-                DataFileSegments = 1
+                ChannelTypes = new List<ChannelTypeEnum> { }
+                //ChannelTypes = new List<ChannelTypeEnum> { ChannelTypeEnum.Retargeting, ChannelTypeEnum.Display, }
             };
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
-                "Text", model.TestingUrgency);
-            ViewBag.Retargeting = new SelectList(EnumHelper.GetEnumTextValues(typeof(RetargetingEnum)), "Value",
                 "Text", model.TestingUrgency);
             
             return View(model);
@@ -280,7 +291,7 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Create(
             [Bind(
                  Include =
-                     "Assets,ID,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,IsPersonalization,IsMatchback,IsSuppression,WhiteLabel,OptOut,SpecialInstructions,OrderNumber,IsAddViewInBrowser,IsAddOptOut,DataFileQuantity,DataFileSegments,IsAccessCreativeManager,IsOpenPixel,OpenPixelUrl,IsOmniOrder,OmniDeployDate,Impressions,Retargeting")] Campaign campaign)
+                     "Assets,Segments,ID,OrderNumber,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,IsPersonalization,IsMatchback,IsSuppression,IsOpenPixel,OpenPixelUrl,WhiteLabel,OptOut,SpecialInstructions,IsAddViewInBrowser,IsAddOptOut,DataFileQuantity,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes")] CampaignVM campaignVm)
         {
             if (ModelState.IsValid)
             {
@@ -291,24 +302,45 @@ namespace WFP.ICT.Web.Controllers
                     int newOrderNumber = camps.Count > 0
                         ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1
                         : 2500;
+
+                    string userName = LoggedInUser?.UserName;
+
+                    TinyMapper.Bind<CampaignVM, Campaign>(config =>
+                    {
+                        config.Ignore(x => x.Segments);
+                        config.Ignore(x => x.ChannelTypes);
+                    });
+
+                    var campaign = TinyMapper.Map<Campaign>(campaignVm);
+                    char c2 = 'A';
+                    foreach (var segmentVm in campaignVm.Segments)
+                    {
+                        var segment = TinyMapper.Map<CampaignSegment>(segmentVm);
+                        segment.Id = Guid.NewGuid();
+                        segment.CreatedAt = DateTime.Now;
+                        segment.OrderNumber = "" + newOrderNumber;
+                        segment.SegmentNumber = newOrderNumber + "" + c2++;
+                        campaign.Segments.Add(segment);
+                    }
                     campaign.Id = Guid.NewGuid();
                     campaign.CreatedAt = DateTime.Now;
-                    campaign.CreatedBy = LoggedInUser?.UserName;
+                    campaign.CreatedBy = userName;
                     campaign.OrderNumber = newOrderNumber.ToString();
                     campaign.IP = Request.ServerVariables["REMOTE_ADDR"];
                     campaign.Browser = Request.UserAgent;
                     campaign.OS = Environment.OSVersion.Platform + " " + Environment.OSVersion.VersionString;
                     campaign.Referrer = Request.UrlReferrer.AbsolutePath;
-
+                    campaign.ChannelTypes = campaignVm.ChannelTypes == null ? null :
+                        string.Join(",", campaignVm.ChannelTypes);
                     campaign.Assets.Id = Guid.NewGuid();
                     campaign.Assets.CampaignId = campaign.Id;
                     campaign.Assets.CreatedAt = DateTime.Now;
-                    campaign.Assets.CreatedBy = LoggedInUser?.UserName;
+                    campaign.Assets.CreatedBy = userName;
 
                     db.Campaigns.Add(campaign);
                     db.SaveChanges();
 
-                    BackgroundJob.Enqueue(() => FileProcessor.ProcessNewOrder(campaign.OrderNumber, LoggedInUser));
+                    BackgroundJob.Enqueue(() => FileProcessor.ProcessNewOrder(campaign.OrderNumber, userName));
 
                     _forceOrders = true;
                     TempData["Success"] = "Order #: "+ campaign.OrderNumber + " , Campaign " + campaign.CampaignName + " has been submitted sucessfully.";
@@ -319,11 +351,11 @@ namespace WFP.ICT.Web.Controllers
                 }
                 return RedirectToAction("Index");
             }
+            campaignVm.ChannelTypes = campaignVm.ChannelTypes ?? new List<ChannelTypeEnum> {};
+
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
-                "Text", campaign.TestingUrgency);
-            ViewBag.Retargeting = new SelectList(EnumHelper.GetEnumTextValues(typeof(RetargetingEnum)), "Value",
-               "Text", campaign.TestingUrgency);
-            return View(campaign);
+                "Text", campaignVm.TestingUrgency);
+            return View(campaignVm);
         }
 
      
@@ -370,53 +402,14 @@ namespace WFP.ICT.Web.Controllers
             return View(campaign);
         }
 
-        // GET: Campaigns/Delete/5
-        public ActionResult Delete(Guid? id)
-        {
-            if (id == null)
-            {
-                throw new HttpException(400, "Bad Request");
-            }
-            Campaign campaign = db.Campaigns.Find(id);
-            if (campaign == null)
-            {
-                throw new HttpException(404, "Not found");
-            }
-            return View(campaign);
-        }
-
-        // POST: Campaigns/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public ActionResult DeleteConfirmed(Guid id)
-        {
-            Campaign campaign = db.Campaigns.Find(id);
-            var proDatas = db.ProDatas.Where(x => x.CampaignId == campaign.Id);
-            foreach (var proData in proDatas)
-            {
-                db.ProDatas.Remove(proData);
-            }
-            db.SaveChanges();
-
-            db.Campaigns.Remove(campaign);
-            db.SaveChanges();
-            _forceOrders = true;
-            return RedirectToAction("Index");
-        }
-
-        // GET: Campaigns/Delete/5
         public ActionResult Clone(Guid? id)
         {
-            if (id == null)
-            {
-                throw new HttpException(400, "Bad Request");
-            }
             Campaign campaign = db.Campaigns.Find(id);
             if (campaign == null)
             {
                 throw new HttpException(404, "Not found");
             }
-            return View(campaign);
+            return View("Clone", campaign);
         }
 
         [HttpPost, ActionName("Clone")]
@@ -427,20 +420,45 @@ namespace WFP.ICT.Web.Controllers
             int newOrderNumber = camps.Count > 0 ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1 : 2500;
 
             Campaign campaign = db.Campaigns
+                .Include(x => x.Assets)
+                .Include(x => x.Segments)
                 .Include(x => x.Testing)
                 .Include(x => x.Approved)
                 .FirstOrDefault(x => x.Id == id);
 
+            var copyId = Guid.NewGuid();
             var copy = new Campaign();
             db.Campaigns.Add(copy);
             db.Entry(copy).CurrentValues.SetValues(db.Entry(campaign).CurrentValues);
-            copy.Id = Guid.NewGuid();
+            copy.Id = copyId;
             copy.CreatedAt = DateTime.Now;
             copy.OrderNumber = newOrderNumber.ToString();
             copy.Status = (int)CampaignStatusEnum.OrderRecevied;
             copy.TestingId = null;
             copy.ApprovedId = null;
             db.SaveChanges();
+
+            var copyAssets = new CampaignAsset();
+            db.CampaignAssets.Add(copyAssets);
+            db.Entry(copyAssets).CurrentValues.SetValues(db.Entry(campaign.Assets).CurrentValues);
+            copyAssets.Id = Guid.NewGuid();
+            copyAssets.CampaignId = copyId;
+            copyAssets.CreatedAt = DateTime.Now;
+            db.SaveChanges();
+            copy.AssetsId = copyAssets.Id;
+            db.SaveChanges();
+
+            foreach (var segment in campaign.Segments.ToList())
+            {
+                var copySegment = new CampaignSegment();
+                db.CampaignSegments.Add(copySegment);
+                db.Entry(copySegment).CurrentValues.SetValues(db.Entry(segment).CurrentValues);
+                copySegment.Id = Guid.NewGuid();
+                copySegment.CampaignId = copyId;
+                copySegment.OrderNumber = "" + newOrderNumber;
+                copySegment.CreatedAt = DateTime.Now;
+                db.SaveChanges();
+            }
 
             if (campaign.Testing != null)
             {
@@ -473,8 +491,164 @@ namespace WFP.ICT.Web.Controllers
             }
             _forceOrders = true;
             TempData["Success"] = "Order : " + campaign.OrderNumber + " has been cloned to Order: " + newOrderNumber + " sucessfully.";
+            return RedirectToAction("Index", "Campaigns");
+        }
+
+        // GET: Campaigns/Delete/5
+        public ActionResult Delete(Guid? id)
+        {
+            if (id == null)
+            {
+                throw new HttpException(400, "Bad Request");
+            }
+            Campaign campaign = db.Campaigns.Find(id);
+            if (campaign == null)
+            {
+                throw new HttpException(404, "Not found");
+            }
+            return View(campaign);
+        }
+
+        // POST: Campaigns/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult DeleteConfirmed(Guid id)
+        {
+            Campaign campaign = db.Campaigns.Find(id);
+            var proDatas = db.ProDatas.Where(x => x.CampaignId == campaign.Id);
+            foreach (var proData in proDatas)
+            {
+                db.ProDatas.Remove(proData);
+            }
+            db.SaveChanges();
+
+            var segments = db.CampaignSegments.Where(x => x.CampaignId == campaign.Id);
+            foreach (var segment in segments)
+            {
+                db.CampaignSegments.Remove(segment);
+            }
+            db.SaveChanges();
+
+            var assets = db.CampaignAssets.FirstOrDefault(x => x.CampaignId == campaign.Id);
+            if (assets != null)
+                db.CampaignAssets.Remove(assets);
+            db.SaveChanges();
+
+            var testing = db.CampaignsTesting.FirstOrDefault(x => x.CampaignId == campaign.Id);
+            if(testing != null)
+                db.CampaignsTesting.Remove(testing);
+            db.SaveChanges();
+
+            var approved = db.CampaignsApproved.FirstOrDefault(x => x.CampaignId == campaign.Id);
+            if (approved != null)
+                db.CampaignsApproved.Remove(approved);
+            db.SaveChanges();
+
+            db.Campaigns.Remove(campaign);
+            db.SaveChanges();
+            _forceOrders = true;
+            TempData["Success"] = "Order :" + campaign.OrderNumber + " has been DELETED succesfully.";
             return RedirectToAction("Index");
         }
 
+        public ActionResult Cancel(Guid? id)
+        {
+            if (id == null)
+            {
+                throw new HttpException(400, "Bad Request");
+            }
+            Campaign campaign = db.Campaigns.Find(id);
+            if (campaign == null)
+            {
+                throw new HttpException(404, "Not found");
+            }
+            return View(campaign);
+        }
+
+        [HttpPost, ActionName("Cancel")]
+        [ValidateAntiForgeryToken]
+        public ActionResult CancelConfirmed(Guid id)
+        {
+            var campaign = db.Campaigns.Find(id);
+            campaign.Status = (int)CampaignStatusEnum.Cancelled;
+            db.SaveChanges();
+            TempData["Success"] = "Order :" + campaign.OrderNumber + " has been cancelled succesfully.";
+            return RedirectToAction("Index", "Campaigns");
+        }
+
+        public ActionResult Complete(Guid? id)
+        {
+            if (id == null)
+            {
+                throw new HttpException(400, "Bad Request");
+            }
+            Campaign campaign = db.Campaigns.Find(id);
+            if (campaign == null)
+            {
+                throw new HttpException(404, "Not found");
+            }
+            return View(campaign);
+        }
+
+        [HttpPost, ActionName("Complete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult CompleteConfirmed(Guid id)
+        {
+            var campaign = db.Campaigns.Include(x => x.Testing).FirstOrDefault(x => x.Id == id);
+            if (campaign.Testing == null)
+            {
+                TempData["Error"] = "Please pass through Testing first.";
+                return RedirectToAction("Index", "Campaigns");
+            }
+            var notCompletedSegments = db.CampaignSegments
+                .Where(x => x.CampaignId == campaign.Id && x.SegmentStatus != (int)SegmentStatusEnum.Complete);
+            if (notCompletedSegments.Any())
+            {
+                string segments = string.Join(",", notCompletedSegments.Select(x => x.SegmentNumber));
+                TempData["Error"] = "You have " + segments + " in progess and is not complete.";
+                return RedirectToAction("Index", "Campaigns");
+            }
+            campaign.Status = (int)CampaignStatusEnum.Completed;
+            db.SaveChanges();
+            TempData["Success"] = "Campaign " + campaign.CampaignName + " has been completed sucessfully.";
+            return RedirectToAction("Index", "Campaigns");
+        }
+
+        public ActionResult Rebroad(Guid? id)
+        {
+            if (id == null)
+            {
+                throw new HttpException(400, "Bad Request");
+            }
+            Campaign campaign = db.Campaigns.Include(x => x.Segments).Include(x => x.Trackings)
+                .FirstOrDefault(x => x.Id == id);
+            if (campaign == null)
+            {
+                throw new HttpException(404, "Not found");
+            }
+            var proData = VendorsList.FirstOrDefault(x => x.Text.Contains("Pro"));
+            ViewBag.Vendor = new SelectList(VendorsList, "Value", "Text", proData);
+            long opennedFromOrignal = campaign.Trackings.FirstOrDefault() != null ? campaign.Trackings.FirstOrDefault().Opened : campaign.Quantity;
+            ViewBag.OpennedFromOrignal = opennedFromOrignal;
+            return View(campaign);
+        }
+
+        [HttpPost, ActionName("Rebroad")]
+        [ValidateAntiForgeryToken]
+        public ActionResult RebroadConfirmed(Guid?Id, DateTime? ReBroadcastedDate, long ReBroadcastedQuantity, Guid? Vendor, string[] SegmentsSelected)
+        {
+            Campaign campaignToBeRebroad = db.Campaigns.FirstOrDefault(x => x.Id == Id);
+            campaignToBeRebroad.ReBroadcasted = true;
+            campaignToBeRebroad.ReBroadcastedDate = ReBroadcastedDate;
+            campaignToBeRebroad.ReBroadcastedQuantity = ReBroadcastedQuantity;
+            campaignToBeRebroad.ReBroadcastedOrderNumber = campaignToBeRebroad.OrderNumber + "RDP";
+            db.SaveChanges();
+
+            // Send email to vendor
+            BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(Vendor, campaignToBeRebroad.OrderNumber, SegmentsSelected));
+            
+            TempData["Success"] = "Order #:" + campaignToBeRebroad.OrderNumber + ", Campaign " + campaignToBeRebroad.CampaignName + " Rebroad has been sent to vendor sucessfully.";
+            return RedirectToAction("Index", "Campaigns");
+        }
     }
 }

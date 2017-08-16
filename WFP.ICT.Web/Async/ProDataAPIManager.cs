@@ -5,8 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
+using ADSDataDirect.Enums;
 using Newtonsoft.Json;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Async
@@ -138,29 +140,17 @@ namespace WFP.ICT.Web.Async
             }
         }
 
-        private static void AddLog(WFPICTContext db, string OrderNumber, string Message)
-        {
-            db.ProDataAPILogs.Add(new ProDataAPILog()
-            {
-                Id = Guid.NewGuid(),
-                CreatedAt = DateTime.Now,
-                OrderNumber = OrderNumber,
-                Message = Message
-            });
-            db.SaveChanges();
-        }
-
         public static void FetchAndUpdateProDatas(WFPICTContext db, string OrderNumber)
         {
-            var logs = db.ProDataAPILogs.Where(x => x.OrderNumber == OrderNumber);
+            var logs = db.SystemLogs.Where(x => x.OrderNumber == OrderNumber && x.LogType == (int)LogTypeEnum.ProData);
             foreach (var log in logs)
             {
-                db.ProDataAPILogs.Remove(log);
+                db.SystemLogs.Remove(log);
             }
             db.SaveChanges();
 
-            AddLog(db, OrderNumber, string.Format("Order Number:{0}, Starting refresh at {1} ", OrderNumber, DateTime.Now));
-            AddLog(db, OrderNumber, string.Format("Order Number:{0}, Deleting Old ProData ", OrderNumber));
+            LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, Starting refresh at {1} ", OrderNumber, DateTime.Now));
+            LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, Deleting Old ProData ", OrderNumber));
 
             var campagin = db.Campaigns.FirstOrDefault(x => x.OrderNumber == OrderNumber);
             var proDatas = db.ProDatas.Where(x => x.CampaignId == campagin.Id);
@@ -174,7 +164,7 @@ namespace WFP.ICT.Web.Async
             if (data.reports != null && data.reports.report != null)
             {
                 var reports = data.reports.report;
-                AddLog(db, OrderNumber, string.Format("Order Number:{0}, {1} records fetched from ProData ", OrderNumber, reports.Length));
+                LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, {1} records fetched from ProData ", OrderNumber, reports.Length));
                 foreach (var report in reports)
                 {
                     db.ProDatas.Add(new ProData()
@@ -194,11 +184,11 @@ namespace WFP.ICT.Web.Async
                     });
                 }
                 db.SaveChanges();
-                AddLog(db, OrderNumber, string.Format("Order Number:{0}, Refresh completed successfully at {1} ", OrderNumber, DateTime.Now));
+                LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, Refresh completed successfully at {1} ", OrderNumber, DateTime.Now));
             }
             else
             {
-                AddLog(db, OrderNumber, string.Format("Order Number:{0}, Prodata response. {1} ", OrderNumber, data.ToJson()));
+                LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, Prodata response. {1} ", OrderNumber, data.ToJson()));
                 throw new Exception("There is error in getting data from ProData. Problem in ProData API.");
             }
             
@@ -206,15 +196,15 @@ namespace WFP.ICT.Web.Async
 
         public static void FetchAndUpdateTrackings(WFPICTContext db, string OrderNumber)
         {
-            var logs = db.ProDataAPILogs.Where(x => x.OrderNumber == OrderNumber);
+            var logs = db.SystemLogs.Where(x => x.OrderNumber == OrderNumber && x.LogType == (int)LogTypeEnum.ProData);
             foreach (var log in logs)
             {
-                db.ProDataAPILogs.Remove(log);
+                db.SystemLogs.Remove(log);
             }
             db.SaveChanges();
 
-            AddLog(db, OrderNumber, string.Format("Order Number:{0}, Starting refresh at {1} ", OrderNumber, DateTime.Now));
-            AddLog(db, OrderNumber, string.Format("Order Number:{0}, Deleting Old ProData ", OrderNumber));
+            LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, Starting refresh at {1} ", OrderNumber, DateTime.Now));
+            LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, Deleting Old ProData ", OrderNumber));
 
             var campagin = db.Campaigns.FirstOrDefault(x => x.OrderNumber == OrderNumber);
             var proDatas = db.ProDatas.Where(x => x.CampaignId == campagin.Id);
@@ -228,7 +218,7 @@ namespace WFP.ICT.Web.Async
             if (data.reports != null && data.reports.report != null)
             {
                 var reports = data.reports.report;
-                AddLog(db, OrderNumber, string.Format("Order Number:{0}, {1} records fetched from ProData ", OrderNumber, reports.Length));
+                LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, {1} records fetched from ProData ", OrderNumber, reports.Length));
                 foreach (var report in reports)
                 {
                     db.ProDatas.Add(new ProData()
@@ -248,11 +238,11 @@ namespace WFP.ICT.Web.Async
                     });
                 }
                 db.SaveChanges();
-                AddLog(db, OrderNumber, string.Format("Order Number:{0}, Refresh completed successfully at {1} ", OrderNumber, DateTime.Now));
+                LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, Refresh completed successfully at {1} ", OrderNumber, DateTime.Now));
             }
             else
             {
-                AddLog(db, OrderNumber, string.Format("Order Number:{0}, Prodata response. {1} ", OrderNumber, data.ToJson()));
+                LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, string.Format("Order Number:{0}, Prodata response. {1} ", OrderNumber, data.ToJson()));
                 throw new Exception("There is error in getting data from ProData. Problem in ProData API.");
             }
 

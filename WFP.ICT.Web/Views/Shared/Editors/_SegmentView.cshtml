@@ -1,4 +1,4 @@
-﻿@model WFP.ICT.Data.Entities.CampaignSegment
+﻿@model WFP.ICT.Web.Models.CampaignSegmentVM
 @using ADSDataDirect.Enums
 @using MyToolkit.Html
 @using WFP.ICT.Enum
@@ -9,9 +9,7 @@
 @using (Html.BeginCollectionItem("Segments"))
 {
     @Html.HiddenFor(Model => Model.Id)
-    @Html.HiddenFor(Model => Model.CreatedAt)
     @Html.HiddenFor(Model => Model.CampaignId)
-    @Html.HiddenFor(Model => Model.CampaignTestingId)
     @Html.HiddenFor(Model => Model.OrderNumber)
     @Html.HiddenFor(Model => Model.SegmentNumber)
     @Html.HiddenFor(Model => Model.SegmentDataFileUrl)
@@ -68,7 +66,7 @@
                         @Model.BroadcastDate
                     </div>
                     <div class="col-md-2">
-                        @Model.HtmlImageFiles
+                        @Model.CreativeFiles
                     </div>
                     <div class="col-md-2">
                         @((SegmentStatusEnum)Model.SegmentStatus)

@@ -67,6 +67,14 @@
       <HintPath>..\packages\MailChimp.Net.V3.1.9.5.0\lib\net45\MailChimp.Net.V3.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.Core.2.2.2\lib\net45\Microsoft.AspNet.SignalR.Core.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.SignalR.SystemWeb, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.SignalR.SystemWeb.2.2.2\lib\net45\Microsoft.AspNet.SignalR.SystemWeb.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Microsoft.CodeDom.Providers.DotNetCompilerPlatform, Version=1.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.1.0.0\lib\net45\Microsoft.CodeDom.Providers.DotNetCompilerPlatform.dll</HintPath>
       <Private>True</Private>
@@ -203,6 +211,10 @@
       <Private>True</Private>
       <HintPath>..\packages\Microsoft.AspNet.WebPages.3.2.3\lib\net45\System.Web.WebPages.Razor.dll</HintPath>
     </Reference>
+    <Reference Include="TinyMapper, Version=2.0.0.40, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\TinyMapper.2.0.8\lib\net45\TinyMapper.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="WebActivatorEx, Version=2.0.0.0, Culture=neutral, PublicKeyToken=7b26dc2a43f6a0d4, processorArchitecture=MSIL">
       <HintPath>..\packages\WebActivatorEx.2.1.0\lib\net40\WebActivatorEx.dll</HintPath>
       <Private>True</Private>
@@ -280,6 +292,7 @@
     <Compile Include="Async\Helpers\ProDataHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="API\adsController.cs" />
+    <Compile Include="Controllers\ApprovedController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
@@ -290,6 +303,7 @@
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\CreativeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="Controllers\TestingController.cs" />
     <Compile Include="Controllers\TrackingController.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -308,6 +322,7 @@
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\KeyGenerator.cs" />
     <Compile Include="Helpers\ListExtensions.cs" />
+    <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Helpers\MultipleButtonAttribute.cs" />
     <Compile Include="Helpers\HangfireAuthorizationFilter.cs" />
     <Compile Include="Async\ProDataAPIManager.cs" />
@@ -321,9 +336,14 @@
     <Compile Include="Helpers\ExceptionHelper.cs" />
     <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\GatePassGenerator.cs" />
+    <Compile Include="Hubs\WFPICTHub.cs" />
+    <Compile Include="Hubs\WFPICTUpdater.cs" />
     <Compile Include="Models\Campaign.cs" />
     <Compile Include="Models\CampaignReportDetailVM.cs" />
     <Compile Include="Models\CampaignSegmentVM.cs" />
+    <Compile Include="Models\CampaignApprovedVM.cs" />
+    <Compile Include="Models\CampaignTestingVM.cs" />
+    <Compile Include="Models\CampaignVM.cs" />
     <Compile Include="Models\CreativeUtility.cs" />
     <Compile Include="Models\CreativeVM.cs" />
     <Compile Include="Models\CampaignReportVM.cs" />
@@ -337,6 +357,7 @@
     <Compile Include="Models\CompanyUsersVM.cs" />
     <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\SystemLog.cs" />
     <Compile Include="Models\UploadFileVM.cs" />
     <Compile Include="Models\UserProfileVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -366,6 +387,7 @@
     <Content Include="css\owl.carousel.css" />
     <Content Include="css\owl.theme.css" />
     <Content Include="css\owl.transitions.css" />
+    <Content Include="css\perfect-scrollbar.min.css" />
     <Content Include="css\spinner.css" />
     <Content Include="css\wfp.css" />
     <Content Include="css\style.css" />
@@ -564,6 +586,7 @@
     <Content Include="js\npm.js" />
     <Content Include="js\offset.js" />
     <Content Include="js\owl.carousel.min.js" />
+    <Content Include="js\perfect-scrollbar.jquery.min.js" />
     <Content Include="js\price-slider.js" />
     <Content Include="js\spinner.js" />
     <Content Include="js\highcharts\themes\dark-blue.js" />
@@ -662,6 +685,8 @@
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.js" />
+    <Content Include="Scripts\jquery.signalR-2.2.2.min.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -675,6 +700,7 @@
     <Content Include="Scripts\respond.min.js" />
     <Content Include="Scripts\select2.js" />
     <Content Include="Scripts\select2.min.js" />
+    <Content Include="Scripts\SignalR.Updater.js" />
     <Content Include="Scripts\sweetalert-dev.js" />
     <Content Include="Scripts\sweetalert.min.js" />
     <Content Include="Scripts\tinymce\jquery.tinymce.min.js" />
@@ -867,9 +893,9 @@
     <Content Include="Views\Home\Settings.cshtml" />
     <Content Include="Views\Home\CreateVendor.cshtml" />
     <Content Include="Views\Home\Vendors.cshtml" />
-    <Content Include="Views\Copy\EditTesting.cshtml" />
+    <Content Include="Views\Testing\EditTesting.cshtml" />
     <Content Include="Views\Shared\_HeaderCopy.cshtml" />
-    <Content Include="Views\Copy\EditApproved.cshtml" />
+    <Content Include="Views\Approved\EditApproved.cshtml" />
     <Content Include="Views\Campaigns\Clone.cshtml" />
     <Content Include="Views\Tracking\Index.cshtml" />
     <Content Include="Views\Creative\Index.cshtml" />
@@ -881,7 +907,7 @@
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.ttf" />
     <Content Include="Scripts\tinymce\skins\lightgray\fonts\tinymce-small.eot" />
     <Content Include="Scripts\tinymce\langs\readme.md" />
-    <Content Include="Templates\Tracking.xlsx" />
+    <Content Include="Templates\Tracking1.xlsx" />
     <Content Include="Templates\SampleZipFile.csv" />
     <Content Include="Templates\SampleLiveSeed.csv" />
     <Content Include="Templates\SampleTestSeed.csv" />
@@ -889,12 +915,18 @@
     <Content Include="Views\Shared\Editors\_Segment.cshtml" />
     <Content Include="Views\Shared\Editors\_SegmentView.cshtml" />
     <Content Include="Views\Notification\Index.cshtml" />
-    <Content Include="Views\Shared\_Rebroadcast.cshtml" />
+    <Content Include="Views\Campaigns\NewSegment.cshtml" />
+    <Content Include="Views\Shared\_Logs.cshtml" />
+    <Content Include="Views\Campaigns\Cancel.cshtml" />
+    <Content Include="Views\Campaigns\Rebroad.cshtml" />
+    <Content Include="Views\Campaigns\Complete.cshtml" />
+    <Content Include="Templates\Tracking2.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Downloads\" />
     <Folder Include="Uploads\" />
+    <Folder Include="Views\Copy\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

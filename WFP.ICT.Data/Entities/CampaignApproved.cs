@@ -24,7 +24,6 @@ namespace WFP.ICT.Data.Entities
         // Campaign Demographics
         public string GeoDetails { get; set; }
         public string Demographics { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter Quantity to be ordered")]
         public long Quantity { get; set; }
         public string SpecialInstructions { get; set; }
         public string ReportSiteLink { get; set; }
@@ -35,15 +34,14 @@ namespace WFP.ICT.Data.Entities
         public long ClickGoals { get; set; }
         public long DataFileQuantity { get; set; }
         public string DataFileUrl { get; set; }
-        public int DataFileSegments { get; set; } // NumberOfIOsToBeGenerated
 
         // Digital Plus
         public bool IsOpenPixel { get; set; }
         public string OpenPixelUrl { get; set; }
         public bool IsOmniOrder { get; set; }
         public DateTime? OmniDeployDate { get; set; }
-        public string Impressions { get; set; }
-        public int Retargeting { get; set; } // RetargetingEnum
+        public long Impressions { get; set; }
+        public string ChannelTypes { get; set; } // List<int> ChannelTypeEnum
 
         public bool IsUseApiDataForOpen { get; set; } // Or API/Open Metric formula
         

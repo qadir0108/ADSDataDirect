@@ -10,10 +10,12 @@ namespace WFP.ICT.Data.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
         public Guid? CampaignId { get; set; }
+        public string OrderNumber { get; set; }
 
         public DateTime? BroadcastDate { get; set; }
+        public DateTime? DeploymentDate { get; set; }
         public string SubjectLine { get; set; }
-        public string HtmlImageFiles { get; set; }
+        public string CreativeFiles { get; set; }
 
         public int FirstRangeStart { get; set; }
         public int FirstRangeEnd { get; set; }

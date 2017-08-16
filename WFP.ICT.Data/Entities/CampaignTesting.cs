@@ -27,7 +27,6 @@ namespace WFP.ICT.Data.Entities
         // Campaign Demographics
         public string GeoDetails { get; set; }
         public string Demographics { get; set; }
-        [Range(1, int.MaxValue, ErrorMessage = "Please enter Quantity to be ordered")]
         public long Quantity { get; set; }
         public string SpecialInstructions { get; set; }
 
@@ -35,7 +34,6 @@ namespace WFP.ICT.Data.Entities
         public long OpenGoals { get; set; }
         public long ClickGoals { get; set; }
         public long DataFileQuantity { get; set; }
-        public int DataFileSegments { get; set; } // NumberOfIOsToBeGenerated
         public string DataFileUrl { get; set; } // aws/2500data.csv
         public DateTime? DateFetched { get; set; }
 
@@ -44,14 +42,11 @@ namespace WFP.ICT.Data.Entities
         public string OpenPixelUrl { get; set; }
         public bool IsOmniOrder { get; set; }
         public DateTime? OmniDeployDate { get; set; }
-        public string Impressions { get; set; }
-        public int Retargeting { get; set; } // RetargetingEnum
-        
-        public virtual ICollection<CampaignSegment> Segments { get; set; }
+        public long Impressions { get; set; }
+        public string ChannelTypes { get; set; } // List<int> ChannelTypeEnum
 
         public CampaignTesting()
         {
-            Segments = new HashSet<CampaignSegment>();
         }
     }
 }

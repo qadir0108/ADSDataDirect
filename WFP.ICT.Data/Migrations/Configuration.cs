@@ -60,6 +60,7 @@ namespace WFP.ICT.Data.Migrations
             var asset = new CampaignAsset()
             {
                 Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
                 CampaignId = compaignId,
                 ZipCodeFile = "2500/2500zip.csv",
                 CreativeFiles = "2500/2500_html.zip",
@@ -99,7 +100,6 @@ namespace WFP.ICT.Data.Migrations
                     IsOpenPixel = true,
                     OpenPixelUrl = "http://www.opened.com/pix101",
                     DataFileQuantity = 1800,
-                    DataFileSegments = 3,
                     Assets = asset
                 }
             };

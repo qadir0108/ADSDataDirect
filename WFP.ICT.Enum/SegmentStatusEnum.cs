@@ -9,7 +9,7 @@ namespace ADSDataDirect.Enums
     {
         Generated,
         Approved,
-        Traffic,
+        Monitoring,
         Complete
     }
 }

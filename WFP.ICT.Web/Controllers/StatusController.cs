@@ -81,10 +81,9 @@ namespace WFP.ICT.Web.Controllers
             {
                 if (!string.IsNullOrEmpty(sc.basicString))
                 {
-                    var searchRDP = sc.basicString + "RDP";
                     campagins = campagins.Where(s =>
                     s.OrderNumber.Equals(sc.basicString) ||
-                    s.OrderNumber.Equals(searchRDP) ||
+                    s.ReBroadcastedOrderNumber.Equals(sc.basicString) ||
                     s.CampaignName.IndexOf(sc.basicString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
                     ViewBag.BasicStringSearched = sc.basicString;
                 }
@@ -92,7 +91,9 @@ namespace WFP.ICT.Web.Controllers
                 {
                     int status = int.Parse(sc.basicStatus);
                     if (status == (int)CampaignStatusEnum.Rebroadcasted)
-                        campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                        campagins = campagins.Where(s => s.ReBroadcasted).ToList();
+                    else if (status == (int)CampaignStatusEnum.NotRebroadcasted)
+                        campagins = campagins.Where(s => s.ReBroadCast && !s.ReBroadcasted).ToList();
                     else
                         campagins = campagins.Where(s => s.Status == status).ToList();
                     ViewBag.BasicStatusSearched = sc.basicStatus;
@@ -101,7 +102,6 @@ namespace WFP.ICT.Web.Controllers
                 {
                     campagins = campagins.Where(s => s.Id.ToString().Equals(sc.basicOrderNumber)).ToList();
                 }
-
             }
             else if (sc.searchType == "advanced")
             {
@@ -219,7 +219,7 @@ namespace WFP.ICT.Web.Controllers
                 {
                     campaignTracking.IONumber = IONumber;
                 }
-                campaign.Status = (int) CampaignStatusEnum.Traffic;
+                campaign.Status = (int) CampaignStatusEnum.Monitoring;
                 db.SaveChanges();
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }

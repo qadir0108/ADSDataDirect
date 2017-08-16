@@ -113,7 +113,7 @@ namespace WFP.ICT.Web.Async
             return alreadyHosted ? UploadFileStatusEnum.HostedWithOutImages :  UploadFileStatusEnum.HostedWithImages;
         }
 
-        public static string GetFilePathLive(UploadFileTypeEnum uploadFileType, string orderNumber, string segmentNumber = "")
+        public static string GetFilePathLive(UploadFileTypeEnum uploadFileType, string orderNumber, string extension = "", string segmentNumber = "")
         {
             string fileName = "";
             switch (uploadFileType)
@@ -130,9 +130,18 @@ namespace WFP.ICT.Web.Async
                     case UploadFileTypeEnum.SuppressionFile:
                         fileName = string.Format("{0}{1}/{1}supp.csv", serverPrefix, orderNumber);
                     break;
+                    case UploadFileTypeEnum.BannersFile:
+                            fileName = string.Format("{0}{1}/_banner{2}", serverPrefix, orderNumber, extension);
+                        break;
+                    case UploadFileTypeEnum.BannersLinksFile:
+                            fileName = string.Format("{0}{1}/_bannerlinks{2}", serverPrefix, orderNumber, extension);
+                        break;
+                    case UploadFileTypeEnum.MiscFile:
+                        fileName = string.Format("{0}{1}/_misc{2}", serverPrefix, orderNumber, extension);
+                        break;
                     case UploadFileTypeEnum.DataFile:
                         fileName = string.Format("{0}{1}/{2}data.csv", serverPrefix, orderNumber, segmentNumber);
-                    break;
+                        break;
             }
             return fileName;
         }

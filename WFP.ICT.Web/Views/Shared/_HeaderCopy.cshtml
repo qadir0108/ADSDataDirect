@@ -11,33 +11,45 @@
 {
     <div class="container">
         <div class="row" style="padding-bottom: 5px">
-            <div class="col-md-10 headertab">
+            <div class="col-md-12 headertab">
                 Order #: @Session["OrderNumber"]
-            </div>
-            <div class="col-md-2">
-                @Html.ActionLink("Back to Orders", "Index", "Campaigns", null, new {@class = "btn btn-default btn-xs"})
-                @Html.ActionLink("Complete", "MoveTo", "Copy", new { id = Session["id"], to = "Complete" }, new { @class = "btn btn-default btn-sm" })
             </div>
         </div>
         <div class="row">
-            <div class="col-md-2">
+            <div class="col-md-1">
                 @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = Session["id"], to = "Testing"}, new {@class = "btn btn-default btn-sm" })
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 @Html.ActionLink("Creative", "Index", "Creative", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm" })
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 @Html.ActionLink("Approved", "MoveTo", "Copy", new {id = Session["id"], to = "Approved"}, new {@class = "btn btn-default btn-sm" })
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 @Html.ActionLink("Status", "Index", "Status", new { searchType = "basic", searchString = Session["OrderNumber"] }, new {@class = "btn btn-default btn-sm" })
             </div>
-            <div class="col-md-2">
+            <div class="col-md-1">
                 @Html.ActionLink("Tracking", "Index", "Tracking", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
-            <div class="col-md-2">
-                @Html.ActionLink("ReBroadcast", "MoveTo", "Copy", new {id = Session["id"], to = "ReBroadcast"}, new {@class = "btn btn-default btn-sm" })
+            
+            <div class="col-md-1">
             </div>
+            <div class="col-md-1">
+            </div>
+
+            <div class="col-md-1">
+                @Html.ActionLink("Clone", "MoveTo", "Copy", new { id = Session["id"], to = "Clone" }, new { @class = "btn btn-default btn-sm" })
+            </div>
+            <div class="col-md-1">
+                @Html.ActionLink("ReBroad", "MoveTo", "Copy", new { id = Session["id"], to = "Rebroad" }, new { @class = "btn btn-default btn-sm" })
+            </div>
+            <div class="col-md-1">
+                @Html.ActionLink("Cancel", "MoveTo", "Copy", new { id = Session["id"], to = "Cancel" }, new { @class = "btn btn-default btn-sm" })
+            </div>
+            <div class="col-md-1">
+                @Html.ActionLink("Complete", "MoveTo", "Copy", new { id = Session["id"], to = "Complete" }, new { @class = "btn btn-default btn-sm" })
+            </div>
+            
         </div>
     </div>
 }

@@ -1,7 +1,8 @@
-﻿@using WFP.ICT.Data.Entities
+﻿@using ADSDataDirect.Enums
+@using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
 @using WFP.ICT.Web.Models
-@model WFP.ICT.Data.Entities.Campaign
+@model WFP.ICT.Web.Models.CampaignVM
 
 @{
     ViewBag.Title = "Create";
@@ -48,9 +49,8 @@
     </div>*@
 
         <div class="form-horizontal">
-            @*@Html.ValidationSummary(false, "", new { @class = "text-danger" })*@
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.Id)
-            @Html.HiddenFor(model => model.CreatedAt)
             @Html.HiddenFor(model => model.OrderNumber)
             
             <div class="tabbable-panel">
@@ -73,7 +73,7 @@
                         </li>
                         <li>
                             <a href="#tab_default_4" data-toggle="tab">
-                                Segment Data
+                                Segments Data
                             </a>
                         </li>
                         <li>
@@ -87,11 +87,9 @@
                             
                         <div class="row">
                         <div class="col-md-6">
-                            <hr />
                             <div class="headertab">
                                 Campaign Details
                             </div>
-                            <hr />
                             <div class="form-group">
                                 @Html.LabelFor(model => model.CampaignName, htmlAttributes: new { @class = "control-label col-md-3" })
                                 <div class="col-md-9">
@@ -167,12 +165,11 @@
 
                         </div>
                    
-                            <div class="col-md-6">
+                        <div class="col-md-6">
                                 
-                                <hr />
                                 <div class="headertab">
                                     Campaign Demographics
-                                </div><hr />
+                                </div>
 
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.GeoDetails, htmlAttributes: new { @class = "control-label col-md-3" })
@@ -198,10 +195,9 @@
                                     </div>
                                 </div>
 
-                                <hr />
                                 <div class="headertab">
                                     Campaign Testing
-                                </div><hr />
+                                </div>
 
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.FromLine, htmlAttributes: new { @class = "control-label col-md-3" })
@@ -226,10 +222,9 @@
                         </div>
                         <div class="tab-pane" id="tab_default_2">
                             
-                                <hr />
-                                <div class="headertab">
-                                    File Management
-                                </div><hr />
+                            <div class="headertab">
+                                File Management
+                            </div>
                             
                             <div class="row">
                                 
@@ -337,10 +332,9 @@
                           
                         </div>
                     <div class="tab-pane" id="tab_default_3">
-                        <hr />
                         <div class="headertab">
                             Additional Information
-                        </div><hr />
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
 
@@ -394,6 +388,31 @@
                                         </div>
                                     </div>
                                 </div>
+                                
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.IsOpenPixel, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        <div class="">
+                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsOpenPixel, "True")Yes
+                                                </label>
+                                                <label class="btn btn-primary">
+                                                    @Html.RadioButtonFor(model => model.IsOpenPixel, "False")No
+                                                </label>
+                                            </div>
+                                            @Html.ValidationMessageFor(model => model.IsOpenPixel, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-group">
+                                    @Html.LabelFor(model => model.OpenPixelUrl, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <div class="col-md-9">
+                                        @Html.EditorFor(model => model.OpenPixelUrl, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.OpenPixelUrl, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
 
                             </div>
 
@@ -427,10 +446,9 @@
                     </div>
                         
                     <div class="tab-pane" id="tab_default_4">
-                        <hr />
                         <div class="headertab">
                             Segments Data
-                        </div><hr />
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group">
@@ -444,66 +462,24 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.DataFileSegments, htmlAttributes: new { @class = "control-label col-md-3" })
-                                    <div class="col-md-9">
-                                        @Html.EditorFor(model => model.DataFileSegments, new { htmlAttributes = new { @class = "form-control", @min = "1", @max = "10" } })
-                                        @Html.ValidationMessageFor(model => model.DataFileSegments, "", new { @class = "text-danger" })
-                                    </div>
+                                    <a id="addSegment" class="btn btn-primary" data-tooltip="Add segment" title="Add more piano" href="javascript:;">
+                                        Add Segment
+                                    </a>
                                 </div>
                             </div>
                         </div>
+                        
+
+
                     </div>
                         
                     <div class="tab-pane" id="tab_default_5">
                         
-                        <hr />
                         <div class="headertab">
                             Digital Plus
-                        </div><hr />
+                        </div>
                         <div class="row">
                             <div class="col-md-6">
-
-                                <div class="form-group">
-                                    <label class="control-label col-md-3">Access Creative Manager</label>
-                                    <div class="col-md-9">
-                                        <div class="">
-                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
-                                                <label class="btn btn-primary">
-                                                    @Html.RadioButtonFor(model => model.IsAccessCreativeManager, "True")Yes
-                                                </label>
-                                                <label class="btn btn-primary">
-                                                    @Html.RadioButtonFor(model => model.IsAccessCreativeManager, "False")No
-                                                </label>
-                                            </div>
-                                            @Html.ValidationMessageFor(model => model.IsAccessCreativeManager, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.IsOpenPixel, htmlAttributes: new { @class = "control-label col-md-3" })
-                                    <div class="col-md-9">
-                                        <div class="">
-                                            <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
-                                                <label class="btn btn-primary">
-                                                    @Html.RadioButtonFor(model => model.IsOpenPixel, "True")Yes
-                                                </label>
-                                                <label class="btn btn-primary">
-                                                    @Html.RadioButtonFor(model => model.IsOpenPixel, "False")No
-                                                </label>
-                                            </div>
-                                            @Html.ValidationMessageFor(model => model.IsOpenPixel, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-                                </div>
-
-                                <div class="form-group">
-                                    @Html.LabelFor(model => model.OpenPixelUrl, htmlAttributes: new { @class = "control-label col-md-3" })
-                                    <div class="col-md-9">
-                                        @Html.EditorFor(model => model.OpenPixelUrl, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.OpenPixelUrl, "", new { @class = "text-danger" })
-                                    </div>
-                                </div>
 
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.IsOmniOrder, htmlAttributes: new { @class = "control-label col-md-3" })
@@ -537,12 +513,24 @@
                                         @Html.ValidationMessageFor(model => model.Impressions, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
-
+                                
                                 <div class="form-group">
-                                    @Html.LabelFor(model => model.Retargeting, htmlAttributes: new { @class = "control-label col-md-3" })
+                                    <label class="control-label col-md-3">Chanel Type</label>
                                     <div class="col-md-9">
-                                        @Html.DropDownList("Retargeting", null, htmlAttributes: new { @class = "form-control" })
-                                        @Html.ValidationMessageFor(model => model.Retargeting, "", new { @class = "text-danger" })
+                                        <div class="input-group">
+                                            @foreach (var value in Enum.GetValues(typeof(ChannelTypeEnum)))
+                                            {
+                                                var id = "dayofweek" + value;
+                                                var name = Enum.GetName(typeof(ChannelTypeEnum), value);
+                                                ChannelTypeEnum e = (ChannelTypeEnum)value;
+                                                var isChecked = Model.ChannelTypes.Contains(e) ? "checked" : "";
+
+                                                <div class="checkbox checkbox-primary">
+                                                    <input id="@id" type="checkbox" value="@value" name="ChannelTypes" @isChecked />
+                                                    <label for="@id" class="control-label">@name </label>
+                                                </div>
+                                            }
+                                        </div>
                                     </div>
                                 </div>
 
@@ -584,14 +572,15 @@
             </div>
 
         <div class="row">
-                <div class="col-md-6"></div>
-                <div class="col-md-6 pull-right">
-                    <div class="form-group pull-right">
-                        <input type="submit" value="Place Order" class="btn btn-default" />
-                        &nbsp;&nbsp;@Html.ActionLink("Back to Orders", "Index")
-                    </div>
+            <div class="col-md-6"></div>
+            <div class="col-md-6 pull-right">
+                <div class="form-group pull-right">
+                    <input type="submit" value="Place Order" class="btn btn-default" />
+                    &nbsp;&nbsp;@Html.ActionLink("Back to Orders", "Index")
                 </div>
             </div>
+        </div>
+            <br /><br />
         </div>
         }
 
@@ -633,7 +622,13 @@
                 $("input[name='IsOmniOrder']:checked").closest("label.btn").addClass("active");
                 $("input[name='IsAddOptOut']:checked").closest("label.btn").addClass("active");
                 $("input[name='IsAddViewInBrowser']:checked").closest("label.btn").addClass("active");
-                $("input[name='IsAccessCreativeManager']:checked").closest("label.btn").addClass("active");
                 $("input[name='IsOpenPixel']:checked").closest("label.btn").addClass("active");
+
+                $('#addSegment').click(function (e) {
+                    $.get('/Campaigns/NewSegment', function (template) {
+                        $('#tab_default_4').append(template);
+                    });
+                    e.preventDefault();
+                });
             });
         </script>

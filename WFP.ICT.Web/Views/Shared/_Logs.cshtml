@@ -1,0 +1,92 @@
+﻿<style>
+    #accordion {
+        position: fixed;
+        bottom: 0;
+        width: 100%;    
+    }
+
+    #accordion .panel-default > .panel-heading{
+        background: #0088ff;
+    }
+
+    #accordion .panel-heading {
+        padding: 0;
+        border-top-left-radius: 0px;
+        border-top-right-radius: 0px;
+    }
+
+    #accordion .panel-group .panel {
+        border-radius: 0;
+    }
+
+    #accordion .panel-title a {
+        color: #FFFFFF;
+        text-align: center;
+        width: 100%;
+        display: block;
+        padding: 10px 15px;
+        font-size: 18px;
+        /*font-family: Helvetica,Arial,sans-serif;*/
+        outline: none;
+    }
+
+    #accordion .panel-title a:hover, .panel-title a:focus, .panel-title a:active {
+        text-decoration: none;
+        outline: none;
+    }
+
+    #systemLogs {
+        overflow-y: auto;
+        height: 200px;
+    }
+
+</style>
+
+<div class="panel-group" id="accordion">
+    <div class="panel panel-default">
+        <div class="panel-heading">
+            <h4 class="panel-title">
+                <a data-toggle="collapse" data-parent="#accordion" href="#collapseOne">
+                    System Logs
+                </a>
+            </h4>
+        </div>
+        <div id="collapseOne" class="panel-collapse collapse">
+            <div class="panel-body" id="systemLogs">
+            </div> 
+        </div>
+    </div>
+</div>
+
+<link rel="stylesheet" href="~/css/perfect-scrollbar.min.css">
+<script src="~/js/perfect-scrollbar.jquery.min.js"></script>
+<script>
+        var wfp = wfp || {};
+    
+        $(document).ready(function () {
+            debugger;
+            $('#systemLogs').perfectScrollbar();
+
+            $('#collapseOne')
+                .on('show.bs.collapse',
+                    function() {
+                        $('#accordion .panel-heading')
+                            .animate({
+                                backgroundColor: "#f9a630"
+                                },
+                                500);
+                    });
+
+            $('#collapseOne')
+                .on('hide.bs.collapse',
+                    function() {
+                        $('#accordion .panel-heading')
+                            .animate({
+                                backgroundColor: "##0088ff"
+                                },
+                                500);
+                    });
+
+        });
+
+</script>

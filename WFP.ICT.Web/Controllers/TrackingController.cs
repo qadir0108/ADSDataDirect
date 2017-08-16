@@ -17,6 +17,7 @@ using WFP.ICT.Web.Reports;
 
 namespace WFP.ICT.Web.Controllers
 {
+    [Authorize]
     public class TrackingController : BaseController
     {
         int pageSize = 10;
@@ -80,10 +81,9 @@ namespace WFP.ICT.Web.Controllers
             {
                 if (!string.IsNullOrEmpty(sc.basicString))
                 {
-                    var searchRDP = sc.basicString + "RDP";
                     campagins = campagins.Where(s =>
                     s.OrderNumber.Equals(sc.basicString) ||
-                    s.OrderNumber.Equals(searchRDP) ||
+                    s.ReBroadcastedOrderNumber.Equals(sc.basicString) ||
                     s.CampaignName.IndexOf(sc.basicString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
                     ViewBag.BasicStringSearched = sc.basicString;
                 }
@@ -91,7 +91,9 @@ namespace WFP.ICT.Web.Controllers
                 {
                     int status = int.Parse(sc.basicStatus);
                     if (status == (int)CampaignStatusEnum.Rebroadcasted)
-                        campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
+                        campagins = campagins.Where(s => s.ReBroadcasted).ToList();
+                    else if (status == (int)CampaignStatusEnum.NotRebroadcasted)
+                        campagins = campagins.Where(s => s.ReBroadCast && !s.ReBroadcasted).ToList();
                     else
                         campagins = campagins.Where(s => s.Status == status).ToList();
                     ViewBag.BasicStatusSearched = sc.basicStatus;
@@ -240,6 +242,8 @@ namespace WFP.ICT.Web.Controllers
                 throw new HttpException(400, "Bad Request");
             }
             Campaign campaign = db.Campaigns
+                .Include(x => x.Assets)
+                .Include(x => x.Segments)
                 .Include(x => x.ProDatas)
                 .Include(x => x.Testing)
                 .Include(x => x.Approved)
@@ -310,6 +314,8 @@ namespace WFP.ICT.Web.Controllers
                 throw new HttpException(400, "Bad Request");
             }
             Campaign campaign = db.Campaigns
+                .Include(x => x.Assets)
+                .Include(x => x.Segments)
                 .Include(x => x.ProDatas)
                 .Include(x => x.Testing)
                 .Include(x => x.Approved)
@@ -402,7 +408,8 @@ namespace WFP.ICT.Web.Controllers
             if (!System.IO.File.Exists(imagePath))
             {
                 helper.Capture();
-                helper.ResizeImage(imagePathTemp, imagePath, 600, 750, true);
+                if (System.IO.File.Exists(imagePathTemp))
+                    helper.ResizeImage(imagePathTemp, imagePath, 600, 750, true);
                 if (System.IO.File.Exists(imagePathTemp))
                     System.IO.File.Delete(imagePathTemp);
             }
@@ -444,7 +451,7 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Order Number missing");
                 }
 
-                var messages = db.ProDataAPILogs.Where(x => x.OrderNumber == OrderNumber)
+                var messages = db.SystemLogs.Where(x => x.OrderNumber == OrderNumber && x.LogType == (int)LogTypeEnum.ProData)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new { CreatedAt = x.CreatedAt.ToString(), Message = x.Message })
                     .ToList();

@@ -9,7 +9,8 @@
     font-size: 24px; 
     font-weight: bolder;
     color: white;
-    padding: 10px 1em
+    padding: 10px 1em;
+    margin-bottom: 5px;
 }
 
 .has-feedback .form-control-feedback {
@@ -70,10 +71,13 @@
     padding-left: 0px !important;
 }
 
+.inherit-width {
+    width: inherit !important;
+}
+
 .listing-row-no-padding {
     padding: 0px !important;
 }
-
 
 /***
 Bootstrap Line Tabs by @keenthemes

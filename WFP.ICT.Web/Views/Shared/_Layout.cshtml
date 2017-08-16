@@ -1,4 +1,7 @@
-﻿<!DOCTYPE html>
+﻿@using System.Security.Claims
+@using WFP.ICT.Data.Entities
+@using WFP.ICT.Enum
+<!DOCTYPE html>
 <html>
 <head>
     <meta charset="utf-8" />
@@ -13,20 +16,33 @@
     <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-    <div id="divBodyContent">
-        @Html.Partial("_Header")
+<div id="divBodyContent">
+    @Html.Partial("_Header")
 
-        <div class="container body-content">
-            @RenderBody()
-
-            <footer>
-                <p>
-                    &copy; @DateTime.Now.Year - ADS Data Direct
-                </p>
-            </footer>
-        </div>
-
+    <div class="container body-content">
+        @RenderBody()
+            
+        <footer>
+            <p>
+                &copy; @DateTime.Now.Year - ADS Data Direct
+            </p>
+        </footer>
     </div>
+</div>
+    
+@{
+    var LoggedInUser = Session["user"] as WFPUser;
+    bool IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+}
+@if (IsAdmin)
+{
+    <script src="../../Scripts/jquery.signalR-2.2.2.js"></script>
+    <script src="~/signalr/hubs"></script>
+    <script src="../../Scripts/SignalR.Updater.js"></script>
+    @Html.Partial("_Logs")
+}
+
+
     @*@Scripts.Render("~/bundles/jquery")
     @Scripts.Render("~/bundles/bootstrap")*@
     <script>

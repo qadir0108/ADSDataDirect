@@ -36,8 +36,8 @@
             var btnUpload = $('#btnUpload_@Model.FileType');
             var linkDownload = $('#linkDownload_@Model.FileType');
             var linkDelete = $('#linkDelete_@Model.FileType');
-            var ifHtmlImageFiles = '@(Model.FileType == "HtmlImageFiles" || Model.FileType.StartsWith("HtmlImageFiles")
-                || Model.FileType == "CompanyLogo" || Model.FileType == "BannersFile" || Model.FileType == "MiscFile")';
+            var ifHtmlImageFiles = '@(Model.FileType == "Assets_CreativeFiles" || Model.FileType.StartsWith("CreativeFiles")
+                || Model.FileType == "CompanyLogo" || Model.FileType == "Assets_BannersFile" || Model.FileType == "Assets_MiscFile")';
 
             //debugger;
             if (txtSelectedFile.val() === '') {
@@ -81,11 +81,9 @@
                         var formData = new FormData();
                         //debugger;
                         formData.append('selectedFile', selectedFile);
-                        if ('@Model.OrderNumber' !== '') {
-                            formData.append('FileType', '@Model.FileType');
-                            formData.append('OrderNumber', '@Model.OrderNumber');
-                            formData.append('SegmentNumber', '@Model.SegmentNumber');
-                        }
+                        formData.append('FileType', '@Model.FileType');
+                        formData.append('OrderNumber', '@Model.OrderNumber');
+                        formData.append('SegmentNumber', '@Model.SegmentNumber');
                         $.ajax({
                             type: "POST",
                             url: '/File/UploadFile',

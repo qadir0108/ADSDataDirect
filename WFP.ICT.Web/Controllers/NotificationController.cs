@@ -1,31 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Data.Entity;
-using System.IO;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using System.Web.Mvc;
-using Hangfire;
-using MailChimp.Net;
-using MailChimp.Net.Interfaces;
-using MailChimp.Net.Models;
-using WFP.ICT.Data.Entities;
-using WFP.ICT.Web.Async;
-using WFP.ICT.Web.Helpers;
+using PagedList;
 using WFP.ICT.Web.Models;
-using WFP.ICT.Enum;
 
 namespace WFP.ICT.Web.Controllers
 {
+    [Authorize]
     public class NotificationController : BaseController
     {
+        int pageSize = 10;
         // Notification
-        public ActionResult Index()
+        public ActionResult Index(CampaignSearchVM sc)
         {
-            var campaigns = db.Campaigns
-                    .Include(c => c.Notifications);
-           
-            return View();
+            var notifications = db.Notifications.ToList();
+            // Paging
+            int pageNumber = (sc.page ?? 1);
+            return View(notifications.ToPagedList(pageNumber, pageSize));
         }
 
         //[HttpPost]

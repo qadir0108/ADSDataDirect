@@ -5,8 +5,9 @@ using System.Threading.Tasks;
 
 namespace ADSDataDirect.Enums
 {
-    public enum RetargetingEnum
+    public enum ChannelTypeEnum
     {
+        Retargeting,
         Display,
         Social
     }

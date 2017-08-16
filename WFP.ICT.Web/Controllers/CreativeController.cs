@@ -5,6 +5,7 @@ using System.Data.Entity;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using ADSDataDirect.Enums;
 using Hangfire;
 using MailChimp.Net;
 using MailChimp.Net.Interfaces;
@@ -17,6 +18,7 @@ using WFP.ICT.Enum;
 
 namespace WFP.ICT.Web.Controllers
 {
+    [Authorize]
     public class CreativeController : BaseController
     {
         // Creative
@@ -203,7 +205,7 @@ namespace WFP.ICT.Web.Controllers
                     throw new Exception("Order Number missing");
                 }
 
-                var messages = db.MailChimpAPILogs.Where(x => x.OrderNumber == OrderNumber)
+                var messages = db.SystemLogs.Where(x => x.OrderNumber == OrderNumber && x.LogType == (int)LogTypeEnum.MailChimp)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new { CreatedAt = x.CreatedAt.ToString(), Message = x.Message })
                     .ToList();

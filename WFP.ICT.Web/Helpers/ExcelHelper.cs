@@ -20,7 +20,7 @@ namespace WFP.ICT.Web.Helpers
     {
         public static void GenerateTrackingReport(CampaignReportVM model, string logoFilePath, string imageFilePath, string outputFile)
         {
-            string sourceFile = HttpContext.Current.Server.MapPath("~/Templates/Tracking.xlsx");
+            string sourceFile = HttpContext.Current.Server.MapPath("~/Templates/Tracking1.xlsx");
             File.Copy(sourceFile, outputFile, true);
 
             try

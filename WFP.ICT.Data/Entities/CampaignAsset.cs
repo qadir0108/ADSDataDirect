@@ -23,8 +23,8 @@ namespace WFP.ICT.Data.Entities
         public string LiveSeedUrl { get; set; }
         public int LiveSeedStatus { get; set; } // UploadFileStatusEnum
 
-        public string CreativeUrl { get; set; }
         public string CreativeFiles { get; set; }
+        public string CreativeUrl { get; set; }
         public int CreativeStatus { get; set; } // UploadFileStatusEnum
 
         public string SuppressionFile { get; set; }

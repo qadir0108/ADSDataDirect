@@ -1,5 +1,4 @@
-﻿@*@model IEnumerable<WFP.ICT.Data.Entities.Campaign>*@
-@using ADSDataDirect.Enums
+﻿@using ADSDataDirect.Enums
 @using PagedList.Mvc
 @using WFP.ICT
 @using WFP.ICT.Data.Entities
@@ -123,7 +122,7 @@
             @foreach (var item in Model)
             {
                 var disabled = "";
-                if ((CampaignStatusEnum)item.Status == CampaignStatusEnum.Traffic || (CampaignStatusEnum)item.Status == CampaignStatusEnum.Completed)
+                if ((CampaignStatusEnum)item.Status == CampaignStatusEnum.Monitoring || (CampaignStatusEnum)item.Status == CampaignStatusEnum.Completed)
                 {
                     disabled = "disabled";
                 }
@@ -154,37 +153,25 @@
                         <div class="row">
                             <div class="col-md-12">
                                 <div class="col-md-3">
-                                    @if (!IsAdmin && item.Testing == null)
+                                    @*@if (!IsAdmin && item.Testing == null)
                                     {
                                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "pull-right no-left-padding no-right-padding" })
-                                    }
-                                    else
-                                    {
-                                        @Html.ActionLink("Clone", "Clone", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding" })
-                                    }
+                                    }*@
+                                    @Html.ActionLink("Clone", "Clone", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Clone", @data_tooltip = "tooltip" })
+                                    <a href="@Url.Action("Delete", "Campaigns",  new { id = item.Id })"  title="Delete" data-tooltip="tooltip">
+                                        <span class="fa fa-trash"></span>
+                                    </a>
                                 </div>
                                 <div class="col-md-3">
-                                    @if (IsAdmin || item.Testing == null)
-                                    {
-                                        @Html.ActionLink("Delete", "Delete", new {id = item.Id}, new {@class = ""})
-                                    }
-                                    else
-                                    {
-                                        @Html.Raw("&nbsp;")
-                                    }
+                                    @Html.ActionLink("Re-broad", "Rebroad", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Re-broad", @data_tooltip = "tooltip" })
                                 </div>
                                 <div class="col-md-3">
-                                    @if (IsAdmin)
-                                    {
-                                        @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = item.Id, to = "Testing"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled })
-                                    }
+                                    @Html.ActionLink("Cancel", "Cancel", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Cancel", @data_tooltip = "tooltip" })
                                 </div>
                                 <div class="col-md-3">
-                                    @if (IsAdmin)
-                                    {
-                                        @Html.ActionLink("Creative", "Index", "Creative", new {id = item.Id}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled })
-                                    }
+                                    @Html.ActionLink("Complete", "Complete", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding ", @title = "Complete", @data_tooltip = "tooltip" })
                                 </div>
+
                             </div>
                         </div>
                         @if (IsAdmin)
@@ -192,19 +179,16 @@
                             <div class="row" style="margin-top: 3px">
                                 <div class="col-md-12">
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Approved", "MoveTo", "Copy", new { id = item.Id, to = "Approved" }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled })
+                                        @Html.ActionLink("Testing", "MoveTo", "Copy", new { id = item.Id, to = "Testing" }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Testing", @data_tooltip = "tooltip" })
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Tracking", "MoveTo", "Copy", new {id = item.Id, to = "Tracking" }, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
+                                        @Html.ActionLink("Creative", "Index", "Creative", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Creative", @data_tooltip = "tooltip" })
                                     </div>
                                     <div class="col-md-3">
-                                        <a href="#" class="btn btn-default btn-sm no-left-padding no-right-padding" title="ReBroadcast" data-tooltip="tooltip"
-                                           data-toggle="modal" data-target="#rebroadcastModal" data-id="@item.Id" data-name="@item.CampaignName" data-order="@item.OrderNumber">
-                                            Re-broad
-                                        </a>
+                                        @Html.ActionLink("Approved", "MoveTo", "Copy", new {id = item.Id, to = "Approved"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Approved", @data_tooltip = "tooltip" })
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Complete", "MoveTo", "Copy", new {id = item.Id, to = "Complete"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding" })
+                                        @Html.ActionLink("Tracking", "MoveTo", "Copy", new {id = item.Id, to = "Tracking"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Tracking", @data_tooltip = "tooltip" })
                                     </div>
                                 </div>
                             </div>
@@ -237,7 +221,6 @@
 <!-- Modal -->
 @{
     Html.RenderPartial("_Search", new WFP.ICT.Web.Models.CampaignSearchVM());
-    Html.RenderPartial("_Rebroadcast");
 }
 <script type="text/javascript">
 

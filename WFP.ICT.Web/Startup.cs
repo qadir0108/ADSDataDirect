@@ -6,6 +6,7 @@ using System.Globalization;
 using Hangfire;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Hubs;
 using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Helpers;
 
@@ -30,6 +31,10 @@ namespace WFP.ICT.Web
                 Authorization = new[] { new HangfireAuthorizationFilter() }
             });
             app.UseHangfireServer();
+
+            app.MapSignalR();
+
+            WFPICTUpdater.Instance.StartUpdatingClients();
 
             // CheckForQCRules 
             //RecurringJob.AddOrUpdate("CheckForQCRules", () => NotificationsProcessor.CheckForQCRules(), Cron.Minutely);

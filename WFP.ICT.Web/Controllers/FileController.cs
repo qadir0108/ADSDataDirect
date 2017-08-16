@@ -3,6 +3,7 @@ using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using WFP.ICT.Web.Async;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
@@ -27,24 +28,56 @@ namespace WFP.ICT.Web.Controllers
                             stream.CopyTo(fileStream);
                         }
 
+                        // File Validations
+                        if (!fileVm.IsValid(filePath))
+                        {
+                            if (System.IO.File.Exists(filePath))
+                                System.IO.File.Delete(filePath);
+                            throw new Exception(fileVm.FileType + " is not valid. Please upload valid file.");
+                        }
+
                         if (string.IsNullOrEmpty(fileVm.OrderNumber))
                         {
                             amazonFileKey = string.Format("{0:yyyyMMddHHmmss}_{1}", DateTime.Now, fileContent.FileName);
                             S3FileManager.Upload(amazonFileKey, filePath);
-                        } else if (!string.IsNullOrEmpty(fileVm.SegmentNumber)) // Data files Upload only // HtmlImageFiles2500A, HtmlImageFiles2500B
+                        }
+                        else if (!string.IsNullOrEmpty(fileVm.SegmentNumber)) // Data files Upload only // HtmlImageFiles2500A, HtmlImageFiles2500B
                         {
                             amazonFileKey = string.Format("{0}/{1}_html.zip", fileVm.OrderNumber, fileVm.SegmentNumber);
                             S3FileManager.Upload(amazonFileKey, filePath, true, true);
                         }
                         else
                         {
-                            amazonFileKey = FileProcessor.AdjustNewFile(fileVm, filePath);
+                            switch (fileVm.FileType)
+                            {
+                                case "Assets_CreativeFiles":
+                                    amazonFileKey = string.Format("{0}/{0}_html.zip", fileVm.OrderNumber);
+                                    break;
+                                case "Assets_ZipCodeFile":
+                                    amazonFileKey = string.Format("{0}/{0}zip.csv", fileVm.OrderNumber);
+                                    break;
+                                case "Assets_TestSeedFile":
+                                    amazonFileKey = string.Format("{0}/{0}test.csv", fileVm.OrderNumber);
+                                    break;
+                                case "Assets_LiveSeedFile":
+                                    amazonFileKey = string.Format("{0}/{0}live.csv", fileVm.OrderNumber);
+                                    break;
+                                case "Assets_BannersFile":
+                                    amazonFileKey = string.Format("{0}/{0}_banner{1}", fileVm.OrderNumber, Path.GetExtension(filePath));
+                                    break;
+                                case "Assets_BannerLinksFile":
+                                    amazonFileKey = string.Format("{0}/{0}_bannerlinks{1}", fileVm.OrderNumber, Path.GetExtension(filePath));
+                                    break;
+                                case "Assets_MiscFile":
+                                    amazonFileKey = string.Format("{0}/{0}_misc{1}", fileVm.OrderNumber, Path.GetExtension(filePath));
+                                    break;
+                            }
+                            S3FileManager.Upload(amazonFileKey, filePath, true, true);
                         }
 
                         // Delete local
-                        string fullPath = Path.Combine(UploadPath, fileContent.FileName);
-                        if (System.IO.File.Exists(fullPath))
-                            System.IO.File.Delete(fullPath);
+                        if (System.IO.File.Exists(filePath))
+                            System.IO.File.Delete(filePath);
                     }
                 }
 

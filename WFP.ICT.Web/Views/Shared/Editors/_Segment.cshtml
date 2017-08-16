@@ -1,4 +1,5 @@
-﻿@model WFP.ICT.Data.Entities.CampaignSegment
+﻿@model WFP.ICT.Web.Models.CampaignSegmentVM
+@using ADSDataDirect.Enums
 @using MyToolkit.Html
 @using WFP.ICT.Enum
 @using WFP.ICT.Web.Models
@@ -7,17 +8,9 @@
 @using (Html.BeginCollectionItem("Segments"))
 {
     @Html.HiddenFor(Model => Model.Id)
-    @Html.HiddenFor(Model => Model.CreatedAt)
     @Html.HiddenFor(Model => Model.CampaignId)
-    @Html.HiddenFor(Model => Model.CampaignTestingId)
     @Html.HiddenFor(Model => Model.OrderNumber)
     @Html.HiddenFor(Model => Model.SegmentNumber)
-    @Html.HiddenFor(Model => Model.SegmentDataFileUrl)
-    @Html.HiddenFor(Model => Model.DateFetched)
-    @Html.HiddenFor(Model => Model.UploadStatus)
-    @Html.HiddenFor(Model => Model.SegmentStatus)
-    @Html.HiddenFor(Model => Model.DateApproved)
-    @Html.HiddenFor(Model => Model.DateSent)
 
     <div class="panel panel-primary">
         <div class="panel-heading">
@@ -32,23 +25,24 @@
             
             <div class="row">
                 <div class="col-md-12">
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         Subject Line
                     </div>
                     <div class="col-md-3">
                         Broadcast Date
                     </div>
                     <div class="col-md-3">
-                        HtmlImageFiles
+                        Deployment Date
                     </div>
-                    <div class="col-md-4">
+                    <div class="col-md-3">
+                        HtmlImageFiles
                     </div>
                 </div>
             </div>
             <div class="row">
                 <div class="col-md-12">
 
-                    <div class="col-md-2">
+                    <div class="col-md-3">
                         @Html.EditorFor(Model => Model.SubjectLine, new { htmlAttributes = new { @class = "form-control" } })
                         @Html.ValidationMessageFor(model => Model.SubjectLine, "", new { @class = "text-danger" })
                     </div>
@@ -57,14 +51,15 @@
                         @Html.ValidationMessageFor(model => Model.BroadcastDate, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-3">
-                        @Html.EditorFor(model => model.HtmlImageFiles, new { htmlAttributes = new { @id= "HtmlImageFiles" + Model.SegmentNumber, @class = "form-control" } })
-                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "HtmlImageFiles" + Model.SegmentNumber, OrderNumber = Model.OrderNumber, SegmentNumber = Model.SegmentNumber})
-                        @Html.ValidationMessageFor(model => model.HtmlImageFiles, "", new { @class = "text-danger" })
+                        @Html.EditorFor(Model => Model.DeploymentDate, new { htmlAttributes = new { @class = "form-control DeploymentDate" } })
+                        @Html.ValidationMessageFor(model => Model.DeploymentDate, "", new { @class = "text-danger" })
                     </div>
-                    <div class="col-md-4">
-                        @((UploadFileStatusEnum)Model.UploadStatus) - @(Model.DateFetched)
-                        <a target="_blank" href="@Model.SegmentDataFileUrl">@Model.SegmentDataFileUrl</a>
+                    <div class="col-md-3">
+                        @Html.EditorFor(model => model.CreativeFiles, new { htmlAttributes = new { @id = "CreativeFiles" + Model.SegmentNumber, @class = "form-control CreativeFiles" } })
+                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "CreativeFiles" + Model.SegmentNumber, OrderNumber = Model.OrderNumber, SegmentNumber = Model.SegmentNumber })
+                        @Html.ValidationMessageFor(model => model.CreativeFiles, "", new { @class = "text-danger" })
                     </div>
+                   
                 </div>
             </div>
             <div class="row">
@@ -118,9 +113,66 @@
 
                 </div>
             </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        UploadStatus
+                    </div>
+                    <div class="col-md-2">
+                        DateFetched
+                    </div>
+                    <div class="col-md-4">
+                        DataFileUrl
+                    </div>
+                    <div class="col-md-2">
+                        SegmentStatus
+                    </div>
+                    @*<div class="col-md-2">
+                        DateApproved
+                    </div>*@
+                    <div class="col-md-2">
+                        DateSent
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                       @((UploadFileStatusEnum)Model.UploadStatus)
+                    </div>
+                    <div class="col-md-2">
+                        @(Model.DateFetched)
+                    </div>
+                    <div class="col-md-4">
+                        <a target="_blank" href="@Model.SegmentDataFileUrl">@Model.SegmentDataFileUrl</a>
+                    </div>
+                    <div class="col-md-2">
+                        @((SegmentStatusEnum)Model.SegmentStatus)
+                    </div>
+                    @*<div class="col-md-2">
+                        @(Model.DateApproved)
+                    </div>*@
+                    <div class="col-md-2">
+                       @(Model.DateSent)
+                    </div>
+                </div>
+            </div>
 
         </div>
     </div>
  
 
 }
+<script>
+    $(document).ready(function () {
+        $('.CreativeFiles').prop('readonly', "readonly");
+        $('.BroadcastDate').datetimepicker({
+            format: 'M/DD/YYYY hh:mm:ss A'
+        });
+        $('.DeploymentDate').datetimepicker({
+            format: 'M/DD/YYYY hh:mm:ss A'
+        });
+    });
+</script>

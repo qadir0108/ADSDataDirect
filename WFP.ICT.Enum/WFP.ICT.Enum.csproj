@@ -41,7 +41,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="RetargetingEnum.cs" />
+    <Compile Include="LogStatusEnum.cs" />
+    <Compile Include="LogTypeEnum.cs" />
+    <Compile Include="ChannelTypeEnum.cs" />
     <Compile Include="NotificationStatusEnum.cs" />
     <Compile Include="QCRuleEnum.cs" />
     <Compile Include="SegmentStatusEnum.cs" />

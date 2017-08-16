@@ -7,6 +7,7 @@ namespace WFP.ICT.Data.Migrations
     {
         public override void Up()
         {
+            RenameTable(name: "dbo.MailChimpAPILog", newName: "SystemLog");
             DropForeignKey("dbo.Campaign", "RebroadId", "dbo.Campaign");
             DropIndex("dbo.Campaign", new[] { "RebroadId" });
             CreateTable(
@@ -24,8 +25,8 @@ namespace WFP.ICT.Data.Migrations
                         LiveSeedFile = c.String(),
                         LiveSeedUrl = c.String(),
                         LiveSeedStatus = c.Int(nullable: false),
-                        CreativeUrl = c.String(),
                         CreativeFiles = c.String(),
+                        CreativeUrl = c.String(),
                         CreativeStatus = c.Int(nullable: false),
                         SuppressionFile = c.String(),
                         SuppressionUrl = c.String(),
@@ -73,9 +74,11 @@ namespace WFP.ICT.Data.Migrations
                     {
                         Id = c.Guid(nullable: false),
                         CampaignId = c.Guid(),
+                        OrderNumber = c.String(),
                         BroadcastDate = c.DateTime(),
+                        DeploymentDate = c.DateTime(),
                         SubjectLine = c.String(),
-                        HtmlImageFiles = c.String(),
+                        CreativeFiles = c.String(),
                         FirstRangeStart = c.Int(nullable: false),
                         FirstRangeEnd = c.Int(nullable: false),
                         SecondRangeStart = c.Int(nullable: false),
@@ -92,11 +95,10 @@ namespace WFP.ICT.Data.Migrations
                         DateComplete = c.DateTime(),
                         CreatedAt = c.DateTime(nullable: false),
                         CreatedBy = c.String(),
-                        CampaignTesting_Id = c.Guid(),
                     })
                 .PrimaryKey(t => t.Id)
-                .ForeignKey("dbo.CampaignTesting", t => t.CampaignTesting_Id)
-                .Index(t => t.CampaignTesting_Id);
+                .ForeignKey("dbo.Campaign", t => t.CampaignId)
+                .Index(t => t.CampaignId);
             
             CreateTable(
                 "dbo.CampaignTracking",
@@ -119,43 +121,43 @@ namespace WFP.ICT.Data.Migrations
                 .ForeignKey("dbo.Campaign", t => t.CampaignId)
                 .Index(t => t.CampaignId);
             
-            AddColumn("dbo.Campaign", "ReBroadCasted", c => c.Boolean(nullable: false));
-            AddColumn("dbo.Campaign", "ReBroadcastedDate", c => c.DateTime());
-            AddColumn("dbo.Campaign", "ReBroadcastedQuantity", c => c.Long(nullable: false));
-            AddColumn("dbo.Campaign", "IsAccessCreativeManager", c => c.Boolean(nullable: false));
             AddColumn("dbo.Campaign", "DataFileQuantity", c => c.Long(nullable: false));
-            AddColumn("dbo.Campaign", "DataFileSegments", c => c.Int(nullable: false));
             AddColumn("dbo.Campaign", "IsOpenPixel", c => c.Boolean(nullable: false));
             AddColumn("dbo.Campaign", "OpenPixelUrl", c => c.String());
             AddColumn("dbo.Campaign", "IsOmniOrder", c => c.Boolean(nullable: false));
             AddColumn("dbo.Campaign", "OmniDeployDate", c => c.DateTime());
-            AddColumn("dbo.Campaign", "Impressions", c => c.String());
-            AddColumn("dbo.Campaign", "Retargeting", c => c.Int(nullable: false));
+            AddColumn("dbo.Campaign", "Impressions", c => c.Long(nullable: false));
+            AddColumn("dbo.Campaign", "ChannelTypes", c => c.String());
+            AddColumn("dbo.Campaign", "ReBroadcasted", c => c.Boolean(nullable: false));
+            AddColumn("dbo.Campaign", "ReBroadcastedDate", c => c.DateTime());
+            AddColumn("dbo.Campaign", "ReBroadcastedQuantity", c => c.Long(nullable: false));
+            AddColumn("dbo.Campaign", "ReBroadcastedOrderNumber", c => c.String());
             AddColumn("dbo.Campaign", "AssetsId", c => c.Guid());
             AddColumn("dbo.CampaignApproved", "OpenGoals", c => c.Long(nullable: false));
             AddColumn("dbo.CampaignApproved", "ClickGoals", c => c.Long(nullable: false));
             AddColumn("dbo.CampaignApproved", "DataFileQuantity", c => c.Long(nullable: false));
             AddColumn("dbo.CampaignApproved", "DataFileUrl", c => c.String());
-            AddColumn("dbo.CampaignApproved", "DataFileSegments", c => c.Int(nullable: false));
             AddColumn("dbo.CampaignApproved", "IsOpenPixel", c => c.Boolean(nullable: false));
             AddColumn("dbo.CampaignApproved", "OpenPixelUrl", c => c.String());
             AddColumn("dbo.CampaignApproved", "IsOmniOrder", c => c.Boolean(nullable: false));
             AddColumn("dbo.CampaignApproved", "OmniDeployDate", c => c.DateTime());
-            AddColumn("dbo.CampaignApproved", "Impressions", c => c.String());
-            AddColumn("dbo.CampaignApproved", "Retargeting", c => c.Int(nullable: false));
+            AddColumn("dbo.CampaignApproved", "Impressions", c => c.Long(nullable: false));
+            AddColumn("dbo.CampaignApproved", "ChannelTypes", c => c.String());
             AddColumn("dbo.CampaignApproved", "IsUseApiDataForOpen", c => c.Boolean(nullable: false));
             AddColumn("dbo.CampaignTesting", "OpenGoals", c => c.Long(nullable: false));
             AddColumn("dbo.CampaignTesting", "ClickGoals", c => c.Long(nullable: false));
             AddColumn("dbo.CampaignTesting", "DataFileQuantity", c => c.Long(nullable: false));
-            AddColumn("dbo.CampaignTesting", "DataFileSegments", c => c.Int(nullable: false));
             AddColumn("dbo.CampaignTesting", "DataFileUrl", c => c.String());
             AddColumn("dbo.CampaignTesting", "DateFetched", c => c.DateTime());
             AddColumn("dbo.CampaignTesting", "IsOpenPixel", c => c.Boolean(nullable: false));
             AddColumn("dbo.CampaignTesting", "OpenPixelUrl", c => c.String());
             AddColumn("dbo.CampaignTesting", "IsOmniOrder", c => c.Boolean(nullable: false));
             AddColumn("dbo.CampaignTesting", "OmniDeployDate", c => c.DateTime());
-            AddColumn("dbo.CampaignTesting", "Impressions", c => c.String());
-            AddColumn("dbo.CampaignTesting", "Retargeting", c => c.Int(nullable: false));
+            AddColumn("dbo.CampaignTesting", "Impressions", c => c.Long(nullable: false));
+            AddColumn("dbo.CampaignTesting", "ChannelTypes", c => c.String());
+            AddColumn("dbo.SystemLog", "LogType", c => c.Int(nullable: false));
+            AddColumn("dbo.SystemLog", "LogStatus", c => c.Int(nullable: false));
+            AlterColumn("dbo.Campaign", "BroadcastDate", c => c.DateTime());
             CreateIndex("dbo.Campaign", "AssetsId");
             AddForeignKey("dbo.Campaign", "AssetsId", "dbo.CampaignAsset", "Id");
             DropColumn("dbo.CampaignCreative", "OrderNumber");
@@ -185,10 +187,23 @@ namespace WFP.ICT.Data.Migrations
             DropColumn("dbo.CampaignTesting", "LiveSeedStatus");
             DropColumn("dbo.CampaignTesting", "SuppressionURL");
             DropColumn("dbo.CampaignTesting", "SuppressionStatus");
+            DropTable("dbo.ProDataAPILog");
         }
         
         public override void Down()
         {
+            CreateTable(
+                "dbo.ProDataAPILog",
+                c => new
+                    {
+                        Id = c.Guid(nullable: false),
+                        OrderNumber = c.String(),
+                        Message = c.String(),
+                        CreatedAt = c.DateTime(nullable: false),
+                        CreatedBy = c.String(),
+                    })
+                .PrimaryKey(t => t.Id);
+            
             AddColumn("dbo.CampaignTesting", "SuppressionStatus", c => c.Int(nullable: false));
             AddColumn("dbo.CampaignTesting", "SuppressionURL", c => c.String());
             AddColumn("dbo.CampaignTesting", "LiveSeedStatus", c => c.Int(nullable: false));
@@ -217,14 +232,17 @@ namespace WFP.ICT.Data.Migrations
             AddColumn("dbo.Campaign", "ZipCodeFile", c => c.String());
             AddColumn("dbo.CampaignCreative", "OrderNumber", c => c.String());
             DropForeignKey("dbo.CampaignTracking", "CampaignId", "dbo.Campaign");
-            DropForeignKey("dbo.CampaignSegment", "CampaignTesting_Id", "dbo.CampaignTesting");
+            DropForeignKey("dbo.CampaignSegment", "CampaignId", "dbo.Campaign");
             DropForeignKey("dbo.Notification", "CampaignId", "dbo.Campaign");
             DropForeignKey("dbo.Campaign", "AssetsId", "dbo.CampaignAsset");
             DropIndex("dbo.CampaignTracking", new[] { "CampaignId" });
-            DropIndex("dbo.CampaignSegment", new[] { "CampaignTesting_Id" });
+            DropIndex("dbo.CampaignSegment", new[] { "CampaignId" });
             DropIndex("dbo.Notification", new[] { "CampaignId" });
             DropIndex("dbo.Campaign", new[] { "AssetsId" });
-            DropColumn("dbo.CampaignTesting", "Retargeting");
+            AlterColumn("dbo.Campaign", "BroadcastDate", c => c.DateTime(nullable: false));
+            DropColumn("dbo.SystemLog", "LogStatus");
+            DropColumn("dbo.SystemLog", "LogType");
+            DropColumn("dbo.CampaignTesting", "ChannelTypes");
             DropColumn("dbo.CampaignTesting", "Impressions");
             DropColumn("dbo.CampaignTesting", "OmniDeployDate");
             DropColumn("dbo.CampaignTesting", "IsOmniOrder");
@@ -232,41 +250,39 @@ namespace WFP.ICT.Data.Migrations
             DropColumn("dbo.CampaignTesting", "IsOpenPixel");
             DropColumn("dbo.CampaignTesting", "DateFetched");
             DropColumn("dbo.CampaignTesting", "DataFileUrl");
-            DropColumn("dbo.CampaignTesting", "DataFileSegments");
             DropColumn("dbo.CampaignTesting", "DataFileQuantity");
             DropColumn("dbo.CampaignTesting", "ClickGoals");
             DropColumn("dbo.CampaignTesting", "OpenGoals");
             DropColumn("dbo.CampaignApproved", "IsUseApiDataForOpen");
-            DropColumn("dbo.CampaignApproved", "Retargeting");
+            DropColumn("dbo.CampaignApproved", "ChannelTypes");
             DropColumn("dbo.CampaignApproved", "Impressions");
             DropColumn("dbo.CampaignApproved", "OmniDeployDate");
             DropColumn("dbo.CampaignApproved", "IsOmniOrder");
             DropColumn("dbo.CampaignApproved", "OpenPixelUrl");
             DropColumn("dbo.CampaignApproved", "IsOpenPixel");
-            DropColumn("dbo.CampaignApproved", "DataFileSegments");
             DropColumn("dbo.CampaignApproved", "DataFileUrl");
             DropColumn("dbo.CampaignApproved", "DataFileQuantity");
             DropColumn("dbo.CampaignApproved", "ClickGoals");
             DropColumn("dbo.CampaignApproved", "OpenGoals");
             DropColumn("dbo.Campaign", "AssetsId");
-            DropColumn("dbo.Campaign", "Retargeting");
+            DropColumn("dbo.Campaign", "ReBroadcastedOrderNumber");
+            DropColumn("dbo.Campaign", "ReBroadcastedQuantity");
+            DropColumn("dbo.Campaign", "ReBroadcastedDate");
+            DropColumn("dbo.Campaign", "ReBroadcasted");
+            DropColumn("dbo.Campaign", "ChannelTypes");
             DropColumn("dbo.Campaign", "Impressions");
             DropColumn("dbo.Campaign", "OmniDeployDate");
             DropColumn("dbo.Campaign", "IsOmniOrder");
             DropColumn("dbo.Campaign", "OpenPixelUrl");
             DropColumn("dbo.Campaign", "IsOpenPixel");
-            DropColumn("dbo.Campaign", "DataFileSegments");
             DropColumn("dbo.Campaign", "DataFileQuantity");
-            DropColumn("dbo.Campaign", "IsAccessCreativeManager");
-            DropColumn("dbo.Campaign", "ReBroadcastedQuantity");
-            DropColumn("dbo.Campaign", "ReBroadcastedDate");
-            DropColumn("dbo.Campaign", "ReBroadCasted");
             DropTable("dbo.CampaignTracking");
             DropTable("dbo.CampaignSegment");
             DropTable("dbo.Notification");
             DropTable("dbo.CampaignAsset");
             CreateIndex("dbo.Campaign", "RebroadId");
             AddForeignKey("dbo.Campaign", "RebroadId", "dbo.Campaign", "Id");
+            RenameTable(name: "dbo.SystemLog", newName: "MailChimpAPILog");
         }
     }
 }
