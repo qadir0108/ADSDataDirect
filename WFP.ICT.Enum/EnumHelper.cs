@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace WFP.ICT.Enum
 {
-    public class EnumHelper
+    public static class EnumHelper
     {
         public static IEnumerable<TextValuePair> GetEnumDescriptionValues(Type enumType)
         {

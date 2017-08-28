@@ -24,9 +24,9 @@
     var columnSortParams6 = new { sortOrder = ViewBag.QuantitySortParm };
     var columnSortParams7 = new { sortOrder = ViewBag.StatusSortParm };
 
-    var LoggedInUser = Session["user"] as WFPUser;
+    var LoggedInUser = Session["user"] as WfpUser;
     var IsLoggedIn = LoggedInUser != null;
-    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 
 <div class="row" style="margin-top: 5px">
@@ -89,7 +89,7 @@
     @foreach (var item in Model)
     {
         var disabled = "";
-        if ((CampaignStatusEnum)item.Status == CampaignStatusEnum.Monitoring || (CampaignStatusEnum)item.Status == CampaignStatusEnum.Completed)
+        if ((CampaignStatus)item.Status == CampaignStatus.Monitoring || (CampaignStatus)item.Status == CampaignStatus.Completed)
         {
             disabled = "disabled";
         }
@@ -106,14 +106,14 @@
                         @(item.FoundAt?.ToString(StringConstants.TimeStampFormat))
                     </td>
                     <td>
-                        @(Enum.GetName(typeof(QCRuleEnum), item.QCRule))
+                        @(Enum.GetName(typeof(QCRule), item.QCRule))
                     </td>
                     <td class="no-right-padding no-left-padding">
                         @(QCRuleUtility.GetString(item.QCRule))
                     </td>
 
                     <td class="no-right-padding no-left-padding">
-                        @Enum.GetName(typeof(NotificationStatusEnum), item.Status)
+                        @Enum.GetName(typeof(NotificationStatus), item.Status)
                     </td>
                 </tr>
     }

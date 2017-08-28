@@ -6,14 +6,14 @@ using System.Threading.Tasks;
 
 namespace WFP.ICT.Data.Entities
 {
-    public class APIRequest : BaseEntity, iBaseEntity
+    public class ApiRequest : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
         
         public string APIKey { get; set; }
         
-        public APIRequest()
+        public ApiRequest()
         {
         }
     }

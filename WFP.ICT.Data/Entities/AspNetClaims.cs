@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WFP.ICT.Data.Entities
 {
-    public class AspNetClaims : BaseEntity, iBaseEntity
+    public class AspNetClaims : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }

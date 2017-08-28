@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace WFP.ICT.Data.Entities
 {
-    public class ProData : BaseEntity, iBaseEntity
+    public class ProData : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
-        
+        public Guid? CampaignId { get; set; }
+        public string OrderNumber { get; set; } // 2501, 2501RDP
+        public string SegmentNumber { get; set; }
+
         public string IO { get; set; }
         public string CampaignName { get; set; }
         public string Reportsite_URL { get; set; }
@@ -21,10 +24,7 @@ namespace WFP.ICT.Data.Entities
         public long UniqueCnt { get; set; }
         public long MobileCnt { get; set; }
         public long ImpressionCnt { get; set; }
-
-        public Guid? CampaignId { get; set; }
-        public virtual Campaign Campaign { get; set; }
-
+        
         public ProData()
         {
         }

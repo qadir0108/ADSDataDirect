@@ -90,7 +90,7 @@ namespace WFP.ICT.Web.Controllers
                         }
                     }
                     if (!string.IsNullOrEmpty(errors))
-                        throw new Exception(errors);
+                        throw new ArgumentException(errors);
                 }
 
                 var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, shouldLockout: false);
@@ -114,12 +114,12 @@ namespace WFP.ICT.Web.Controllers
 
                     //return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                     case SignInStatus.LockedOut:
-                        throw new Exception("User is locked");
+                        throw new ArgumentException("User is locked");
                     //return View("Lockout");
                     case SignInStatus.Failure:
-                        throw new Exception("Username or password is incorrect.");
+                        throw new ArgumentException("Username or password is incorrect.");
                     default:
-                        throw new Exception("Username or password is incorrect.");
+                        throw new ArgumentException("Username or password is incorrect.");
                         //ModelState.AddModelError("", "Username or password is incorrect.");
                         //return View(model);
                 }
@@ -192,6 +192,7 @@ namespace WFP.ICT.Web.Controllers
         [AllowAnonymous]
         public ActionResult Register()
         {
+            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text");
             return View();
         }
 
@@ -207,25 +208,26 @@ namespace WFP.ICT.Web.Controllers
                 //var user = new WFPUser { UserName = model.UserName, Email = model.Email };
                 //var UserManager = new UserManager<Data.Entities.WFPUser>(new UserStore<Data.Entities.WFPUser>(context));
 
-                var appUser = new WFPUser
+                var appUser = new WfpUser
                 {
                     Id = Guid.NewGuid().ToString(),
                     CreatedAt = DateTime.Now,
+                    WhiteLabel = model.WhiteLabel,
                     UserName = model.UserName,
                     Email = model.Email,
-                    Status = (int)UserStatusEnum.Active,
-                    UserType = model.IsAdminUser ? (int)UserTypeEnum.Admin: (int)UserTypeEnum.User,
-                    IsUsesAPI = model.IsUsesAPI,
+                    Status = (int)UserStatus.Active,
+                    UserType = model.IsAdminUser ? (int)UserType.Admin: (int)UserType.User,
+                    IsUsesApi = model.IsUsesAPI,
                     IsTestsCreatives = model.IsTestsCreatives
                 };
                 var result = UserManager.CreateAsync(appUser, model.Password);
                 if (result.Result == IdentityResult.Success)
                 {
-                    return RedirectToAction("Users", "Home");
+                    return RedirectToAction("Users", "Company");
                 }
                 AddErrors(result.Result);
             }
-
+            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text");
             // If we got this far, something failed, redisplay form
             return View(model);
         }

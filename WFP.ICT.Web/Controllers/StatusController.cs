@@ -33,7 +33,7 @@ namespace WFP.ICT.Web.Controllers
             ViewBag.StatusSortParm = sc.sortOrder == "Status" ? "Status_desc" : "Status";
             ViewBag.OrderNumberSortParm = sc.sortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
 
-            var campagins = db.Campaigns
+            var campagins = Db.Campaigns
                 .Include(x => x.Testing)
                 .Include(x => x.Approved)
                 .Include(x => x.Trackings)
@@ -83,16 +83,16 @@ namespace WFP.ICT.Web.Controllers
                 {
                     campagins = campagins.Where(s =>
                     s.OrderNumber.Equals(sc.basicString) ||
-                    s.ReBroadcastedOrderNumber.Equals(sc.basicString) ||
+                    s.ReBroadcastedOrderNumber == sc.basicString ||
                     s.CampaignName.IndexOf(sc.basicString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
                     ViewBag.BasicStringSearched = sc.basicString;
                 }
                 else if (!string.IsNullOrEmpty(sc.basicStatus))
                 {
                     int status = int.Parse(sc.basicStatus);
-                    if (status == (int)CampaignStatusEnum.Rebroadcasted)
+                    if (status == (int)CampaignStatus.Rebroadcasted)
                         campagins = campagins.Where(s => s.ReBroadcasted).ToList();
-                    else if (status == (int)CampaignStatusEnum.NotRebroadcasted)
+                    else if (status == (int)CampaignStatus.NotRebroadcasted)
                         campagins = campagins.Where(s => s.ReBroadCast && !s.ReBroadcasted).ToList();
                     else
                         campagins = campagins.Where(s => s.Status == status).ToList();
@@ -108,7 +108,7 @@ namespace WFP.ICT.Web.Controllers
                 if (!string.IsNullOrEmpty(sc.advancedStatus))
                 {
                     int status = int.Parse(sc.advancedStatus);
-                    if (status == (int)CampaignStatusEnum.Rebroadcasted)
+                    if (status == (int)CampaignStatus.Rebroadcasted)
                         campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
                     else
                         campagins = campagins.Where(s => s.Status == status).ToList();
@@ -182,7 +182,7 @@ namespace WFP.ICT.Web.Controllers
 
         public ActionResult ChangeAssigned(Guid? Id, string UserId)
         {
-            Campaign campaign = db.Campaigns.FirstOrDefault(x => x.Id == Id);
+            Campaign campaign = Db.Campaigns.FirstOrDefault(x => x.Id == Id);
             if (campaign == null)
             {
                 throw new HttpException(404, "Not found");
@@ -190,7 +190,7 @@ namespace WFP.ICT.Web.Controllers
             try
             {
                 campaign.AssignedToCustomer = UserId;
-                db.SaveChanges();
+                Db.SaveChanges();
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -199,9 +199,9 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        public ActionResult SendToTracking(Guid? Id, string SegmentNumber, string IONumber)
+        public ActionResult SendToTracking(Guid? id, string segmentNumber, string ioNumber)
         {
-            Campaign campaign = db.Campaigns.FirstOrDefault(x => x.Id == Id);
+            Campaign campaign = Db.Campaigns.FirstOrDefault(x => x.Id == id);
             if (campaign == null)
             {
                 throw new HttpException(404, "Not found");
@@ -210,17 +210,17 @@ namespace WFP.ICT.Web.Controllers
             {
                 CampaignTracking campaignTracking = null;
 
-                if(string.IsNullOrEmpty(SegmentNumber))
-                    campaignTracking = db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == Id);
+                if(string.IsNullOrEmpty(segmentNumber))
+                    campaignTracking = Db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == id);
                 else
-                    campaignTracking = db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == Id && x.SegmentNumber == SegmentNumber);
+                    campaignTracking = Db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == id && x.SegmentNumber == segmentNumber);
 
                 if (campaignTracking != null)
                 {
-                    campaignTracking.IONumber = IONumber;
+                    campaignTracking.IoNumber = ioNumber;
                 }
-                campaign.Status = (int) CampaignStatusEnum.Monitoring;
-                db.SaveChanges();
+                campaign.Status = (int) CampaignStatus.Monitoring;
+                Db.SaveChanges();
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

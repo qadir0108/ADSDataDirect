@@ -65,6 +65,10 @@ namespace WFP.ICT.Web.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "White Label")]
+        public string WhiteLabel { get; set; }
+
+        [Required]
         [Display(Name = "User Name")]
         public string UserName { get; set; }
 

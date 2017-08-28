@@ -11,24 +11,23 @@ using WFP.ICT.Data.DB;
 
 namespace WFP.ICT.Data
 {
-    public class SegmentDataManager
+    public static class SegmentDataManager
     {
         public static readonly string CustomerCode = "greatlakehonda";
         public static List<SegmentResponse> FetchSegmentsData(SegmentParameters parameters)
         {
             List<SegmentResponse> data = new List<SegmentResponse>();
             string connectionString = WebConfigurationManager.ConnectionStrings["SegmentsConnection"].ConnectionString;
-            string cmdText = "[dbo].[OneLocationData]";
 
             using (SqlConnection connection = new SqlConnection(connectionString))
             {
-                using (SqlCommand command = new SqlCommand(cmdText, connection))
+                using (SqlCommand command = new SqlCommand("[dbo].[OneLocationData]", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
                     command.Parameters.Add("@DataQuantity", SqlDbType.BigInt).Value = parameters.DataQuantity;
                     command.Parameters.Add("@CustomerCode", SqlDbType.VarChar).Value = parameters.CustomerCode;
                     SqlParameter parameter = command.Parameters
-                              .AddWithValue("@Zips", parameters.Zips); ;
+                              .AddWithValue("@Zips", parameters.Zips);
                     parameter.SqlDbType = SqlDbType.Structured;
                     parameter.TypeName = "dbo.ZipCodeFilters";
 

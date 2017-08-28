@@ -24,7 +24,7 @@ namespace WFP.ICT.Web.Models
         
         public bool IsTested { get; set; }
         public DateTime? TestingTime { get; set; }
-        public int TestingUrgency { get; set; } // TestingUrgencyEnum
+        public int TestingUrgency { get; set; } // Enum.TestingUrgency
         public DateTime? DeployDate { get; set; }
 
         // Campaign Demographics
@@ -47,7 +47,7 @@ namespace WFP.ICT.Web.Models
         public bool IsOmniOrder { get; set; }
         public DateTime? OmniDeployDate { get; set; }
         public long Impressions { get; set; }
-        public List<ChannelTypeEnum> ChannelTypes { get; set; } // List<int> ChannelTypeEnum
+        public List<ChannelType> ChannelTypes { get; set; } // List<int> Enum.ChannelType
 
         public virtual CampaignAsset Assets { get; set; }
 

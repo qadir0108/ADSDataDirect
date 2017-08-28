@@ -12,7 +12,7 @@ namespace WFP.ICT.Web.Controllers
         // Notification
         public ActionResult Index(CampaignSearchVM sc)
         {
-            var notifications = db.Notifications.ToList();
+            var notifications = Db.Notifications.ToList();
             // Paging
             int pageNumber = (sc.page ?? 1);
             return View(notifications.ToPagedList(pageNumber, pageSize));
@@ -149,7 +149,7 @@ namespace WFP.ICT.Web.Controllers
         //    {
         //        if (OrderNumber == null)
         //        {
-        //            throw new Exception("Order Number missing");
+        //            throw new ArgumentException("Order Number missing");
         //        }
 
         //        var messages = db.MailChimpAPILogs.Where(x => x.OrderNumber == OrderNumber)

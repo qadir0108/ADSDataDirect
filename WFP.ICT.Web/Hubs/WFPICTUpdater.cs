@@ -63,7 +63,7 @@ namespace WFP.ICT.Hubs
                 {
                     _isUpdating = true;
 
-                    using (var db = new WFPICTContext())
+                    using (var db = new WfpictContext())
                     {
                         var logs = db.SystemLogs.OrderByDescending(x => x.CreatedAt)
                             .Take(100)
@@ -71,7 +71,7 @@ namespace WFP.ICT.Hubs
                             .Select(x => new SystemLogVM()
                             {
                                 CreatedAt = x.CreatedAt.ToString(StringConstants.DateTimeFormatDashes),
-                                LogType = System.Enum.GetName(typeof(LogTypeEnum), (LogTypeEnum)x.LogType),
+                                LogType = System.Enum.GetName(typeof(LogType), (LogType)x.LogType),
                                 OrderNumber = x.OrderNumber,
                                 Message = x.Message
                             })

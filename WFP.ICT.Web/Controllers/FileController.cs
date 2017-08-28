@@ -8,10 +8,10 @@ using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
 {
-    public class FileController : BaseController
+    public sealed class FileController : BaseController
     {
         [HttpPost]
-        public async Task<JsonResult> UploadFile(UploadFileVM fileVm)
+        public JsonResult UploadFile(UploadFileVM fileVm)
         {
             try
             {
@@ -33,17 +33,24 @@ namespace WFP.ICT.Web.Controllers
                         {
                             if (System.IO.File.Exists(filePath))
                                 System.IO.File.Delete(filePath);
-                            throw new Exception(fileVm.FileType + " is not valid. Please upload valid file.");
+                            throw new ArgumentNullException(fileVm.FileType + " is not valid. Please upload valid file.");
                         }
 
-                        if (string.IsNullOrEmpty(fileVm.OrderNumber))
+                        if (fileVm.FileType == "CompanyLogo")
                         {
-                            amazonFileKey = string.Format("{0:yyyyMMddHHmmss}_{1}", DateTime.Now, fileContent.FileName);
+                            string logoFileName = FileHelper.GetValidFileName(LoggedInUser?.Id + System.IO.Path.GetExtension(fileContent.FileName));
+                            string logoFilePath = Path.Combine(ImagesPath, logoFileName);
+                            System.IO.File.Copy(filePath, logoFilePath, true);
+                            amazonFileKey = logoFileName;
+                        }
+                        else if (string.IsNullOrEmpty(fileVm.OrderNumber))
+                        {
+                            amazonFileKey = $"{DateTime.Now:yyyyMMddHHmmss}_{fileContent.FileName}";
                             S3FileManager.Upload(amazonFileKey, filePath);
                         }
                         else if (!string.IsNullOrEmpty(fileVm.SegmentNumber)) // Data files Upload only // HtmlImageFiles2500A, HtmlImageFiles2500B
                         {
-                            amazonFileKey = string.Format("{0}/{1}_html.zip", fileVm.OrderNumber, fileVm.SegmentNumber);
+                            amazonFileKey = $"{fileVm.OrderNumber}/{fileVm.SegmentNumber}_html.zip";
                             S3FileManager.Upload(amazonFileKey, filePath, true, true);
                         }
                         else
@@ -85,40 +92,44 @@ namespace WFP.ICT.Web.Controllers
             }
             catch (Exception ex)
             {
-                //Response.StatusCode = (int) HttpStatusCode.BadRequest;
                 return Json(new JsonResponse() { IsSucess = false, ErrorMessage = "Upload failed " + ex.Message });
             }
         }
 
         [HttpGet]
-        public virtual ActionResult DownloadFile(string file)
+        public ActionResult DownloadFile(UploadFileVM fileVm)
         {
-            string filePath = Path.Combine(UploadPath, Server.UrlEncode(file));
-            //if (!System.IO.File.Exists(filePath))
-            // return null;
-
-            S3FileManager.Download(file, filePath);
-
-            return File(filePath, "text/csv", file);
+            string filePath = Path.Combine(UploadPath, fileVm.FileName);
+            if (fileVm.FileType == "CompanyLogo")
+            {
+                filePath = Path.Combine(ImagesPath, fileVm.FileName);
+            }
+                else
+            {
+                S3FileManager.Download(fileVm.FileName, filePath);
+            }
+            return File(filePath, "text/csv", fileVm.FileName);
         }
 
         [HttpPost]
-        public virtual JsonResult DeleteFile(string file)
+        public JsonResult DeleteFile(UploadFileVM fileVm)
         {
             try
             {
-                S3FileManager.Delete(file);
-
-                //string fullPath = Path.Combine(UploadPath, Server.UrlEncode(file));
-                //if (!System.IO.File.Exists(fullPath))
-                //    throw new Exception("File does not exists.");
-                //System.IO.File.Delete(fullPath);
-
+                if (fileVm.FileType == "CompanyLogo")
+                {
+                    string filePath = Path.Combine(ImagesPath, fileVm.FileName);
+                    if (System.IO.File.Exists(filePath))
+                        System.IO.File.Delete(filePath);
+                }
+                else
+                {
+                    S3FileManager.Delete(fileVm.FileName);
+                }
                 return Json(new JsonResponse() {IsSucess = true});
             }
             catch (Exception ex)
             {
-                //Response.StatusCode = (int) HttpStatusCode.BadRequest;
                 return Json(new JsonResponse() {IsSucess = false, ErrorMessage = "File Delete failed. " + ex.Message });
             }
         }

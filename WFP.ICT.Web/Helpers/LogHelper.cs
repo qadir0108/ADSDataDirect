@@ -9,17 +9,17 @@ namespace WFP.ICT.Web.Helpers
 {
     public class LogHelper
     {
-        public static void AddLog(WFPICTContext db, LogTypeEnum logType, string OrderNumber, string Message)
+        public static void AddLog(WfpictContext db, LogType logType, string OrderNumber, string Message)
         {
-            Add(db, logType, LogStatusEnum.Success, OrderNumber, Message);
+            Add(db, logType, LogStatus.Success, OrderNumber, Message);
         }
 
-        public static void AddError(WFPICTContext db, LogTypeEnum logType, string OrderNumber, string Message)
+        public static void AddError(WfpictContext db, LogType logType, string OrderNumber, string Message)
         {
-            Add(db, logType, LogStatusEnum.Error, OrderNumber, Message);
+            Add(db, logType, LogStatus.Error, OrderNumber, Message);
         }
 
-        private static void Add(WFPICTContext db, LogTypeEnum logType, LogStatusEnum logStatus, string OrderNumber, string Message)
+        private static void Add(WfpictContext db, LogType logType, LogStatus logStatus, string OrderNumber, string Message)
         {
             db.SystemLogs.Add(new SystemLog()
             {

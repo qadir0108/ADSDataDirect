@@ -4,31 +4,45 @@ using System.IO;
 using System.Linq;
 using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Web.Async.Helpers;
 using WFP.ICT.Web.Helpers;
 
 namespace WFP.ICT.Web.Async
 {
-    public class CampaignProcessor
+    public static class CampaignProcessor
     {
-        public static void SendVendorEmail(Guid? vendorId, string OrderNumber, string[] SegmentsSelected)
+        public static void SendVendorEmail(Guid? vendorId, string orderNumber, string[] segmentsSelected)
         {
-            using (var db = new WFPICTContext())
+            using (var db = new WfpictContext())
             {
                 Campaign campaign = db.Campaigns
                     .Include(x => x.Assets)
                     .Include(x => x.Segments)
                     .Include(x => x.Approved)
                     .Include(x => x.Trackings)
-                    .FirstOrDefault(x => x.OrderNumber == OrderNumber);
+                    .FirstOrDefault(x => x.OrderNumber == orderNumber);
 
                 var vendor = db.Vendors.FirstOrDefault(x => x.Id == vendorId);
 
-                if (SegmentsSelected == null)
+                if (segmentsSelected == null)
                 {
                     EmailHelper.SendApprovedToVendor(vendor, campaign, null);
 
+                    string orderNumberRdp;
+                    long quantity;
+                    if (campaign.ReBroadcasted)
+                    {
+                        orderNumberRdp = campaign.ReBroadcastedOrderNumber;
+                        quantity = campaign.ReBroadcastedQuantity;
+                    }
+                    else
+                    {
+                        orderNumberRdp = campaign.OrderNumber;
+                        quantity = campaign.Approved.Quantity;
+                    }
+
                     var campaignTracking =
-                           db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == campaign.Id && x.SegmentNumber == "");
+                           db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == campaign.Id && x.OrderNumber == orderNumberRdp && x.SegmentNumber == "");
 
                     if (campaignTracking == null)
                     {
@@ -38,7 +52,9 @@ namespace WFP.ICT.Web.Async
                             Id = trackingId,
                             CreatedAt = DateTime.Now,
                             CampaignId = campaign.Id,
+                            OrderNumber = orderNumberRdp,
                             SegmentNumber = string.Empty,
+                            Quantity = quantity,
                             DateSent = DateTime.Now,
                             IsCreatedThroughApi = false
                         };
@@ -47,29 +63,26 @@ namespace WFP.ICT.Web.Async
 
                     if (!campaign.ReBroadcasted)
                     {
-                        LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, "Order has been sent to vendor successfully.");
+                        LogHelper.AddLog(db, LogType.ProData, orderNumber, "Order has been sent to vendor successfully.");
                     }
                     else
                     {
-                        LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, "Order Rebroad has been sent to vendor sucessfully.");
+                        LogHelper.AddLog(db, LogType.ProData, orderNumber, "Order Rebroad has been sent to vendor sucessfully.");
                     }
-
-                    campaign.Status = (int)CampaignStatusEnum.Monitoring;
                     db.SaveChanges();
 
                 }
                 else // Segments
                 {
                     var segments = db.CampaignSegments
-                                   .Where(c => c.CampaignId == campaign.Id && SegmentsSelected.Contains(c.SegmentNumber))
+                                   .Where(c => c.CampaignId == campaign.Id && segmentsSelected.Contains(c.SegmentNumber))
                                    .ToList();
 
                     foreach (var segment in segments)
                     {
                         EmailHelper.SendApprovedToVendor(vendor, campaign, segment);
 
-                        segment.SegmentStatus = (int)SegmentStatusEnum.Monitoring;
-                        segment.DateSent = DateTime.Now;
+                        segment.SegmentStatus = (int)SegmentStatus.Monitoring;
 
                         var campaignTracking =
                             db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == campaign.Id && x.SegmentNumber == segment.SegmentNumber);
@@ -82,35 +95,28 @@ namespace WFP.ICT.Web.Async
                                 Id = trackingId,
                                 CreatedAt = DateTime.Now,
                                 CampaignId = campaign.Id,
+                                OrderNumber = orderNumber,
                                 SegmentNumber = segment.SegmentNumber,
+                                Quantity = segment.Quantity,
                                 DateSent = DateTime.Now,
                                 IsCreatedThroughApi = false
                             };
                             db.CampaignTrackings.Add(tracking);
                         }
-
-                        if(!campaign.ReBroadcasted)
-                        {
-                            LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, "Segment " + segment.SegmentNumber + " has been sent to vendor successfully.");
-                        }
-                        else
-                        {
-                            LogHelper.AddLog(db, LogTypeEnum.ProData, OrderNumber, "Segment " + segment.SegmentNumber + " Rebroad has been sent to vendor successfully.");
-                        }
-                        
-                    }
-
-                    // Put campaign to monitoring if no segments is in generated/approved state
-                    var ifSomeSegmentsRemaining = db.CampaignSegments
-                                  .Where(c => c.CampaignId == campaign.Id)
-                                  .Any(x => x.SegmentStatus == (int)SegmentStatusEnum.Generated || x.SegmentStatus == (int)SegmentStatusEnum.Approved);
-                    if (!ifSomeSegmentsRemaining)
-                    {
-                        campaign.Status = (int)CampaignStatusEnum.Monitoring;
-                        db.SaveChanges();
+                        LogHelper.AddLog(db, LogType.ProData, orderNumber, $"Segment {segment.SegmentNumber} has been sent to vendor successfully.");
                     }
                 }
-                
+
+                // Put campaign to monitoring if no segments is in generated/approved state
+                var ifSomeSegmentsRemaining = db.CampaignSegments
+                              .Where(c => c.CampaignId == campaign.Id)
+                              .Any(x => x.SegmentStatus == (int)SegmentStatus.Generated || x.SegmentStatus == (int)SegmentStatus.Approved);
+                if (!ifSomeSegmentsRemaining)
+                {
+                    campaign.Status = (int)CampaignStatus.Monitoring;
+                    db.SaveChanges();
+                }
+
             }
         }
 

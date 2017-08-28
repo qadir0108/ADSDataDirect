@@ -78,41 +78,37 @@ namespace WFP.ICT.Web.Helpers
             }
             catch (Exception ex)
             {
+                //
             }
             return filePath;
         }
 
-        public void ResizeImage(string OriginalFile, string NewFile, int NewWidth, int MaxHeight, bool OnlyResizeIfWider)
+        public void ResizeImage(string originalFile, string newFile, int newWidth, int maxHeight, bool onlyResizeIfWider)
         {
-            System.Drawing.Image FullsizeImage = System.Drawing.Image.FromFile(OriginalFile);
+            System.Drawing.Image fullsizeImage = System.Drawing.Image.FromFile(originalFile);
 
             // Prevent using images internal thumbnail
-            FullsizeImage.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
-            FullsizeImage.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
+            fullsizeImage.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
+            fullsizeImage.RotateFlip(System.Drawing.RotateFlipType.Rotate180FlipNone);
 
-            if (OnlyResizeIfWider)
-            {
-                if (FullsizeImage.Width <= NewWidth)
-                {
-                    NewWidth = FullsizeImage.Width;
-                }
-            }
+            if (onlyResizeIfWider && fullsizeImage.Width <= newWidth)
+                newWidth = fullsizeImage.Width;
 
-            int NewHeight = FullsizeImage.Height * NewWidth / FullsizeImage.Width;
-            if (NewHeight > MaxHeight)
+            int newHeight = fullsizeImage.Height * newWidth / fullsizeImage.Width;
+            if (newHeight > maxHeight)
             {
                 // Resize with height instead
-                NewWidth = FullsizeImage.Width * MaxHeight / FullsizeImage.Height;
-                NewHeight = MaxHeight;
+                newWidth = fullsizeImage.Width * maxHeight / fullsizeImage.Height;
+                newHeight = maxHeight;
             }
 
-            System.Drawing.Image NewImage = FullsizeImage.GetThumbnailImage(NewWidth, NewHeight, null, IntPtr.Zero);
+            System.Drawing.Image newImage = fullsizeImage.GetThumbnailImage(newWidth, newHeight, null, IntPtr.Zero);
 
             // Clear handle to original file so that we can overwrite it if necessary
-            FullsizeImage.Dispose();
+            fullsizeImage.Dispose();
 
             // Save resized picture
-            NewImage.Save(NewFile);
+            newImage.Save(newFile);
         }
     }
 }

@@ -23,19 +23,12 @@
     var columnSortParams6 = new { sortOrder = ViewBag.QuantitySortParm };
     var columnSortParams7 = new { sortOrder = ViewBag.StatusSortParm };
 
-    var LoggedInUser = Session["user"] as WFPUser;
+    var LoggedInUser = Session["user"] as WfpUser;
     var IsLoggedIn = LoggedInUser != null;
-    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 
-@if (TempData["Success"] != null)
-{
-    <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
-}
-@if (TempData["Error"] != null)
-{
-    <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
-}
+
 
 <div class="row">
     <div class="col-md-2">
@@ -122,7 +115,7 @@
             @foreach (var item in Model)
             {
                 var disabled = "";
-                if ((CampaignStatusEnum)item.Status == CampaignStatusEnum.Monitoring || (CampaignStatusEnum)item.Status == CampaignStatusEnum.Completed)
+                if ((CampaignStatus)item.Status == CampaignStatus.Monitoring || (CampaignStatus)item.Status == CampaignStatus.Completed)
                 {
                     disabled = "disabled";
                 }
@@ -147,31 +140,44 @@
                     </td>
 
                     <td class="no-right-padding no-left-padding">
-                        @Enum.GetName(typeof(CampaignStatusEnum), item.Status)
+                        @Enum.GetName(typeof(CampaignStatus), item.Status)
                     </td>
                     <td class="no-right-padding no-left-padding">
                         <div class="row">
                             <div class="col-md-12">
-                                <div class="col-md-3">
-                                    @*@if (!IsAdmin && item.Testing == null)
+                                @if (IsAdmin)
+                                {
+                                    <div class="col-md-3">
+                                        @*@if (!IsAdmin && item.Testing == null)
                                     {
                                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "pull-right no-left-padding no-right-padding" })
                                     }*@
-                                    @Html.ActionLink("Clone", "Clone", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Clone", @data_tooltip = "tooltip" })
-                                    <a href="@Url.Action("Delete", "Campaigns",  new { id = item.Id })"  title="Delete" data-tooltip="tooltip">
+                                        <a href="@Url.Action("Clone", "Campaigns", new {id = item.Id})" title="Clone" data-tooltip="tooltip">
+                                            <span class="fa fa-clone"></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="@Url.Action("Rebroad", "Campaigns", new {id = item.Id})" title="Re-broad" data-tooltip="tooltip">
+                                            <span class="fa fa-repeat"></span>
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <a href="@Url.Action("Complete", "Campaigns", new {id = item.Id})" title="Complete" data-tooltip="tooltip">
+                                            <span class="fa fa-check"></span>
+                                        </a>
+                                    </div>
+                                }
+                                <div class="col-md-3">
+                                    <a href="@Url.Action("Delete", "Campaigns", new {id = item.Id})" title="Delete" data-tooltip="tooltip">
                                         <span class="fa fa-trash"></span>
                                     </a>
+                                    @if (IsAdmin)
+                                    {
+                                        <a href="@Url.Action("Cancel", "Campaigns", new {id = item.Id})" title="Cancel" data-tooltip="tooltip" class="pull-right">
+                                            <span class="fa fa-times"></span>
+                                        </a>
+                                    }
                                 </div>
-                                <div class="col-md-3">
-                                    @Html.ActionLink("Re-broad", "Rebroad", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Re-broad", @data_tooltip = "tooltip" })
-                                </div>
-                                <div class="col-md-3">
-                                    @Html.ActionLink("Cancel", "Cancel", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Cancel", @data_tooltip = "tooltip" })
-                                </div>
-                                <div class="col-md-3">
-                                    @Html.ActionLink("Complete", "Complete", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding ", @title = "Complete", @data_tooltip = "tooltip" })
-                                </div>
-
                             </div>
                         </div>
                         @if (IsAdmin)
@@ -179,16 +185,16 @@
                             <div class="row" style="margin-top: 3px">
                                 <div class="col-md-12">
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Testing", "MoveTo", "Copy", new { id = item.Id, to = "Testing" }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Testing", @data_tooltip = "tooltip" })
+                                        @Html.ActionLink("Testing", "Index", "Testing", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Testing", @data_tooltip = "tooltip" })
                                     </div>
                                     <div class="col-md-3">
                                         @Html.ActionLink("Creative", "Index", "Creative", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Creative", @data_tooltip = "tooltip" })
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Approved", "MoveTo", "Copy", new {id = item.Id, to = "Approved"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Approved", @data_tooltip = "tooltip" })
+                                        @Html.ActionLink("Approved", "Index", "Approved", new {id = item.Id }, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Approved", @data_tooltip = "tooltip" })
                                     </div>
                                     <div class="col-md-3">
-                                        @Html.ActionLink("Tracking", "MoveTo", "Copy", new {id = item.Id, to = "Tracking"}, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Tracking", @data_tooltip = "tooltip" })
+                                        @Html.ActionLink("Tracking", "Report", "Tracking", new {id = item.Id }, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Tracking", @data_tooltip = "tooltip" })
                                     </div>
                                 </div>
                             </div>
@@ -217,7 +223,8 @@
                 </div>
             </div>
         </div>
-
+<br />
+<br />
 <!-- Modal -->
 @{
     Html.RenderPartial("_Search", new WFP.ICT.Web.Models.CampaignSearchVM());

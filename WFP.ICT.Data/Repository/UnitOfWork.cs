@@ -9,37 +9,32 @@ namespace WFP.ICT.Data.Repository
 {
     public class UnitOfWork : IDisposable
     {
-        private WFPICTContext context = new WFPICTContext();
-        private GenericRepository<Campaign> campaignRepository;
+        private readonly WfpictContext _context = new WfpictContext();
+        private GenericRepository<Campaign> _campaignRepository;
 
         public GenericRepository<Campaign> CampaignRepository
         {
             get
             {
-                if (this.campaignRepository == null)
+                if (this._campaignRepository == null)
                 {
-                    this.campaignRepository = new GenericRepository<Campaign>(context);
+                    this._campaignRepository = new GenericRepository<Campaign>(_context);
                 }
-                return campaignRepository;
+                return _campaignRepository;
             }
         }
 
         public void Save()
         {
-            context.SaveChanges();
+            _context.SaveChanges();
         }
 
         private bool disposed = false;
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
-            {
-                if (disposing)
-                {
-                    context.Dispose();
-                }
-            }
+            if (!this.disposed && disposing)
+                _context?.Dispose();
             this.disposed = true;
         }
 

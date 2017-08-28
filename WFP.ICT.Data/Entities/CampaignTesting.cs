@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WFP.ICT.Data.Entities
 {
-    public class CampaignTesting : BaseEntity, iBaseEntity
+    public class CampaignTesting : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
@@ -21,7 +21,7 @@ namespace WFP.ICT.Data.Entities
         
         public bool IsTested { get; set; }
         public DateTime? TestingTime { get; set; }
-        public int TestingUrgency { get; set; } // TestingUrgencyEnum
+        public int TestingUrgency { get; set; } // Enum.TestingUrgency
         public DateTime? DeployDate { get; set; }
 
         // Campaign Demographics
@@ -43,7 +43,7 @@ namespace WFP.ICT.Data.Entities
         public bool IsOmniOrder { get; set; }
         public DateTime? OmniDeployDate { get; set; }
         public long Impressions { get; set; }
-        public string ChannelTypes { get; set; } // List<int> ChannelTypeEnum
+        public string ChannelTypes { get; set; } // List<int> Enum.ChannelType
 
         public CampaignTesting()
         {

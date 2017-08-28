@@ -735,7 +735,12 @@ namespace WFP.ICT.Web.Helpers
 
     public class CsvDestination
     {
-        public StreamWriter StreamWriter;
+        private StreamWriter streamWriter;
+
+        public StreamWriter StreamWriter
+        {
+            get { return streamWriter; }
+        }
 
         public static implicit operator CsvDestination(string path)
         {
@@ -743,18 +748,18 @@ namespace WFP.ICT.Web.Helpers
         }
         private CsvDestination(StreamWriter streamWriter)
         {
-            this.StreamWriter = streamWriter;
+            this.streamWriter = streamWriter;
         }
 
         private CsvDestination(Stream stream)
         {
-            this.StreamWriter = new StreamWriter(stream);
+            this.streamWriter = new StreamWriter(stream);
         }
 
         public CsvDestination(string fullName)
         {
             FixCsvFileName(ref fullName);
-            this.StreamWriter = new StreamWriter(fullName);
+            this.streamWriter = new StreamWriter(fullName);
         }
 
         private static void FixCsvFileName(ref string fullName)

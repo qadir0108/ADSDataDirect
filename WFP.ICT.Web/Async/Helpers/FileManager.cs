@@ -39,9 +39,9 @@ namespace WFP.ICT.Web.Async
 
             string htmlFile = Directory.EnumerateFiles(directory).FirstOrDefault(x => x.EndsWith("htm") || x.EndsWith("html"));
             if(string.IsNullOrEmpty(htmlFile))
-                throw new Exception("Html not found");
+                throw new ArgumentException("Html not found");
 
-            UploadFileStatusEnum status = ProcessHtml(htmlFile, htmlFilePath);
+            UploadFileStatus status = ProcessHtml(htmlFile, htmlFilePath);
 
             // Create 2501 directory
             S3FileManager.CreateDirectory(orderNumber);
@@ -68,7 +68,7 @@ namespace WFP.ICT.Web.Async
             return new HtmlProcessResult() {Status = status, filePathLive = filePathLive};
         }
 
-        public static UploadFileStatusEnum ProcessHtml(string htmlFile, string outputFilePath)
+        public static UploadFileStatus ProcessHtml(string htmlFile, string outputFilePath)
         {
             string imagesPath = string.Format("{0}{1}/{1}img/", serverPrefix, _orderNumber);
 
@@ -110,36 +110,36 @@ namespace WFP.ICT.Web.Async
 
             doc.Save(outputFilePath);
 
-            return alreadyHosted ? UploadFileStatusEnum.HostedWithOutImages :  UploadFileStatusEnum.HostedWithImages;
+            return alreadyHosted ? UploadFileStatus.HostedWithOutImages :  UploadFileStatus.HostedWithImages;
         }
 
-        public static string GetFilePathLive(UploadFileTypeEnum uploadFileType, string orderNumber, string extension = "", string segmentNumber = "")
+        public static string GetFilePathLive(UploadFileType uploadFileType, string orderNumber, string extension = "", string segmentNumber = "")
         {
             string fileName = "";
             switch (uploadFileType)
             {
-                    case UploadFileTypeEnum.ZipFile:
+                    case UploadFileType.ZipFile:
                         fileName = string.Format("{0}{1}/{1}zip.csv", serverPrefix, orderNumber);
                         break;
-                    case UploadFileTypeEnum.TestSeedFile:
+                    case UploadFileType.TestSeedFile:
                         fileName = string.Format("{0}{1}/{1}test.csv", serverPrefix, orderNumber);
                     break;
-                    case UploadFileTypeEnum.LiveSeedFile:
+                    case UploadFileType.LiveSeedFile:
                         fileName = string.Format("{0}{1}/{1}live.csv", serverPrefix, orderNumber);
                     break;
-                    case UploadFileTypeEnum.SuppressionFile:
+                    case UploadFileType.SuppressionFile:
                         fileName = string.Format("{0}{1}/{1}supp.csv", serverPrefix, orderNumber);
                     break;
-                    case UploadFileTypeEnum.BannersFile:
+                    case UploadFileType.BannersFile:
                             fileName = string.Format("{0}{1}/_banner{2}", serverPrefix, orderNumber, extension);
                         break;
-                    case UploadFileTypeEnum.BannersLinksFile:
+                    case UploadFileType.BannersLinksFile:
                             fileName = string.Format("{0}{1}/_bannerlinks{2}", serverPrefix, orderNumber, extension);
                         break;
-                    case UploadFileTypeEnum.MiscFile:
+                    case UploadFileType.MiscFile:
                         fileName = string.Format("{0}{1}/_misc{2}", serverPrefix, orderNumber, extension);
                         break;
-                    case UploadFileTypeEnum.DataFile:
+                    case UploadFileType.DataFile:
                         fileName = string.Format("{0}{1}/{2}data.csv", serverPrefix, orderNumber, segmentNumber);
                         break;
             }

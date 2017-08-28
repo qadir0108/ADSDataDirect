@@ -14,16 +14,6 @@
 
     <div class="container">
         <div class="form-horizontal">
-            <br />
-            @if (TempData["Success"] != null)
-            {
-                <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
-            }
-            
             <div class="tabbable-panel">
                 <div class="tabbable-line">
                     <ul class="nav nav-tabs ">
@@ -44,7 +34,7 @@
                         </li>
                         <li>
                             <a href="#tab_default_4" data-toggle="tab">
-                                Segments Data
+                                Data & Multi drop
                             </a>
                         </li>
                         <li>
@@ -65,6 +55,7 @@
                                     @Html.ValidationSummary(true, "", new { @class = "text-danger" })
                                     @Html.HiddenFor(model => model.Id)
                                     @Html.HiddenFor(model => model.CampaignId)
+                                    @Html.HiddenFor(model => model.OrderNumber)
                                     @Html.HiddenFor(model => model.CreatedAt)
                                     @Html.HiddenFor(model => model.Assets.Id)
                                     @Html.HiddenFor(model => model.Assets.CampaignId)
@@ -81,8 +72,9 @@
                                     <div class="form-group">
                                         @Html.LabelFor(model => model.WhiteLabel, htmlAttributes: new { @class = "control-label col-md-2" })
                                         <div class="col-md-10">
-                                            @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.WhiteLabel, "", new { @class = "text-danger" })
+                                            @Html.DropDownList("WhiteLabel", null, htmlAttributes: new { @class = "form-control" })
+                                            @*@Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })*@
+                                            @Html.ValidationMessageFor(model => model.WhiteLabel, "", new {@class = "text-danger"})
                                         </div>
                                     </div>
 
@@ -104,7 +96,7 @@
                                     </div>
 
                                     <div class="form-group">
-                                        <label class="control-label col-md-2 pre">ReBroadcast Date</label>
+                                        <label class="control-label col-md-2">ReBroadcast Date</label>
                                         <div class="col-md-10">
                                             @Html.EditorFor(model => model.ReBroadcastDate, new { htmlAttributes = new { @class = "form-control" } })
                                             @Html.ValidationMessageFor(model => model.ReBroadcastDate, "", new { @class = "text-danger" })
@@ -279,52 +271,52 @@
                             <div class="col-md-6">
                                 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2">@UploadFileTypeEnum.HtmlImagesFile</label>
-                                    <label class="control-label col-md-7"><a target="_blank" href="@Model.Assets.CreativeUrl">@Model.Assets.CreativeUrl</a></label>
-                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatusEnum)Model.Assets.CreativeStatus) </label>
+                                    <label class="control-label col-md-2">@UploadFileType.HtmlImagesFile</label>
+                                    <label class="control-label col-md-7"><a target="_blank" href="@(Model.Assets.CreativeUrl)">@(Model.Assets.CreativeUrl)</a></label>
+                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatus)Model.Assets.CreativeStatus) </label>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2 " style="text-align: left;">@UploadFileTypeEnum.ZipFile</label>
-                                    <label class="control-label col-md-7"><a target="_blank" href="@Model.Assets.ZipCodeUrl">@Model.Assets.ZipCodeUrl</a></label>
-                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatusEnum)Model.Assets.ZipCodeStatus) </label>
+                                    <label class="control-label col-md-2 " style="text-align: left;">@UploadFileType.ZipFile</label>
+                                    <label class="control-label col-md-7"><a target="_blank" href="@(Model.Assets.ZipCodeUrl)">@(Model.Assets.ZipCodeUrl)</a></label>
+                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatus)Model.Assets.ZipCodeStatus) </label>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2">@UploadFileTypeEnum.TestSeedFile</label>
+                                    <label class="control-label col-md-2">@UploadFileType.TestSeedFile</label>
                                     <label class="control-label col-md-7"><a target="_blank" href="@Model.Assets.TestSeedUrl">@Model.Assets.TestSeedUrl</a></label>
-                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatusEnum)Model.Assets.TestSeedStatus) </label>
+                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatus)Model.Assets.TestSeedStatus) </label>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2">@UploadFileTypeEnum.LiveSeedFile</label>
+                                    <label class="control-label col-md-2">@UploadFileType.LiveSeedFile</label>
                                     <label class="control-label col-md-7"><a target="_blank" href="@Model.Assets.LiveSeedUrl">@Model.Assets.LiveSeedUrl</a></label>
-                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatusEnum)Model.Assets.LiveSeedStatus) </label>
+                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatus)Model.Assets.LiveSeedStatus) </label>
                                 </div>
 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2">@UploadFileTypeEnum.SuppressionFile</label>
+                                    <label class="control-label col-md-2">@UploadFileType.SuppressionFile</label>
                                     <label class="control-label col-md-7"><a target="_blank" href="@Model.Assets.SuppressionUrl">@Model.Assets.SuppressionUrl</a></label>
-                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatusEnum)Model.Assets.SuppressionStatus) </label>
+                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatus)Model.Assets.SuppressionStatus) </label>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2">@UploadFileTypeEnum.BannersFile</label>
+                                    <label class="control-label col-md-2">@UploadFileType.BannersFile</label>
                                     <label class="control-label col-md-7"><a target="_blank" href="@Model.Assets.BannersUrl">@Model.Assets.BannersUrl</a></label>
-                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatusEnum)Model.Assets.BannersStatus) </label>
+                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatus)Model.Assets.BannersStatus) </label>
                                 </div>
                                 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2">@UploadFileTypeEnum.BannersLinksFile</label>
+                                    <label class="control-label col-md-2">@UploadFileType.BannersLinksFile</label>
                                     <label class="control-label col-md-7"><a target="_blank" href="@Model.Assets.BannerLinksUrl">@Model.Assets.BannerLinksUrl</a></label>
-                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatusEnum)Model.Assets.BannerLinksStatus) </label>
+                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatus)Model.Assets.BannerLinksStatus) </label>
                                 </div>
                                 
                                 
                                 <div class="form-group">
-                                    <label class="control-label col-md-2" style="text-align: left;">@UploadFileTypeEnum.MiscFile</label>
+                                    <label class="control-label col-md-2" style="text-align: left;">@UploadFileType.MiscFile</label>
                                     <label class="control-label col-md-7"><a target="_blank" href="@Model.Assets.MiscUrl">@Model.Assets.MiscUrl</a></label>
-                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatusEnum)Model.Assets.MiscStatus) </label>
+                                    <label class="control-label col-md-3 inherit-width">@((UploadFileStatus)Model.Assets.MiscStatus) </label>
                                 </div>
 
                                 <br />
@@ -405,7 +397,7 @@
                     <div class="tab-pane" id="tab_default_4">
                             
                         <div class="headertab">
-                            Data Segments
+                            Data & Multi drop
                         </div>
                       
                         <div class="row">
@@ -418,9 +410,11 @@
                             </div>
 
                             <div class="form-group col-md-6">
-                                <label class="control-label col-md-4">DataFileSegments</label>
-                                <div class="col-md-4">
-                                    @(Model.Segments?.Count)
+                                <label class="control-label col-md-2">Drops : <span id="nDrops">@(Model.Segments?.Count)</span></label>
+                                <div class="col-md-6">
+                                    <a id="addSegment" class="btn btn-primary" data-tooltip="tooltip" title="Add another drop" href="javascript:;">
+                                        Add another drop
+                                    </a>
                                 </div>
                                 <div class="col-md-4">
                                     <div class="form-group">
@@ -438,7 +432,7 @@
                             {
                                 foreach (var segment in Model.Segments.OrderBy(x => x.SegmentNumber))
                                 {
-                                    Html.RenderPartial("Editors/_Segment", segment);
+                                    Html.RenderPartial("Editors/_TestingSegment", segment);
                                 }
                             }
                         }
@@ -490,11 +484,11 @@
                                         <label class="control-label col-md-3">Chanel Type</label>
                                         <div class="col-md-9">
                                             <div class="input-group">
-                                                @foreach (var value in Enum.GetValues(typeof(ChannelTypeEnum)))
+                                                @foreach (var value in Enum.GetValues(typeof(ChannelType)))
                                                 {
                                                     var id = "dayofweek" + value;
-                                                    var name = Enum.GetName(typeof(ChannelTypeEnum), value);
-                                                    ChannelTypeEnum e = (ChannelTypeEnum)value;
+                                                    var name = Enum.GetName(typeof(ChannelType), value);
+                                                    ChannelType e = (ChannelType)value;
                                                     var isChecked = Model.ChannelTypes == null ? "" :
                                                         Model.ChannelTypes.Contains(e) ? "checked" : "";
 
@@ -609,38 +603,13 @@
             $("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
         });
 
-        var oldValue = parseInt($("#DataFileSegments").val());
-        $("#DataFileSegments").on("change", function (event) {
-
-            event.preventDefault();
-
-            var newValue = parseInt($("#DataFileSegments").val());
-            if (newValue < 1 || newValue > 10) {
-                $("#DataFileSegments").val(oldValue);
-                wfp.showError("Please select between 1 and 10");
-                return;
-            }
-            debugger;
-            if (!(oldValue + 1 === newValue || oldValue - 1 === newValue)) {
-                debugger;
-                $("#DataFileSegments").val(oldValue);
-                wfp.showError("Please add segments one by one.");
-                return;
-            }
-
-            if (newValue !== oldValue) {
-                debugger;
-                $.post("/Copy/UpdateSegments", { Id: $("#Id").val(), oldValue: oldValue, newValue: newValue }, function (response) {
-                    if (response.IsSucess) {
-                        wfp.showSuccess('updated successfully.');
-                        wfp.redirectTo();
-                    } else {
-                        wfp.showError(response.ErrorMessage);
-                    }
-                });
-
-            }
-            //$("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
+        $('#addSegment').click(function (e) {
+            $.get('/Testing/NewSegment', { orderNumber: $("#OrderNumber").val() }, function (template) {
+                $('#tab_default_4').append(template);
+                $('[data-tooltip="tooltip"]').tooltip();
+                $('#nDrops').html(function (i, val) { return +val + 1 });
+            });
+            e.preventDefault();
         });
 
         $('.btnApprove').click(function (e) {
@@ -668,7 +637,7 @@
                            if (response.IsSucess) {
                                debugger;
                                wfp.showSuccess('Segment ' + segment + ' has been approved successfully.');
-                               wfp.redirectTo('/Copy/MoveTo?id=@Session["id"]&to=Approved');
+                               wfp.redirectTo('/Approved/Index?id=@Session["id"]');
                            } else {
                                wfp.showError(response.ErrorMessage);
                            }

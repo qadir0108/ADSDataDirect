@@ -9,27 +9,18 @@ using WFP.ICT.Data.Migrations;
 
 namespace WFP.ICT.Data.Entities
 {
-    public class WFPICTContext : IdentityDbContext<WFPUser>
+    public class WfpictContext : IdentityDbContext<WfpUser>
     {
-        public WFPICTContext() : base("WFPICTContext")
+        public WfpictContext() : base("WFPICTContext")
         {
             Configuration.LazyLoadingEnabled = true;
             Configuration.ProxyCreationEnabled = false;
 
-            Database.SetInitializer(new MigrateDatabaseToLatestVersion<WFPICTContext, Configuration>());
+            Database.SetInitializer(new MigrateDatabaseToLatestVersion<WfpictContext, Configuration>());
         }
 
         protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
-            // The rest should not be needed - it should be done by conventions
-            //modelBuilder.Entity<Campaign>()
-            //    .HasOptional(s => s.Testing)
-            //    .WithRequired(si => si.Campaign);
-
-            //modelBuilder.Entity<Campaign>()
-            //    .HasOptional(s => s.Approved)
-            //    .WithRequired(si => si.Campaign);
-
             base.OnModelCreating(modelBuilder);
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
@@ -46,13 +37,14 @@ namespace WFP.ICT.Data.Entities
         public DbSet<CampaignTracking> CampaignTrackings { get; set; }
         public DbSet<ProData> ProDatas { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
+        public DbSet<Customer> Customers { get; set; }
         public DbSet<Notification> Notifications { get; set; }
-        public DbSet<APIRequest> ApiRequests { get; set; }
+        public DbSet<ApiRequest> ApiRequests { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
 
-        public static WFPICTContext Create()
+        public static WfpictContext Create()
         {
-            return new WFPICTContext();
+            return new WfpictContext();
         }
 
         #region Overrided
@@ -82,26 +74,6 @@ namespace WFP.ICT.Data.Entities
                 ); // Add the original exception as the innerException
             }
             return -1;
-        }
-
-        private Exception HandleDbUpdateException(DbUpdateException dbu)
-        {
-            var builder = new StringBuilder("A DbUpdateException was caught while saving changes. ");
-
-            try
-            {
-                foreach (var result in dbu.Entries)
-                {
-                    builder.AppendFormat("Type: {0} was part of the problem. ", result.Entity.GetType().Name);
-                }
-            }
-            catch (Exception e)
-            {
-                builder.Append("Error parsing DbUpdateException: " + e.ToString());
-            }
-
-            string message = builder.ToString();
-            return new Exception(message, dbu);
         }
         #endregion
     }

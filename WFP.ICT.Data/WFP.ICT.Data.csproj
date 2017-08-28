@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>WFP.ICT.Data.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>WFP.ICT.Data.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -77,9 +79,10 @@
     <Compile Include="Entities\CampaignTesting.cs" />
     <Compile Include="Entities\ProData.cs" />
     <Compile Include="Entities\APIRequest.cs" />
+    <Compile Include="Entities\Customer.cs" />
     <Compile Include="Entities\Vendor.cs" />
     <Compile Include="Entities\Campaign.cs" />
-    <Compile Include="Entities\iBaseEntity.cs" />
+    <Compile Include="Entities\IBaseEntity.cs" />
     <Compile Include="Migrations\201704261038315_Initial.cs" />
     <Compile Include="Migrations\201704261038315_Initial.Designer.cs">
       <DependentUpon>201704261038315_Initial.cs</DependentUpon>
@@ -100,6 +103,10 @@
     <Compile Include="Migrations\201708161637577_DataSegment.Designer.cs">
       <DependentUpon>201708161637577_DataSegment.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201708281134090_Tracking.cs" />
+    <Compile Include="Migrations\201708281134090_Tracking.Designer.cs">
+      <DependentUpon>201708281134090_Tracking.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
     <Compile Include="Entities\WFPRole.cs" />
@@ -117,6 +124,7 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="WFP.ICT.Data.ruleset" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\WFP.ICT.Enum\WFP.ICT.Enum.csproj">
@@ -143,6 +151,14 @@
     <EmbeddedResource Include="Migrations\201708161637577_DataSegment.resx">
       <DependentUpon>201708161637577_DataSegment.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708281134090_Tracking.resx">
+      <DependentUpon>201708281134090_Tracking.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\Google.Protobuf.dll" />
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.CSharp.dll" />
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

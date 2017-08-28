@@ -6,6 +6,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using System.Web.Http;
 using WFP.ICT.Web.Async;
+using WFP.ICT.Web.Async.Helpers;
 using WFP.ICT.Web.Controllers;
 
 namespace WFP.ICT.Web

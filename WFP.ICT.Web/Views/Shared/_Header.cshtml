@@ -3,9 +3,9 @@
 @using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
 @{
-    var LoggedInUser = Session["user"] as WFPUser;
+    var LoggedInUser = Session["user"] as WfpUser;
     var IsLoggedIn = LoggedInUser != null;
-    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 
 <div class="header">
@@ -39,16 +39,20 @@
                             <li class="active">
                                 <a href="~/Tracking">Tracking</a>
                             </li>
-                            <li class="active">
-                                <a href="~/Notification">Notifications</a>
-                            </li>
+                            if (IsAdmin)
+                            {
+                                <li class="active">
+                                    <a href="~/Notification">Notifications</a>
+                                </li>
+                            }
                             <li>
                                 <a href="#">@HttpContext.Current.User.Identity.Name</a>
                                 <ul>
                                     @if(IsAdmin)
                                     {
-                                        <li><a href="/Home/Users" title="Users" class="animsition-link"><span class="glyphicon glyphicon-user"></span> Users</a></li>
-                                        <li><a href="/Home/Vendors" title="Vendors" class="animsition-link"><span class="glyphicon glyphicon-cog"></span> Vendors</a></li>
+                                        <li><a href="/Company/Users" title="Users" class="animsition-link"><span class="glyphicon glyphicon-user"></span> Users</a></li>
+                                        <li><a href="/Vendor" title="Vendors" class="animsition-link"><span class="glyphicon glyphicon-cog"></span> Vendors</a></li>
+                                        <li><a href="/Customer" title="Customer" class="animsition-link"><span class="glyphicon glyphicon-cog"></span> Customers</a></li>
                                     }
                                     <li><a href="/Home/Settings" title="Settings" class="animsition-link"><span class="glyphicon glyphicon-lock"></span> Settings</a></li>
                                     <li><a href="/Account/LogOff" title="Logout" class="animsition-link"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>

@@ -13,10 +13,13 @@
         public int Type { get; set; }
         public string DateCreated { get; set; }
 
-        public bool IsUsesAPI { get; set; }
-        public string APIKey { get; set; }
+        public bool IsUsesApi { get; set; }
+        public string ApiKey { get; set; }
         public bool IsTestsCreatives { get; set; }
 
+        public string CompanyName { get; set; }
         public string CompanyLogo { get; set; }
+        public string WhiteLabel { get; set; }
+        public string ReportTemplate { get; set; }
     }
 }

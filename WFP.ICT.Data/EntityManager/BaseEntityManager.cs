@@ -10,29 +10,29 @@ namespace WFP.ICT.Data.EntityManager
     /// <summary>
     /// Base class for Entity Manager. Generic Repository Design Pattern
     /// </summary>
-    public class BaseEntityManager<EntityType> : IDisposable, IBaseEntityManager<EntityType> where EntityType : class, iBaseEntity, new()
+    public class BaseEntityManager<EntityType> : IDisposable, IBaseEntityManager<EntityType> where EntityType : class, IBaseEntity, new()
     {
-        private static WFPICTContext _dbContext;
+        private WfpictContext _dbContext;
         public bool SaveChangesSuccess { get; protected set; }
 
-        public WFPICTContext CurrentContext
+        public WfpictContext CurrentContext
         {
             get
             {
                 var httpContext = HttpContext.Current;
                 if (httpContext == null)
                 {
-                    return new WFPICTContext();
+                    return new WfpictContext();
                 } else
                 {
                     const string key = "WFPICTContext";
                     if (httpContext.Items[key] != null)
                     {
-                        return httpContext.Items[key] as WFPICTContext;
+                        return httpContext.Items[key] as WfpictContext;
                     }
                     else
                     {
-                        _dbContext = new WFPICTContext();
+                        _dbContext = new WfpictContext();
                         httpContext.Items[key] = _dbContext;
                     }
                 }
@@ -53,14 +53,14 @@ namespace WFP.ICT.Data.EntityManager
         /// <summary>
         /// public constructor that use existing object
         /// </summary>
-        public BaseEntityManager(WFPICTContext dbContext)
+        public BaseEntityManager(WfpictContext dbContext)
         {
             if (dbContext != null)
                 _dbContext = dbContext;
             else
             {
                 string message="BaseEntityManager constructor, entity name "+EntityName()+": dbContext object can't be NULL !";
-                throw new Exception(message);
+                throw new ArgumentNullException(message);
             }
         }
 
@@ -71,13 +71,9 @@ namespace WFP.ICT.Data.EntityManager
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!this.disposed)
+            if (!this.disposed && disposing)
             {
-                if (disposing)
-                {
-                    if (_dbContext != null)
-                        _dbContext.Dispose();
-                }
+                _dbContext?.Dispose();
             }
             this.disposed = true;
         }
@@ -128,7 +124,7 @@ namespace WFP.ICT.Data.EntityManager
             var navPropertiesList = navigationalProperties.Split(",".ToCharArray());
             try
             {
-                if (navigationalProperties.Equals(String.Empty))
+                if (string.IsNullOrEmpty(navigationalProperties))
                     entity = _dbContext.Set<EntityType>().Find(id);
                 else
                 {

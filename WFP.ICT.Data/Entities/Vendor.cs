@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace WFP.ICT.Data.Entities
 {
-    public class Vendor : BaseEntity, iBaseEntity
+    public class Vendor : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
@@ -15,8 +15,7 @@ namespace WFP.ICT.Data.Entities
         public string CompanyName { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        public string APIKey { get; set; }
-        public string CCEmails { get; set; }
+        public string CcEmails { get; set; }
         
         public Vendor()
         {

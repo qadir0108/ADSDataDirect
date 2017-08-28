@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Identity.Owin;
+﻿using System;
+using Microsoft.AspNet.Identity.Owin;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Globalization;
@@ -14,13 +15,14 @@ namespace WFP.ICT.Web.Controllers
 {
     public class BaseController : Controller
     {
-        private WFPICTContext _db;
-        public WFPICTContext db
+        protected readonly Random Random = new Random();
+        private WfpictContext _db;
+        protected WfpictContext Db
         {
             get
             {
-                if(_db == null)
-                    _db = HttpContext.GetOwinContext().Get<WFPICTContext>();
+                if (_db != null) return _db;
+                _db = HttpContext.GetOwinContext().Get<WfpictContext>();
                 return _db;
             }
             private set
@@ -29,30 +31,30 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        public void SetupLoggedInUser(string UserName)
+        public void SetupLoggedInUser(string userName)
         {
-            var user = db.Users.Include(u => u.Roles).FirstOrDefault(x => x.UserName == UserName);
+            var user = Db.Users.Include(u => u.Roles).FirstOrDefault(x => x.UserName == userName);
             Session["user"] = user;
         }
 
-        public WFPUser LoggedInUser
+        protected WfpUser LoggedInUser
         {
             get
             {
-                return Session["user"] as WFPUser;
+                return Session["user"] as WfpUser;
             }
         }
 
-        public bool IsAdmin
+        protected bool IsAdmin
         {
             get
             {
-                return LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+                return LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
             }
         }
 
-        string _uploadPath = "~/Uploads";
-        public string UploadPath
+        readonly string _uploadPath = $"~/Uploads";
+        protected string UploadPath
         {
             get
             {
@@ -62,8 +64,8 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        string _downloadPath = "~/Downloads";
-        public string DownloadPath
+        readonly string _downloadPath = $"~/Downloads";
+        protected string DownloadPath
         {
             get
             {
@@ -73,8 +75,8 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        string _imagesPath = "~/images";
-        public string ImagesPath
+        readonly string _imagesPath = $"~/images";
+        protected string ImagesPath
         {
             get
             {
@@ -82,11 +84,11 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        public SelectList StatusList
+        protected SelectList StatusList
         {
             get
             {
-                var items = EnumHelper.GetEnumTextValues(typeof(CampaignStatusEnum))
+                var items = EnumHelper.GetEnumTextValues(typeof(CampaignStatus))
                     .Select(x => new SelectListItem()
                     {
                         Text = x.Text,
@@ -98,6 +100,25 @@ namespace WFP.ICT.Web.Controllers
                     Value = string.Empty
                 });
                 return new SelectList(items, "Value", "Text");
+            }
+        }
+
+        protected IEnumerable<SelectListItem> ReportTemplates
+        {
+            get
+            {
+                var items = EnumHelper.GetEnumTextValues(typeof(ReportTemplate))
+                    .Select(x => new SelectListItem()
+                    {
+                        Text = x.Text,
+                        Value = x.Value
+                    }).ToList();
+                items.Insert(0, new SelectListItem()
+                {
+                    Text = "Select Template",
+                    Value = string.Empty
+                });
+                return items;
             }
         }
 
@@ -124,14 +145,14 @@ namespace WFP.ICT.Web.Controllers
         }
 
         private static List<SelectListItem> _users;
-        public IEnumerable<SelectListItem> UsersList
+        protected IEnumerable<SelectListItem> UsersList
         {
             get
             {
                 if (_users == null)
                 {
-                    var user = Session["user"] as WFPUser;
-                    _users = db.Users
+                    var user = Session["user"] as WfpUser;
+                    _users = Db.Users
                         .OrderBy(x => x.CreatedAt).Select(
                              x => new SelectListItem()
                              {
@@ -148,15 +169,21 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        public static bool _forceOrders;
-        private static List<SelectListItem> _orderNumbers;
+        private static bool _forceOrders;
+
+        public static bool ForceOrders
+        {
+            get { return _forceOrders; }
+            set { _forceOrders = value; }
+        }
+        private List<SelectListItem> _orderNumbers;
         public IEnumerable<SelectListItem> OrderNumberList
         {
             get
             {
                 if (_orderNumbers == null || _forceOrders)
                 {
-                    _orderNumbers = db.Campaigns
+                    _orderNumbers = Db.Campaigns
                         .OrderBy(x => x.CreatedAt).Select(
                              x => new SelectListItem()
                              {
@@ -173,15 +200,21 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        public static bool _forceVendors;
-        private static List<SelectListItem> _vendors;
-        public IEnumerable<SelectListItem> VendorsList
+        private static bool _forceVendors;
+        protected static bool ForceVendors
+        {
+            get { return _forceVendors; }   
+            set { _forceVendors = value; }
+        }
+
+        private List<SelectListItem> _vendors;
+        protected IEnumerable<SelectListItem> VendorsList
         {
             get
             {
                 if (_vendors == null || _forceVendors)
                 {
-                    _vendors = db.Vendors
+                    _vendors = Db.Vendors
                         .OrderBy(x => x.CreatedAt).Select(
                              x => new SelectListItem()
                              {
@@ -198,7 +231,38 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        private static List<SelectListItem> _claimTypes;
+        private static bool _forceCustomers;
+        protected static bool ForceCustomers
+        {
+            get { return _forceCustomers; }
+            set { _forceCustomers = value; }
+        }
+
+        private List<SelectListItem> _customers;
+        protected IEnumerable<SelectListItem> CustomersList
+        {
+            get
+            {
+                if (_customers == null || _forceCustomers)
+                {
+                    _customers = Db.Customers
+                        .OrderBy(x => x.CreatedAt).Select(
+                             x => new SelectListItem()
+                             {
+                                 Text = x.Name + " - " + x.WebDomain,
+                                 Value = x.Code
+                             }).ToList();
+                    _customers.Insert(0, new SelectListItem()
+                    {
+                        Text = "Select Customer",
+                        Value = string.Empty
+                    });
+                }
+                return _customers;
+            }
+        }
+
+        private List<SelectListItem> _claimTypes;
         public IEnumerable<SelectListItem> ClaimTypes
         {
             get

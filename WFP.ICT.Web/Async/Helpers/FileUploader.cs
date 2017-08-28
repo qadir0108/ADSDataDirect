@@ -18,11 +18,11 @@ namespace WFP.ICT.Web.Async
         public FileUploader()
         {
             if (ConfigurationManager.AppSettings["FTPServer"] == null)
-                throw new Exception("FTPServer not configured");
+                throw new ArgumentException("FTPServer not configured");
             if (ConfigurationManager.AppSettings["FTPUsername"] == null)
-                throw new Exception("FTPUsername not configured");
+                throw new ArgumentException("FTPUsername not configured");
             if (ConfigurationManager.AppSettings["FTPPassword"] == null)
-                throw new Exception("FTPPassword not configured");
+                throw new ArgumentException("FTPPassword not configured");
 
             _ftpServer = ConfigurationManager.AppSettings["FTPServer"];
             _ftpUsername = ConfigurationManager.AppSettings["FTPUsername"];

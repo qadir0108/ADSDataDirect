@@ -1,0 +1,433 @@
+﻿@using ADSDataDirect.Enums
+@using PagedList.Mvc
+@using WFP.ICT.Data.Entities
+@using WFP.ICT.Enum
+@model PagedList.IPagedList<WFP.ICT.Web.Models.UserProfileVM>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string currentSort = ViewBag.CurrentSort;
+    if (string.IsNullOrEmpty(currentSort))
+    {
+        currentSort = "OrderNumber_desc";
+    }
+
+    var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
+    var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
+    var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.BroadcastDateSortParm };
+    var columnSortParams5 = new { sortOrder = ViewBag.StatusSortParm };
+
+}
+<style>
+    .drpWhiteLabel {
+         width:120px !important; 
+    }
+</style>
+<div class="row">
+        <div class="col-md-11">
+            <div class="dashboard-page-head">
+                <div class="page-header">
+                    <h1>Users<small></small></h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 listing-action" id="divTools1" style="text-align:left">
+            @Html.ActionLink("New", "Register","Account", null, new { @class = "btn btn-default", @title = "New User", @data_tooltip = "tooltip" })
+        </div>
+</div>
+        
+        <table class="table">
+            <tr>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.CreatedAt)
+                    </th>*@
+                <td>
+                    @Html.SortIdentifier(currentSort, "OrderNumber")
+                    @Html.ActionLink("User Name", "Users", columnSortParams1)
+                    @*@Html.DisplayNameFor(model => model.OrderNumber)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CampaignName")
+                    @Html.ActionLink("Email", "Users", columnSortParams2)
+                    @*@Html.DisplayNameFor(model => model.CampaignName)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CreatedBy")
+                    @Html.ActionLink("Date Created", "Users", columnSortParams3)
+                    @*@Html.DisplayNameFor(model => model.RepresentativeName)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "BroadcastDate")
+                    @Html.ActionLink("Permission", "Users", columnSortParams4)
+                    @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "BroadcastDate")
+                    @Html.ActionLink("Tests Creatives", "Users", columnSortParams4)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "BroadcastDate")
+                    @Html.ActionLink("Uses API", "Users", columnSortParams4)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "Status")
+                    @Html.ActionLink("Status", "Users", columnSortParams5)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "WhiteLabel")
+                    @Html.ActionLink("White Label", "Users", columnSortParams5)
+                </td>
+                <td></td>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr id="@item.Id">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateCreated)
+                    </td>
+                    <td>
+                        @Enum.GetName(typeof(UserType), item.Type)
+                    </td>
+                    <td>
+                        @(item.IsTestsCreatives ? "Yes" : "No")
+                    </td>
+                    <td>
+                        @(item.IsUsesApi ? "Yes" : "No")
+                    </td>
+                    <td>
+                        @Enum.GetName(typeof(UserStatus), item.Status)
+                    </td>
+                    <td>
+                        @Html.DropDownListFor(modelItem => item.WhiteLabel, new SelectList(ViewBag.WhiteLabel, "Value", "Value", item.WhiteLabel)
+                        , new { @class = "form-control input-md drpWhiteLabel", @id = "drpWhiteLabel", @style = "width:100%" })
+                    </td>
+                    <td style="min-width:190px">
+                        @if (item.Status == 0)
+                        {
+                            <a href="#" id="btnLock" class="btn btn-default btn-sm btnLock" title="DeActivate" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-lock" aria-hidden="true"></i></a>
+                        }
+                        else
+                        {
+                            <a href="#" id="btnUnLock" class="btn btn-default btn-sm btnLock" title="Activate" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-unlock" aria-hidden="true"></i></a>
+                        }
+                        @if (item.Type == 0)
+                        {
+                            <a href="#" id="btnType" class="btn btn-default btn-sm btnType" title="Change to Normal User" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-user" aria-hidden="true"></i></a>
+                        }
+                        else
+                        {
+                            <a href="#" id="btnType" class="btn btn-default btn-sm btnType" title="Change to Admin User" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-users" aria-hidden="true"></i></a>
+                        }
+                        @if (item.IsTestsCreatives)
+                        {
+                            <a href="#" id="btnTests" class="btn btn-default btn-sm btnTests" title="Can NOT test Creatives" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-times-circle" aria-hidden="true"></i></a>
+                        }
+                        else
+                        {
+                            <a href="#" id="btnTests" class="btn btn-default btn-sm btnTests" title="Able to Test Creatives" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-bars" aria-hidden="true"></i></a>
+                        }
+                        <a href="#" id="btnOpenChangePassword" name="btnOpenChangePassword" class="btn btn-default btn-sm btnOpenChangePassword" title="Change Password" data-tooltip="tooltip"
+                           data-toggle="modal" data-target="#myModal" data-id="@item.Id" data-user="@item.UserName"><i class="fa fa-key" aria-hidden="true"></i>
+                        </a>
+                        <a href="#" id="btnDelete" class="btn btn-default btn-sm btnDelete" title="Delete" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="page-count">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                </div>
+                <div class="tp-pagination">
+                    @Html.PagedListPager(Model, page => Url.Action("Users", new { page, sortOrder = ViewBag.CurrentSort }), new PagedListRenderOptions() { })
+                </div>
+            </div>
+        </div>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Change Password</h4>
+            </div>
+            <form id="frm" role="form">
+                <div class="modal-body">
+                    <input id="txtId" name="txtId" type="hidden">
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPassword">Password<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                            </div>
+                            <input id="txtPassword" name="txtPassword" type="text" data-minlength="6" placeholder="Password" class="form-control input-md" required>
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                        <div class="help-block"></div>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPasswordRetype">Re-type Password<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                            </div>
+                            <input id="txtPasswordRetype" name="txtPasswordRetype" type="text" placeholder="Re-type Password" class="form-control input-md" data-match="#txtPassword" data-match-error="Password and Re-type Password don't match." required>
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                        <div class="help-block with-errors"></div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btnChangePassword" id="btnChangePassword">Change Password</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+
+        var wfp = wfp || {};
+
+        $(document).ready(function () {
+
+            $(".drpWhiteLabel").on("change", function (e) {
+                debugger;
+                if ($(this).val() === '') return;
+
+                var dataToPost = {
+                    userId: $(this).parent().parent().attr('id'),
+                    whiteLabel: $(this).val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Company/ChangeWhiteLabel",
+                    data: dataToPost,
+                    success: function (response) {
+                        debugger;
+                        if (response === "") wfp.reload();
+                        if (response.IsSucess) {
+                            wfp.showSuccess('WhiteLabel has been updated successfully.');
+                            wfp.redirectTo();
+                        } else {
+                            wfp.showError(response.ErrorMessage);
+                        }
+                    },
+                    failure: function (response) {
+                        wfp.showError('There is erorr in service call.');
+                    },
+                    complete: function () {
+                    }
+                });
+            });
+
+            $('.btnLock').click(function (e) {
+                debugger;
+                e.preventDefault();
+
+                var dataToPost = {
+                    ID: $(this).data('id'),
+                    Action: 'lock'
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Company/SaveUser",
+                    data: dataToPost,
+                    success: function (response) {
+                        debugger;
+                        if (response === "") wfp.reload();
+                        if (response.IsSucess) {
+                            wfp.showSuccess('User has been updated successfully.');
+                            wfp.reload('/Company/Users');
+                        } else {
+                            wfp.showError(response.ErrorMessage);
+                        }
+                    },
+                    failure: function (response) {
+                        wfp.showError('There is erorr in service call.');
+                    },
+                    complete: function () {
+                    }
+                });
+            });
+
+            $('.btnType').click(function (e) {
+                debugger;
+                e.preventDefault();
+
+                var dataToPost = {
+                    ID: $(this).data('id'),
+                    Action: 'type'
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Company/SaveUser",
+                    data: dataToPost,
+                    success: function (response) {
+                        debugger;
+                        if (response === "") wfp.reload();
+                        if (response.IsSucess) {
+                            wfp.showSuccess('User has been updated successfully.');
+                            wfp.reload('/Company/Users');
+                        } else {
+                            wfp.showError(response.ErrorMessage);
+                        }
+                    },
+                    failure: function (response) {
+                        wfp.showError('There is erorr in service call.');
+                    },
+                    complete: function () {
+                    }
+                });
+            });
+
+            $('.btnTests').click(function (e) {
+                debugger;
+                e.preventDefault();
+
+                var dataToPost = {
+                    ID: $(this).data('id'),
+                    Action: 'tests'
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Company/SaveUser",
+                    data: dataToPost,
+                    success: function (response) {
+                        debugger;
+                        if (response === "") wfp.reload();
+                        if (response.IsSucess) {
+                            wfp.showSuccess('User has been updated successfully.');
+                            wfp.reload('/Company/Users');
+                        } else {
+                            wfp.showError(response.ErrorMessage);
+                        }
+                    },
+                    failure: function (response) {
+                        wfp.showError('There is erorr in service call.');
+                    },
+                    complete: function () {
+                    }
+                });
+            });
+
+            $('.btnDelete').click(function (e) {
+                debugger;
+                e.preventDefault();
+
+                var dataToPost = {
+                    ID: $(this).data('id'),
+                    Action: 'delete'
+                };
+
+                wfp.showSwal("Are you sure to delete?", function () {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Company/SaveUser",
+                        data: dataToPost,
+                        success: function (response) {
+                            debugger;
+                            if (response === "") wfp.reload();
+                            if (response.IsSucess) {
+                                wfp.showSuccess('User has been deleted successfully.');
+                                wfp.reload('/Company/Users');
+                            } else {
+                                wfp.showError(response.ErrorMessage);
+                            }
+                        },
+                        failure: function (response) {
+                            wfp.showError('There is erorr in service call.');
+                        },
+                        complete: function () {
+                        }
+                    });
+
+                });
+            });
+
+            $('#myModal').on('show.bs.modal', function (event) {
+
+             var button = $(event.relatedTarget);
+             var modal = $(this);
+
+             debugger;
+             var id = button.data('id');
+             if (id) {
+                 $('#txtId').val(id);
+                 modal.find('.modal-title').text('Change Password : ' + button.data('user'));
+             }
+         });
+
+            $('#btnChangePassword').click(function () {
+                debugger;
+
+                var form = $("#frm");
+                form.validator('validate')
+                    .on('submit',
+                        function (e) {
+                            debugger;
+                            if (e.isDefaultPrevented()) {
+
+                            } else {
+
+                                e.preventDefault();
+
+                                var dataToPost = {
+                                    ID: $('#txtId').val(),
+                                    Action: 'password',
+                                    Password: $('#txtPassword').val()
+                                };
+
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Company/SaveUser",
+                                    data: dataToPost,
+                                    success: function (response) {
+                                        debugger;
+                                        if (response === "") wfp.reload();
+                                        if (response.IsSucess) {
+                                            wfp.showSuccess('Password has been changed successfully.');
+                                            $('#myModal').modal('hide');
+                                        } else {
+                                            wfp.showError(response.ErrorMessage);
+                                        }
+                                    },
+                                    failure: function (response) {
+                                        wfp.showError('There is erorr in service call.');
+                                    },
+                                    complete: function () {
+                                    }
+                                });
+
+                                // everything looks good!
+                            }
+                        }); //end validator
+            });
+
+        });
+
+</script>

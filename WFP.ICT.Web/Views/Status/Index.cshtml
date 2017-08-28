@@ -21,9 +21,9 @@
     var columnSortParams4 = new { sortOrder = ViewBag.BroadcastDateSortParm };
     var columnSortParams5 = new { sortOrder = ViewBag.StatusSortParm };
 
-    var LoggedInUser = Session["user"] as WFPUser;
+    var LoggedInUser = Session["user"] as WfpUser;
     var IsLoggedIn = LoggedInUser != null;
-    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 
 
@@ -46,7 +46,7 @@
                 </div>
                 <input type="hidden" id="searchType" name="searchType" value="basic" />
                 <input type="hidden" id="clearSessionId" name="clearSessionId" value="" />
-                <input type="text" id="searchString" name="searchString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
+                <input type="text" id="basicString" name="basicString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
                 <div class="input-group-addon">
                     <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
                 </div>
@@ -93,7 +93,7 @@
 
         <tr id="@item.Id" data-order="@item.OrderNumber">
             <td>
-                @Enum.GetName(typeof(CampaignStatusEnum), item.Status)
+                @Enum.GetName(typeof(CampaignStatus), item.Status)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.OrderNumber)
@@ -117,7 +117,7 @@
             </td>
             <td>
                 <div class="col-xs-8 no-left-padding">
-                    <input type="text" class="form-control input-md" id="@txtIONumber" value="@(item.Trackings.FirstOrDefault() != null ? item.Trackings.FirstOrDefault().IONumber : "")"/>    
+                    <input type="text" class="form-control input-md" id="@txtIONumber" value="@(item.Trackings.FirstOrDefault() != null ? item.Trackings.FirstOrDefault().IoNumber : "")"/>    
                 </div>
                 <a href="#" class="btn btn-default btnSendToTracking" id="btnSendToTracking" data-tooltip="tooltip" title="Send To Tracking"><span class="glyphicon glyphicon-send"></span></a>
             </td>
@@ -188,16 +188,16 @@
             $('.btnSendToTracking').click(function () {
                 debugger;
                 
-                var Id = $(this).parent().parent().attr('id');
-                var OrderNumber = $(this).parent().parent().data('order');
-                var txtIONumber = $("#txtIONumber" + Id);
+                var id = $(this).parent().parent().attr('id');
+                var orderNumber = $(this).parent().parent().data('order');
+                var txtIoNumber = $("#txtIONumber" + id);
 
-                if (txtIONumber.val() === '') return;
+                if (txtIoNumber.val() === '') return;
 
                 var dataToPost = {
-                    Id: Id,
-                    SegmentNumber: '',
-                    IONumber: txtIONumber.val()
+                    id: id,
+                    segmentNumber: '',
+                    iONumber: txtIoNumber.val()
                 };
 
                 $.ajax({
@@ -208,7 +208,7 @@
                         debugger;
                         if (response === "") wfp.reload();
                         if (response.IsSucess) {
-                            wfp.showSuccess('Order #: ' + OrderNumber + ' has been moved to tracking successfully.');
+                            wfp.showSuccess('Order #: ' + orderNumber + ' has been moved to tracking successfully.');
                             wfp.redirectTo();
                         } else {
                             wfp.showError(response.ErrorMessage);

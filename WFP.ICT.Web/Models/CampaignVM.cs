@@ -25,8 +25,8 @@ namespace WFP.ICT.Web.Models
         public bool ReBroadCast { get; set; }
         public DateTime? ReBroadcastDate { get; set; }
         public long Price { get; set; }
-        public int TestingUrgency { get; set; } // TestingUrgencyEnum
-        public int Status { get; set; } // CampaignStatusEnum
+        public int TestingUrgency { get; set; } // Enum.TestingUrgency
+        public string Status { get; set; } // Enum.CampaignStatus
         // Campaign Demographics
         public string GeoDetails { get; set; }
         public string Demographics { get; set; }
@@ -62,7 +62,7 @@ namespace WFP.ICT.Web.Models
         public bool IsOmniOrder { get; set; }
         public DateTime? OmniDeployDate { get; set; }
         public long Impressions { get; set; }
-        public List<ChannelTypeEnum> ChannelTypes { get; set; } // List<int> ChannelTypeEnum
+        public List<ChannelType> ChannelTypes { get; set; } // List<int> Enum.ChannelType
 
         public bool ReBroadcasted { get; set; }
         public DateTime? ReBroadcastedDate { get; set; }

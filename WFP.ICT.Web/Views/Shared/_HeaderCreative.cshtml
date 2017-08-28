@@ -3,9 +3,9 @@
 @using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
 @{
-    var LoggedInUser = Session["user"] as WFPUser;
+    var LoggedInUser = Session["user"] as WfpUser;
     var IsLoggedIn = LoggedInUser != null;
-    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 @if (Session["id"] != null)
 {

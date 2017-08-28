@@ -9,6 +9,7 @@ using WFP.ICT.Data.Entities;
 using WFP.ICT.Hubs;
 using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Helpers;
+using WFP.ICT.Web.ProData;
 
 [assembly: OwinStartup(typeof(WFP.ICT.Web.Startup))]
 namespace WFP.ICT.Web
@@ -25,8 +26,7 @@ namespace WFP.ICT.Web
             SetupInitialSettings();
 
             GlobalConfiguration.Configuration.UseSqlServerStorage("WFPICTContext");
-            //app.UseHangfireDashboard();
-            app.UseHangfireDashboard("/hangfire", new DashboardOptions
+            app.UseHangfireDashboard($"/hangfire", new DashboardOptions
             {
                 Authorization = new[] { new HangfireAuthorizationFilter() }
             });
@@ -37,19 +37,19 @@ namespace WFP.ICT.Web
             WFPICTUpdater.Instance.StartUpdatingClients();
 
             // CheckForQCRules 
-            //RecurringJob.AddOrUpdate("CheckForQCRules", () => NotificationsProcessor.CheckForQCRules(), Cron.Minutely);
+            RecurringJob.AddOrUpdate("FetchAndCheckForQCRules", () => NotificationsProcessor.FetchAndCheckForQcRules(), Cron.Hourly);
 
-            //RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), "0 8,12,17 * * *");
-            //RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), Cron.Minutely);
+            RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), "0 8,12,17 * * *");
+            // RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), Cron.Minutely);
 
         }
 
         private void SetupInitialSettings()
         {
-            using (WFPICTContext ctx = new WFPICTContext())
+            using (WfpictContext ctx = new WfpictContext())
             {
-                var UserManager = new UserManager<Data.Entities.WFPUser>(new UserStore<Data.Entities.WFPUser>(ctx));
-                var alreadyAdminUser = UserManager.FindByName("admin");
+                var userManager = new UserManager<Data.Entities.WfpUser>(new UserStore<Data.Entities.WfpUser>(ctx));
+                userManager.FindByName("admin");
             }
         }
     }

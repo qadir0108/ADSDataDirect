@@ -34,6 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>WFP.ICT.Web.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -42,6 +43,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>WFP.ICT.Web.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core">
@@ -285,19 +287,24 @@
     <Compile Include="App_Start\UnityConfig.cs" />
     <Compile Include="App_Start\UnityMvcActivator.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
-    <Compile Include="Async\NotificationsProcessor.cs" />
+    <Compile Include="Controllers\CompanyController.cs" />
+    <Compile Include="Controllers\TestController.cs" />
+    <Compile Include="Controllers\CustomerController.cs" />
+    <Compile Include="Controllers\VendorController.cs" />
+    <Compile Include="Models\CustomerVm.cs" />
+    <Compile Include="Models\VendorVm.cs" />
+    <Compile Include="ProData\NotificationsProcessor.cs" />
     <Compile Include="Async\CampaignProcessor.cs" />
     <Compile Include="Async\DataFileProcessor.cs" />
     <Compile Include="Async\MailChimpProcessor.cs" />
-    <Compile Include="Async\Helpers\ProDataHelper.cs" />
+    <Compile Include="ProData\ProDataHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
-    <Compile Include="API\adsController.cs" />
+    <Compile Include="API\AdsController.cs" />
     <Compile Include="Controllers\ApprovedController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\NotificationController.cs" />
     <Compile Include="Controllers\StatusController.cs" />
     <Compile Include="Controllers\CampaignsController.cs" />
-    <Compile Include="Controllers\CopyController.cs" />
     <Compile Include="Controllers\ErrorController.cs" />
     <Compile Include="Controllers\FileController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
@@ -313,7 +320,6 @@
     <Compile Include="Helpers\AuthorizeClaim.cs" />
     <Compile Include="Helpers\CsvHelper.cs" />
     <Compile Include="Helpers\EmailChecker.cs" />
-    <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\ExcelUtility.cs" />
     <Compile Include="Async\Helpers\FileManager.cs" />
     <Compile Include="Async\Helpers\FileManagerFTP.cs" />
@@ -325,7 +331,7 @@
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Helpers\MultipleButtonAttribute.cs" />
     <Compile Include="Helpers\HangfireAuthorizationFilter.cs" />
-    <Compile Include="Async\ProDataAPIManager.cs" />
+    <Compile Include="ProData\ProDataApiManager.cs" />
     <Compile Include="Async\Helpers\S3FileManager.cs" />
     <Compile Include="Helpers\NumberHelper.cs" />
     <Compile Include="Helpers\QCRuleUtility.cs" />
@@ -338,18 +344,18 @@
     <Compile Include="Helpers\GatePassGenerator.cs" />
     <Compile Include="Hubs\WFPICTHub.cs" />
     <Compile Include="Hubs\WFPICTUpdater.cs" />
-    <Compile Include="Models\Campaign.cs" />
-    <Compile Include="Models\CampaignReportDetailVM.cs" />
+    <Compile Include="API\Campaign.cs" />
+    <Compile Include="Models\CampaignTrackingDetailVm.cs" />
     <Compile Include="Models\CampaignSegmentVM.cs" />
     <Compile Include="Models\CampaignApprovedVM.cs" />
     <Compile Include="Models\CampaignTestingVM.cs" />
     <Compile Include="Models\CampaignVM.cs" />
     <Compile Include="Models\CreativeUtility.cs" />
     <Compile Include="Models\CreativeVM.cs" />
-    <Compile Include="Models\CampaignReportVM.cs" />
+    <Compile Include="Models\CampaignTrackingVm.cs" />
     <Compile Include="Models\HtmlProcessResult.cs" />
-    <Compile Include="Models\ProDataRequest.cs" />
-    <Compile Include="Models\ProDataResponse.cs" />
+    <Compile Include="ProData\ProDataRequest.cs" />
+    <Compile Include="ProData\ProDataResponse.cs" />
     <Compile Include="Models\CompanyPermissionVM.cs" />
     <Compile Include="Models\CompanyRoleVM.cs" />
     <Compile Include="Models\CampaignSearchVM.cs" />
@@ -357,7 +363,7 @@
     <Compile Include="Models\CompanyUsersVM.cs" />
     <Compile Include="Models\JsonResponse.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
-    <Compile Include="Models\SystemLog.cs" />
+    <Compile Include="Models\SystemLogVM.cs" />
     <Compile Include="Models\UploadFileVM.cs" />
     <Compile Include="Models\UserProfileVM.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -366,6 +372,7 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>CampaignDatasetType.xsd</DependentUpon>
     </Compile>
+    <Compile Include="Reports\TrackingReports.cs" />
     <Compile Include="Reports\ReportModel.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
@@ -442,7 +449,8 @@
     <Content Include="images\location-pic-4.jpg" />
     <Content Include="images\location-pic-5.jpg" />
     <Content Include="images\location-pic.jpg" />
-    <Content Include="images\wfp.jpg" />
+    <Content Include="images\template1.png" />
+    <Content Include="images\template2.png" />
     <Content Include="images\mail.svg" />
     <Content Include="images\music.png" />
     <Content Include="images\page-header-img.jpg" />
@@ -521,11 +529,6 @@
     <Content Include="images\wedding-flowers.jpg" />
     <Content Include="images\wedding-jewellery.jpg" />
     <Content Include="images\wedding-shoes.jpg" />
-    <Content Include="images\wfp1.jpg" />
-    <Content Include="images\wfp2.jpg" />
-    <Content Include="images\wfp3.jpg" />
-    <Content Include="images\wfp4.jpg" />
-    <Content Include="images\wfp5.jpg" />
     <Content Include="images\woo-parallax.jpg" />
     <Content Include="images\jssLeftRight.png" />
     <Content Include="js\accordion-sign.js" />
@@ -856,7 +859,7 @@
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
-    <Content Include="Views\Home\Users.cshtml" />
+    <Content Include="Views\Company\Users.cshtml" />
     <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
@@ -887,12 +890,12 @@
     <Content Include="Views\Campaigns\Edit.cshtml" />
     <Content Include="Views\Campaigns\Index.cshtml" />
     <Content Include="Views\Shared\_UploadFile.cshtml" />
-    <Content Include="Views\Tracking\ViewReport.cshtml" />
+    <Content Include="Views\Tracking\Report.cshtml" />
     <Content Include="Views\Status\Index.cshtml" />
     <Content Include="Views\Shared\_Search.cshtml" />
     <Content Include="Views\Home\Settings.cshtml" />
-    <Content Include="Views\Home\CreateVendor.cshtml" />
-    <Content Include="Views\Home\Vendors.cshtml" />
+    <Content Include="Views\Vendor\New.cshtml" />
+    <Content Include="Views\Vendor\Index.cshtml" />
     <Content Include="Views\Testing\EditTesting.cshtml" />
     <Content Include="Views\Shared\_HeaderCopy.cshtml" />
     <Content Include="Views\Approved\EditApproved.cshtml" />
@@ -912,21 +915,26 @@
     <Content Include="Templates\SampleLiveSeed.csv" />
     <Content Include="Templates\SampleTestSeed.csv" />
     <Content Include="Templates\SampleSuppression.csv" />
-    <Content Include="Views\Shared\Editors\_Segment.cshtml" />
+    <Content Include="Views\Shared\Editors\_TestingSegment.cshtml" />
     <Content Include="Views\Shared\Editors\_SegmentView.cshtml" />
     <Content Include="Views\Notification\Index.cshtml" />
-    <Content Include="Views\Campaigns\NewSegment.cshtml" />
+    <Content Include="Views\Shared\Editors\_NewSegment.cshtml" />
     <Content Include="Views\Shared\_Logs.cshtml" />
     <Content Include="Views\Campaigns\Cancel.cshtml" />
     <Content Include="Views\Campaigns\Rebroad.cshtml" />
     <Content Include="Views\Campaigns\Complete.cshtml" />
     <Content Include="Templates\Tracking2.xlsx" />
+    <Content Include="WFP.ICT.Web.ruleset" />
+    <Content Include="Views\Company\Permissions.cshtml" />
+    <Content Include="Views\Company\Roles.cshtml" />
+    <Content Include="Views\Customer\Index.cshtml" />
+    <Content Include="Views\Customer\New.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Downloads\" />
     <Folder Include="Uploads\" />
-    <Folder Include="Views\Copy\" />
+    <Folder Include="Views\Test\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />
@@ -948,6 +956,11 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Reports\Campaign.rdlc" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\Google.Protobuf.dll" />
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.CSharp.dll" />
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.dll" />
   </ItemGroup>
   <PropertyGroup>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>

@@ -18,10 +18,73 @@ namespace WFP.ICT.Web.Controllers
     [Authorize]
     public class TestingController : BaseController
     {
+        public ActionResult Index(Guid? id)
+        {
+            var campaign = Db.Campaigns
+                .Include(c => c.Assets)
+                .Include(c => c.Testing)
+                .FirstOrDefault(c => c.Id == id);
+
+            if (campaign == null) return View("Error");
+
+            Session["id"] = id;
+            Session["OrderNumber"] = campaign.OrderNumber;
+
+            if (campaign.Testing == null)
+            {
+                campaign.Assets.ZipCodeUrl = $"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}zip.csv";
+                campaign.Assets.CreativeUrl =$"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}.htm";
+
+                var testingId = Guid.NewGuid();
+                var testing = new CampaignTesting()
+                {
+                    Id = testingId,
+                    CampaignId = campaign.Id,
+                    CreatedAt = DateTime.Now,
+                    CreatedBy = campaign.CreatedBy,
+                    CampaignName = campaign.CampaignName,
+                    WhiteLabel = campaign.WhiteLabel,
+                    ReBroadCast = campaign.ReBroadCast,
+                    ReBroadcastDate = campaign.ReBroadcastDate,
+                    FromLine = campaign.FromLine,
+                    SubjectLine = campaign.SubjectLine,
+
+                    TestingUrgency = campaign.TestingUrgency,
+                    DeployDate = campaign.BroadcastDate,
+                    GeoDetails = campaign.GeoDetails,
+                    Demographics = campaign.Demographics,
+                    Quantity = campaign.Quantity,
+                    SpecialInstructions = campaign.SpecialInstructions,
+
+                    IsOpenPixel = campaign.IsOpenPixel,
+                    OpenPixelUrl = campaign.OpenPixelUrl,
+                    OpenGoals = campaign.Quantity * 12 / 100,
+                    ClickGoals = campaign.Quantity * 15 / 100,
+                    DataFileQuantity = campaign.DataFileQuantity,
+                    //DataFileUrl = string.Format("http://www.digitaldynamixs.net/ep2/{0}/{0}data.csv", campaign.OrderNumber),
+
+                    IsOmniOrder = campaign.IsOmniOrder,
+                    OmniDeployDate = campaign.OmniDeployDate,
+                    Impressions = campaign.Impressions,
+                    ChannelTypes = campaign.ChannelTypes,
+
+                };
+                Db.CampaignsTesting.Add(testing);
+                Db.SaveChanges();
+
+                campaign.TestingId = testingId;
+                Db.SaveChanges();
+            }
+            campaign.Status = (int)CampaignStatus.Testing;
+            Db.SaveChanges();
+            return RedirectToAction("EditTesting", "Testing", new { id = campaign.TestingId });
+        }
+
         // GET: Copy/Edit/5
+        static char c1;
         public ActionResult EditTesting(Guid? id)
         {
-            var campaignTesting = db.CampaignsTesting.FirstOrDefault(c => c.Id == id);
+            var campaignTesting = Db.CampaignsTesting.FirstOrDefault(c => c.Id == id);
 
             if (campaignTesting == null)
             {
@@ -34,28 +97,57 @@ namespace WFP.ICT.Web.Controllers
             });
 
             var campaignTestingVm = TinyMapper.Map<CampaignTestingVM>(campaignTesting);
-            Campaign campaign = db.Campaigns
+            Campaign campaign = Db.Campaigns
                    .Include(x => x.Assets)
                    .Include(x => x.Segments)
                    .FirstOrDefault(x => x.Id == campaignTesting.CampaignId);
             campaignTestingVm.OrderNumber = campaign.OrderNumber;
+            if (campaign.Assets == null)
+            {
+                var assetId = Guid.NewGuid();
+                Db.CampaignAssets.Add(new CampaignAsset()
+                {
+                    Id = assetId,
+                    CampaignId = campaign.Id,
+                    CreatedAt = DateTime.Now
+                });
+                campaign.AssetsId = assetId;
+                Db.SaveChanges();
+                campaign = Db.Campaigns
+                   .Include(x => x.Assets)
+                   .Include(x => x.Segments)
+                   .FirstOrDefault(x => x.Id == campaignTesting.CampaignId);
+            }
             campaignTestingVm.Assets = campaign.Assets;
-            foreach (var segment in campaign.Segments)
+            c1 = 'A';
+            foreach (var segment in campaign.Segments.OrderBy(x => x.SegmentNumber))
             {
                 var segmentVm = TinyMapper.Map<CampaignSegmentVM>(segment);
                 campaignTestingVm.Segments.Add(segmentVm);
+                c1 = segment.SegmentNumber.Replace(campaignTestingVm.OrderNumber, string.Empty).ToCharArray().Select(x => ++x).FirstOrDefault();
             }
-
-            campaignTestingVm.ChannelTypes = string.IsNullOrEmpty(campaignTesting.ChannelTypes) ? new List<ChannelTypeEnum> { } :
+            campaignTestingVm.ChannelTypes = string.IsNullOrEmpty(campaignTesting.ChannelTypes) ? new List<ChannelType> { } :
                 campaignTesting.ChannelTypes
                     .Split(",".ToCharArray())
-                    .Select(x => (ChannelTypeEnum)System.Enum.Parse(typeof(ChannelTypeEnum),x)).ToList();
-            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
-                "Text", campaignTesting.TestingUrgency);
-
+                    .Select(x => (ChannelType)System.Enum.Parse(typeof(ChannelType),x)).ToList();
+            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
+                "Text", campaignTestingVm.TestingUrgency);
+            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", campaignTestingVm.WhiteLabel);
             return View(campaignTestingVm);
         }
-        
+
+        public ActionResult NewSegment(string orderNumber)
+        {
+            //TempData["PianoMake"] = new SelectList(PianoMakeList, "Value", "Text");
+            var segment = new CampaignSegment()
+            {
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
+                SegmentNumber = orderNumber + c1++
+            };
+            return PartialView("~/Views/Shared/Editors/_NewSegment.cshtml", segment);
+        }
+
         // POST: Copy/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -76,27 +168,42 @@ namespace WFP.ICT.Web.Controllers
                 var campaignTesting = TinyMapper.Map<CampaignTesting>(campaignTestingVm);
                 campaignTesting.ChannelTypes = campaignTestingVm.ChannelTypes == null ? null :
                     string.Join(",", campaignTestingVm.ChannelTypes);
-                db.Entry(campaignTesting).State = EntityState.Modified;
-                db.SaveChanges();
+                Db.Entry(campaignTesting).State = EntityState.Modified;
+                Db.SaveChanges();
 
                 // Updatin Asssets
-                var campaignAssets = db.CampaignAssets.FirstOrDefault(x => x.CampaignId == campaignTestingVm.CampaignId);
+                var campaignAssets = Db.CampaignAssets.FirstOrDefault(x => x.CampaignId == campaignTestingVm.CampaignId);
                 campaignAssets.CreativeFiles = campaignTestingVm.Assets.CreativeFiles;
                 campaignAssets.CreativeUrl = campaignTestingVm.Assets.CreativeUrl;
                 campaignAssets.ZipCodeFile = campaignTestingVm.Assets.ZipCodeFile;
                 campaignAssets.ZipCodeUrl = campaignTestingVm.Assets.ZipCodeUrl;
                 campaignAssets.TestSeedFile = campaignTestingVm.Assets.TestSeedFile;
                 campaignAssets.LiveSeedFile = campaignTestingVm.Assets.LiveSeedFile;
-                db.Entry(campaignAssets).State = EntityState.Modified;
-                db.SaveChanges();
+                Db.Entry(campaignAssets).State = EntityState.Modified;
+                Db.SaveChanges();
 
                 // Updating Segments
                 if(campaignTestingVm.Segments != null)
                 foreach (var segmentVm in campaignTestingVm.Segments)
                 {
-                    var segment = db.CampaignSegments.FirstOrDefault(x => x.Id == segmentVm.Id);
+                    var segment = Db.CampaignSegments.FirstOrDefault(x => x.Id == segmentVm.Id);
+                    if (segment == null)
+                    {
+                        segment = new CampaignSegment()
+                        {
+                            Id = Guid.NewGuid(),
+                            CreatedAt = DateTime.Now,
+                            CampaignId = campaignTestingVm.CampaignId,
+                            OrderNumber = campaignTestingVm.OrderNumber,
+                            SegmentNumber = segmentVm.SegmentNumber
+                        };
+                        Db.CampaignSegments.Add(segment);
+                        Db.SaveChanges();
+                    }
                     segment.SubjectLine = segmentVm.SubjectLine;
-                    segment.BroadcastDate = segmentVm.BroadcastDate;
+                    segment.FromLine = segmentVm.FromLine;
+                    segment.WhiteLabel = segmentVm.WhiteLabel;
+                    segment.Quantity = segmentVm.Quantity;
                     segment.DeploymentDate = segmentVm.DeploymentDate;
                     segment.CreativeFiles = segmentVm.CreativeFiles;
                     segment.FirstRangeStart = segmentVm.FirstRangeStart;
@@ -105,8 +212,8 @@ namespace WFP.ICT.Web.Controllers
                     segment.SecondRangeEnd = segmentVm.SecondRangeEnd;
                     segment.ThirdRangeStart = segmentVm.ThirdRangeStart;
                     segment.ThirdRangeEnd = segmentVm.ThirdRangeEnd;
-                    db.Entry(segment).State = EntityState.Modified;
-                    db.SaveChanges();
+                    Db.Entry(segment).State = EntityState.Modified;
+                    Db.SaveChanges();
                 }
 
                 TempData["Success"] = "Testing data saved successfully!";
@@ -118,8 +225,9 @@ namespace WFP.ICT.Web.Controllers
                                  select error.ErrorMessage).ToList();
                 TempData["Error"] = "There is error in saving data." + string.Join("<br/>", errorList);
             }
-            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
+            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
                 "Text", campaignTestingVm.TestingUrgency);
+            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", campaignTestingVm.WhiteLabel);
             return View("EditTesting", campaignTestingVm);
         }
 
@@ -127,10 +235,10 @@ namespace WFP.ICT.Web.Controllers
         {
             try
             {
-                var segment = db.CampaignSegments.FirstOrDefault(x => x.Id == Id);
-                segment.SegmentStatus = (int)SegmentStatusEnum.Approved;
+                var segment = Db.CampaignSegments.FirstOrDefault(x => x.Id == Id);
+                segment.SegmentStatus = (int)SegmentStatus.Approved;
                 segment.DateApproved = DateTime.Now;
-                db.SaveChanges();
+                Db.SaveChanges();
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -146,7 +254,7 @@ namespace WFP.ICT.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                return RedirectToAction("MoveTo", "Copy", new { id = Session["id"], to = "Approved" });
+                return RedirectToAction("Index", "Approved", new { id = Session["id"] });
             }
             else
             {
@@ -155,7 +263,7 @@ namespace WFP.ICT.Web.Controllers
                                  select error.ErrorMessage).ToList();
                 TempData["Error"] = "There is error in saving data." + string.Join("<br/>", errorList);
             }
-            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgencyEnum)), "Value",
+            ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
                 "Text", campaignTestingVm.TestingUrgency);
             return View("EditTesting", campaignTestingVm);
         }
@@ -165,7 +273,7 @@ namespace WFP.ICT.Web.Controllers
         [MultipleButton(Name = "action", Argument = "ProcessFiles")]
         public ActionResult ProcessFiles([Bind(Include = "Id,CampaignId,OrderNumber")] CampaignTestingVM campaignTestingVm)
         {
-            var campaign = db.Campaigns.FirstOrDefault(x => x.Id == campaignTestingVm.CampaignId);
+            var campaign = Db.Campaigns.FirstOrDefault(x => x.Id == campaignTestingVm.CampaignId);
             BackgroundJob.Enqueue(() => FileProcessor.ProcessAssetUpdateUrls(UploadPath, campaign.OrderNumber));
 
             TempData["Success"] = "File Processing has been started succesfully.";
@@ -177,72 +285,26 @@ namespace WFP.ICT.Web.Controllers
         [MultipleButton(Name = "action", Argument = "FetchProcessDataFiles")]
         public ActionResult FetchProcessDataFiles([Bind(Include = "Id,CampaignId,OrderNumber,ZipCodeFile, DataFileQuantity,Segments")] CampaignTestingVM campaignTestingVm)
         {
-            var campaign = db.Campaigns.Include(x => x.Assets).FirstOrDefault(x => x.Id == campaignTestingVm.CampaignId);
-
-            BackgroundJob.Enqueue(() => DataFileProcessor.FetchSQLDataFile(UploadPath, campaign.OrderNumber, campaign.Assets.ZipCodeFile, campaignTestingVm.DataFileQuantity));
-
-            TempData["Success"] = "SQL Data is being fetched and processed, please wait about 5m ...";
-            return RedirectToAction("EditTesting", new { id = campaignTestingVm.Id });
-        }
-
-        #region NOT USED
-        public ActionResult UpdateSegments(Guid? Id, int oldValue, int newValue)
-        {
             try
             {
-                Campaign campaign = db.Campaigns
-                   .Include(x => x.Segments)
-                   .FirstOrDefault(x => x.Id == Id);
+                var campaign = Db.Campaigns
+                .Include(x => x.Assets)
+                .Include(x => x.Segments)
+                .FirstOrDefault(x => x.Id == campaignTestingVm.CampaignId);
 
-                var lastSegment = campaign.Segments.OrderBy(x => x.SegmentNumber).LastOrDefault();
+                if(campaign.Segments.Count == 0)
+                    throw new ArgumentException("There are no data segments.");
 
-                if (oldValue + 1 == newValue) // add 
-                {
-                    char c1 = 'A';
-                    if (lastSegment != null)
-                    {
-                        c1 = lastSegment.SegmentNumber.ToCharArray().Last();
-                        c1++;
-                    }
-                    campaign.Segments.Add(new CampaignSegment()
-                    {
-                        Id = Guid.NewGuid(),
-                        CreatedAt = DateTime.Now,
-                        CampaignId = campaign.Id,
-                        SegmentNumber = campaign.OrderNumber + c1,
-                        FirstRangeStart = 1,
-                        FirstRangeEnd = 60000,
-                        SecondRangeStart = 0,
-                        SecondRangeEnd = 0,
-                        ThirdRangeStart = 0,
-                        ThirdRangeEnd = 0
-                    });
-                    db.SaveChanges();
-                }
-                else if (oldValue - 1 == newValue) // removed
-                {
-                    if (lastSegment == null)
-                    {
-                        throw new Exception("No more Segments");
-                    }
+                BackgroundJob.Enqueue(() => DataFileProcessor.FetchSQLDataFile(UploadPath, campaign.OrderNumber, campaign.Assets.ZipCodeFile, campaignTestingVm.DataFileQuantity));
 
-                    db.CampaignSegments.Remove(lastSegment);
-                    campaign.Segments.Remove(lastSegment);
-                    db.SaveChanges();
-                }
-                else
-                {
-                    throw new Exception("Please add segments one by one");
-                }
-
-                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+                TempData["Success"] = "SQL Data is being fetched and processed, please wait about 5m ...";
             }
             catch (Exception ex)
             {
-                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+                TempData["Error"] = ex.Message;
             }
-
+            return RedirectToAction("EditTesting", new { id = campaignTestingVm.Id });
         }
-        #endregion
+
     }
 }

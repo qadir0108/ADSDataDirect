@@ -5,29 +5,19 @@
 @using WFP.ICT.Enum
 @using WFP.ICT.Web.Helpers
 
-@model PagedList.IPagedList<WFP.ICT.Web.Models.CampaignReportVM>
+@model PagedList.IPagedList<WFP.ICT.Web.Models.CampaignTrackingVm>
 
 @{
     ViewData["Title"] = "Campaign Tracking";
     Layout = "~/Views/Shared/_Layout.cshtml";
 
-    var LoggedInUser = Session["user"] as WFPUser;
+    var LoggedInUser = Session["user"] as WfpUser;
     var IsLoggedIn = LoggedInUser != null;
-    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 
 <div class="container">
 
-        <br />
-        @if (TempData["Success"] != null)
-        {
-            <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
-        }
-        @if (TempData["Error"] != null)
-        {
-            <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
-        }
-    
     <div class="row" style="margin-top: 5px">
         <div class="col-md-8">
             <div class="headertab">
@@ -43,7 +33,7 @@
                     </div>
                     <input type="hidden" id="searchType" name="searchType" value="basic" />
                     <input type="hidden" id="clearSessionId" name="clearSessionId" value="" />
-                    <input type="text" id="searchString" name="searchString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
+                    <input type="text" id="basicString" name="basicString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
                     <div class="input-group-addon">
                         <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
                     </div>
@@ -61,7 +51,7 @@
         <thead>
             <tr>
                 <th>
-                    Order Number
+                    Order #
                 </th>
                 <th>
                     Campaign Name
@@ -90,7 +80,7 @@
         <tbody>
         @foreach (var item in Model)
         {
-            var divDrillDownId = "divDrillDown" + item.Id;
+            var divDrillDownId = "divDrillDown" + item.TrackingId;
 
             <tr>
                 <td>
@@ -118,12 +108,9 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.Status)
                 </td>
-                <td>
-                    @if (item.Status == "Completed")
-                    {
-                        <a href="#" class="btn btn-default btnDrill" data-id="@item.Id" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
-                        <a href="~/Tracking/DownloadReport?id=@item.Id" target="_blank" class="btn btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
-                    }
+                <td style="min-width: 90px">
+                    <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
+                    <a href="~/Tracking/DownloadReport?id=@item.CampaignId&trackingId=@item.TrackingId" target="_blank" class="btn btn-sm btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
                 </td>
             </tr>
             <tr><td colspan="8">
@@ -139,10 +126,10 @@
                                     @Html.DisplayFor(model => item.CampaignName)
                                 </dd>
                                 <dt>
-                                    @Html.DisplayNameFor(model => item.IONumber)
+                                    @Html.DisplayNameFor(model => item.IoNumber)
                                 </dt>
                                 <dd>
-                                    @Html.DisplayFor(model => item.IONumber)
+                                    @Html.DisplayFor(model => item.IoNumber)
                                 </dd>
                                 <dt>
                                     @Html.DisplayNameFor(model => item.StartDate)
@@ -151,10 +138,10 @@
                                     @Html.DisplayFor(model => item.StartDate)
                                 </dd>
                                 <dt>
-                                    @Html.DisplayNameFor(model => item.EmailsSent)
+                                    EmailsSent
                                 </dt>
                                 <dd>
-                                    @Html.DisplayFor(model => item.EmailsSent)
+                                    @Html.DisplayFor(model => item.Quantity)
                                 </dd>
                                 <dt>
                                     @Html.DisplayNameFor(model => item.Opened)
@@ -175,10 +162,10 @@
                                     @Html.DisplayFor(model => item.ClickedPercentage)
                                 </dd>
                                 <dt>
-                                    @Html.DisplayNameFor(model => item.CTRPercentage)
+                                    CtrPercentage
                                 </dt>
                                 <dd>
-                                    @Html.DisplayFor(model => item.CTRPercentage)
+                                    @Html.DisplayFor(model => item.ClickToOpenPercentage)
                                 </dd>
 
                             </dl>
@@ -207,7 +194,7 @@
                                     {
                                         <tr>
                                             <td>
-                                                @Html.DisplayFor(modelItem => item1.IONumber)
+                                                @Html.DisplayFor(modelItem => item1.IoNumber)
                                             </td>
                                             <td style="word-wrap:break-word;word-break:break-all;">
                                                 @item1.Link

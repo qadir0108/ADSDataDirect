@@ -3,9 +3,9 @@
 @using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
 @{
-    var LoggedInUser = Session["user"] as WFPUser;
+    var LoggedInUser = Session["user"] as WfpUser;
     var IsLoggedIn = LoggedInUser != null;
-    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 @if (Session["id"] != null)
 {
@@ -17,19 +17,19 @@
         </div>
         <div class="row">
             <div class="col-md-1">
-                @Html.ActionLink("Testing", "MoveTo", "Copy", new {id = Session["id"], to = "Testing"}, new {@class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Testing", "Index", "Testing", new {id = Session["id"] }, new {@class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-1">
                 @Html.ActionLink("Creative", "Index", "Creative", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-1">
-                @Html.ActionLink("Approved", "MoveTo", "Copy", new {id = Session["id"], to = "Approved"}, new {@class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Approved", "Index", "Approved", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-1">
                 @Html.ActionLink("Status", "Index", "Status", new { searchType = "basic", searchString = Session["OrderNumber"] }, new {@class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-1">
-                @Html.ActionLink("Tracking", "Index", "Tracking", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Tracking", "Report", "Tracking", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
             
             <div class="col-md-1">
@@ -38,16 +38,16 @@
             </div>
 
             <div class="col-md-1">
-                @Html.ActionLink("Clone", "MoveTo", "Copy", new { id = Session["id"], to = "Clone" }, new { @class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Clone", "Clone", "Campaigns", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-1">
-                @Html.ActionLink("ReBroad", "MoveTo", "Copy", new { id = Session["id"], to = "Rebroad" }, new { @class = "btn btn-default btn-sm" })
+                @Html.ActionLink("ReBroad", "Rebroad", "Campaigns", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-1">
-                @Html.ActionLink("Cancel", "MoveTo", "Copy", new { id = Session["id"], to = "Cancel" }, new { @class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Cancel", "Cancel", "Campaigns", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
             <div class="col-md-1">
-                @Html.ActionLink("Complete", "MoveTo", "Copy", new { id = Session["id"], to = "Complete" }, new { @class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Complete", "Complete", "Campaigns", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
             
         </div>

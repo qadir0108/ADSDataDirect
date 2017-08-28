@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WFP.ICT.Data.Entities
 {
-    public class CampaignApproved : BaseEntity, iBaseEntity
+    public class CampaignApproved : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
@@ -41,7 +41,7 @@ namespace WFP.ICT.Data.Entities
         public bool IsOmniOrder { get; set; }
         public DateTime? OmniDeployDate { get; set; }
         public long Impressions { get; set; }
-        public string ChannelTypes { get; set; } // List<int> ChannelTypeEnum
+        public string ChannelTypes { get; set; } // List<int> Enum.ChannelType
 
         public bool IsUseApiDataForOpen { get; set; } // Or API/Open Metric formula
         

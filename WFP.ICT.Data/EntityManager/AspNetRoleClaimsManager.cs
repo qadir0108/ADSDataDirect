@@ -9,7 +9,7 @@ namespace WFP.ICT.Data.EntityManager
 
         }
 
-        public AspNetRoleClaimsManager(WFPICTContext context) : base(context)
+        public AspNetRoleClaimsManager(WfpictContext context) : base(context)
         {
 
         }

@@ -40,7 +40,7 @@ namespace WFP.ICT.Web.App_Start
 
             container.RegisterType<Controllers.AccountController>(new InjectionConstructor());
 
-            container.RegisterType<System.Data.Entity.DbContext, WFPICTContext>(new HierarchicalLifetimeManager());
+            container.RegisterType<System.Data.Entity.DbContext, WfpictContext>(new HierarchicalLifetimeManager());
         }
     }
 }

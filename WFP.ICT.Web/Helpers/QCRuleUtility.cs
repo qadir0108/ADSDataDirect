@@ -12,15 +12,15 @@ namespace WFP.ICT.Web.Helpers
         {
             switch (QCRule)
             {
-                case (int)QCRuleEnum.NotStartedInFirst4Hours:
+                case (int)ADSDataDirect.Enums.QCRule.NotStartedInFirst4Hours:
                     return "Campaign is not started in first four(4) hours of Order";
-                case (int)QCRuleEnum.NotHitOpenRate5In24Hours:
+                case (int)ADSDataDirect.Enums.QCRule.NotHitOpenRate5In24Hours:
                     return "Campaign has not hit OPEN rate of 5% in 24 hours of Order";
-                case (int)QCRuleEnum.NotHitOpenRate10In72Hours:
+                case (int)ADSDataDirect.Enums.QCRule.NotHitOpenRate10In72Hours:
                     return "Campaign has not hit OPEN rate of 10% in 72 hours of Order";
-                case (int)QCRuleEnum.NotHitClickRate750In24Hours:
+                case (int)ADSDataDirect.Enums.QCRule.NotHitClickRate750In24Hours:
                     return "Campaign has not hit CLICK rate of .75% in 24 hours of Order";
-                case (int)QCRuleEnum.NotHitClickRate1500In72Hours:
+                case (int)ADSDataDirect.Enums.QCRule.NotHitClickRate1500In72Hours:
                     return "Campaign has not hit CLICK rate of 1.5% in 72 hours of Order";
             }
             return "";

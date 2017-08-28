@@ -9,7 +9,7 @@ namespace WFP.ICT.Web.Helpers
 {
     public class EmailChecker
     {
-        static bool invalid = false;
+        private static bool invalid = false;
 
         public static bool IsValidEmail(string strIn)
         {
@@ -27,10 +27,7 @@ namespace WFP.ICT.Web.Helpers
             {
                 return false;
             }
-
-            if (invalid)
-                return false;
-
+           
             // Return true if strIn is in valid e-mail format.
             try
             {

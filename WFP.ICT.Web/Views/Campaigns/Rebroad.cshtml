@@ -80,7 +80,7 @@
             <div class="form-group">
                 <label class="control-label col-md-3">ReBroadcast Quantity</label>
                 <div class="col-md-9">
-                    @Html.EditorFor(model => model.ReBroadcastedQuantity, new { htmlAttributes = new { @class = "form-control", @value= @ViewBag.OpennedFromOrignal } })
+                    @Html.EditorFor(model => model.ReBroadcastedQuantity, new { htmlAttributes = new { @class = "form-control" } })
                     @Html.ValidationMessageFor(model => model.ReBroadcastedQuantity, "", new { @class = "text-danger" })
                 </div>
             </div>
@@ -92,7 +92,7 @@
                 </div>
             </div>
             
-            <div class="form-group">
+            @*<div class="form-group">
                 <label class="control-label col-md-3 pre">Segment</label>
                 <div class="col-md-9">
                     <div id="SegmentsSelected">
@@ -105,8 +105,8 @@
                         }
                     </div>
                 </div>
-            </div>
-            
+            </div>*@
+            <br /><br />
             <div class="form-group pull-right">
                 <div class="no-color">
                     <input type="submit" value="Rebroad" class="btn btn-default" /> |

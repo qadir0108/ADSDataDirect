@@ -20,8 +20,18 @@
     @Html.Partial("_Header")
 
     <div class="container body-content">
+        
+        @if (TempData["Success"] != null)
+        {
+            <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+        }
+        @if (TempData["Error"] != null)
+        {
+            <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
+        }
+
         @RenderBody()
-            
+
         <footer>
             <p>
                 &copy; @DateTime.Now.Year - ADS Data Direct
@@ -31,8 +41,8 @@
 </div>
     
 @{
-    var LoggedInUser = Session["user"] as WFPUser;
-    bool IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var LoggedInUser = Session["user"] as WfpUser;
+    bool IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 @if (IsAdmin)
 {

@@ -23,9 +23,9 @@ namespace WFP.ICT.Web.Async
         public static async Task FetchSQLDataFile(string UploadPath, string OrderNumber, string ZipCodeFile,
             long DataQuantity)
         {
-            using (var db = new WFPICTContext())
+            using (var db = new WfpictContext())
             {
-                LogHelper.AddLog(db, LogTypeEnum.DataProcessing, OrderNumber, "SQL Data File processing started");
+                LogHelper.AddLog(db, LogType.DataProcessing, OrderNumber, "SQL Data File processing started");
                 try
                 {
                     // Zip file processing
@@ -38,7 +38,7 @@ namespace WFP.ICT.Web.Async
                         if (string.IsNullOrEmpty(trimmed)) continue;
                         list.Add(trimmed);
                     }
-                    LogHelper.AddLog(db, LogTypeEnum.DataProcessing, OrderNumber,
+                    LogHelper.AddLog(db, LogType.DataProcessing, OrderNumber,
                         ZipCodeFile + " processed sucessfully.");
 
                     // SQL Data file
@@ -75,7 +75,7 @@ namespace WFP.ICT.Web.Async
                         });
                         string amazonFileKey = string.Format("{0}/{0}data.csv", OrderNumber);
                         S3FileManager.Upload(amazonFileKey, filePath, true);
-                        LogHelper.AddLog(db, LogTypeEnum.DataProcessing, OrderNumber,
+                        LogHelper.AddLog(db, LogType.DataProcessing, OrderNumber,
                        amazonFileKey + " data file generated and uploaded to Amazon sucessfully.");
 
                         // Generating Segment data files
@@ -124,33 +124,30 @@ namespace WFP.ICT.Web.Async
                             string amazonFileKey1 = string.Format("{0}/{1}data.csv", campaign.OrderNumber, segment.SegmentNumber);
                             S3FileManager.Upload(amazonFileKey1, filePath, true);
 
-                            segment.SegmentDataFileUrl = FileManager.GetFilePathLive(UploadFileTypeEnum.DataFile,
+                            segment.SegmentDataFileUrl = FileManager.GetFilePathLive(UploadFileType.DataFile,
                                 campaign.OrderNumber, string.Empty, segment.SegmentNumber);
                             segment.DateFetched = DateTime.Now;
-                            segment.UploadStatus = (int)UploadFileStatusEnum.Completed;
-                            segment.SegmentStatus = (int)SegmentStatusEnum.Generated;
+                            segment.UploadStatus = (int)UploadFileStatus.Completed;
+                            segment.SegmentStatus = (int)SegmentStatus.Generated;
 
-                            LogHelper.AddLog(db, LogTypeEnum.DataProcessing, OrderNumber,
+                            LogHelper.AddLog(db, LogType.DataProcessing, OrderNumber,
                                 amazonFileKey1 + " data file generated and uploaded to Amazon sucessfully.");
 
                         }
                         db.SaveChanges();
 
+                        LogHelper.AddLog(db, LogType.DataProcessing, OrderNumber, " SQL Data files generated sucessfully.");
                     }
                     catch (Exception ex)
                     {
-                        LogHelper.AddError(db, LogTypeEnum.DataProcessing, OrderNumber, "Error fetching data from SQL Server " + ex.Message);
+                        LogHelper.AddError(db, LogType.DataProcessing, OrderNumber, "Error fetching data from SQL Server " + ex.Message);
                     }
 
                 }
                 catch (Exception ex)
                 {
-                    LogHelper.AddError(db, LogTypeEnum.DataProcessing, OrderNumber, "Error processing " + ZipCodeFile + " " + ex.Message);
+                    LogHelper.AddError(db, LogType.DataProcessing, OrderNumber, "Error processing " + ZipCodeFile + " " + ex.Message);
                 }
-
-                LogHelper.AddLog(db, LogTypeEnum.DataProcessing, OrderNumber,
-                                " SQL Data files generated sucessfully.");
-
             }
         }
     }

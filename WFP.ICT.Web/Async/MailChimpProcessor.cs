@@ -42,16 +42,16 @@ namespace WFP.ICT.Web.Async
 
         public static void TestSend(CreativeVM model)
         {
-            using (var db = new WFPICTContext())
+            using (var db = new WfpictContext())
             {
-                var logs = db.SystemLogs.Where(x => x.OrderNumber == model.OrderNumber && x.LogType == (int)LogTypeEnum.MailChimp);
+                var logs = db.SystemLogs.Where(x => x.OrderNumber == model.OrderNumber && x.LogType == (int)LogType.MailChimp);
                 foreach (var log in logs)
                 {
                     db.SystemLogs.Remove(log);
                 }
                 db.SaveChanges();
 
-                LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Starting Test send. Order Number : " + model.OrderNumber);
+                LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Starting Test send. Order Number : " + model.OrderNumber);
                 string listId = CreateList(db, model);
                 CreateMembers(db, listId, model);
 
@@ -65,14 +65,14 @@ namespace WFP.ICT.Web.Async
                 
                 SendCampaign(db, model, campaignId);
 
-                LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Test send completed successfully.");
+                LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Test send completed successfully.");
             }
         }
 
-        private static void SendCampaign(WFPICTContext db, CreativeVM model, string campaignId)
+        private static void SendCampaign(WfpictContext db, CreativeVM model, string campaignId)
         {
             IMailChimpManager manager = new MailChimpManager();
-            LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Sending to Test list");
+            LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Sending to Test list");
             var sent = manager.Campaigns.SendAsync(campaignId).ConfigureAwait(false);
           
         }
@@ -104,10 +104,10 @@ namespace WFP.ICT.Web.Async
             return campaignId;
         }
 
-        private static string CreateCampignWithTemplate(WFPICTContext db, CreativeVM model, string listId, int templateId)
+        private static string CreateCampignWithTemplate(WfpictContext db, CreativeVM model, string listId, int templateId)
         {
             IMailChimpManager manager = new MailChimpManager();
-            LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Creating campaign with template");
+            LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Creating campaign with template");
             var campaign = manager.Campaigns.AddAsync(new MailChimp.Net.Models.Campaign
             {
                 Recipients = new Recipient
@@ -129,10 +129,10 @@ namespace WFP.ICT.Web.Async
             return campaignId;
         }
 
-        private static int CreateTemplate(WFPICTContext db, CreativeVM model)
+        private static int CreateTemplate(WfpictContext db, CreativeVM model)
         {
             IMailChimpManager manager = new MailChimpManager();
-            LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Creating template from creatives");
+            LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Creating template from creatives");
             var allTemplatesRequest = manager.Templates.GetAllAsync().ConfigureAwait(false);
             var allTemplates = allTemplatesRequest.GetAwaiter().GetResult();
             int templateIdOld = -1;
@@ -146,13 +146,13 @@ namespace WFP.ICT.Web.Async
             }
             if (templateIdOld != -1)
             {
-                LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Template " + model.OrderNumber + " already exists. Deleting old one.");
+                LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Template " + model.OrderNumber + " already exists. Deleting old one.");
                 var deleteTemplateRequest = manager.Templates.DeleteAsync(templateIdOld.ToString()).ConfigureAwait(false);
             }
 
             var template = manager.Templates.CreateAsync(model.OrderNumber, "", model.Creatives).ConfigureAwait(false);
             var templateId = template.GetAwaiter().GetResult().Id;
-            LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Template creatives created successfully.");
+            LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Template creatives created successfully.");
             return templateId;
         }
 
@@ -163,10 +163,10 @@ namespace WFP.ICT.Web.Async
             var folderStatus = folder.GetAwaiter().GetResult();
         }
 
-        private static void CreateMembers(WFPICTContext db, string listId, CreativeVM model)
+        private static void CreateMembers(WfpictContext db, string listId, CreativeVM model)
         {
             IMailChimpManager manager = new MailChimpManager();
-            LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Creating members");
+            LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Creating members");
             foreach (var email in model.TestEmails)
             {
                 var member = new Member { EmailAddress = email.Text, StatusIfNew = Status.Subscribed };
@@ -175,10 +175,10 @@ namespace WFP.ICT.Web.Async
 
                 var exists = manager.Members.ExistsAsync(listId, email.Text).Result;
             }
-            LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Members created successfully.");
+            LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Members created successfully.");
         }
 
-        private static string CreateList(WFPICTContext db, CreativeVM model)
+        private static string CreateList(WfpictContext db, CreativeVM model)
         {
             bool isListExists = false;
             string listId = string.Empty;
@@ -196,11 +196,11 @@ namespace WFP.ICT.Web.Async
 
             if (isListExists)
             {
-                LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "List " + model.OrderNumber + " already exists.");
+                LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "List " + model.OrderNumber + " already exists.");
             }
             else
             {
-                LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "Creating list");
+                LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "Creating list");
                 var testList = manager.Lists.AddOrUpdateAsync(
                         new List()
                         {
@@ -225,7 +225,7 @@ namespace WFP.ICT.Web.Async
                         }).ConfigureAwait(false);
                 var list = testList.GetAwaiter().GetResult();
                 listId = list.Id;
-                LogHelper.AddLog(db, LogTypeEnum.MailChimp, model.OrderNumber, "List created successfully.");
+                LogHelper.AddLog(db, LogType.MailChimp, model.OrderNumber, "List created successfully.");
             }
 
             return listId;

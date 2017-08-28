@@ -20,6 +20,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>WFP.ICT.Enum.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -28,6 +29,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>WFP.ICT.Enum.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -41,23 +43,34 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="LogStatusEnum.cs" />
-    <Compile Include="LogTypeEnum.cs" />
-    <Compile Include="ChannelTypeEnum.cs" />
-    <Compile Include="NotificationStatusEnum.cs" />
-    <Compile Include="QCRuleEnum.cs" />
-    <Compile Include="SegmentStatusEnum.cs" />
-    <Compile Include="CampaignStatusEnum.cs" />
+    <Compile Include="ReportTemplate.cs" />
+    <Compile Include="LogStatus.cs" />
+    <Compile Include="ProDataResponseStatus.cs" />
+    <Compile Include="LogType.cs" />
+    <Compile Include="ChannelType.cs" />
+    <Compile Include="NotificationStatus.cs" />
+    <Compile Include="QCRule.cs" />
+    <Compile Include="SegmentStatus.cs" />
+    <Compile Include="CampaignStatus.cs" />
     <Compile Include="EnumHelper.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SelectItemPair.cs" />
     <Compile Include="StringConstants.cs" />
-    <Compile Include="TestingUrgencyEnum.cs" />
+    <Compile Include="TestingUrgency.cs" />
     <Compile Include="TextValuePair.cs" />
-    <Compile Include="UploadFileTypeEnum.cs" />
-    <Compile Include="UploadFileStatusEnum.cs" />
-    <Compile Include="UserTypeEnum.cs" />
-    <Compile Include="UserStatusEnum.cs" />
+    <Compile Include="UploadFileType.cs" />
+    <Compile Include="UploadFileStatus.cs" />
+    <Compile Include="UserType.cs" />
+    <Compile Include="UserStatus.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="packages.config" />
+    <None Include="WFP.ICT.Enum.ruleset" />
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\Google.Protobuf.dll" />
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.CSharp.dll" />
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

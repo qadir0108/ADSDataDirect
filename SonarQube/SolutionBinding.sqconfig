@@ -1,0 +1,11 @@
+{
+  "ServerUri": "http://localhost:9000",
+  "Organization": null,
+  "ProjectKey": "adsdatadirect",
+  "Profiles": {
+    "CSharp": {
+      "ProfileKey": "AV4SZVSBj6MjXWCq_1BW",
+      "ProfileTimestamp": "2017-08-24T09:20:32+05:00"
+    }
+  }
+}

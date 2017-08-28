@@ -21,6 +21,5 @@ namespace WFP.ICT.Data.EntityManager
 
         int SaveChanges();
         bool SaveChangesSuccess { get; }
-        void Dispose();
     }
 }

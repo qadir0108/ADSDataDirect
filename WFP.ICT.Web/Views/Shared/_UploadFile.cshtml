@@ -44,7 +44,7 @@
                 linkDownload.hide();
                 linkDelete.hide();
             } else {
-                linkDownload.attr('href', '../../File/DownloadFile?file=' + txtSelectedFile.val());
+                linkDownload.attr('href', '../../File/DownloadFile?FileName=' + txtSelectedFile.val() + '&FileType=' + '@Model.FileType');
                 linkDelete.data('file', txtSelectedFile.val());
                 linkDownload.show();
                 linkDelete.show();
@@ -96,7 +96,7 @@
                                     wfp.showSuccess('Uploaded Successfully.');
                                     btnUpload.prop('disabled', false);
                                     txtSelectedFile.attr('value', result.Result);
-                                    linkDownload.attr('href', '../../File/DownloadFile?file=' + result.Result);
+                                    linkDownload.attr('href', '../../File/DownloadFile?FileName=' + result.Result + '&FileType=' + '@Model.FileType');
                                     linkDelete.data('file', result.Result);
                                     linkDownload.show();
                                     linkDelete.show();
@@ -141,7 +141,8 @@
                 e.preventDefault();
 
                 var dataToPost = {
-                    file: linkDelete.data('file')
+                   FileName: linkDelete.data('file'),
+                   FileType: '@Model.FileType'
                 };
 
                 $.ajax({

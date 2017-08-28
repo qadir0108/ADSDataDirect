@@ -47,7 +47,7 @@ namespace WFP.ICT.Web.Models
 
         public bool IsUseApiDataForOpen { get; set; } // Or API/Open Metric formula
 
-        public List<ChannelTypeEnum> ChannelTypes { get; set; } // List<int> ChannelTypeEnum
+        public List<ChannelType> ChannelTypes { get; set; } // List<int> Enum.ChannelType
 
         public virtual CampaignAsset Assets { get; set; }
 

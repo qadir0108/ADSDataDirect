@@ -9,6 +9,12 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFP.ICT.Enum", "WFP.ICT.Enu
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFP.ICT.Web", "WFP.ICT.Web\WFP.ICT.Web.csproj", "{14EBE5AC-2DB6-46D3-ADBA-60BD626F3938}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SonarQube", "SonarQube", "{073389B6-4365-45C5-AF92-E188759AB528}"
+	ProjectSection(SolutionItems) = preProject
+		SonarQube\adsdatadirectCSharp.ruleset = SonarQube\adsdatadirectCSharp.ruleset
+		SonarQube\SolutionBinding.sqconfig = SonarQube\SolutionBinding.sqconfig
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU

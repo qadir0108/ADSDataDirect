@@ -10,7 +10,7 @@ namespace WFP.ICT.Data.Migrations
     using System.Data.Entity.Migrations;
     using System.Linq;
 
-    internal sealed class Configuration : DbMigrationsConfiguration<WFPICTContext>
+    internal sealed class Configuration : DbMigrationsConfiguration<WfpictContext>
     {
         public Configuration()
         {
@@ -18,7 +18,7 @@ namespace WFP.ICT.Data.Migrations
             
         }
 
-        protected override void Seed(WFPICTContext context)
+        protected override void Seed(WfpictContext context)
         {
             // Look for any students.
             if (context.Users.Any())
@@ -26,34 +26,36 @@ namespace WFP.ICT.Data.Migrations
                 return;   // DB has been seeded
             }
 
-            var UserManager = new UserManager<Data.Entities.WFPUser>(new UserStore<Data.Entities.WFPUser>(context));
+            var userManager = new UserManager<Data.Entities.WfpUser>(new UserStore<Data.Entities.WfpUser>(context));
 
-            var appUser = new WFPUser
+            var appUser = new WfpUser
             {
                 Id = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.Now,
                 UserName = "josh.silver",
                 Email = "josh.silver@adsdatadirect.com",
-                Status = (int)UserStatusEnum.Active,
-                UserType = (int)UserTypeEnum.Admin
+                Status = (int)UserStatus.Active,
+                UserType = (int)UserType.Admin
             };
-            var result = UserManager.CreateAsync(appUser, "P@kistan1");
+            var result = userManager.CreateAsync(appUser, "P@kistan1");
             if (result.Result == IdentityResult.Success)
             {
+                //Success
             }
 
-            appUser = new WFPUser
+            appUser = new WfpUser
             {
                 Id = Guid.NewGuid().ToString(),
                 CreatedAt = DateTime.Now,
                 UserName = "test.user",
                 Email = "qadir0108@gmail.com",
-                Status = (int)UserStatusEnum.Active,
-                UserType = (int)UserTypeEnum.User
+                Status = (int)UserStatus.Active,
+                UserType = (int)UserType.User
             };
-            result = UserManager.CreateAsync(appUser, "P@kistan1");
+            result = userManager.CreateAsync(appUser, "P@kistan1");
             if (result.Result == IdentityResult.Success)
             {
+                //Success
             }
 
             var compaignId = Guid.NewGuid();
@@ -76,7 +78,7 @@ namespace WFP.ICT.Data.Migrations
                     CreatedAt = DateTime.Now,
                     CreatedBy = "josh.silver",
 
-                    Status = (int)CampaignStatusEnum.OrderRecevied,
+                    Status = (int)CampaignStatus.OrderRecevied,
                     CampaignName = "Car Dealership 123",
                     BroadcastDate = DateTime.Now.AddDays(5),
                     RepresentativeName = "Josh Silver",
@@ -84,7 +86,7 @@ namespace WFP.ICT.Data.Migrations
                     ReBroadCast = true,
                     ReBroadcastDate = DateTime.Now.AddMonths(1),
                     Price = 10000,
-                    TestingUrgency = (int)TestingUrgencyEnum.One_Three_Hour,
+                    TestingUrgency = (int)TestingUrgency.One_Three_Hour,
                     GeoDetails = "1 km around 5432",
                     Demographics = "NY",
                     Quantity = 100000,
@@ -114,7 +116,7 @@ namespace WFP.ICT.Data.Migrations
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
                 Email = "qadir0108@gmail.com",
-                CCEmails = @"jkorkin@prodata.media,josh.silver@adsdatdirect.com,jkorkin@safedatatech.onmicrosoft.com,eric@adsdatadirect.com,john.benuck@amelioratedata.com",
+                CcEmails = @"jkorkin@prodata.media,josh.silver@adsdatdirect.com,jkorkin@safedatatech.onmicrosoft.com,eric@adsdatadirect.com,john.benuck@amelioratedata.com",
                 Name = "Test Vendor",
                 CompanyName = "Vendor Company"
             };

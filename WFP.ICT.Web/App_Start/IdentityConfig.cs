@@ -29,17 +29,17 @@ namespace WFP.ICT.Web
     }
 
     // Configure the application user manager used in this application. UserManager is defined in ASP.NET Identity and is used by the application.
-    public class ApplicationUserManager : UserManager<WFPUser>
+    public class ApplicationUserManager : UserManager<WfpUser>
     {
-        public ApplicationUserManager(IUserStore<WFPUser> store) : base(store)
+        public ApplicationUserManager(IUserStore<WfpUser> store) : base(store)
         {
         }
 
         public static ApplicationUserManager Create(IdentityFactoryOptions<ApplicationUserManager> options, IOwinContext context) 
         {
-            var manager = new ApplicationUserManager(new UserStore<WFPUser>(context.Get<WFPICTContext>()));
+            var manager = new ApplicationUserManager(new UserStore<WfpUser>(context.Get<WfpictContext>()));
             // Configure validation logic for usernames
-            manager.UserValidator = new UserValidator<WFPUser>(manager)
+            manager.UserValidator = new UserValidator<WfpUser>(manager)
             {
                 AllowOnlyAlphanumericUserNames = false,
                 RequireUniqueEmail = true
@@ -62,11 +62,11 @@ namespace WFP.ICT.Web
 
             // Register two factor authentication providers. This application uses Phone and Emails as a step of receiving a code for verifying the user
             // You can write your own provider and plug it in here.
-            manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<WFPUser>
+            manager.RegisterTwoFactorProvider("Phone Code", new PhoneNumberTokenProvider<WfpUser>
             {
                 MessageFormat = "Your security code is {0}"
             });
-            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<WFPUser>
+            manager.RegisterTwoFactorProvider("Email Code", new EmailTokenProvider<WfpUser>
             {
                 Subject = "Security Code",
                 BodyFormat = "Your security code is {0}"
@@ -77,24 +77,24 @@ namespace WFP.ICT.Web
             if (dataProtectionProvider != null)
             {
                 manager.UserTokenProvider = 
-                    new DataProtectorTokenProvider<WFPUser>(dataProtectionProvider.Create("ASP.NET Identity"));
+                    new DataProtectorTokenProvider<WfpUser>(dataProtectionProvider.Create("ASP.NET Identity"));
             }
             return manager;
         }
     }
 
-    public class ApplicationRoleManager : RoleManager<WFPRole>
+    public class ApplicationRoleManager : RoleManager<WfpRole>
     {
-        public ApplicationRoleManager(IRoleStore<WFPRole, string> roleStore): base(roleStore)
+        public ApplicationRoleManager(IRoleStore<WfpRole, string> roleStore): base(roleStore)
         {
         }
 
         public static ApplicationRoleManager Create(IdentityFactoryOptions<ApplicationRoleManager> options, IOwinContext context)
         {
-            return new ApplicationRoleManager(new RoleStore<WFPRole>(context.Get<WFPICTContext>()));
+            return new ApplicationRoleManager(new RoleStore<WfpRole>(context.Get<WfpictContext>()));
         }
 
-        public void AddClaim(WFPICTContext ctx, string roleId, Guid claimID)
+        public void AddClaim(WfpictContext ctx, string roleId, Guid claimID)
         {
             ctx.RoleClaims.Add(new AspNetRoleClaims()
             {
@@ -108,14 +108,14 @@ namespace WFP.ICT.Web
     }
 
     // Configure the application sign-in manager which is used in this application.
-    public class ApplicationSignInManager : SignInManager<WFPUser, string>
+    public class ApplicationSignInManager : SignInManager<WfpUser, string>
     {
         public ApplicationSignInManager(ApplicationUserManager userManager, IAuthenticationManager authenticationManager)
             : base(userManager, authenticationManager)
         {
         }
 
-        public override Task<ClaimsIdentity> CreateUserIdentityAsync(WFPUser user)
+        public override Task<ClaimsIdentity> CreateUserIdentityAsync(WfpUser user)
         {
             return user.GenerateUserIdentityAsync((ApplicationUserManager)UserManager);
         }
@@ -125,7 +125,7 @@ namespace WFP.ICT.Web
             return new ApplicationSignInManager(context.GetUserManager<ApplicationUserManager>(), context.Authentication);
         }
 
-        public override Task SignInAsync(WFPUser user, bool isPersistent, bool rememberBrowser)
+        public override Task SignInAsync(WfpUser user, bool isPersistent, bool rememberBrowser)
         {
             return base.SignInAsync(user, isPersistent, rememberBrowser);
         }
@@ -141,7 +141,7 @@ namespace WFP.ICT.Web
         //    if (resultFromLocal.Result == SignInStatus.Success)
         //    {
         //        var user = UserManager.FindByName(userName);
-        //        if (user.Status == (int)UserStatusEnum.Locked)
+        //        if (user.Status == (int)UserStatus.Locked)
         //            return Task.FromResult(SignInStatus.LockedOut);
 
         //        return Task.FromResult(SignInStatus.Success);
@@ -173,7 +173,7 @@ namespace WFP.ICT.Web
         //                }
         //                else
         //                {
-        //                    throw new Exception("There is an error while creating user." + createUserResult.Result.Errors.FirstOrDefault());
+        //                    throw new ArgumentException("There is an error while creating user." + createUserResult.Result.Errors.FirstOrDefault());
         //                }
         //            }
 

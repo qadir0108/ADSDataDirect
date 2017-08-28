@@ -33,21 +33,12 @@
     var columnSortParams4 = new { sortOrder = ViewBag.BroadcastDateSortParm };
     var columnSortParams5 = new { sortOrder = ViewBag.StatusSortParm };
 
-    var LoggedInUser = Session["user"] as WFPUser;
+    var LoggedInUser = Session["user"] as WfpUser;
     var IsLoggedIn = LoggedInUser != null;
-    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserTypeEnum.Admin);
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 
     <div class="container">
         <div class="form-horizontal">
-            <br />
-            @if (TempData["Success"] != null)
-            {
-                <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
-            }
-            @if (TempData["Error"] != null)
-            {
-                <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
-            }
             <div class="row">
                 <div class="col-md-4">
 

@@ -5,7 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace WFP.ICT.Data.Entities
 {
-    public class CampaignCreative : BaseEntity, iBaseEntity
+    public class CampaignCreative : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }

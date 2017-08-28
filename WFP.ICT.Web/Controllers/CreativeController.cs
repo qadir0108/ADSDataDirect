@@ -24,7 +24,7 @@ namespace WFP.ICT.Web.Controllers
         // Creative
         public ActionResult Index(Guid id)
         {
-            var campaign = db.Campaigns
+            var campaign = Db.Campaigns
                 .Include(c => c.Assets)
                 .Include(c => c.Testing)
                 .Include(c => c.Approved)
@@ -78,7 +78,7 @@ namespace WFP.ICT.Web.Controllers
         {
             try
             {
-                var alreay = db.CampaignCreatives.FirstOrDefault(x => x.CampaignId.ToString() == model.CampaignId);
+                var alreay = Db.CampaignCreatives.FirstOrDefault(x => x.CampaignId.ToString() == model.CampaignId);
                 if (alreay == null)
                 {
                     var creativeId = Guid.NewGuid();
@@ -89,15 +89,15 @@ namespace WFP.ICT.Web.Controllers
                         CampaignId = Guid.Parse(model.CampaignId),
                         CreativeHtml = model.Creatives
                     };
-                    db.CampaignCreatives.Add(alreay);
-                    var campaign = db.Campaigns.FirstOrDefault(c => c.Id.ToString() == model.CampaignId);
+                    Db.CampaignCreatives.Add(alreay);
+                    var campaign = Db.Campaigns.FirstOrDefault(c => c.Id.ToString() == model.CampaignId);
                     campaign.CreativeId = creativeId;
                 }
                 else
                 {
                     alreay.CreativeHtml = model.Creatives;
                 }
-                db.SaveChanges();
+                Db.SaveChanges();
                 TempData["Success"] = "Creatives has been saved successfully!";
             }
             catch (Exception ex)
@@ -202,10 +202,10 @@ namespace WFP.ICT.Web.Controllers
             {
                 if (OrderNumber == null)
                 {
-                    throw new Exception("Order Number missing");
+                    throw new ArgumentException("Order Number missing");
                 }
 
-                var messages = db.SystemLogs.Where(x => x.OrderNumber == OrderNumber && x.LogType == (int)LogTypeEnum.MailChimp)
+                var messages = Db.SystemLogs.Where(x => x.OrderNumber == OrderNumber && x.LogType == (int)LogType.MailChimp)
                     .OrderByDescending(x => x.CreatedAt)
                     .Select(x => new { CreatedAt = x.CreatedAt.ToString(), Message = x.Message })
                     .ToList();

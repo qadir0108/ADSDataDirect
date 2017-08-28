@@ -17,11 +17,11 @@
     @Html.HiddenFor(Model => Model.UploadStatus)
     @Html.HiddenFor(Model => Model.SegmentStatus)
     @Html.HiddenFor(Model => Model.DateApproved)
-    @Html.HiddenFor(Model => Model.DateSent)
+    @Html.HiddenFor(Model => Model.DateComplete)
 
     <div class="panel panel-primary">
         <div class="panel-heading">
-            Segment : @Model.SegmentNumber
+            Multi drop : @Model.SegmentNumber
             <div class="pull-right">
                 Total: @(NumberHelper.GetTotal(Model.FirstRangeStart, Model.FirstRangeEnd, Model.SecondRangeStart, Model.SecondRangeEnd, Model.ThirdRangeStart, Model.ThirdRangeEnd))
                 <a class="btn btn-primary btn-sm " target="_blank" href="@Model.SegmentDataFileUrl">
@@ -40,20 +40,29 @@
                         Subject Line
                     </div>
                     <div class="col-md-2">
-                        Broadcast Date
+                        From Line
+                    </div>
+                    <div class="col-md-2">
+                        White Label
+                    </div>
+                    <div class="col-md-2">
+                        Quantity
+                    </div>
+                    <div class="col-md-2">
+                        Deployment Date
                     </div>
                     <div class="col-md-2">
                         HtmlImageFiles
                     </div>
-                    <div class="col-md-2">
+                    @*<div class="col-md-2">
                         Segment Status
                     </div>
                     <div class="col-md-2">
-                        Approved at
+                        Fetched at
                     </div>
                     <div class="col-md-2">
-                        Sent at
-                    </div>
+                        Approved at
+                    </div>*@
                 </div>
             </div>
             <div class="row">
@@ -63,20 +72,29 @@
                         @Model.SubjectLine
                     </div>
                     <div class="col-md-2">
-                        @Model.BroadcastDate
+                        @Model.FromLine
+                    </div>
+                    <div class="col-md-2">
+                        @Model.WhiteLabel
+                    </div>
+                    <div class="col-md-2">
+                        @Model.Quantity
+                    </div>
+                    <div class="col-md-2">
+                        @Model.DeploymentDate
                     </div>
                     <div class="col-md-2">
                         @Model.CreativeFiles
                     </div>
+                    @*<div class="col-md-2">
+                        @((SegmentStatus)Model.SegmentStatus)
+                    </div>
                     <div class="col-md-2">
-                        @((SegmentStatusEnum)Model.SegmentStatus)
+                        @(Model.DateFetched)
                     </div>
                     <div class="col-md-2">
                         @(Model.DateApproved)
-                    </div>
-                    <div class="col-md-2">
-                        @(Model.DateSent)
-                    </div>
+                    </div>*@
                 </div>
             </div>
             <div class="row">

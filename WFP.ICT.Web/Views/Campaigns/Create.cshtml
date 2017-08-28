@@ -7,11 +7,14 @@
 @{
     ViewBag.Title = "Create";
     Layout = "~/Views/Shared/_Layout.cshtml";
+    var LoggedInUser = Session["user"] as WfpUser;
+    var IsLoggedIn = LoggedInUser != null;
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
 }
 
 <h2>New Order<span class="small"></span></h2>
 
-@using (Html.BeginForm()) 
+@using (Html.BeginForm("Create", "Campaigns", FormMethod.Post, new { @id="form1" }))
 {
     @Html.AntiForgeryToken()
 
@@ -73,7 +76,7 @@
                         </li>
                         <li>
                             <a href="#tab_default_4" data-toggle="tab">
-                                Segments Data
+                                Data & Multi drop
                             </a>
                         </li>
                         <li>
@@ -420,8 +423,9 @@
                                 <div class="form-group">
                                     @Html.LabelFor(model => model.WhiteLabel, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-9">
-                                        @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
-                                        @Html.ValidationMessageFor(model => model.WhiteLabel, "", new { @class = "text-danger" })
+                                        @Html.DropDownList("WhiteLabel", null, htmlAttributes: new { @class = "form-control" })
+                                        @*@Html.EditorFor(model => model.WhiteLabel, new {htmlAttributes = new {@class = "form-control"}})*@
+                                        @Html.ValidationMessageFor(model => model.WhiteLabel, "", new {@class = "text-danger"})
                                     </div>
                                 </div>
 
@@ -447,7 +451,7 @@
                         
                     <div class="tab-pane" id="tab_default_4">
                         <div class="headertab">
-                            Segments Data
+                            Data & Multi drop
                         </div>
                         <div class="row">
                             <div class="col-md-6">
@@ -462,8 +466,8 @@
 
                             <div class="col-md-6">
                                 <div class="form-group">
-                                    <a id="addSegment" class="btn btn-primary" data-tooltip="Add segment" title="Add more piano" href="javascript:;">
-                                        Add Segment
+                                    <a id="addSegment" class="btn btn-primary" data-tooltip="tooltip" title="Add another drop" href="javascript:;">
+                                        Add another drop
                                     </a>
                                 </div>
                             </div>
@@ -518,11 +522,11 @@
                                     <label class="control-label col-md-3">Chanel Type</label>
                                     <div class="col-md-9">
                                         <div class="input-group">
-                                            @foreach (var value in Enum.GetValues(typeof(ChannelTypeEnum)))
+                                            @foreach (var value in Enum.GetValues(typeof(ChannelType)))
                                             {
                                                 var id = "dayofweek" + value;
-                                                var name = Enum.GetName(typeof(ChannelTypeEnum), value);
-                                                ChannelTypeEnum e = (ChannelTypeEnum)value;
+                                                var name = Enum.GetName(typeof(ChannelType), value);
+                                                ChannelType e = (ChannelType)value;
                                                 var isChecked = Model.ChannelTypes.Contains(e) ? "checked" : "";
 
                                                 <div class="checkbox checkbox-primary">
@@ -590,6 +594,16 @@
 
             $(function () {
 
+                $('#form1').bind('submit', function () {
+                    debugger;
+                    $('#WhiteLabel').removeAttr("disabled");
+                    //$(this).find(':select').prop('disabled', false);
+                });
+
+                var isAdmin = '@IsAdmin' === 'True';
+                if (!isAdmin)
+                    $('#WhiteLabel').prop("disabled", "disabled");
+
                 $('#BroadcastDate').datetimepicker({
                     format: 'M/DD/YYYY hh:mm:ss A'
                 });
@@ -627,6 +641,7 @@
                 $('#addSegment').click(function (e) {
                     $.get('/Campaigns/NewSegment', function (template) {
                         $('#tab_default_4').append(template);
+                        $('[data-tooltip="tooltip"]').tooltip();
                     });
                     e.preventDefault();
                 });

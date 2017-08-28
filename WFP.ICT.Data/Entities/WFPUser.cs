@@ -9,16 +9,16 @@ using System.Data.Entity;
 namespace WFP.ICT.Data.Entities
 {
     // ID, UserName, Email, PhoneNumber and Password used from IdentityUser
-    public class WFPUser : IdentityUser
+    public class WfpUser : IdentityUser
     {
-        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<WFPUser> manager)
+        public async Task<ClaimsIdentity> GenerateUserIdentityAsync(Microsoft.AspNet.Identity.UserManager<WFP.ICT.Data.Entities.WfpUser, string> manager)
         {
             // Note the authenticationType must match the one defined in CookieAuthenticationOptions.AuthenticationType
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
             try
             {
-                using (WFPICTContext ctx = new WFPICTContext())
+                using (WfpictContext ctx = new WfpictContext())
                 {
                     var userId = userIdentity.GetUserId();
                     var user = ctx.Users.Include(x => x.Roles).FirstOrDefault(x => x.Id == userId);
@@ -35,6 +35,7 @@ namespace WFP.ICT.Data.Entities
             }
             catch (Exception ex)
             {
+                // ignored
             }
             return userIdentity;
         }
@@ -44,20 +45,23 @@ namespace WFP.ICT.Data.Entities
         
         public DateTime? LastLogin { get; set; }
 
-        public int Status { get; set; } // UserStatusEnum
-        public int UserType { get; set; } // UserTypeEnum
+        public int Status { get; set; } // UserStatus
+        public int UserType { get; set; } // UserType
 
-        public bool IsUsesAPI { get; set; }
-        public string APIKey { get; set; }
+        public bool IsUsesApi { get; set; }
+        public string ApiKey { get; set; }
         public bool IsTestsCreatives { get; set; }
 
+        public string CompanyName { get; set; }
         public string CompanyLogo { get; set; }
+        public string WhiteLabel { get; set; }
+        public string ReportTemplate { get; set; }
 
         public DateTime CreatedAt { get; set; }
-        public string CreatedByID { get; set; }
-        public virtual WFPUser CreatedBy { get; set; }
+        public string CreatedById { get; set; }
+        public virtual WfpUser CreatedBy { get; set; }
 
-        public WFPUser()
+        public WfpUser()
         {
         }
     }
