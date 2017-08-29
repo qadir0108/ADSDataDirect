@@ -1,8 +1,8 @@
 ﻿@using System.Linq
 @using System.Web.Mvc.Html
-@using ADSDataDirect.Enums
 @using MyToolkit.Html
 @using WFP.ICT.Data.Entities
+@using WFP.ICT.Enum
 @using WFP.ICT.Web.Models
 @model WFP.ICT.Web.Models.CampaignApprovedVM
 
@@ -555,7 +555,7 @@
 
                     var segment = $(this).data('segment');
                     var dataToPost = {
-                        Id: $(this).data('id')
+                        id: $(this).data('id')
                     };
 
                     wfp.showSwal("Are you sure to complete segment " + segment + " ?",

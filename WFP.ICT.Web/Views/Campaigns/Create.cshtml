@@ -1,5 +1,4 @@
-﻿@using ADSDataDirect.Enums
-@using WFP.ICT.Data.Entities
+﻿@using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
 @using WFP.ICT.Web.Models
 @model WFP.ICT.Web.Models.CampaignVM
@@ -240,7 +239,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             @Html.EditorFor(model => model.Assets.ZipCodeFile, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_ZipCodeFile", OrderNumber = Model.OrderNumber })
+                                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_ZipCodeFile", OrderNumber = Model.OrderNumber })
                                             @Html.ValidationMessageFor(model => model.Assets.ZipCodeFile, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -252,7 +251,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             @Html.EditorFor(model => model.Assets.TestSeedFile, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_TestSeedFile", OrderNumber = Model.OrderNumber })
+                                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_TestSeedFile", OrderNumber = Model.OrderNumber })
                                             @Html.ValidationMessageFor(model => model.Assets.TestSeedFile, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -264,7 +263,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             @Html.EditorFor(model => model.Assets.LiveSeedFile, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_LiveSeedFile", OrderNumber = Model.OrderNumber })
+                                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_LiveSeedFile", OrderNumber = Model.OrderNumber })
                                             @Html.ValidationMessageFor(model => model.Assets.LiveSeedFile, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -280,7 +279,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             @Html.EditorFor(model => model.Assets.SuppressionFile, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_SuppressionFile", OrderNumber = Model.OrderNumber })
+                                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_SuppressionFile", OrderNumber = Model.OrderNumber })
                                             @Html.ValidationMessageFor(model => model.Assets.SuppressionFile, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
@@ -291,7 +290,7 @@
                                         </div>
                                         <div class="col-md-9">
                                             @Html.EditorFor(model => model.Assets.CreativeFiles, new {disabled = "disabled", htmlAttributes = new {@class = "form-control"}})
-                                            @Html.Partial("_UploadFile", new UploadFileVM() {FileType = "Assets_CreativeFiles", OrderNumber = Model.OrderNumber})
+                                            @Html.Partial("_UploadFile", new UploadFileVm() {FileType = "Assets_CreativeFiles", OrderNumber = Model.OrderNumber})
                                             @Html.ValidationMessageFor(model => model.Assets.CreativeFiles, "", new {@class = "text-danger"})
                                         </div>
                                     </div>
@@ -545,7 +544,7 @@
                                     @Html.LabelFor(model => model.Assets.BannersFile, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-9">
                                         @Html.EditorFor(model => model.Assets.BannersFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_BannersFile", OrderNumber = Model.OrderNumber })
+                                        @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_BannersFile", OrderNumber = Model.OrderNumber })
                                         @Html.ValidationMessageFor(model => model.Assets.BannersFile, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
@@ -554,7 +553,7 @@
                                     @Html.LabelFor(model => model.Assets.BannerLinksFile, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-9">
                                         @Html.EditorFor(model => model.Assets.BannerLinksFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_BannerLinksFile", OrderNumber = Model.OrderNumber })
+                                        @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_BannerLinksFile", OrderNumber = Model.OrderNumber })
                                         @Html.ValidationMessageFor(model => model.Assets.BannerLinksFile, "", new { @class = "text-danger" })
                                     </div>
                                 </div>
@@ -563,7 +562,7 @@
                                     @Html.LabelFor(model => model.Assets.MiscFile, htmlAttributes: new { @class = "control-label col-md-3" })
                                     <div class="col-md-9">
                                         @Html.EditorFor(model => model.Assets.MiscFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "Assets_MiscFile", OrderNumber = Model.OrderNumber })
+                                        @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_MiscFile", OrderNumber = Model.OrderNumber })
                                         @Html.ValidationMessageFor(model => model.Assets.MiscFile, "", new { @class = "text-danger" })
                                     </div>
                                 </div>

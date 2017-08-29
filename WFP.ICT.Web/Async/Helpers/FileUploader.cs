@@ -1,15 +1,12 @@
 ﻿using System;
 using System.Configuration;
 using System.Net;
+using WFP.ICT.Web.Helpers;
 
-namespace WFP.ICT.Web.Async
+namespace WFP.ICT.Web.Async.Helpers
 {
     public class FileUploader
     {
-        private bool _uploadCompleted;
-        private bool _status;
-
-        private string _ftpServer;
         private string _ftpUsername;
         private string _ftpPassword;
         private string _baseURL;
@@ -18,16 +15,16 @@ namespace WFP.ICT.Web.Async
         public FileUploader()
         {
             if (ConfigurationManager.AppSettings["FTPServer"] == null)
-                throw new ArgumentException("FTPServer not configured");
+                throw new AdsException("FTPServer not configured");
             if (ConfigurationManager.AppSettings["FTPUsername"] == null)
-                throw new ArgumentException("FTPUsername not configured");
+                throw new AdsException("FTPUsername not configured");
             if (ConfigurationManager.AppSettings["FTPPassword"] == null)
-                throw new ArgumentException("FTPPassword not configured");
+                throw new AdsException("FTPPassword not configured");
 
-            _ftpServer = ConfigurationManager.AppSettings["FTPServer"];
+            var ftpServer = ConfigurationManager.AppSettings["FTPServer"];
             _ftpUsername = ConfigurationManager.AppSettings["FTPUsername"];
             _ftpPassword = ConfigurationManager.AppSettings["FTPPassword"];
-            _baseURL = String.Format("ftp://{0}/public_html/ep2/", _ftpServer);
+            _baseURL = $"ftp://{ftpServer}/public_html/ep2/";
         }
 
         public bool DirectoryExists(string directoryPath)
@@ -65,18 +62,19 @@ namespace WFP.ICT.Web.Async
             }
             catch (Exception ex)
             {
+                //
             }
         }
 
         public string Upload(string directoryName, string fileName, string filePath)
         {
-            using (WebClient _client = new WebClient())
+            using (WebClient client = new WebClient())
             {
-                _client.Credentials = new NetworkCredential(_ftpUsername, _ftpPassword);
-                string filePathFTP = _baseURL + directoryName + "/" + fileName;
-                Uri address = new Uri(filePathFTP);
-                _client.UploadFile(address, filePath);
-                string filePathLive = serverPrefix + directoryName + "/" + fileName;
+                client.Credentials = new NetworkCredential(_ftpUsername, _ftpPassword);
+                string filePathFtp = $"{_baseURL}{directoryName}/{fileName}";
+                Uri address = new Uri(filePathFtp);
+                client.UploadFile(address, filePath);
+                string filePathLive = $"{serverPrefix}{directoryName}/{fileName}";
                 return filePathLive;
             }
         }

@@ -2,7 +2,7 @@ using System;
 using Microsoft.Practices.Unity;
 using WFP.ICT.Data.Entities;
 
-namespace WFP.ICT.Web.App_Start
+namespace WFP.ICT.Web
 {
     /// <summary>
     /// Specifies the Unity configuration for the main container.

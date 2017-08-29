@@ -4,11 +4,13 @@ using Microsoft.Owin;
 using Owin;
 using System.Globalization;
 using Hangfire;
+using Hangfire.Dashboard;
 using Microsoft.AspNet.Identity.EntityFramework;
 using WFP.ICT.Data.Entities;
-using WFP.ICT.Hubs;
 using WFP.ICT.Web.Async;
+using WFP.ICT.Web.Hangfire;
 using WFP.ICT.Web.Helpers;
+using WFP.ICT.Web.Hubs;
 using WFP.ICT.Web.ProData;
 
 [assembly: OwinStartup(typeof(WFP.ICT.Web.Startup))]
@@ -25,10 +27,14 @@ namespace WFP.ICT.Web
             
             SetupInitialSettings();
 
-            GlobalConfiguration.Configuration.UseSqlServerStorage("WFPICTContext");
+            //GlobalConfiguration.Configuration.UseSqlServerStorage("WFPICTContext");
             app.UseHangfireDashboard($"/hangfire", new DashboardOptions
             {
-                Authorization = new[] { new HangfireAuthorizationFilter() }
+                Authorization = new[]
+                {
+                    new HangfireAuthorizationFilter()
+                    //new LocalRequestsOnlyAuthorizationFilter()
+                }
             });
             app.UseHangfireServer();
 
@@ -37,7 +43,7 @@ namespace WFP.ICT.Web
             WFPICTUpdater.Instance.StartUpdatingClients();
 
             // CheckForQCRules 
-            RecurringJob.AddOrUpdate("FetchAndCheckForQCRules", () => NotificationsProcessor.FetchAndCheckForQcRules(), Cron.Hourly);
+            RecurringJob.AddOrUpdate("FetchAndCheckForQCRules", () => NotificationsProcessor.FetchAndCheckForQcRules(), Cron.HourInterval(3));
 
             RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), "0 8,12,17 * * *");
             // RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), Cron.Minutely);

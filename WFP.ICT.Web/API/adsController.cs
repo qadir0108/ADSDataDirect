@@ -3,8 +3,9 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web.Http;
 using System.Web.Http.Results;
-using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.API
@@ -14,7 +15,7 @@ namespace WFP.ICT.Web.API
         private readonly string AuthenticationParameterName = "X-ADS-Auth";
         private readonly int APIMaxDailyLimit = 30;
 
-        private WfpictContext db = new WfpictContext();
+        private readonly WfpictContext _db = new WfpictContext();
 
         // GET: api/ads
         //[Authorize]
@@ -24,35 +25,34 @@ namespace WFP.ICT.Web.API
             {
                 if (!Request.Headers.Contains(AuthenticationParameterName))
                 {
-                    throw new ArgumentException("Authentication API Key is missing");
+                    throw new AdsException("Authentication API Key is missing");
                 }
 
                 string token = Request.Headers.GetValues(AuthenticationParameterName).First();
 
-                var user = db.Users.FirstOrDefault(x => x.ApiKey.Equals(token));
+                var user = _db.Users.FirstOrDefault(x => x.ApiKey.Equals(token));
                 var isValidUser = user != null;
                 if (!isValidUser)
                 {
-                    throw new ArgumentException("Invalid Authentication API Key");
+                    throw new AdsException("Invalid Authentication API Key");
                 }
 
-                int todaysRequests =
-                    db.ApiRequests.ToList().Count(x => x.APIKey == token && x.CreatedAt.Date == DateTime.Now.Date);
+                int todaysRequests = _db.ApiRequests.Count(x => x.APIKey == token && x.CreatedAt.Date == DateTime.Now.Date);
                 if (todaysRequests > APIMaxDailyLimit)
                 {
-                    throw new ArgumentException("API Daily Max limit " + APIMaxDailyLimit +
+                    throw new AdsException("API Daily Max limit " + APIMaxDailyLimit +
                                         " reached. Please try again tomarrow.");
                 }
 
-                db.ApiRequests.Add(new ApiRequest()
+                _db.ApiRequests.Add(new ApiRequest()
                 {
                     Id = Guid.NewGuid(),
                     CreatedAt = DateTime.Now,
                     APIKey = token
                 });
-                db.SaveChanges();
+                _db.SaveChanges();
 
-                var campaigns = db.Campaigns
+                var campaigns = _db.Campaigns
                     .Include(x => x.ProDatas)
                     .Include(x => x.Testing)
                     .Include(x => x.Approved)
@@ -75,44 +75,44 @@ namespace WFP.ICT.Web.API
             {
                 if (!Request.Headers.Contains(AuthenticationParameterName))
                 {
-                    throw new ArgumentException("Authentication API Key is missing");
+                    throw new AdsException("Authentication API Key is missing");
                 }
                 if (string.IsNullOrEmpty(campagin.OrderNumber))
                 {
-                    throw new ArgumentException("OrderNumber is missing");
+                    throw new AdsException("OrderNumber is missing");
                 }
                 if (string.IsNullOrEmpty(campagin.IoNumber))
                 {
-                    throw new ArgumentException("IONumber is missing");
+                    throw new AdsException("IONumber is missing");
                 }
 
                 string token = Request.Headers.GetValues(AuthenticationParameterName).First();
 
-                var user = db.Users.FirstOrDefault(x => x.ApiKey.Equals(token));
+                var user = _db.Users.FirstOrDefault(x => x.ApiKey.Equals(token));
                 var isValidUser = user != null;
                 if (!isValidUser)
                 {
-                    throw new ArgumentException("Invalid Authentication API Key");
+                    throw new AdsException("Invalid Authentication API Key");
                 }
 
-                db.ApiRequests.Add(new ApiRequest()
+                _db.ApiRequests.Add(new ApiRequest()
                 {
                     Id = Guid.NewGuid(),
                     CreatedAt = DateTime.Now,
                     APIKey = token
                 });
-                db.SaveChanges();
+                _db.SaveChanges();
 
-                var campaignTracking = db.CampaignTrackings
+                var campaignTracking = _db.CampaignTrackings
                                 .FirstOrDefault(x => x.SegmentNumber == campagin.OrderNumber.Trim());
 
                 if (campaignTracking == null)
                 {
-                    throw new ArgumentException("Campaign with Order Number " + campagin.OrderNumber + " does not exists");
+                    throw new AdsException("Campaign with Order Number " + campagin.OrderNumber + " does not exists");
                 }
 
                 campaignTracking.IoNumber = campagin.IoNumber.Trim();
-                db.SaveChanges();
+                _db.SaveChanges();
 
                 string message = "Campaign with Order Number " + campagin.OrderNumber +
                                  " has been updated with IO Number " + campagin.IoNumber;

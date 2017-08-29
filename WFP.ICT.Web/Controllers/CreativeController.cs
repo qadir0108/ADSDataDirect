@@ -5,7 +5,6 @@ using System.Data.Entity;
 using System.IO;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using ADSDataDirect.Enums;
 using Hangfire;
 using MailChimp.Net;
 using MailChimp.Net.Interfaces;
@@ -15,6 +14,7 @@ using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using WFP.ICT.Enum;
+using WFP.ICT.Web.Async.Helpers;
 
 namespace WFP.ICT.Web.Controllers
 {
@@ -202,7 +202,7 @@ namespace WFP.ICT.Web.Controllers
             {
                 if (OrderNumber == null)
                 {
-                    throw new ArgumentException("Order Number missing");
+                    throw new AdsException("Order Number missing");
                 }
 
                 var messages = Db.SystemLogs.Where(x => x.OrderNumber == OrderNumber && x.LogType == (int)LogType.MailChimp)

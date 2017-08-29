@@ -7,6 +7,8 @@ using System.Text.RegularExpressions;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
+using WFP.ICT.Enum;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using Xdr = DocumentFormat.OpenXml.Drawing.Spreadsheet;
 using A = DocumentFormat.OpenXml.Drawing;
@@ -34,7 +36,7 @@ namespace WFP.ICT.Web.Reports
 
                     if (!sheets.Any())
                     {
-                        throw new ArgumentException("No sheets");
+                        throw new AdsException("No sheets");
                     }
 
                     string relationshipId = sheets.First().Id.Value;
@@ -176,7 +178,7 @@ namespace WFP.ICT.Web.Reports
 
                     if (!sheets.Any())
                     {
-                        throw new ArgumentException("No sheets");
+                        throw new AdsException("No sheets");
                     }
 
                     string relationshipId = sheets.First().Id.Value;

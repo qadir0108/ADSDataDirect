@@ -1,18 +1,13 @@
 ﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
 using System.Threading;
-using ADSDataDirect.Enums;
-using Microsoft.AspNet.SignalR.Hubs;
 using Microsoft.AspNet.SignalR;
-using Microsoft.Practices.Unity;
-using PagedList;
+using Microsoft.AspNet.SignalR.Hubs;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Models;
 
-namespace WFP.ICT.Hubs
+namespace WFP.ICT.Web.Hubs
 {
     public class WFPICTUpdater
     {

@@ -1,4 +1,4 @@
-﻿namespace WFP.ICT
+﻿namespace WFP.ICT.Enum
 {
     public static class StringConstants
     {

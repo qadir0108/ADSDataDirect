@@ -6,7 +6,6 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Data.EntityManager;
 using WFP.ICT.Enum;
@@ -16,6 +15,8 @@ namespace WFP.ICT.Web.Controllers
     public class BaseController : Controller
     {
         protected readonly Random Random = new Random();
+        protected const int PageSize = 10;
+
         private WfpictContext _db;
         protected WfpictContext Db
         {

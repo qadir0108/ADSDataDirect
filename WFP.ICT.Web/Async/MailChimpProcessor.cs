@@ -4,12 +4,12 @@ using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Web;
-using ADSDataDirect.Enums;
 using MailChimp.Net;
 using MailChimp.Net.Core;
 using MailChimp.Net.Interfaces;
 using MailChimp.Net.Models;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 

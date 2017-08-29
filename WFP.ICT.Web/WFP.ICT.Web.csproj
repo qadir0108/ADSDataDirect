@@ -154,6 +154,7 @@
     <Reference Include="PresentationFramework" />
     <Reference Include="System" />
     <Reference Include="System.Data" />
+    <Reference Include="System.DirectoryServices" />
     <Reference Include="System.Drawing" />
     <Reference Include="System.IO.Compression" />
     <Reference Include="System.IO.Compression.FileSystem" />
@@ -279,6 +280,8 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Hangfire\HangfireBootstrapper .cs" />
+    <Compile Include="Hangfire\ApplicationPreload.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -291,6 +294,7 @@
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
+    <Compile Include="Helpers\AdsException.cs" />
     <Compile Include="Models\CustomerVm.cs" />
     <Compile Include="Models\VendorVm.cs" />
     <Compile Include="ProData\NotificationsProcessor.cs" />
@@ -330,7 +334,7 @@
     <Compile Include="Helpers\ListExtensions.cs" />
     <Compile Include="Helpers\LogHelper.cs" />
     <Compile Include="Helpers\MultipleButtonAttribute.cs" />
-    <Compile Include="Helpers\HangfireAuthorizationFilter.cs" />
+    <Compile Include="Hangfire\HangfireAuthorizationFilter.cs" />
     <Compile Include="ProData\ProDataApiManager.cs" />
     <Compile Include="Async\Helpers\S3FileManager.cs" />
     <Compile Include="Helpers\NumberHelper.cs" />

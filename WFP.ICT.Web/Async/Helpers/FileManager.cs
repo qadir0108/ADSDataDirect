@@ -4,9 +4,10 @@ using System.IO.Compression;
 using System.Linq;
 using HtmlAgilityPack;
 using WFP.ICT.Enum;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
-namespace WFP.ICT.Web.Async
+namespace WFP.ICT.Web.Async.Helpers
 {
     public class FileManager
     {
@@ -39,7 +40,7 @@ namespace WFP.ICT.Web.Async
 
             string htmlFile = Directory.EnumerateFiles(directory).FirstOrDefault(x => x.EndsWith("htm") || x.EndsWith("html"));
             if(string.IsNullOrEmpty(htmlFile))
-                throw new ArgumentException("Html not found");
+                throw new AdsException("Html not found");
 
             UploadFileStatus status = ProcessHtml(htmlFile, htmlFilePath);
 

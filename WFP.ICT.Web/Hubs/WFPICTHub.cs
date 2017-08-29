@@ -1,10 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using Microsoft.AspNet.SignalR;
+﻿using Microsoft.AspNet.SignalR;
 using Microsoft.AspNet.SignalR.Hubs;
 
-namespace WFP.ICT.Hubs
+namespace WFP.ICT.Web.Hubs
 {
     [HubName("wFPICTHub")]
     public class WFPICTHub : Hub

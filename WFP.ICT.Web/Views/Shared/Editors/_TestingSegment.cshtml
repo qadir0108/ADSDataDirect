@@ -1,5 +1,4 @@
 ﻿@model WFP.ICT.Web.Models.CampaignSegmentVM
-@using ADSDataDirect.Enums
 @using MyToolkit.Html
 @using WFP.ICT.Enum
 @using WFP.ICT.Web.Models
@@ -70,7 +69,7 @@
                     </div>
                     <div class="col-md-2">
                         @Html.EditorFor(model => model.CreativeFiles, new { htmlAttributes = new { @id = "CreativeFiles" + Model.SegmentNumber, @class = "form-control CreativeFiles" } })
-                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "CreativeFiles" + Model.SegmentNumber, OrderNumber = Model.OrderNumber, SegmentNumber = Model.SegmentNumber })
+                        @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "CreativeFiles" + Model.SegmentNumber, OrderNumber = Model.OrderNumber, SegmentNumber = Model.SegmentNumber })
                         @Html.ValidationMessageFor(model => model.CreativeFiles, "", new { @class = "text-danger" })
                     </div>
                    

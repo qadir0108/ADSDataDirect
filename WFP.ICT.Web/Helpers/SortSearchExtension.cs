@@ -3,7 +3,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Routing;
 
-namespace WFP.ICT.Web
+namespace WFP.ICT.Web.Helpers
 {
     public static class SortSearchExtension
     {

@@ -3,7 +3,7 @@ using Amazon.S3;
 using Amazon.S3.IO;
 using Amazon.S3.Model;
 
-namespace WFP.ICT.Web.Async
+namespace WFP.ICT.Web.Async.Helpers
 {
     public class S3FileManager
     {

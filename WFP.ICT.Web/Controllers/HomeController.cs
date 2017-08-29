@@ -2,7 +2,6 @@
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Enums;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using WFP.ICT.Data.Entities;

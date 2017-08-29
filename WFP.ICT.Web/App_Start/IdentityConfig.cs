@@ -173,7 +173,7 @@ namespace WFP.ICT.Web
         //                }
         //                else
         //                {
-        //                    throw new ArgumentException("There is an error while creating user." + createUserResult.Result.Errors.FirstOrDefault());
+        //                    throw new AdsException("There is an error while creating user." + createUserResult.Result.Errors.FirstOrDefault());
         //                }
         //            }
 

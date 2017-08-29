@@ -6,9 +6,9 @@ using System.Globalization;
 using System.IO;
 using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Enums;
 using PagedList;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using WFP.ICT.Web.ProData;
@@ -19,8 +19,6 @@ namespace WFP.ICT.Web.Controllers
     [Authorize]
     public class TrackingController : BaseController
     {
-        private const int PageSize = 10;
-
         public ActionResult Index(CampaignSearchVM sc)
         {
             ViewBag.CurrentSort = sc.sortOrder;
@@ -257,12 +255,12 @@ namespace WFP.ICT.Web.Controllers
             string creativeUrl = campaign.Assets.CreativeUrl,
                 imagePathTemp = $"{UploadPath}\\{model.OrderNumber}t.png",
                 imagePath = $"{UploadPath}\\{model.OrderNumber}.png",
-                fileName = $"{model.OrderNumber}.xlsx", 
+                fileName = $"{model.OrderNumber}.xlsx",
                 filePath = Path.Combine(DownloadPath, fileName);
 
-            string logoFilePath = !string.IsNullOrEmpty(LoggedInUser?.CompanyLogo) ? 
-                $"{ImagesPath}\\{LoggedInUser.CompanyLogo}" : 
-                $"{ImagesPath}\\logo1.png";
+            string logoFilePath = !string.IsNullOrEmpty(LoggedInUser?.CompanyLogo)
+                ? $"{ImagesPath}\\{LoggedInUser.CompanyLogo}"
+                : $"{ImagesPath}\\logo1.png";
 
             var helper = new ImageHelper(creativeUrl, imagePathTemp);
             if (!System.IO.File.Exists(imagePath))
@@ -274,8 +272,11 @@ namespace WFP.ICT.Web.Controllers
                     System.IO.File.Delete(imagePathTemp);
             }
 
-            string templateFile = LoggedInUser?.ReportTemplate == "0" ? $"~/Templates/Tracking1.xlsx" : 
-                                 (LoggedInUser?.ReportTemplate == "1" ? $"~/Templates/Tracking2.xlsx" : $"~/Templates/Tracking1.xlsx");
+            string templateFile;
+            if (LoggedInUser?.ReportTemplate == "0" || string.IsNullOrEmpty(LoggedInUser?.ReportTemplate))
+                templateFile = $"~/Templates/Tracking1.xlsx";
+            else
+                templateFile = $"~/Templates/Tracking2.xlsx";
 
             string logoResized = $"{ImagesPath}\\logoResized.png";
             if (templateFile == $"~/Templates/Tracking1.xlsx")
@@ -283,7 +284,7 @@ namespace WFP.ICT.Web.Controllers
                 helper.ResizeImage(logoFilePath, logoResized, 700, 116, true);
                 TrackingReports.GenerateTemplate1(model, Server.MapPath(templateFile), logoResized, imagePath, filePath);
             }
-            else if (templateFile == $"~/Templates/Tracking2.xlsx")
+            else //if (templateFile == $"~/Templates/Tracking2.xlsx")
             {
                 helper.ResizeImage(logoFilePath, logoResized, 700, 86, true);
                 TrackingReports.GenerateTemplate2(model, Server.MapPath(templateFile), logoResized, imagePath, filePath);
@@ -298,7 +299,7 @@ namespace WFP.ICT.Web.Controllers
             {
                 if (orderNumber == null)
                 {
-                    throw new ArgumentException("Order Number missing");
+                    throw new AdsException("Order Number missing");
                 }
 
                 Campaign campaign = Db.Campaigns

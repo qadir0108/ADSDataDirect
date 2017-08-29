@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace ADSDataDirect.Enums
+﻿namespace WFP.ICT.Enum
 {
-    public enum QCRule
+    public enum QcRule
     {
         NotStartedInFirst4Hours, //If Campaign has not started in First 4 hours send a notification
         NotHitOpenRate5In24Hours, // If campaign has not hit Open rate of 5% in 24 hours send  notifcation

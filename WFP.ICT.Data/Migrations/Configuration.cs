@@ -1,5 +1,3 @@
-using ADSDataDirect.Enums;
-
 namespace WFP.ICT.Data.Migrations
 {
     using Entities;

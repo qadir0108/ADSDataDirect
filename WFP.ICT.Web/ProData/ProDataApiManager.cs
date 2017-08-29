@@ -5,9 +5,9 @@ using System.IO;
 using System.Linq;
 using System.Net.Http;
 using System.Text;
-using ADSDataDirect.Enums;
 using Newtonsoft.Json;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
@@ -90,7 +90,7 @@ namespace WFP.ICT.Web.ProData
                     }
                     catch (Exception ex)
                     {
-                        throw new ArgumentException("There is error in parsing data from ProData. Problem in ProData API.");
+                        throw new AdsException("There is error in parsing data from ProData. Problem in ProData API.");
                     }
 
                     return proDataResponse;
@@ -198,7 +198,7 @@ namespace WFP.ICT.Web.ProData
             else
             {
                 LogHelper.AddLog(db, LogType.ProData, orderNumber, $"Prodata response. {data.ToJson()} ");
-                throw new ArgumentException("There is error in getting data from ProData. Problem in ProData API.");
+                throw new AdsException("There is error in getting data from ProData. Problem in ProData API.");
             }
             
         }
@@ -342,40 +342,40 @@ namespace WFP.ICT.Web.ProData
         {
             int? hoursPassed = DateTime.Now.Hour - campaignTracking.DateSent?.Hour;
             bool problemFound = false;
-            QCRule qcRule = QCRule.NotStartedInFirst4Hours;
+            QcRule qcRule = QcRule.NotStartedInFirst4Hours;
             // QC Rule 1
             if (responseStatus == ProDataResponseStatus.NotFound.ToString() && hoursPassed >= 4)
             {
                 problemFound = true;
-                qcRule = QCRule.NotStartedInFirst4Hours;
+                qcRule = QcRule.NotStartedInFirst4Hours;
             }
 
             // QC Rule 2
             if (campaignTracking.OpenedPercentage < 0.05 && hoursPassed >= 24)
             {
                 problemFound = true;
-                qcRule = QCRule.NotHitOpenRate5In24Hours;
+                qcRule = QcRule.NotHitOpenRate5In24Hours;
             }
 
             // QC Rule 3
             if (campaignTracking.OpenedPercentage < 0.10 && hoursPassed >= 72)
             {
                 problemFound = true;
-                qcRule = QCRule.NotHitOpenRate10In72Hours;
+                qcRule = QcRule.NotHitOpenRate10In72Hours;
             }
 
             // QC Rule 4
             if (campaignTracking.ClickedPercentage < 0.075 && hoursPassed >= 24)
             {
                 problemFound = true;
-                qcRule = QCRule.NotHitClickRate750In24Hours;
+                qcRule = QcRule.NotHitClickRate750In24Hours;
             }
 
             // QC Rule 5
             if (campaignTracking.ClickedPercentage < 0.15 && hoursPassed >= 72)
             {
                 problemFound = true;
-                qcRule = QCRule.NotHitClickRate1500In72Hours;
+                qcRule = QcRule.NotHitClickRate1500In72Hours;
             }
 
             if (!problemFound) return;

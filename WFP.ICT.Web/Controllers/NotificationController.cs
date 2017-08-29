@@ -1,6 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
 using PagedList;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
@@ -8,14 +9,13 @@ namespace WFP.ICT.Web.Controllers
     [Authorize]
     public class NotificationController : BaseController
     {
-        int pageSize = 10;
         // Notification
         public ActionResult Index(CampaignSearchVM sc)
         {
-            var notifications = Db.Notifications.ToList();
+            var notifications = Db.Notifications.Where(x => x.Status == (int)NotificationStatus.Found).ToList();
             // Paging
             int pageNumber = (sc.page ?? 1);
-            return View(notifications.ToPagedList(pageNumber, pageSize));
+            return View(notifications.ToPagedList(pageNumber, PageSize));
         }
 
         //[HttpPost]
@@ -149,7 +149,7 @@ namespace WFP.ICT.Web.Controllers
         //    {
         //        if (OrderNumber == null)
         //        {
-        //            throw new ArgumentException("Order Number missing");
+        //            throw new AdsException("Order Number missing");
         //        }
 
         //        var messages = db.MailChimpAPILogs.Where(x => x.OrderNumber == OrderNumber)

@@ -1,9 +1,9 @@
-﻿using Newtonsoft.Json;
-using System;
+﻿using System;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
-namespace WFP.ICT
+namespace WFP.ICT.Web.Helpers
 {
     public static class Extensions
     {
@@ -35,12 +35,12 @@ namespace WFP.ICT
 
         public static string ToSafeString(this Guid? value)
         {
-            return value.HasValue ? value.Value.ToString() : string.Empty;
+            return value?.ToString() ?? string.Empty;
         }
 
         public static string ToSafeString(this DateTime? value, string format)
         {
-            return value.HasValue ? value.Value.ToString(format) : string.Empty;
+            return value?.ToString(format) ?? string.Empty;
         }
     }
 }

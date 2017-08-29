@@ -3,7 +3,6 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
-using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
 using WFP.ICT.Web.Async.Helpers;

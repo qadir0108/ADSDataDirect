@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Web;
-using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 
 namespace WFP.ICT.Web.Helpers
 {

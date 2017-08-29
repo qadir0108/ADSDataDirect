@@ -4,9 +4,10 @@ using System.IO.Compression;
 using System.Linq;
 using HtmlAgilityPack;
 using WFP.ICT.Enum;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
-namespace WFP.ICT.Web.Async
+namespace WFP.ICT.Web.Async.Helpers
 {
     public class FileManagerFTP
     {
@@ -24,7 +25,7 @@ namespace WFP.ICT.Web.Async
             FileUploader uploader = new FileUploader();
 
             // Unzip
-            var directory = string.Format("{0}\\{1}temp", UploadPath, orderNumber);
+            var directory = $"{UploadPath}\\{orderNumber}temp";
             if (Directory.Exists(directory))
             {
                 new DirectoryInfo(directory).Delete(true);
@@ -36,12 +37,12 @@ namespace WFP.ICT.Web.Async
             ZipFile.ExtractToDirectory(zipFilePath, directory);
 
             // Change html
-            string htmlFileName = string.Format("{0}.htm", orderNumber);
-            string htmlFilePath = string.Format("{0}\\{1}", directory, htmlFileName);
+            string htmlFileName = $"{orderNumber}.htm";
+            string htmlFilePath = $"{directory}\\{htmlFileName}";
 
             string htmlFile = Directory.EnumerateFiles(directory).FirstOrDefault(x => x.EndsWith("htm") || x.EndsWith("html"));
             if(string.IsNullOrEmpty(htmlFile))
-                throw new ArgumentException("Html not found");
+                throw new AdsException("Html not found");
 
             UploadFileStatus status = ProcessHtml(htmlFile, htmlFilePath);
 
@@ -52,16 +53,17 @@ namespace WFP.ICT.Web.Async
             string filePathLive = uploader.Upload(orderNumber, htmlFileName, htmlFilePath);
 
             // Create images directory
-            var imagesLive = string.Format("{0}/{0}img", orderNumber);
+            var imagesLive = $"{orderNumber}/{orderNumber}img";
             uploader.CreateDirectory(imagesLive);
 
             // Upload Images
             var images = Directory.EnumerateDirectories(directory).FirstOrDefault();
-            foreach (var imgFile in Directory.EnumerateFiles(images))
-            {
-                var file = new FileInfo(imgFile);
-                uploader.Upload(imagesLive, file.Name, imgFile);
-            }
+            if (images != null)
+                foreach (var imgFile in Directory.EnumerateFiles(images))
+                {
+                    var file = new FileInfo(imgFile);
+                    uploader.Upload(imagesLive, file.Name, imgFile);
+                }
 
             // Delete tmp
             new DirectoryInfo(directory).Delete(true);

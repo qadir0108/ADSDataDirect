@@ -4,8 +4,8 @@ using System.Configuration;
 using System.Net.Mail;
 using System.Text;
 using System.Threading.Tasks;
-using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Helpers;
 
 namespace WFP.ICT.Web.Async.Helpers
@@ -118,7 +118,7 @@ namespace WFP.ICT.Web.Async.Helpers
             {
                 foreach (var notification in campaign.Notifications)
                 {
-                    problems.Append($"<tr><td>{campaign.OrderNumber}</td><td>{campaign.CampaignName}</td><td>{notification.CheckTime}</td><td>{(QCRule)notification.QCRule}</td><td>{QCRuleUtility.GetString(notification.QCRule)}</td></tr>");
+                    problems.Append($"<tr><td>{campaign.OrderNumber}</td><td>{campaign.CampaignName}</td><td>{notification.CheckTime}</td><td>{(QcRule)notification.QCRule}</td><td>{QcRuleUtility.GetString(notification.QCRule)}</td></tr>");
                 }
             }
             problems.Append("</table>");

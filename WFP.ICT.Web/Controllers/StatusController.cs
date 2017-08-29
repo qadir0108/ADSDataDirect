@@ -4,7 +4,6 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Enums;
 using PagedList;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
@@ -15,8 +14,6 @@ namespace WFP.ICT.Web.Controllers
     [Authorize]
     public class StatusController : BaseController
     {
-        int pageSize = 10;
-        
         // GET: Campaigns
         public ActionResult Index(CampaignSearchVM sc)
         {
@@ -177,7 +174,7 @@ namespace WFP.ICT.Web.Controllers
 
             // Paging
             int pageNumber = (sc.page ?? 1);
-            return View(campagins.ToPagedList(pageNumber, pageSize));
+            return View(campagins.ToPagedList(pageNumber, PageSize));
         }
 
         public ActionResult ChangeAssigned(Guid? Id, string UserId)

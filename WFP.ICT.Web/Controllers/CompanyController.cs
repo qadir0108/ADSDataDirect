@@ -7,6 +7,7 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using PagedList;
 using WFP.ICT.Enum;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
@@ -114,7 +115,7 @@ namespace WFP.ICT.Web.Controllers
                             IdentityResult passwordChangeResult = UserManager.ResetPassword(user.Id, resetToken, model.Password);
                             if (passwordChangeResult != IdentityResult.Success)
                             {
-                                throw new ArgumentException(passwordChangeResult.Errors.FirstOrDefault());
+                                throw new AdsException(passwordChangeResult.Errors.FirstOrDefault());
                             }
                         }
                         break;

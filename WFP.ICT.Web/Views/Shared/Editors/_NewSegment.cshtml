@@ -73,7 +73,7 @@
                     </div>
                     <div class="col-md-2">
                         @Html.EditorFor(model => model.CreativeFiles, new { htmlAttributes = new { @id= "CreativeFiles" + Model.SegmentNumber, @class = "form-control CreativeFiles" } })
-                        @Html.Partial("_UploadFile", new UploadFileVM() { FileType = "CreativeFiles" + Model.SegmentNumber, SegmentNumber = Model.SegmentNumber})
+                        @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "CreativeFiles" + Model.SegmentNumber, SegmentNumber = Model.SegmentNumber})
                         @Html.ValidationMessageFor(model => model.CreativeFiles, "", new { @class = "text-danger" })
                     </div>
                 </div>

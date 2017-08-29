@@ -274,7 +274,7 @@ namespace WFP.ICT.Web.Helpers
         private string ToCsv(T record)
         {
             if (record == null)
-                throw new ArgumentException("Cannot be null", "record");
+                throw new AdsException("Cannot be null", "record");
 
             string[] csvStrings = new string[getters.Length];
 

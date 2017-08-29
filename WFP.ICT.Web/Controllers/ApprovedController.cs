@@ -5,11 +5,12 @@ using System.Linq;
 using System.Text;
 using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Enums;
 using Hangfire;
 using Nelibur.ObjectMapper;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Async;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 using WFP.ICT.Web.ProData;
 
@@ -166,11 +167,11 @@ namespace WFP.ICT.Web.Controllers
             return View(campaignApprovedVm);
         }
 
-        public ActionResult CompleteSegment(Guid? Id)
+        public ActionResult CompleteSegment(Guid? id)
         {
             try
             {
-                var segment = Db.CampaignSegments.FirstOrDefault(x => x.Id == Id);
+                var segment = Db.CampaignSegments.FirstOrDefault(x => x.Id == id);
                 segment.SegmentStatus = (int)SegmentStatus.Complete;
                 segment.DateComplete = DateTime.Now;
                 Db.SaveChanges();
@@ -189,11 +190,11 @@ namespace WFP.ICT.Web.Controllers
                 Campaign campaign = Db.Campaigns.Include(x => x.Approved).FirstOrDefault(x => x.Id == id);
                 if (campaign == null)
                 {
-                    throw new ArgumentException("Campagin with Id: " + id + " Not Found.");
+                    throw new AdsException("Campagin with Id: " + id + " Not Found.");
                 }
                 if (campaign.Approved == null)
                 {
-                    throw new ArgumentException("Campagin: " + campaign.CampaignName + " is not yet approved.");
+                    throw new AdsException("Campagin: " + campaign.CampaignName + " is not yet approved.");
                 }
 
                 BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(vendorId, campaign.OrderNumber, segmentsSelected));
@@ -218,11 +219,11 @@ namespace WFP.ICT.Web.Controllers
                     .FirstOrDefault(x => x.Id == id);
                 if (campaign == null)
                 {
-                    throw new ArgumentException("Campagin with Id: " + id + " Not Found.");
+                    throw new AdsException("Campagin with Id: " + id + " Not Found.");
                 }
                 if (campaign.Approved == null)
                 {
-                    throw new ArgumentException("Campagin: " + campaign.CampaignName + " is not yet approved.");
+                    throw new AdsException("Campagin: " + campaign.CampaignName + " is not yet approved.");
                 }
 
                 var segment = campaign.Segments.FirstOrDefault();
@@ -259,7 +260,7 @@ namespace WFP.ICT.Web.Controllers
                     {
                         message.Append($"<br/>{field}");
                     }
-                    throw new ArgumentException(message.ToString());
+                    throw new AdsException(message.ToString());
                 }
 
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);

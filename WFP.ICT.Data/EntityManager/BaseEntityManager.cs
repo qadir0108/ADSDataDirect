@@ -60,7 +60,7 @@ namespace WFP.ICT.Data.EntityManager
             else
             {
                 string message="BaseEntityManager constructor, entity name "+EntityName()+": dbContext object can't be NULL !";
-                throw new ArgumentNullException(message);
+                throw new ArgumentException(message);
             }
         }
 

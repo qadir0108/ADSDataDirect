@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Enums;
 using Hangfire;
 using Nelibur.ObjectMapper;
 using WFP.ICT.Data.Entities;
@@ -293,7 +292,7 @@ namespace WFP.ICT.Web.Controllers
                 .FirstOrDefault(x => x.Id == campaignTestingVm.CampaignId);
 
                 if(campaign.Segments.Count == 0)
-                    throw new ArgumentException("There are no data segments.");
+                    throw new AdsException("There are no data segments.");
 
                 BackgroundJob.Enqueue(() => DataFileProcessor.FetchSQLDataFile(UploadPath, campaign.OrderNumber, campaign.Assets.ZipCodeFile, campaignTestingVm.DataFileQuantity));
 

@@ -1,5 +1,4 @@
-﻿@using ADSDataDirect.Enums
-@using PagedList.Mvc
+﻿@using PagedList.Mvc
 @using WFP.ICT
 @using WFP.ICT.Data.Entities
 @using WFP.ICT.Enum
@@ -106,10 +105,10 @@
                         @(item.FoundAt?.ToString(StringConstants.TimeStampFormat))
                     </td>
                     <td>
-                        @(Enum.GetName(typeof(QCRule), item.QCRule))
+                        @(Enum.GetName(typeof(QcRule), item.QCRule))
                     </td>
                     <td class="no-right-padding no-left-padding">
-                        @(QCRuleUtility.GetString(item.QCRule))
+                        @(QcRuleUtility.GetString(item.QCRule))
                     </td>
 
                     <td class="no-right-padding no-left-padding">

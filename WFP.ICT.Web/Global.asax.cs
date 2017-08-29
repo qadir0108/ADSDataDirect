@@ -8,6 +8,7 @@ using System.Web.Http;
 using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Async.Helpers;
 using WFP.ICT.Web.Controllers;
+using WFP.ICT.Web.Hangfire;
 
 namespace WFP.ICT.Web
 {
@@ -22,12 +23,15 @@ namespace WFP.ICT.Web
             RouteConfig.RegisterRoutes(RouteTable.Routes);
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
+            HangfireBootstrapper.Instance.Start();
+
             //ViewEngines.Engines.Clear();
             //ViewEngines.Engines.Add(new RazorViewEngine());
         }
 
-        protected void Application_AcquireRequestState(object sender, EventArgs e)
+        protected void Application_End(object sender, EventArgs e)
         {
+            HangfireBootstrapper.Instance.Stop();
         }
 
         protected void Application_Error(object sender, EventArgs e)

@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Enums;
 using Hangfire;
 using Nelibur.ObjectMapper;
 using PagedList;
@@ -21,7 +20,6 @@ namespace WFP.ICT.Web.Controllers
     [Authorize]
     public class CampaignsController : BaseController
     {
-        readonly int pageSize = 10;
         private static char c1;
         
         // GET: Campaigns
@@ -199,13 +197,13 @@ namespace WFP.ICT.Web.Controllers
 
             // Paging
             int pageNumber = (sc.page ?? 1);
-            return View(campagins.ToPagedList(pageNumber, pageSize));
+            return View(campagins.ToPagedList(pageNumber, PageSize));
         }
 
         public ActionResult Download()
         {
-            string fileName = string.Format("Orders_{0:yyyyMMdd_HHmmss}.csv", DateTime.Now);
-            var filePath = string.Format("{0}\\{1}", DownloadPath, fileName);
+            string fileName = $"Orders_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
+            var filePath = $"{DownloadPath}\\{fileName}";
             if (Session["idsForPrint"] != null)
             {
                 List<Guid> ids;
@@ -235,7 +233,7 @@ namespace WFP.ICT.Web.Controllers
                 }
                 catch (Exception ex)
                 {
-                    throw new ArgumentException("Wrong Numbers" + ex.Message);
+                    throw new AdsException("Wrong Numbers" + ex.Message);
                 }
             }
             return File(filePath, "text/csv", fileName);

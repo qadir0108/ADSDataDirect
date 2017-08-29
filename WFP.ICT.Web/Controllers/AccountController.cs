@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -7,6 +8,7 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
+using WFP.ICT.Web.Helpers;
 using WFP.ICT.Web.Models;
 
 namespace WFP.ICT.Web.Controllers
@@ -81,16 +83,16 @@ namespace WFP.ICT.Web.Controllers
             {
                 if (!ModelState.IsValid)
                 {
-                    string errors = string.Empty;
+                    StringBuilder errors = new StringBuilder();
                     foreach (var ms in ModelState.Values)
                     {
                         foreach (var error in ms.Errors)
                         {
-                            errors += error.ErrorMessage +"<br/>";
+                            errors.Append($"{error.ErrorMessage}<br/>");
                         }
                     }
-                    if (!string.IsNullOrEmpty(errors))
-                        throw new ArgumentException(errors);
+                    if (!string.IsNullOrEmpty(errors.ToString()))
+                        throw new AdsException(errors.ToString());
                 }
 
                 var result = await SignInManager.PasswordSignInAsync(model.Username, model.Password, model.RememberMe, shouldLockout: false);
@@ -114,12 +116,12 @@ namespace WFP.ICT.Web.Controllers
 
                     //return RedirectToAction("SendCode", new { ReturnUrl = returnUrl, RememberMe = model.RememberMe });
                     case SignInStatus.LockedOut:
-                        throw new ArgumentException("User is locked");
+                        throw new AdsException("User is locked");
                     //return View("Lockout");
                     case SignInStatus.Failure:
-                        throw new ArgumentException("Username or password is incorrect.");
+                        throw new AdsException("Username or password is incorrect.");
                     default:
-                        throw new ArgumentException("Username or password is incorrect.");
+                        throw new AdsException("Username or password is incorrect.");
                         //ModelState.AddModelError("", "Username or password is incorrect.");
                         //return View(model);
                 }

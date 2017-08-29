@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
-using ADSDataDirect.Enums;
 using WFP.ICT.Data.Entities;
+using WFP.ICT.Enum;
 using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Async.Helpers;
 using WFP.ICT.Web.Helpers;
@@ -38,15 +38,15 @@ namespace WFP.ICT.Web.ProData
                     LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules completed {index} out of {campaigns.Count} campaigns.");
                     index++;
                 }
-                
-                // Send them 5 days = 120hrs
+
+                // Send them 5 days = 120
                 // Expire notifications that are > 120 hrs
                 var toBeExpired = db.Notifications.ToList()
                         .Where(x => (DateTime.Now.TimeOfDay.Hours - x.FoundAt?.TimeOfDay.Hours) >= 120)
                         .ToList();
                 if (toBeExpired.Count > 0)
                 {
-                    LogHelper.AddLog(db, LogType.RulesProcessing, "", "Expiring 72hrs old notifications");
+                    LogHelper.AddLog(db, LogType.RulesProcessing, "", "Expiring 120hrs old notifications");
                     foreach (var notification in toBeExpired)
                     {
                         notification.Status = (int)NotificationStatus.Expired;
@@ -54,9 +54,11 @@ namespace WFP.ICT.Web.ProData
                     db.SaveChanges();
                 }
 
-                // Delete prodata log with time >= 2 hrs
-                var logs = db.SystemLogs.Where(x => (x.LogType == (int)LogType.RulesProcessing || x.LogType == (int)LogType.ProData) &&
-                                                    (DateTime.Now.TimeOfDay.Hours - x.CreatedAt.TimeOfDay.Hours) >= 2).ToList();
+                // Delete prodata log with time >= 12 hrs
+                var logs = db.SystemLogs.ToList()
+                    .Where(x => (x.LogType == (int)LogType.RulesProcessing || x.LogType == (int)LogType.ProData) &&
+                                (DateTime.Now.TimeOfDay.Hours - x.CreatedAt.TimeOfDay.Hours) >= 12).ToList();
+
                 if (logs.Count > 0)
                 {
                     foreach (var log in logs)
