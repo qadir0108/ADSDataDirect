@@ -295,6 +295,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Helpers\AdsException.cs" />
+    <Compile Include="Models\SettingsVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
     <Compile Include="Models\VendorVm.cs" />
     <Compile Include="ProData\NotificationsProcessor.cs" />
@@ -849,7 +850,7 @@
     <Content Include="Scripts\tinymce\tinymce.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="css\sweetalert.css" />
-    <Content Include="Views\Tracking\Report.aspx" />
+    <Content Include="Views\Tracking\ReportRdlc.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
     </Content>
@@ -933,6 +934,7 @@
     <Content Include="Views\Company\Roles.cshtml" />
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Customer\New.cshtml" />
+    <Content Include="Views\Notification\Settings.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -41,6 +41,7 @@ namespace WFP.ICT.Data.Entities
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<ApiRequest> ApiRequests { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
+        public DbSet<Settings> Settings { get; set; }
 
         public static WfpictContext Create()
         {

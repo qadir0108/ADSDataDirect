@@ -25,7 +25,6 @@ namespace WFP.ICT.Web.Controllers
         // GET: Campaigns
         public ActionResult Index(CampaignSearchVM sc)
         {
-            //NotificationsProcessor.FetchAndCheckForQcRules();
             //FileManager.ProcessHtml("C:\\123.htm", "C:\\1.htm");
             //FileManager.UploadFile(UploadFileType.ZipFile, @"C:\\zip_codesCopy.csv", "123");
             if (LoggedInUser == null) return RedirectToAction("LogOff", "Account");
@@ -341,7 +340,7 @@ namespace WFP.ICT.Web.Controllers
                     Db.Campaigns.Add(campaign);
                     Db.SaveChanges();
 
-                    BackgroundJob.Enqueue(() => FileProcessor.ProcessNewOrder(campaign.OrderNumber, userName));
+                    BackgroundJob.Enqueue(() => CampaignProcessor.ProcessNewOrder(campaign.OrderNumber, userName));
 
                     ForceOrders = true;
                     TempData["Success"] = "Order #: "+ campaign.OrderNumber + " , Campaign " + campaign.CampaignName + " has been submitted sucessfully.";
@@ -660,7 +659,7 @@ namespace WFP.ICT.Web.Controllers
             Db.SaveChanges();
 
             // Send email to vendor
-            BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(Vendor, campaign.OrderNumber, SegmentsSelected));
+            BackgroundJob.Enqueue(() => CampaignProcessor.SendToVendor(OrderVia.Email, Vendor, campaign.OrderNumber, SegmentsSelected, String.Empty));
             
             TempData["Success"] = "Order #:" + campaign.OrderNumber + ", Campaign " + campaign.CampaignName + " Rebroad has been sent to vendor sucessfully.";
             return RedirectToAction("Index", "Campaigns");

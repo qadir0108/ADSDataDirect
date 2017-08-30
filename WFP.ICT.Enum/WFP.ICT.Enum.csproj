@@ -43,13 +43,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="OrderVia.cs" />
     <Compile Include="ReportTemplate.cs" />
     <Compile Include="LogStatus.cs" />
     <Compile Include="ProDataResponseStatus.cs" />
     <Compile Include="LogType.cs" />
     <Compile Include="ChannelType.cs" />
     <Compile Include="NotificationStatus.cs" />
-    <Compile Include="QCRule.cs" />
+    <Compile Include="QcRule.cs" />
     <Compile Include="SegmentStatus.cs" />
     <Compile Include="CampaignStatus.cs" />
     <Compile Include="EnumHelper.cs" />

@@ -67,6 +67,7 @@
     <Compile Include="DB\SegmentParameters.cs" />
     <Compile Include="DB\SegmentDataManager.cs" />
     <Compile Include="Entities\CampaignAsset.cs" />
+    <Compile Include="Entities\Settings.cs" />
     <Compile Include="Entities\SystemLog.cs" />
     <Compile Include="Entities\Notification.cs" />
     <Compile Include="Entities\CampaignTracking.cs" />
@@ -106,6 +107,10 @@
     <Compile Include="Migrations\201708281134090_Tracking.cs" />
     <Compile Include="Migrations\201708281134090_Tracking.Designer.cs">
       <DependentUpon>201708281134090_Tracking.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201708300621310_Settings.cs" />
+    <Compile Include="Migrations\201708300621310_Settings.Designer.cs">
+      <DependentUpon>201708300621310_Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
@@ -153,6 +158,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201708281134090_Tracking.resx">
       <DependentUpon>201708281134090_Tracking.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201708300621310_Settings.resx">
+      <DependentUpon>201708300621310_Settings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

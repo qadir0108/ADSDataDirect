@@ -250,7 +250,7 @@ namespace WFP.ICT.Web.Controllers
                         .OrderBy(x => x.CreatedAt).Select(
                              x => new SelectListItem()
                              {
-                                 Text = x.Name + " - " + x.WebDomain,
+                                 Text = x.Name + " [" + x.WebDomain + "]",
                                  Value = x.Code
                              }).ToList();
                     _customers.Insert(0, new SelectListItem()

@@ -11,6 +11,7 @@
 
         public static readonly string KeyOrderCcEmails = "OrderCCEmails";
 
-
+        public static readonly string KeyAutoProcessTracking = "AutoProcessTracking";
+        public static readonly string KeySendNotificationEmails = "SendNotificationEmails";
     }
 }

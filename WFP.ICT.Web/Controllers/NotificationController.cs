@@ -1,6 +1,8 @@
-﻿using System.Linq;
+﻿using System;
+using System.Linq;
 using System.Web.Mvc;
 using PagedList;
+using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
 using WFP.ICT.Web.Models;
 
@@ -16,6 +18,55 @@ namespace WFP.ICT.Web.Controllers
             // Paging
             int pageNumber = (sc.page ?? 1);
             return View(notifications.ToPagedList(pageNumber, PageSize));
+        }
+
+        public ActionResult Settings()
+        {
+            SettingsVm sc = new SettingsVm();
+            var settingAuto = Db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyAutoProcessTracking);
+            if (settingAuto != null) sc.IsAutoProcessTracking = int.Parse(settingAuto.Value) == 1;
+
+            var settingSendNotifications = Db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeySendNotificationEmails);
+            if (settingSendNotifications != null) sc.IsSendNotificationEmails = int.Parse(settingSendNotifications.Value) == 1;
+            return View(sc);
+        }
+
+        [HttpPost]
+        public ActionResult Settings(SettingsVm sc)
+        {
+            var settingAuto = Db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyAutoProcessTracking);
+            if (settingAuto == null)
+            {
+                Db.Settings.Add(new Settings
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.Now,
+                    Key = StringConstants.KeyAutoProcessTracking,
+                    Value = sc.IsAutoProcessTracking ? "1" : "0"
+                });
+            }
+            else
+            {
+                settingAuto.Value = sc.IsAutoProcessTracking ? "1" : "0";
+            }
+            var settingSendNotifications = Db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeySendNotificationEmails);
+            if (settingSendNotifications == null)
+            {
+                Db.Settings.Add(new Settings
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.Now,
+                    Key = StringConstants.KeySendNotificationEmails,
+                    Value = sc.IsSendNotificationEmails ? "1" : "0"
+                });
+            }
+            else
+            {
+                settingSendNotifications.Value = sc.IsSendNotificationEmails ? "1" : "0";
+            }
+            Db.SaveChanges();
+            TempData["Success"] = "Notification Settings has been saved sucessfully.";
+            return RedirectToAction("Settings");
         }
 
         //[HttpPost]

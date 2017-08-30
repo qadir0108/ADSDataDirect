@@ -14,7 +14,6 @@ namespace WFP.ICT.Web.Controllers
 {
     public class CompanyController : BaseController
     {
-        private const int PageSize = 15;
         private ApplicationUserManager _userManager;
         private ApplicationUserManager UserManager
         {
@@ -29,7 +28,7 @@ namespace WFP.ICT.Web.Controllers
         public ActionResult Users(CampaignSearchVM sc)
         {
             var model = UserManager.Users.Select(x =>
-            new UserProfileVM()
+            new UserProfileVm()
             {
                 Id = x.Id,
                 UserName = x.UserName,
@@ -47,10 +46,9 @@ namespace WFP.ICT.Web.Controllers
                 IsUsesApi = x.IsUsesApi
             }).ToList();
 
-            int pageNumber = (sc.page ?? 1);
-            var Model = model.ToPagedList(pageNumber, PageSize);
             ViewBag.WhiteLabel = CustomersList;
-            return View("Users", Model);
+            int pageNumber = (sc.page ?? 1);
+            return View("Users", model.ToPagedList(pageNumber, PageSize));
         }
 
         public ActionResult ChangeWhiteLabel(Guid? userId, string whiteLabel)
@@ -89,24 +87,18 @@ namespace WFP.ICT.Web.Controllers
                         }
                         break;
                     case "type":
-                        if (user.UserType == (int)UserType.Admin)
+                        switch (user.UserType)
                         {
-                            user.UserType = (int)UserType.User;
-                        }
-                        else if (user.UserType == (int)UserType.User)
-                        {
-                            user.UserType = (int)UserType.Admin;
+                            case (int)UserType.Admin:
+                                user.UserType = (int)UserType.User;
+                                break;
+                            case (int)UserType.User:
+                                user.UserType = (int)UserType.Admin;
+                                break;
                         }
                         break;
                     case "tests":
-                        if (user.IsTestsCreatives)
-                        {
-                            user.IsTestsCreatives = false;
-                        }
-                        else
-                        {
-                            user.IsTestsCreatives = true;
-                        }
+                        user.IsTestsCreatives = !user.IsTestsCreatives;
                         break;
                     case "password":
                         if (!string.IsNullOrEmpty(model.Password))

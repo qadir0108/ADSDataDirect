@@ -33,7 +33,7 @@ namespace WFP.ICT.Web.Controllers
                 .Include(x => x.ProDatas)
                 .Include(x => x.Trackings)
                 .OrderByDescending(x => x.CreatedAt)
-                .Where(x => x.Status == (int)CampaignStatus.Monitoring)
+                .Where(x => x.Status == (int)CampaignStatus.Monitoring && x.Approved != null)
                 .ToList();
 
             switch (sc.sortOrder)

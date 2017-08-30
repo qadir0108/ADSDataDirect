@@ -15,7 +15,7 @@ namespace WFP.ICT.Web.Async.Helpers
         private const string Footer = @"<br/><br/>Thanks<br/>
                                         <b>ADS Data Direct</b><br/>http://www.adsdatadirect.com";
 
-        public static async Task SendOrderEmailToClient(Campaign campaign, WfpUser loggedInUser, string bccEmails)
+        public static void SendOrderEmailToClient(Campaign campaign, WfpUser loggedInUser, string bccEmails)
         {
             string subject = $"Order # {campaign.OrderNumber}, Campaign Date {campaign.BroadcastDate?.ToString("d")}, QTY {campaign.Quantity} , Date Submitted {campaign.CreatedAt:d}";
 
@@ -46,10 +46,10 @@ namespace WFP.ICT.Web.Async.Helpers
                         <tr><th align=""left"">Referrer:</th><td>{campaign.Referrer}</td></tr>
                         </table></p> <p>We will soon contact you and update you about your order.</p> {Footer}";
 
-            await SendEmailAsync(loggedInUser.Email, subject, body, string.Empty, bccEmails);
+            SendEmail(loggedInUser.Email, subject, body, string.Empty, bccEmails);
         }
 
-        public static async Task SendApprovedToVendor(Vendor vendor, Campaign campaign, CampaignSegment segment)
+        public static void SendApprovedToVendor(Vendor vendor, Campaign campaign, CampaignSegment segment)
         {
             string newOld = !campaign.ReBroadcasted ? "New" : "RDP";
             string orderNumber = campaign.OrderNumber;
@@ -106,10 +106,10 @@ namespace WFP.ICT.Web.Async.Helpers
                     <tr><th align=""left"">Click Goals:</th><td>{campaign.Approved.ClickGoals}</td></tr>
                     <tr><th align=""left"">Segment Data:</th><td>{segmentsHtml}</td></tr>
                     </table></p> <p></p> {Footer}";
-            await SendEmailAsync(vendor.Email, subject, body, vendor.CcEmails);
+            SendEmail(vendor.Email, subject, body, vendor.CcEmails);
         }
 
-        public static async Task SendNotificationsToVendor(Vendor vendor, List<Campaign> campaigns)
+        public static void SendNotificationsToVendor(Vendor vendor, List<Campaign> campaigns)
         {
             string subject = "Campaign Issues Notifications";
 
@@ -118,12 +118,12 @@ namespace WFP.ICT.Web.Async.Helpers
             {
                 foreach (var notification in campaign.Notifications)
                 {
-                    problems.Append($"<tr><td>{campaign.OrderNumber}</td><td>{campaign.CampaignName}</td><td>{notification.CheckTime}</td><td>{(QcRule)notification.QCRule}</td><td>{QcRuleUtility.GetString(notification.QCRule)}</td></tr>");
+                    problems.Append($"<tr><td>{campaign.OrderNumber}</td><td>{campaign.CampaignName}</td><td>{notification.CheckTime}</td><td>{(QcRule)notification.QcRule}</td><td>{QcRuleUtility.GetString(notification.QcRule)}</td></tr>");
                 }
             }
             problems.Append("</table>");
             string body = $@"<br/><p>Dear {vendor.Name}</p><br/>There is problem with these orders<br/><br/></p> <p>{problems}</p> {Footer}";
-            await SendEmailAsync(vendor.Email, subject, body, vendor.CcEmails);
+            SendEmail(vendor.Email, subject, body, vendor.CcEmails);
         }
 
         public static void SendErrorEmail(string to, Exception ex, string currentController, string currentAction)

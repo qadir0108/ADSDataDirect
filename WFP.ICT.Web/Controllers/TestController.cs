@@ -30,13 +30,13 @@ namespace WFP.ICT.Web.Controllers
 
             foreach (var dic in whiteLabelDictionary)
             {
-                Db.Customers.Add(new Customer()
+                Db.Customers.Add(new Customer
                 {
                     Id = Guid.NewGuid(),
                     CreatedAt = DateTime.Now,
-                    Code = dic.Key,
-                    Name = dic.Key,
-                    WebDomain = dic.Value
+                    Code = dic.Key.Trim(),
+                    Name = dic.Key.Trim(),
+                    WebDomain = dic.Value.Trim()
                 });
             }
             Db.SaveChanges();

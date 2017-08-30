@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using System.Text;
 
 namespace WFP.ICT.Web.ProData
 {
@@ -13,6 +14,18 @@ namespace WFP.ICT.Web.ProData
 
         public string ResponseStatus { get; set; }
         public string ResponseMessage { get; set; }
+        public string ErrorMessage
+        {
+            get
+            {
+                StringBuilder errorMessage = new StringBuilder(message);
+                foreach (var field in error_fields)
+                {
+                    errorMessage.Append($"<br/>{field}");
+                }
+                return errorMessage.ToString();
+            }
+        }
     }
 
     public class Reports

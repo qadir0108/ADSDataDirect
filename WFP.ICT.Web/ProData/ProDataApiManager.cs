@@ -382,7 +382,7 @@ namespace WFP.ICT.Web.ProData
 
             var alreadyNoted = db.Notifications
                 .FirstOrDefault(x => x.CampaignId == campaignId && x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber
-                             && x.QCRule == (int)qcRule && x.Status == (int)NotificationStatus.Found);
+                             && x.QcRule == (int)qcRule && x.Status == (int)NotificationStatus.Found);
 
             if (alreadyNoted == null)
             {
@@ -397,7 +397,7 @@ namespace WFP.ICT.Web.ProData
                     Status = (int)NotificationStatus.Found,
                     CheckTime = DateTime.Now,
                     FoundAt = DateTime.Now,
-                    QCRule = (int)qcRule
+                    QcRule = (int)qcRule
                 });
                 db.SaveChanges();
             }

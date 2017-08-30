@@ -66,6 +66,9 @@
                 <span class="glyphicon glyphicon-download"></span>
             </a>
             @Html.ActionLink("New", "Create", null, new {@class = "btn btn-default", @data_tooltip = "tooltip", @title = "Place New Order"})
+            <a href="@Url.Action("Delete", "Campaigns")" title="Pending" data-tooltip="tooltip" class="btn btn-default">
+                <span class="fa fa-clock-o"></span>
+            </a>
         </div>
     </form>
 

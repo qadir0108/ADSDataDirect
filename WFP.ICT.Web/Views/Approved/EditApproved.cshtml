@@ -346,16 +346,16 @@
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <a href="#" id="" name="" class="btn btn-default" title="Send to Vendor" data-tooltip="tooltip"
-                               data-toggle="modal" data-target="#myModal" data-name="@Model.CampaignName" data-order="@Model.OrderNumber">
+                            <a href="#" id="" class="btn btn-default" title="Send to Vendor" data-tooltip="tooltip"
+                               data-toggle="modal" data-target="#myModal" data-via="Email" data-name="@Model.CampaignName" data-order="@Model.OrderNumber">
                                 <span class="glyphicon glyphicon-envelope"></span>Send
                             </a>
                         </div>
                     </div>
                     <div class="col-md-2">
                         <div class="form-group">
-                            <a href="#" id="btnSendViaAPI" class="btn btn-default" title="Send via API" data-tooltip="tooltip"
-                               data-id="@Model.CampaignId" data-name="@Model.CampaignName" data-order="@Model.OrderNumber">
+                            <a href="#" id="" class="btn btn-default" title="Send to Vendor" data-tooltip="tooltip"
+                               data-toggle="modal" data-target="#myModal" data-via="Api" data-name="@Model.CampaignName" data-order="@Model.OrderNumber">
                                 <span class="glyphicon glyphicon-cog"></span>Send API
                             </a>
                         </div>
@@ -412,7 +412,7 @@
                             </div>
                         </div>
                         <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary btnSendToVendor" id="btnSendToVendor">Send to Vendor</button>
+                            <button type="submit" class="btn btn-primary btnSendToVendor" id="btnSendToVendor">Send</button>
                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
                         </div>
                     </form>
@@ -455,6 +455,8 @@
                     var modal = $(this);
                     $('#frm')[0].reset();
                     debugger;
+                    $('#txtId').val(button.data('via'));
+                    $('#btnSendToVendor').text('Send via ' + button.data('via'));
                     modal.find('.modal-title').text('Send to Vendor : ' + button.data('name') + ', Order Number : ' + button.data('order'));
                 });
 
@@ -472,7 +474,10 @@
                         segmentsSelected.push(this.value);
                     });
 
+                    var via = $('#txtId').val();
+
                     var dataToPost = {
+                        via: via,
                         vendorId: $('#Vendor').find('option:selected').val(),
                         id: $('#CampaignId').val(),
                         segmentsSelected: segmentsSelected
@@ -491,7 +496,15 @@
                                    debugger;
                                    if (response === "") wfp.reload();
                                    if (response.IsSucess) {
-                                       wfp.showSuccess('Approved order has been sent to vendor successfully.');
+                                       switch (via) {
+                                        case 'Email':
+                                           wfp.showSuccess('Approved order has been sent to vendor successfully.');
+                                           break;
+                                        case 'Api':
+                                            wfp.showSuccess('Approved order has been sent to vendor via API successfully.');
+                                            break;
+                                       default:
+                                       }
                                        $('#myModal').modal('hide');
                                        wfp.redirectTo();
                                    } else {
@@ -506,46 +519,6 @@
                            });
                        });
 
-                });
-
-                $('#btnSendViaAPI').click(function (e) {
-                    debugger;
-
-                    e.preventDefault();
-
-                    var order = $(this).data('order');
-                    var name = $(this).data('name');
-                    var dataToPost = {
-                        id: $(this).data('id')
-                    };
-
-                    wfp.showSwal("Are you sure to send Order # " + order + " - " + name + " via API?",
-                       function () {
-
-                           debugger;
-                           $.ajax({
-                               type: "POST",
-                               url: "/Approved/SendViaApi",
-                               data: JSON.stringify(dataToPost),
-                               contentType: "application/json; charset=utf-8",
-                               success: function (response) {
-                                   debugger;
-                                   if (response === "") wfp.reload();
-                                   if (response.IsSucess) {
-                                       debugger;
-                                       wfp.showSuccess('Segment ' + segment + ' has been approved successfully.');
-                                       wfp.redirectTo('/Approved/Index?id=@Session["id"]');
-                                   } else {
-                                       wfp.showError(response.ErrorMessage);
-                                   }
-                               },
-                               failure: function (response) {
-                                   wfp.showError('There is erorr in service call.');
-                               },
-                               complete: function () {
-                               }
-                           });
-                       });
                 });
 
                 $('.btnApprove').click(function (e) {

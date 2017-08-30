@@ -1,0 +1,101 @@
+﻿@using WFP.ICT.Data.Entities
+@using WFP.ICT.Enum
+@using WFP.ICT.Web.Models
+@model WFP.ICT.Web.Models.SettingsVm
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var LoggedInUser = Session["user"] as WfpUser;
+    var IsLoggedIn = LoggedInUser != null;
+    var IsAdmin = LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
+
+}
+
+<h2>Settings<span class="small"></span></h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="form-horizontal">
+
+            <div class="tabbable-panel">
+                <div class="tabbable-line">
+                    <ul class="nav nav-tabs ">
+                        <li class="active">
+                            <a href="#tab_default_1" data-toggle="tab">
+                                Settings
+                            </a>
+                        </li>
+                        <div class="pull-right" id="tools">
+                            <button type="submit" class="btn btn-sm btn-default"><span class="glyphicon glyphicon-saved"></span> Save</button>
+                        </div>
+                    </ul>
+                    <div class="tab-content">
+                        <div class="tab-pane active" id="tab_default_1">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5">IsAutoTracking</label>
+                                        <div class="col-md-7">
+                                            <div class="">
+                                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsAutoProcessTracking, "True")Yes
+                                                    </label>
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsAutoProcessTracking, "False")No
+                                                    </label>
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.IsAutoProcessTracking, "", new {@class = "text-danger"})
+                                            </div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        <label class="control-label col-md-5">Send Notifications Emails</label>
+                                        <div class="col-md-7">
+                                            <div class="">
+                                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsSendNotificationEmails, "True")Yes
+                                                    </label>
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsSendNotificationEmails, "False")No
+                                                    </label>
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.IsSendNotificationEmails, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+
+            <br /><br />
+
+        </div>
+    </div>
+
+}
+<script type="text/javascript">
+
+    var wfp = wfp || {};
+
+    $(function () {
+        $("input[name='IsAutoProcessTracking']:checked").closest("label.btn").addClass("active");
+        $("input[name='IsSendNotificationEmails']:checked").closest("label.btn").addClass("active");
+    });
+</script>

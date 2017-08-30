@@ -29,7 +29,7 @@
 }
 
 <div class="row" style="margin-top: 5px">
-    <div class="col-md-12">
+    <div class="col-md-11">
         <div class="headertab">
             Tracking Notifications
         </div>
@@ -55,6 +55,11 @@
             <span class="glyphicon glyphicon-search"></span>
         </button>
     </div>*@
+    <div class="col-md-1" id="divTools" style="text-align: left">
+        <a href="@Url.Action("Settings", "Notification")" title="Settings" data-tooltip="tooltip" class="btn btn-default">
+            <span class="fa fa-cog"></span>
+        </a>
+    </div>
 </div>
 
 <table class="table">
@@ -92,7 +97,7 @@
         {
             disabled = "disabled";
         }
-        var rowClass = item.QCRule == 0 ? "btn-danger" : (item.QCRule == 1) ? "btn-primary" : (item.QCRule == 2) ? "btn-default" : "btn-danger";
+        var rowClass = item.QcRule == 0 ? "btn-danger" : (item.QcRule == 1) ? "btn-primary" : (item.QcRule == 2) ? "btn-default" : "btn-danger";
 
                 <tr class="@rowClass">
                     <td>
@@ -105,10 +110,10 @@
                         @(item.FoundAt?.ToString(StringConstants.TimeStampFormat))
                     </td>
                     <td>
-                        @(Enum.GetName(typeof(QcRule), item.QCRule))
+                        @(Enum.GetName(typeof(QcRule), item.QcRule))
                     </td>
                     <td class="no-right-padding no-left-padding">
-                        @(QcRuleUtility.GetString(item.QCRule))
+                        @(QcRuleUtility.GetString(item.QcRule))
                     </td>
 
                     <td class="no-right-padding no-left-padding">

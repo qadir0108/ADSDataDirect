@@ -4,7 +4,6 @@ using System.Data.Entity;
 using System.Linq;
 using WFP.ICT.Data.Entities;
 using WFP.ICT.Enum;
-using WFP.ICT.Web.Async;
 using WFP.ICT.Web.Async.Helpers;
 using WFP.ICT.Web.Helpers;
 
@@ -16,6 +15,11 @@ namespace WFP.ICT.Web.ProData
         {
             using (var db = new WfpictContext())
             {
+                bool isAutoProcessTracking = false;
+                var settingAuto = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyAutoProcessTracking);
+                if (settingAuto != null) isAutoProcessTracking = int.Parse(settingAuto.Value) == 1;
+                if(!isAutoProcessTracking) return;
+
                 LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules started at {DateTime.Now}");
 
                 // any camp that is in monitoring or any whose any segment is in monitoring
@@ -25,7 +29,6 @@ namespace WFP.ICT.Web.ProData
                     .Include(x => x.Trackings)
                     .Where(x => x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
                     .Where(x => x.Approved != null)
-                    //.Where(x => x.OrderNumber == "2750" || x.ReBroadcastedOrderNumber == "2557RDP")
                     .ToList();
 
                 LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules processing {campaigns.Count} campaigns.");
@@ -77,15 +80,13 @@ namespace WFP.ICT.Web.ProData
         {
             using (var db = new WfpictContext())
             {
-                //var campaignIds = db.Notifications
-                //    .Where(x => x.Status == (int) Enum.NotificationStatus.Found)
-                //    .Select(x => x.CampaignId)
-                //    .ToList();
-                //List<Campaign> campaigns = db.Campaigns
-                //    .Include(x => x.Notifications)
-                //    .Where(x => campaignIds.Contains(x.Id))
-                //    .ToList();
+                bool isSendNotificationEmails = false;
+                var settingSendNotifications = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeySendNotificationEmails);
+                if (settingSendNotifications != null) isSendNotificationEmails = int.Parse(settingSendNotifications.Value) == 1;
+                if(!isSendNotificationEmails) return;
 
+                // pick all those notifications where status = found
+                // pick camps of those notifs
                 var campaigns = (from c in db.Campaigns
                                 join n in db.Notifications on c.Id equals n.CampaignId
                                 where n.Status == (int)NotificationStatus.Found

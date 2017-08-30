@@ -13,87 +13,82 @@ namespace WFP.ICT.Web.Async
 {
     public static class FileProcessor
     {
-        public static void ProcessNewOrder(string orderNumber, string userName)
+        public static void ProcessNewOrderFiles(WfpictContext db, Campaign campaign)
         {
-            using (var db = new WfpictContext())
+            if (!string.IsNullOrEmpty(campaign.Assets.CreativeFiles))
             {
-                var campaign = db.Campaigns.Include(x => x.Assets).Include(x => x.Segments)
-                                 .FirstOrDefault(x => x.OrderNumber == orderNumber);
+                string amazonFileKey = string.Format("{0}/{0}_html.zip", campaign.OrderNumber);
+                S3FileManager.Move(campaign.Assets.CreativeFiles, amazonFileKey, campaign.OrderNumber, true);
+                campaign.Assets.CreativeFiles = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber,
+                    "CreativeFiles moved to " + amazonFileKey);
+            }
+            if (!string.IsNullOrEmpty(campaign.Assets.ZipCodeFile))
+            {
+                string amazonFileKey = string.Format("{0}/{0}zip.csv", campaign.OrderNumber);
+                S3FileManager.Move(campaign.Assets.ZipCodeFile, amazonFileKey, campaign.OrderNumber, true);
+                campaign.Assets.ZipCodeFile = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber,
+                    "ZipCodeFile moved to " + amazonFileKey);
+            }
+            if (!string.IsNullOrEmpty(campaign.Assets.TestSeedFile))
+            {
+                string amazonFileKey = string.Format("{0}/{0}test.csv", campaign.OrderNumber);
+                S3FileManager.Move(campaign.Assets.TestSeedFile, amazonFileKey, campaign.OrderNumber, true);
+                campaign.Assets.TestSeedFile = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber,
+                    "TestSeedFile moved to " + amazonFileKey);
+            }
+            if (!string.IsNullOrEmpty(campaign.Assets.LiveSeedFile))
+            {
+                string amazonFileKey = string.Format("{0}/{0}live.csv", campaign.OrderNumber);
+                S3FileManager.Move(campaign.Assets.LiveSeedFile, amazonFileKey, campaign.OrderNumber, true);
+                campaign.Assets.LiveSeedFile = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber,
+                    "LiveSeedFile moved to " + amazonFileKey);
+            }
+            if (!string.IsNullOrEmpty(campaign.Assets.SuppressionFile))
+            {
+                string amazonFileKey = string.Format("{0}/{0}supp.csv", campaign.OrderNumber);
+                S3FileManager.Move(campaign.Assets.SuppressionFile, amazonFileKey, campaign.OrderNumber, true);
+                campaign.Assets.SuppressionFile = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber,
+                    "SuppressionFile moved to " + amazonFileKey);
+            }
+            if (!string.IsNullOrEmpty(campaign.Assets.BannersFile))
+            {
+                string amazonFileKey = string.Format("{0}/{0}_banner{1}", campaign.OrderNumber,
+                    Path.GetExtension(campaign.Assets.BannersFile));
+                S3FileManager.Move(campaign.Assets.BannersFile, amazonFileKey, campaign.OrderNumber, true);
+                campaign.Assets.BannersFile = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber,
+                    "BannersFile moved to " + amazonFileKey);
+            }
+            if (!string.IsNullOrEmpty(campaign.Assets.BannerLinksFile))
+            {
+                string amazonFileKey = string.Format("{0}/{0}_bannerlinks{1}", campaign.OrderNumber,
+                    Path.GetExtension(campaign.Assets.BannerLinksFile));
+                S3FileManager.Move(campaign.Assets.BannerLinksFile, amazonFileKey, campaign.OrderNumber, true);
+                campaign.Assets.BannerLinksFile = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber,
+                    "BannerLinksFile moved to " + amazonFileKey);
+            }
+            if (!string.IsNullOrEmpty(campaign.Assets.MiscFile))
+            {
+                string amazonFileKey = string.Format("{0}/{0}_misc{1}", campaign.OrderNumber,
+                    Path.GetExtension(campaign.Assets.MiscFile));
+                S3FileManager.Move(campaign.Assets.MiscFile, amazonFileKey, campaign.OrderNumber, true);
+                campaign.Assets.MiscFile = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber, "MiscFile moved to " + amazonFileKey);
+            }
 
-                var user = db.Users.FirstOrDefault(x => x.UserName == userName);
-
-                var ads = db.Vendors.FirstOrDefault(x => x.Name.Contains("ADS"));
-
-                if (!string.IsNullOrEmpty(campaign.Assets.CreativeFiles))
-                {
-                    string amazonFileKey = string.Format("{0}/{0}_html.zip", campaign.OrderNumber);
-                    S3FileManager.Move(campaign.Assets.CreativeFiles, amazonFileKey, campaign.OrderNumber, true);
-                    campaign.Assets.CreativeFiles = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "CreativeFiles moved to " + amazonFileKey);
-                }
-                if (!string.IsNullOrEmpty(campaign.Assets.ZipCodeFile))
-                {
-                    string amazonFileKey = string.Format("{0}/{0}zip.csv", campaign.OrderNumber);
-                    S3FileManager.Move(campaign.Assets.ZipCodeFile, amazonFileKey, campaign.OrderNumber, true);
-                    campaign.Assets.ZipCodeFile = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "ZipCodeFile moved to " + amazonFileKey);
-                }
-                if (!string.IsNullOrEmpty(campaign.Assets.TestSeedFile))
-                {
-                    string amazonFileKey = string.Format("{0}/{0}test.csv", campaign.OrderNumber);
-                    S3FileManager.Move(campaign.Assets.TestSeedFile, amazonFileKey, campaign.OrderNumber, true);
-                    campaign.Assets.TestSeedFile = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "TestSeedFile moved to " + amazonFileKey);
-                }
-                if (!string.IsNullOrEmpty(campaign.Assets.LiveSeedFile))
-                {
-                    string amazonFileKey = string.Format("{0}/{0}live.csv", campaign.OrderNumber);
-                    S3FileManager.Move(campaign.Assets.LiveSeedFile, amazonFileKey, campaign.OrderNumber, true);
-                    campaign.Assets.LiveSeedFile = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "LiveSeedFile moved to " + amazonFileKey);
-                }
-                if (!string.IsNullOrEmpty(campaign.Assets.SuppressionFile))
-                {
-                    string amazonFileKey = string.Format("{0}/{0}supp.csv", campaign.OrderNumber);
-                    S3FileManager.Move(campaign.Assets.SuppressionFile, amazonFileKey, campaign.OrderNumber, true);
-                    campaign.Assets.SuppressionFile = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "SuppressionFile moved to " + amazonFileKey);
-                }
-                if (!string.IsNullOrEmpty(campaign.Assets.BannersFile))
-                {
-                    string amazonFileKey = string.Format("{0}/{0}_banner{1}", campaign.OrderNumber, Path.GetExtension(campaign.Assets.BannersFile));
-                    S3FileManager.Move(campaign.Assets.BannersFile, amazonFileKey, campaign.OrderNumber, true);
-                    campaign.Assets.BannersFile = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "BannersFile moved to " + amazonFileKey);
-                }
-                if (!string.IsNullOrEmpty(campaign.Assets.BannerLinksFile))
-                {
-                    string amazonFileKey = string.Format("{0}/{0}_bannerlinks{1}", campaign.OrderNumber, Path.GetExtension(campaign.Assets.BannerLinksFile));
-                    S3FileManager.Move(campaign.Assets.BannerLinksFile, amazonFileKey, campaign.OrderNumber, true);
-                    campaign.Assets.BannerLinksFile = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "BannerLinksFile moved to " + amazonFileKey);
-                }
-                if (!string.IsNullOrEmpty(campaign.Assets.MiscFile))
-                {
-                    string amazonFileKey = string.Format("{0}/{0}_misc{1}", campaign.OrderNumber, Path.GetExtension(campaign.Assets.MiscFile));
-                    S3FileManager.Move(campaign.Assets.MiscFile, amazonFileKey, campaign.OrderNumber, true);
-                    campaign.Assets.MiscFile = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "MiscFile moved to " + amazonFileKey);
-                }
-
-                foreach (var segment in campaign.Segments)
-                {
-                    string amazonFileKey = string.Format("{0}/{1}_html.zip", campaign.OrderNumber, segment.SegmentNumber);
-                    S3FileManager.Move(segment.CreativeFiles, amazonFileKey, campaign.OrderNumber, true);
-                    segment.CreativeFiles = amazonFileKey;
-                    LogHelper.AddLog(db, LogType.FileProcessing, orderNumber, "Segment  " + segment.SegmentNumber + " CreativeFiles moved to " + amazonFileKey);
-                }
-
-                db.SaveChanges();
-
-                EmailHelper.SendOrderEmailToClient(campaign, user, ads?.CcEmails);
-
-                LogHelper.AddLog(db, LogType.Orders, campaign.OrderNumber, "New Order " + campaign.CampaignName + " has been entered into system successfully by " + campaign.RepresentativeName);
+            foreach (var segment in campaign.Segments)
+            {
+                string amazonFileKey = string.Format("{0}/{1}_html.zip", campaign.OrderNumber, segment.SegmentNumber);
+                S3FileManager.Move(segment.CreativeFiles, amazonFileKey, campaign.OrderNumber, true);
+                segment.CreativeFiles = amazonFileKey;
+                LogHelper.AddLog(db, LogType.FileProcessing, campaign.OrderNumber,
+                    "Segment  " + segment.SegmentNumber + " CreativeFiles moved to " + amazonFileKey);
             }
         }
 
@@ -103,7 +98,7 @@ namespace WFP.ICT.Web.Async
             {
                 var campaign = db.Campaigns.Include(x => x.Assets).FirstOrDefault(x => x.OrderNumber == orderNumber);
                 
-                var directory = string.Format("{0}\\{1}", uploadPath, campaign.OrderNumber);
+                var directory = $"{uploadPath}\\{campaign.OrderNumber}";
                 if (!Directory.Exists(directory)) Directory.CreateDirectory(directory);
 
                 // HtmlImagesURL

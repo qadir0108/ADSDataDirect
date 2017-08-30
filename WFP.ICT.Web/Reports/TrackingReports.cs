@@ -132,6 +132,10 @@ namespace WFP.ICT.Web.Reports
                     if (File.Exists(imageFilePath))
                         AddImage(worksheetPart, imageFilePath, 17, 7);
 
+                    cell = GetCell(worksheetPart.Worksheet, "B", 73);
+                    cell.CellValue = new CellValue(model.CampaignName);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+
                     cell = GetCell(worksheetPart.Worksheet, "J", 73);
                     cell.CellValue = new CellValue(model.OrderNumber);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);

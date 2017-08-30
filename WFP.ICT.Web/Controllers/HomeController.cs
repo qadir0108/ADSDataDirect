@@ -25,8 +25,8 @@ namespace WFP.ICT.Web.Controllers
 
         public ActionResult Settings()
         {
-            UserProfileVM profile = null;
-            if (LoggedInUser == null) return View("Settings", (UserProfileVM) null);
+            UserProfileVm profile = null;
+            if (LoggedInUser == null) return View("Settings", (UserProfileVm) null);
 
             if (string.IsNullOrEmpty(LoggedInUser?.ApiKey))
             {
@@ -36,7 +36,7 @@ namespace WFP.ICT.Web.Controllers
                 SetupLoggedInUser(LoggedInUser.UserName);
             }
 
-            profile = new UserProfileVM()
+            profile = new UserProfileVm()
             {
                 UserName = LoggedInUser.UserName,
                 FirstName = LoggedInUser.FirstName,
@@ -56,7 +56,7 @@ namespace WFP.ICT.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Settings(UserProfileVM profile)
+        public ActionResult Settings(UserProfileVm profile)
         {
             var user = Db.Users.FirstOrDefault(x => x.Id == LoggedInUser.Id);
             if (user == null) return View("Error");

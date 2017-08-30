@@ -14,7 +14,7 @@ namespace WFP.ICT.Data.Entities
         public string OrderNumber { get; set; }
         public string SegmentNumber { get; set; }
 
-        public int QCRule { get; set; } // Enum.QCRule
+        public int QcRule { get; set; } // Enum.QCRule
         public DateTime? CheckTime { get; set; } // Upadte always
         
         public int Status { get; set; } // Enum.NotificationStatus

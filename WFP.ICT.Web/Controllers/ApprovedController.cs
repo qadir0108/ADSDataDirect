@@ -183,7 +183,7 @@ namespace WFP.ICT.Web.Controllers
             }
         }
 
-        public ActionResult SendToVendor(Guid? vendorId, Guid? id, string[] segmentsSelected)
+        public ActionResult SendToVendor(OrderVia via, Guid? vendorId, Guid? id, string[] segmentsSelected)
         {
             try
             {
@@ -197,8 +197,18 @@ namespace WFP.ICT.Web.Controllers
                     throw new AdsException("Campagin: " + campaign.CampaignName + " is not yet approved.");
                 }
 
-                BackgroundJob.Enqueue(() => CampaignProcessor.SendVendorEmail(vendorId, campaign.OrderNumber, segmentsSelected));
-
+                switch (via)
+                {
+                        case OrderVia.Email:
+                            BackgroundJob.Enqueue(() => CampaignProcessor.SendToVendor(via, vendorId, campaign.OrderNumber, segmentsSelected, string.Empty));
+                        break;
+                        case OrderVia.Api:
+                            string whiteLabel = string.IsNullOrEmpty(LoggedInUser?.WhiteLabel) ? "ADS" : LoggedInUser?.WhiteLabel;
+                            string whiteLabelDomain = CustomersList.FirstOrDefault(x => x.Value == whiteLabel)?.Text.Split(" ".ToCharArray()).LastOrDefault()?.Trim("[]".ToCharArray());
+                            CampaignProcessor.SendToVendor(via, vendorId, campaign.OrderNumber, segmentsSelected, whiteLabelDomain);
+                        break;
+                }
+                
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
@@ -207,70 +217,5 @@ namespace WFP.ICT.Web.Controllers
             }
 
         }
-
-        public ActionResult SendViaApi(Guid? id)
-        {
-            try
-            {
-                Campaign campaign = Db.Campaigns
-                    .Include(x => x.Assets)
-                    .Include(x => x.Segments)
-                    .Include(x => x.Approved)
-                    .FirstOrDefault(x => x.Id == id);
-                if (campaign == null)
-                {
-                    throw new AdsException("Campagin with Id: " + id + " Not Found.");
-                }
-                if (campaign.Approved == null)
-                {
-                    throw new AdsException("Campagin: " + campaign.CampaignName + " is not yet approved.");
-                }
-
-                var segment = campaign.Segments.FirstOrDefault();
-                string whiteLabel = string.IsNullOrEmpty(LoggedInUser?.WhiteLabel) ? "MM" : LoggedInUser?.WhiteLabel;
-                string whiteLabelDomain = CustomersList.FirstOrDefault(x => x.Value == whiteLabel)?.Text.Split("-".ToCharArray()).LastOrDefault()?.Trim();
-                var response = ProDataApiManager.Create(campaign, segment, whiteLabelDomain);
-                if (response.status == ProDataApiManager.Success)
-                {
-                    var campaignTracking =
-                       Db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == campaign.Id && x.SegmentNumber == (segment != null ? segment.SegmentNumber : null));
-
-                    if (campaignTracking == null)
-                    {
-                        var trackingId = Guid.NewGuid();
-                        var tracking = new CampaignTracking()
-                        {
-                            Id = trackingId,
-                            CreatedAt = DateTime.Now,
-                            CampaignId = campaign.Id,
-                            SegmentNumber = segment?.SegmentNumber,
-                            DateSent = DateTime.Now,
-                            IsCreatedThroughApi = true,
-                            QueuedCampaignId = response.queued_pending_campaign_id.ToString(),
-                        };
-                        Db.CampaignTrackings.Add(tracking);
-                        campaign.Status = (int)CampaignStatus.Monitoring;
-                        Db.SaveChanges();
-                    }
-                }
-                else
-                {
-                    StringBuilder message = new StringBuilder(response.message);
-                    foreach (var field in response.error_fields)
-                    {
-                        message.Append($"<br/>{field}");
-                    }
-                    throw new AdsException(message.ToString());
-                }
-
-                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
-            }
-            catch (Exception ex)
-            {
-                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
-            }
-
-        }
-
     }
 }
