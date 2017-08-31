@@ -192,18 +192,16 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult Report(Guid? id)
         {
-            if (id == null)
-            {
-                throw new HttpException(400, "Bad Request");
-            }
             Campaign campaign = Db.Campaigns
                 .Include(x => x.Approved)
                 .Include(x => x.ProDatas)
                 .Include(x => x.Trackings)
                 .FirstOrDefault(x => x.Id == id);
+
             if (campaign == null)
             {
-                throw new HttpException(404, "Not found");
+                TempData["Error"] = "Campaign not found.";
+                return RedirectToAction("Index", "Campaigns");
             }
             if (campaign.Approved == null)
             {
@@ -293,26 +291,25 @@ namespace ADSDataDirect.Web.Controllers
             return File(filePath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
         }
 
-        public JsonResult RefreshProData(string orderNumber)
+        public JsonResult RefreshProData(Guid? id)
         {
             try
             {
-                if (orderNumber == null)
-                {
-                    throw new AdsException("Order Number missing");
-                }
-
                 Campaign campaign = Db.Campaigns
                     .Include(x => x.Approved)
                     .Include(x => x.Segments)
                     .Include(x => x.Trackings)
-                    .Where(x => x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
+                    //.Where(x => x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
                     .Where(x => x.Approved != null)
-                    .FirstOrDefault(x => x.OrderNumber == orderNumber);
+                    .FirstOrDefault(x => x.Id == id);
 
                 // Update Tracking
-                if(campaign != null)
-                    ProDataApiManager.FetchAndUpdateTrackings(Db, campaign);
+                if (campaign == null)
+                {
+                    throw new AdsException("Campaign not found.");
+                }
+
+                ProDataApiManager.FetchAndUpdateTrackings(Db, campaign);
 
                 // Only updating prodata
                 //ProDataApiManager.FetchAndUpdateProDatas(Db, orderNumber);

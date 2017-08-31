@@ -17,7 +17,7 @@
     Html.RenderPartial("_HeaderCopy");
 }
 
-<div class="container">
+<div class="container" style="margin-top: 10px">
 
     <div class="row">
         <div class="col-md-11 headertab">
@@ -68,7 +68,7 @@
 
                 <tr>
                     <td>
-                        @Html.HiddenFor(modelItem => item.OrderNumber)
+                        @Html.HiddenFor(modelItem => item.CampaignId)
                         @Html.DisplayFor(modelItem => item.OrderNumber)
                     </td>
                     <td>
@@ -225,7 +225,7 @@
                             e.preventDefault();
 
                             var dataToPost = {
-                                orderNumber: $('#OrderNumber').val()
+                                id: $('#item_CampaignId').val()
                             };
 
                             $.ajax({

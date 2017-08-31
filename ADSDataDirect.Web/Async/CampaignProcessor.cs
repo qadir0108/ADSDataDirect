@@ -82,7 +82,7 @@ namespace ADSDataDirect.Web.Async
                         break;
                     case OrderVia.Api:
                         var response = ProDataApiManager.Create(campaign, segment, whiteLabelDomain);
-                        if (response.Status != ProDataApiManager.Success)
+                        if (response.status != ProDataApiManager.Success)
                         {
                             throw new AdsException(response.ErrorMessage);
                         }
@@ -125,7 +125,7 @@ namespace ADSDataDirect.Web.Async
                     break;
                 case OrderVia.Api:
                     var response = ProDataApiManager.Create(campaign, null, whiteLabelDomain);
-                    if (response.Status != ProDataApiManager.Success)
+                    if (response.status != ProDataApiManager.Success)
                     {
                         throw new AdsException(response.ErrorMessage);
                     }

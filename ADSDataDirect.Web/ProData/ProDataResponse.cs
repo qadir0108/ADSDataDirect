@@ -5,12 +5,12 @@ namespace ADSDataDirect.Web.ProData
 {
     public class ProDataResponse
     {
-        public string Status { get; set; }
-        public Reports Reports { get; set; }
-        public string Timestamp { get; set; }
-        public string Message { get; set; }
-        public List<string> ErrorFields { get; set; }
-        public long QueuedPendingCampaignId { get; set; }
+        public string status { get; set; }
+        public Reports reports { get; set; }
+        public string timestamp { get; set; }
+        public string message { get; set; }
+        public List<string> error_fields { get; set; }
+        public long queued_pending_campaign_id { get; set; }
 
         public string ResponseStatus { get; set; }
         public string ResponseMessage { get; set; }
@@ -18,8 +18,8 @@ namespace ADSDataDirect.Web.ProData
         {
             get
             {
-                StringBuilder errorMessage = new StringBuilder(Message);
-                foreach (var field in ErrorFields)
+                StringBuilder errorMessage = new StringBuilder(message);
+                foreach (var field in error_fields)
                 {
                     errorMessage.Append($"<br/>{field}");
                 }
@@ -30,14 +30,14 @@ namespace ADSDataDirect.Web.ProData
 
     public class Reports
     {
-        public Report[] Report { get; set; }
+        public Report[] report { get; set; }
     }
 
     public class Report
     {
-        public string Io { get; set; }
-        public string ReportsiteUrl { get; set; }
-        public string DestinationUrl { get; set; }
+        public string IO { get; set; }
+        public string Reportsite_URL { get; set; }
+        public string Destination_URL { get; set; }
         public string CampaignStartDate { get; set; }
         public string ClickCount { get; set; }
         public string CampaignName { get; set; }

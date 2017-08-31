@@ -34,8 +34,7 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>ADSDataDirect.Web-1.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,8 +43,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>
-    </CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>ADSDataDirect.Web-1.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core">
@@ -631,6 +629,7 @@
     <Content Include="fonts\CWB0XYA8bzo0kSThX0UTuA.woff2" />
     <Content Include="fonts\d-6IYplOFocCacKzxwXSOFtXRa8TVwTICgirnJhmVJw.woff2" />
     <Content Include="json.json" />
+    <Content Include="ADSDataDirect.Web-1.ruleset" />
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <Content Include="Reports\CampaignDatasetType.xsc">
       <DependentUpon>CampaignDatasetType.xsd</DependentUpon>

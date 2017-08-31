@@ -397,12 +397,15 @@
                                         <i class="glyphicon glyphicon-briefcase"></i>
                                     </div>
                                     <div id="SegmentsSelected">
-                                        @foreach (var segment in Model.Segments)
+                                        @if (Model.Segments != null)
                                         {
-                                            <div class="checkbox checkbox-primary">
-                                                <input id="@segment.Id" type="checkbox" value="@segment.SegmentNumber" />
-                                                <label for="@segment.Id" class="control-label">@segment.SegmentNumber - @segment.SegmentDataFileUrl </label>
-                                            </div>
+                                            foreach (var segment in Model.Segments)
+                                            {
+                                                <div class="checkbox checkbox-primary">
+                                                    <input id="@segment.Id" type="checkbox" value="@segment.SegmentNumber" />
+                                                    <label for="@segment.Id" class="control-label">@segment.SegmentNumber - @segment.SegmentDataFileUrl </label>
+                                                </div>
+                                            }
                                         }
                                     </div>
                                 </div>

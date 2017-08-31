@@ -33,40 +33,40 @@ namespace ADSDataDirect.Web.ProData
         {
             ProDataRequest request = new ProDataRequest()
             {
-                Io = campaign.OrderNumber,
-                CampaignName = campaign.Approved.CampaignName,
-                IsRebroadcast = campaign.Approved.ReBroadCast ? "Y" : "N",
-                WhiteLabel = whiteLabelDomain,
-                CreativeUrl = campaign.Assets.CreativeUrl,
-                Quantity = campaign.Approved.Quantity,
-                GeoType = "POSTALCODE",
-                GeoUrl = campaign.Assets.ZipCodeUrl,
-                CtrPercent = 0.023,
-                Subject = campaign.Approved.SubjectLine,
-                FromName = campaign.Approved.FromLine,
-                FromEmail = campaign.RepresentativeEmail,
-                DeployDate = campaign.Approved.DeployDate?.ToString(StringConstants.DateTimeFormatDashes),
+                io = campaign.OrderNumber,
+                campaign_name = campaign.Approved.CampaignName,
+                is_rebroadcast = campaign.Approved.ReBroadCast ? "Y" : "N",
+                white_label = whiteLabelDomain,
+                creative_url = campaign.Assets.CreativeUrl,
+                quantity = campaign.Approved.Quantity,
+                geo_type = "POSTALCODE",
+                geo_url = campaign.Assets.ZipCodeUrl,
+                ctr_percent = 0.023,
+                subject = campaign.Approved.SubjectLine,
+                from_name = campaign.Approved.FromLine,
+                from_email = campaign.RepresentativeEmail,
+                deploy_date = campaign.Approved.DeployDate?.ToString(StringConstants.DateTimeFormatDashes),
             };
 
             if (campaign.Approved.IsOpenPixel)
             {
-                request.IsOpenPixel = "Y";
-                request.OpenPercent = (double)campaign.Approved.OpenGoals / campaign.Approved.Quantity;
-                request.OpenPixel = campaign.Approved.OpenPixelUrl;
+                request.is_open_pixel = "Y";
+                request.open_percent = (double)campaign.Approved.OpenGoals / campaign.Approved.Quantity;
+                request.open_pixel = campaign.Approved.OpenPixelUrl;
             }
             else
-                request.IsOpenPixel = "N";
+                request.is_open_pixel = "N";
 
             if (!string.IsNullOrEmpty(segment?.SegmentDataFileUrl))
             {
-                request.IsDataFile = "Y";
-                request.DataFileUrl = segment.SegmentDataFileUrl;
-                request.DataFileReplacementParam = segment.SegmentNumber;
-                request.DataFileReplacementColumn = "0";
-                request.DataFileUniqueIp = "Y";
+                request.is_data_file = "Y";
+                request.data_file_url = segment.SegmentDataFileUrl;
+                request.data_file_replacement_param = segment.SegmentNumber;
+                request.data_file_replacement_column = "0";
+                request.data_file_unique_ip = "Y";
             }
             else
-                request.IsDataFile = "N";
+                request.is_data_file = "N";
 
             return Create(request);
         }
@@ -169,9 +169,9 @@ namespace ADSDataDirect.Web.ProData
             db.SaveChanges();
 
             var data = Fetch(orderNumber);
-            if (data.Reports != null && data.Reports.Report != null)
+            if (data.reports != null && data.reports.report != null)
             {
-                var reports = data.Reports.Report;
+                var reports = data.reports.report;
                 LogHelper.AddLog(db, LogType.ProData, orderNumber, $"{reports.Length} records fetched from ProData ");
                 foreach (var report in reports)
                 {
@@ -181,14 +181,14 @@ namespace ADSDataDirect.Web.ProData
                         CreatedAt = DateTime.Now,
                         CampaignId = campagin.Id,
                         CampaignName = report.CampaignName,
-                        Reportsite_URL = report.ReportsiteUrl,
-                        Destination_URL = report.DestinationUrl,
+                        Reportsite_URL = report.Reportsite_URL,
+                        Destination_URL = report.Destination_URL,
                         CampaignStartDate = report.CampaignStartDate,
                         ClickCount = long.Parse(report.ClickCount),
                         UniqueCnt = report.UniqueCnt,
                         MobileCnt = report.MobileCnt,
                         ImpressionCnt = report.ImpressionCnt,
-                        IO = report.Io
+                        IO = report.IO
                     });
                 }
                 db.SaveChanges();
@@ -245,9 +245,9 @@ namespace ADSDataDirect.Web.ProData
             db.SaveChanges();
 
             // Add new ProData
-            if (data.Reports != null && data.Reports.Report != null)
+            if (data.reports != null && data.reports.report != null)
             {
-                var reports = data.Reports.Report;
+                var reports = data.reports.report;
                 LogHelper.AddLog(db, LogType.ProData, orderNumber, $"{reports.Length} records fetched from ProData ");
                 foreach (var report in reports)
                 {
@@ -260,14 +260,14 @@ namespace ADSDataDirect.Web.ProData
                         SegmentNumber = segmentNumber,
 
                         CampaignName = report.CampaignName,
-                        Reportsite_URL = report.ReportsiteUrl,
-                        Destination_URL = report.DestinationUrl,
+                        Reportsite_URL = report.Reportsite_URL,
+                        Destination_URL = report.Destination_URL,
                         CampaignStartDate = report.CampaignStartDate,
                         ClickCount = long.Parse(report.ClickCount),
                         UniqueCnt = report.UniqueCnt,
                         MobileCnt = report.MobileCnt,
                         ImpressionCnt = report.ImpressionCnt,
-                        IO = report.Io
+                        IO = report.IO
                     });
                 }
                 db.SaveChanges();
@@ -311,13 +311,13 @@ namespace ADSDataDirect.Web.ProData
                 db.SaveChanges();
             }
 
-            if (campaignTracking?.DateSent == null || data.Reports?.Report == null || data.Reports.Report.Length == 0) return campaignTracking;
+            if (campaignTracking?.DateSent == null || data.reports?.report == null || data.reports.report.Length == 0) return campaignTracking;
 
-            var reports = data.Reports.Report;
+            var reports = data.reports.report;
             var report = reports[0];
             DateTime startDateTime;
             DateTime.TryParse(report.CampaignStartDate, out startDateTime);
-            campaignTracking.IoNumber = report.Io;
+            campaignTracking.IoNumber = report.IO;
             campaignTracking.StartDate = startDateTime;
             campaignTracking.Opened = campaign.Approved.IsUseApiDataForOpen ? report.ImpressionCnt : API.Campaign.GetOpens(campaignTracking.Quantity, startDateTime);
             campaignTracking.Clicked = reports.Sum(x => long.Parse(x.ClickCount));
