@@ -1,0 +1,150 @@
+﻿@using ADSDataDirect.Core.Entities
+@using ADSDataDirect.Enums
+@using ADSDataDirect.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<ADSDataDirect.Core.Entities.Notification>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string currentSort = ViewBag.CurrentSort;
+    if (string.IsNullOrEmpty(currentSort))
+    {
+        currentSort = "OrderNumber_desc";
+    }
+
+    var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
+    var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
+    var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.CreatedAtSortParm };
+    var columnSortParams5 = new { sortOrder = ViewBag.BroadcastDateSortParm };
+    var columnSortParams6 = new { sortOrder = ViewBag.QuantitySortParm };
+    var columnSortParams7 = new { sortOrder = ViewBag.StatusSortParm };
+
+    var loggedInUser = Session["user"] as WfpUser;
+    var isLoggedIn = loggedInUser != null;
+    var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
+}
+
+<div class="row" style="margin-top: 5px">
+    <div class="col-md-11">
+        <div class="headertab">
+            Tracking Notifications
+        </div>
+    </div>
+
+    @*<div class="col-md-3 no-left-padding" id="divSearch" data-tooltip="tooltip" title="Search">
+        <form id="frmSearch" method="post">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-search"></span>
+                </div>
+                <input type="hidden" id="searchType" name="searchType" value="basic" />
+                <input type="hidden" id="clearSessionId" name="clearSessionId" value="" />
+                <input type="text" id="searchString" name="searchString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
+                <div class="input-group-addon">
+                    <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-1" id="divTools" style="text-align:left">
+        <button class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
+            <span class="glyphicon glyphicon-search"></span>
+        </button>
+    </div>*@
+    <div class="col-md-1" id="divTools" style="text-align: left">
+        <a href="@Url.Action("Settings", "Notification")" title="Settings" data-tooltip="tooltip" class="btn btn-default">
+            <span class="fa fa-cog"></span>
+        </a>
+    </div>
+</div>
+
+<table class="table">
+    <tr>
+        <td>
+            @Html.SortIdentifier(currentSort, "OrderNumber")
+            @Html.ActionLink("#", "Index", columnSortParams1)
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "CampaignName")
+            @Html.ActionLink("Campaign Name", "Index", columnSortParams2)
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "FoundAt")
+            @Html.ActionLink("Found At", "Index", columnSortParams4)
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "Problem")
+            @Html.ActionLink("Problem", "Index", columnSortParams5)
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "Problem Detail")
+            @Html.ActionLink("Problem Detail", "Index", columnSortParams6)
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "Status")
+            @Html.ActionLink("Status", "Index", columnSortParams6)
+        </td>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        var disabled = "";
+        if ((CampaignStatus)item.Status == CampaignStatus.Monitoring || (CampaignStatus)item.Status == CampaignStatus.Completed)
+        {
+            disabled = "disabled";
+        }
+        var rowClass = item.QcRule == 0 ? "btn-danger" : (item.QcRule == 1) ? "btn-primary" : (item.QcRule == 2) ? "btn-default" : "btn-danger";
+
+                <tr class="@rowClass">
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OrderNumber)
+                    </td>
+                    <td>
+                        @(item.FoundAt?.ToString(StringConstants.TimeStampFormat))
+                    </td>
+                    <td>
+                        @(Enum.GetName(typeof(QcRule), item.QcRule))
+                    </td>
+                    <td class="no-right-padding no-left-padding">
+                        @(QcRuleUtility.GetString(item.QcRule))
+                    </td>
+
+                    <td class="no-right-padding no-left-padding">
+                        @Enum.GetName(typeof(NotificationStatus), item.Status)
+                    </td>
+                </tr>
+    }
+
+</table>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="page-count">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+        </div>
+        <div class="tp-pagination">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new
+           {
+               page,
+               sortOrder = ViewBag.CurrentSort,
+               searchType = ViewBag.SearchType,
+               basicString = ViewBag.BasicStringSearched,
+               basicStatus = ViewBag.BasicStatusSearched,
+               advancedStatus = ViewBag.AdvancedStatusSearched,
+               advancedUser = ViewBag.AdvancedUserSearched,
+               campaignName = ViewBag.CampaignName,
+               isTested = ViewBag.IsTested,
+               orderedFrom = ViewBag.OrderedFrom,
+               orderedTo = ViewBag.OrderedTo,
+               broadcastFrom = ViewBag.BroadcastFrom,
+               broadcastTo = ViewBag.BroadcastTo
+           }), new PagedListRenderOptions() { })
+        </div>
+    </div>
+</div>

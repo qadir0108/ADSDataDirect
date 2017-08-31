@@ -1,0 +1,149 @@
+﻿@using ADSDataDirect.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<ADSDataDirect.Web.Models.VendorVm>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string currentSort = ViewBag.CurrentSort;
+    if (string.IsNullOrEmpty(currentSort))
+    {
+        currentSort = "OrderNumber_desc";
+    }
+
+    var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
+    var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
+    var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.BroadcastDateSortParm };
+    var columnSortParams5 = new { sortOrder = ViewBag.StatusSortParm };
+
+}
+
+<div class="row">
+        <div class="col-md-11">
+            <div class="dashboard-page-head">
+                <div class="page-header">
+                    <h1>Vendors<small></small></h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 listing-action" id="divTools1" style="text-align:left">
+            @Html.ActionLink("New", "New","Vendor", null, new { @class = "btn btn-default", @title = "New Vendor", @data_tooltip = "tooltip" })
+        </div>
+</div>
+        <table class="table">
+            <tr>
+                @*<th>
+                        @Html.DisplayNameFor(model => model.CreatedAt)
+                    </th>*@
+                <td>
+                    @Html.SortIdentifier(currentSort, "OrderNumber")
+                    @Html.ActionLink("Name", "Index", columnSortParams1)
+                    @*@Html.DisplayNameFor(model => model.OrderNumber)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "BroadcastDate")
+                    @Html.ActionLink("Company", "Index", columnSortParams4)
+                    @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "Status")
+                    @Html.ActionLink("Email", "Index", columnSortParams5)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CampaignName")
+                    @Html.ActionLink("Phone", "Index", columnSortParams2)
+                    @*@Html.DisplayNameFor(model => model.CampaignName)*@
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CreatedBy")
+                    @Html.ActionLink("Date Created", "Index", columnSortParams3)
+                    @*@Html.DisplayNameFor(model => model.RepresentativeName)*@
+                </td>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Name)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Phone)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.DateCreated)
+                    </td>
+                    <td>
+                        <a href="@Url.Action("Edit","Vendor", new { id = item.Id })" id="btnEdit" class="btn btn-sm btn-default" title="Edit" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                        <a href="#" id="btnDelete" class="btn btn-sm btn-default btnDelete" title="Delete" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="page-count">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                </div>
+                <div class="tp-pagination">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort }), new PagedListRenderOptions() { })
+                </div>
+            </div>
+        </div>
+
+<!-- Modal -->
+
+<script type="text/javascript">
+
+        var wfp = wfp || {};
+
+        $(document).ready(function () {
+
+            $('.btnDelete').click(function (e) {
+                debugger;
+                e.preventDefault();
+
+                var dataToPost = {
+                    id: $(this).data('id')
+                };
+
+                wfp.showSwal("Are you sure to delete?", function () {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Vendor/Delete",
+                        data: dataToPost,
+                        success: function (response) {
+                            debugger;
+                            if (response === "") wfp.reload();
+                            if (response.IsSucess) {
+                                wfp.showSuccess('Vendor has been deleted successfully.');
+                                wfp.redirectTo('/Vendor/Index');
+                            } else {
+                                wfp.showError(response.ErrorMessage);
+                            }
+                        },
+                        failure: function (response) {
+                            wfp.showError('There is erorr in service call.');
+                        },
+                        complete: function () {
+                        }
+                    });
+
+                });
+            });
+            
+        });
+
+</script>

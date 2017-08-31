@@ -1,0 +1,256 @@
+﻿@using System.Threading.Tasks
+@using ADSDataDirect.Core.Entities
+@using ADSDataDirect.Enums
+
+@model List<ADSDataDirect.Web.Models.CampaignTrackingVm>
+
+@{
+    ViewData["Title"] = "Campaign Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var loggedInUser = Session["user"] as WfpUser;
+    var isLoggedIn = loggedInUser != null;
+    var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
+}
+
+@{
+    Html.RenderPartial("_HeaderCopy");
+}
+
+<div class="container">
+
+    <div class="row">
+        <div class="col-md-11 headertab">
+            Campaign Tracking
+        </div>
+        <div class="col-md-1 listing-action" id="divTools" style="text-align: right">
+        @if (isAdmin)
+        {
+            <a href="#" class="btn btn-default" id="btnRefresh" data-tooltip="tooltip" title="Refresh from ProData"><span class="glyphicon glyphicon-refresh"></span></a>
+        }
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Order #
+                </th>
+                <th>
+                    Campaign Name
+                </th>
+                <th>
+                    White Label
+                </th>
+                <th>
+                    Deploy Date
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Opened
+                </th>
+                <th>
+                    Clicked
+                </th>
+                <th>
+                    Status
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var divDrillDownId = "divDrillDown" + item.TrackingId;
+
+                <tr>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.OrderNumber)
+                        @Html.DisplayFor(modelItem => item.OrderNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CampaignName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WhiteLabel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Opened)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Clicked)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>
+                    <td style="min-width: 90px">
+                        <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
+                        <a href="~/Tracking/DownloadReport?id=@item.CampaignId&trackingId=@item.TrackingId" target="_blank" class="btn btn-sm btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8">
+                        <div id="@divDrillDownId" class="divDrillDown">
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.CampaignName)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.CampaignName)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.IoNumber)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.IoNumber)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.StartDate)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.StartDate)
+                                        </dd>
+                                        <dt>
+                                            EmailsSent
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.Quantity)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.Opened)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.Opened)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.OpenedPercentage)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.OpenedPercentage)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.Clicked)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.ClickedPercentage)
+                                        </dd>
+                                        <dt>
+                                            CtrPercentage
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.ClickToOpenPercentage)
+                                        </dd>
+
+                                    </dl>
+
+                                </div>
+                                <div class="col-md-8">
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    IO #
+                                                </th>
+                                                <th>
+                                                    Link
+                                                </th>
+                                                <th>
+                                                    Quantity Per Link
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (item.PerLink != null)
+                                            {
+                                                foreach (var item1 in item.PerLink)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item1.IoNumber)
+                                                        </td>
+                                                        <td style="word-wrap:break-word;word-break:break-all;">
+                                                            @item1.Link
+                                                            @*@Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item1.Link, item1.Link.Substring(0, item1.Link.Length > 80 ? 80 : item1.Link.Length)))*@
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item1.ClickCount)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+<script type="text/javascript">
+
+                    var wfp = wfp || {};
+
+                    $(document).ready(function () {
+
+                        $(".divDrillDown").hide();
+
+                        $(".btnDrill").click(function () {
+                            debugger;
+                            var id = $(this).data('id');
+                            $("#divDrillDown" + id).slideToggle("slow");
+                        });
+
+                        $('#btnRefresh').click(function (e) {
+                            debugger;
+
+                            e.preventDefault();
+
+                            var dataToPost = {
+                                orderNumber: $('#OrderNumber').val()
+                            };
+
+                            $.ajax({
+                                type: "POST",
+                                url: "/Tracking/RefreshProData",
+                                data: JSON.stringify(dataToPost),
+                                contentType: "application/json; charset=utf-8",
+                                success: function (response) {
+                                    debugger;
+                                    if (response === "") wfp.reload();
+                                    if (response.IsSucess) {
+                                        wfp.showSuccess('ProData has been refreshed successfully.');
+                                        wfp.reload();
+                                    } else {
+                                        wfp.showError(response.ErrorMessage);
+                                    }
+                                },
+                                failure: function (response) {
+                                    wfp.showError('There is erorr in service call.');
+                                },
+                                complete: function () {
+                                }
+                            });
+
+                        });
+
+                    });
+                </script>

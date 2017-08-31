@@ -3,17 +3,21 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFP.ICT.Data", "WFP.ICT.Data\WFP.ICT.Data.csproj", "{73D3925F-4B91-419C-BB37-1CF35B705466}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFP.ICT.Enum", "WFP.ICT.Enum\WFP.ICT.Enum.csproj", "{1BE0CDE0-0F59-413C-B089-663DB5EF00E1}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WFP.ICT.Web", "WFP.ICT.Web\WFP.ICT.Web.csproj", "{14EBE5AC-2DB6-46D3-ADBA-60BD626F3938}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SonarQube", "SonarQube", "{073389B6-4365-45C5-AF92-E188759AB528}"
 	ProjectSection(SolutionItems) = preProject
 		SonarQube\adsdatadirectCSharp.ruleset = SonarQube\adsdatadirectCSharp.ruleset
 		SonarQube\SolutionBinding.sqconfig = SonarQube\SolutionBinding.sqconfig
 	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSDataDirect.Infrastructure", "ADSDataDirect.Infrastructure\ADSDataDirect.Infrastructure.csproj", "{4E429988-3991-4F58-B398-ADC3EFA0D213}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSDataDirect.Test", "ADSDataDirect.Test\ADSDataDirect.Test.csproj", "{AC92E0A9-9D5A-4771-B7A2-625573167F8B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSDataDirect.Core", "ADSDataDirect.Core\ADSDataDirect.Core.csproj", "{73D3925F-4B91-419C-BB37-1CF35B705466}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSDataDirect.Enums", "ADSDataDirect.Enums\ADSDataDirect.Enums.csproj", "{1BE0CDE0-0F59-413C-B089-663DB5EF00E1}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ADSDataDirect.Web", "ADSDataDirect.Web\ADSDataDirect.Web.csproj", "{14EBE5AC-2DB6-46D3-ADBA-60BD626F3938}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -23,6 +27,22 @@ Global
 		Release|x86 = Release|x86
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{4E429988-3991-4F58-B398-ADC3EFA0D213}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E429988-3991-4F58-B398-ADC3EFA0D213}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E429988-3991-4F58-B398-ADC3EFA0D213}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{4E429988-3991-4F58-B398-ADC3EFA0D213}.Debug|x86.Build.0 = Debug|Any CPU
+		{4E429988-3991-4F58-B398-ADC3EFA0D213}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E429988-3991-4F58-B398-ADC3EFA0D213}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E429988-3991-4F58-B398-ADC3EFA0D213}.Release|x86.ActiveCfg = Release|Any CPU
+		{4E429988-3991-4F58-B398-ADC3EFA0D213}.Release|x86.Build.0 = Release|Any CPU
+		{AC92E0A9-9D5A-4771-B7A2-625573167F8B}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AC92E0A9-9D5A-4771-B7A2-625573167F8B}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AC92E0A9-9D5A-4771-B7A2-625573167F8B}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{AC92E0A9-9D5A-4771-B7A2-625573167F8B}.Debug|x86.Build.0 = Debug|Any CPU
+		{AC92E0A9-9D5A-4771-B7A2-625573167F8B}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AC92E0A9-9D5A-4771-B7A2-625573167F8B}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AC92E0A9-9D5A-4771-B7A2-625573167F8B}.Release|x86.ActiveCfg = Release|Any CPU
+		{AC92E0A9-9D5A-4771-B7A2-625573167F8B}.Release|x86.Build.0 = Release|Any CPU
 		{73D3925F-4B91-419C-BB37-1CF35B705466}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{73D3925F-4B91-419C-BB37-1CF35B705466}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{73D3925F-4B91-419C-BB37-1CF35B705466}.Debug|x86.ActiveCfg = Debug|Any CPU

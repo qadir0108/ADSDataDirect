@@ -1,0 +1,191 @@
+﻿@model ADSDataDirect.Web.Models.CampaignSegmentVm
+@using ADSDataDirect.Enums
+@using ADSDataDirect.Web.Models
+@using MyToolkit.Html
+
+<!-- Start Piano -->
+@using (Html.BeginCollectionItem("Segments"))
+{
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.CampaignId)
+    @Html.HiddenFor(model => model.OrderNumber)
+    @Html.HiddenFor(model => model.SegmentNumber)
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Multi drop : @Model.SegmentNumber
+            <div class="pull-right">
+                <a href="#" class="btn btn-primary btn-sm btnApprove" data-tooltip="tooltip" title="Approve" data-id="@Model.Id" data-segment="@Model.SegmentNumber">
+                    <i class="fa fa-check" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        Subject Line
+                    </div>
+                    <div class="col-md-2">
+                        From Line
+                    </div>
+                    <div class="col-md-2">
+                        White Label
+                    </div>
+                    <div class="col-md-2">
+                        Quantity
+                    </div>
+                    <div class="col-md-2">
+                        Deployment Date
+                    </div>
+                    <div class="col-md-2">
+                        HtmlImageFiles
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.SubjectLine, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.SubjectLine, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.FromLine, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.FromLine, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.WhiteLabel, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.Quantity, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.DeploymentDate, new { htmlAttributes = new { @class = "form-control DeploymentDate" } })
+                        @Html.ValidationMessageFor(model => Model.DeploymentDate, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.CreativeFiles, new { htmlAttributes = new { @id = "CreativeFiles" + Model.SegmentNumber, @class = "form-control CreativeFiles" } })
+                        @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "CreativeFiles" + Model.SegmentNumber, OrderNumber = Model.OrderNumber, SegmentNumber = Model.SegmentNumber })
+                        @Html.ValidationMessageFor(model => model.CreativeFiles, "", new { @class = "text-danger" })
+                    </div>
+                   
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        First Start
+                    </div>
+                    <div class="col-md-2">
+                        First End
+                    </div>
+                    <div class="col-md-2">
+                        Second Start
+                    </div>
+                    <div class="col-md-2">
+                        Second End
+                    </div>
+                    <div class="col-md-2">
+                        Third Start
+                    </div>
+                    <div class="col-md-2">
+                        Third End
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.FirstRangeStart, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.FirstRangeStart, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.FirstRangeEnd, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.FirstRangeEnd, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.SecondRangeStart, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.SecondRangeStart, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.SecondRangeEnd, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.SecondRangeEnd, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.ThirdRangeStart, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.ThirdRangeStart, "", new { @class = "text-danger" })
+                    </div>
+                    <div class="col-md-2">
+                        @Html.EditorFor(model => model.ThirdRangeEnd, new { htmlAttributes = new { @class = "form-control" } })
+                        @Html.ValidationMessageFor(model => Model.ThirdRangeEnd, "", new { @class = "text-danger" })
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        UploadStatus
+                    </div>
+                    <div class="col-md-2">
+                        DateFetched
+                    </div>
+                    <div class="col-md-4">
+                        DataFileUrl
+                    </div>
+                    <div class="col-md-2">
+                        SegmentStatus
+                    </div>
+                    @*<div class="col-md-2">
+                        DateApproved
+                    </div>*@
+                    <div class="col-md-2">
+                        DateFetched
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                       @((UploadFileStatus)Model.UploadStatus)
+                    </div>
+                    <div class="col-md-2">
+                        @(Model.DateFetched)
+                    </div>
+                    <div class="col-md-4">
+                        <a target="_blank" href="@Model.SegmentDataFileUrl">@Model.SegmentDataFileUrl</a>
+                    </div>
+                    <div class="col-md-2">
+                        @((SegmentStatus)Model.SegmentStatus)
+                    </div>
+                    @*<div class="col-md-2">
+                        @(Model.DateApproved)
+                    </div>*@
+                    <div class="col-md-2">
+                       @(Model.DateFetched)
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+ 
+
+}
+<script>
+    $(document).ready(function () {
+        $('.CreativeFiles').prop('readonly', "readonly");
+        $('.BroadcastDate').datetimepicker({
+            format: 'M/DD/YYYY hh:mm:ss A'
+        });
+        $('.DeploymentDate').datetimepicker({
+            format: 'M/DD/YYYY hh:mm:ss A'
+        });
+    });
+</script>

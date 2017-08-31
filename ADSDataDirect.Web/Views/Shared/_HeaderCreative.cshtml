@@ -1,0 +1,37 @@
+﻿@using System.Linq;
+@using System.Security.Claims;
+@using ADSDataDirect.Core.Entities
+@using ADSDataDirect.Enums
+@{
+    var loggedInUser = Session["user"] as WfpUser;
+    var isLoggedIn = loggedInUser != null;
+    var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
+}
+@if (Session["id"] != null)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2">
+                @*@Html.ActionLink("Setup Test", "Index", "Creative", new { id = Session["id"], to = "Creative" }, new { @class = "btn btn-default btn-sm" })*@
+            </div>
+            <div class="col-md-2">
+                @Html.ActionLink("Creative", "Index", "Creative", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm" })
+            </div>
+            <div class="col-md-2">
+                    <div class="form-group">
+                        <input type="submit" value="Test Send" class="btn btn-default btn-sm" name="action:TestSend" />
+                    </div>
+                
+            </div>
+            <div class="col-md-2">
+                @Html.ActionLink("Approve Live", "Index", "Creative", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm" })
+            </div>
+            <div class="col-md-2">
+                @Html.ActionLink("Schedule", "Index", "Creative", new { searchType = "basic", searchString = Session["OrderNumber"] }, new {@class = "btn btn-default btn-sm" })
+            </div>
+            <div class="col-md-2">
+                @*@Html.ActionLink("Setup Live", "Index", "Creative", new { id = Session["id"], to = "Creative" }, new { @class = "btn btn-default btn-sm" })*@
+            </div>
+        </div>
+    </div>
+}

@@ -1,0 +1,147 @@
+﻿@model ADSDataDirect.Web.Models.CampaignSegmentVm
+@using ADSDataDirect.Web.Helpers
+@using MyToolkit.Html
+
+<!-- Start Piano -->
+@using (Html.BeginCollectionItem("Segments"))
+{
+    @Html.HiddenFor(model => model.Id)
+    @Html.HiddenFor(model => model.CampaignId)
+    @Html.HiddenFor(model => model.OrderNumber)
+    @Html.HiddenFor(model => model.SegmentNumber)
+    @Html.HiddenFor(model => model.SegmentDataFileUrl)
+    @Html.HiddenFor(model => model.DateFetched)
+    @Html.HiddenFor(model => model.UploadStatus)
+    @Html.HiddenFor(model => model.SegmentStatus)
+    @Html.HiddenFor(model => model.DateApproved)
+    @Html.HiddenFor(model => model.DateComplete)
+
+    <div class="panel panel-primary">
+        <div class="panel-heading">
+            Multi drop : @Model.SegmentNumber
+            <div class="pull-right">
+                Total: @(NumberHelper.GetTotal(Model.FirstRangeStart, Model.FirstRangeEnd, Model.SecondRangeStart, Model.SecondRangeEnd, Model.ThirdRangeStart, Model.ThirdRangeEnd))
+                <a class="btn btn-primary btn-sm " target="_blank" href="@Model.SegmentDataFileUrl">
+                    View Data
+                </a>
+                <a href="#" class="btn btn-primary btn-sm btnApprove" data-tooltip="tooltip" title="Complete" data-id="@Model.Id" data-segment="@Model.SegmentNumber">
+                    <i class="fa fa-check-square" aria-hidden="true"></i>
+                </a>
+            </div>
+        </div>
+        <div class="panel-body">
+
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        Subject Line
+                    </div>
+                    <div class="col-md-2">
+                        From Line
+                    </div>
+                    <div class="col-md-2">
+                        White Label
+                    </div>
+                    <div class="col-md-2">
+                        Quantity
+                    </div>
+                    <div class="col-md-2">
+                        Deployment Date
+                    </div>
+                    <div class="col-md-2">
+                        HtmlImageFiles
+                    </div>
+                    @*<div class="col-md-2">
+                        Segment Status
+                    </div>
+                    <div class="col-md-2">
+                        Fetched at
+                    </div>
+                    <div class="col-md-2">
+                        Approved at
+                    </div>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+
+                    <div class="col-md-2">
+                        @Model.SubjectLine
+                    </div>
+                    <div class="col-md-2">
+                        @Model.FromLine
+                    </div>
+                    <div class="col-md-2">
+                        @Model.WhiteLabel
+                    </div>
+                    <div class="col-md-2">
+                        @Model.Quantity
+                    </div>
+                    <div class="col-md-2">
+                        @Model.DeploymentDate
+                    </div>
+                    <div class="col-md-2">
+                        @Model.CreativeFiles
+                    </div>
+                    @*<div class="col-md-2">
+                        @((SegmentStatus)Model.SegmentStatus)
+                    </div>
+                    <div class="col-md-2">
+                        @(Model.DateFetched)
+                    </div>
+                    <div class="col-md-2">
+                        @(Model.DateApproved)
+                    </div>*@
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        First Start
+                    </div>
+                    <div class="col-md-2">
+                        First End
+                    </div>
+                    <div class="col-md-2">
+                        Second Start
+                    </div>
+                    <div class="col-md-2">
+                        Second End
+                    </div>
+                    <div class="col-md-2">
+                        Third Start
+                    </div>
+                    <div class="col-md-2">
+                        Third End
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md-12">
+                    <div class="col-md-2">
+                        @Model.FirstRangeStart
+                    </div>
+                    <div class="col-md-2">
+                        @Model.FirstRangeEnd
+                    </div>
+                    <div class="col-md-2">
+                        @Model.SecondRangeStart
+                    </div>
+                    <div class="col-md-2">
+                        @Model.SecondRangeEnd
+                    </div>
+                    <div class="col-md-2">
+                        @Model.ThirdRangeStart
+                    </div>
+                    <div class="col-md-2">
+                        @Model.ThirdRangeEnd
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+
+}

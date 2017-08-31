@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ProjectInfo xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
+  <ProjectName>ADSDataDirect.Infrastructure</ProjectName>
+  <ProjectLanguage>C#</ProjectLanguage>
+  <ProjectType>Product</ProjectType>
+  <ProjectGuid>4e429988-3991-4f58-b398-adc3efa0d213</ProjectGuid>
+  <FullPath>E:\NET_PROJECTS\ADSDataDirect\ADSDataDirect.Infrastructure\ADSDataDirect.Infrastructure.csproj</FullPath>
+  <IsExcluded>false</IsExcluded>
+  <AnalysisResults>
+    <AnalysisResult Id="FilesToAnalyze" Location="E:\NET_PROJECTS\ADSDataDirect\.sonarqube\out\\ADSDataDirect.Infrastructure_1433\FilesToAnalyze.txt" />
+  </AnalysisResults>
+  <AnalysisSettings>
+    <Property Name="sonar.cs.roslyn.reportFilePath">E:\NET_PROJECTS\ADSDataDirect\ADSDataDirect.Infrastructure\bin\Debug\ADSDataDirect.Infrastructure.dll.RoslynCA.json</Property>
+    <Property Name="sonar.cs.analyzer.projectOutPath">E:\NET_PROJECTS\ADSDataDirect\.sonarqube\out\\ADSDataDirect.Infrastructure_1433</Property>
+    <Property Name="sonar.stylecop.projectFilePath">E:\NET_PROJECTS\ADSDataDirect\ADSDataDirect.Infrastructure\ADSDataDirect.Infrastructure.csproj</Property>
+  </AnalysisSettings>
+</ProjectInfo>

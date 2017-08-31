@@ -1,0 +1,256 @@
+﻿@using ADSDataDirect.Core.Entities
+@using ADSDataDirect.Enums
+@using ADSDataDirect.Web.Models
+@using PagedList.Mvc
+@model PagedList.IPagedList<ADSDataDirect.Core.Entities.Campaign>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string currentSort = ViewBag.CurrentSort;
+    if (string.IsNullOrEmpty(currentSort))
+    {
+        currentSort = "OrderNumber_desc";
+    }
+
+    var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
+    var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
+    var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.BroadcastDateSortParm };
+    var columnSortParams5 = new { sortOrder = ViewBag.StatusSortParm };
+
+    var loggedInUser = Session["user"] as WfpUser;
+    var isLoggedIn = loggedInUser != null;
+    var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
+}
+
+
+@{
+    Html.RenderPartial("_HeaderCopy");
+}
+
+<div class="row" style="margin-top: 5px">
+    <div class="col-md-8">
+        <div class="headertab">
+            Campaign Status
+        </div>
+    </div>
+
+    <div class="col-md-3 no-left-padding" id="divSearch" data-tooltip="tooltip" title="Search">
+        <form id="frmSearch" method="post">
+            <div class="input-group">
+                <div class="input-group-addon">
+                    <span class="glyphicon glyphicon-search"></span>
+                </div>
+                <input type="hidden" id="searchType" name="searchType" value="basic" />
+                <input type="hidden" id="clearSessionId" name="clearSessionId" value="" />
+                <input type="text" id="basicString" name="basicString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
+                <div class="input-group-addon">
+                    <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-md-1" id="divTools" style="text-align:left">
+        <button class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
+            <span class="glyphicon glyphicon-search"></span>
+        </button>
+    </div>
+</div>
+        
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Status
+            </th>
+            <th>
+                Order Number
+            </th>
+            <th>
+                Campaign Name
+            </th>
+            <th>
+                Status Date
+            </th>
+            <th>
+                Deploy Date Time
+            </th>
+            <th>
+                Assigned Customer
+            </th>
+            <th>
+                Send To Tracking
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach (var item in Model)
+    {
+        var txtIoNumber = "txtIONumber" + @item.Id;
+
+        <tr id="@item.Id" data-order="@item.OrderNumber">
+            <td>
+                @Enum.GetName(typeof(CampaignStatus), item.Status)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approved.CampaignName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approved.CreatedAt)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Approved.DeployDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AssignedToCustomer)
+                @if (isAdmin)
+                {
+                    @Html.DropDownListFor(modelItem => item.AssignedToCustomer, new SelectList(ViewBag.Customer, "Value", "Text", item.AssignedToCustomer)
+                        , new { @class = "form-control input-md drpCustomer", @id = "drpCustomer", @style = "width:100%" })
+                }
+            </td>
+            <td>
+                <div class="col-xs-8 no-left-padding">
+                    <input type="text" class="form-control input-md" id="@txtIoNumber" value="@(item.Trackings.FirstOrDefault() != null ? item.Trackings.FirstOrDefault().IoNumber : "")"/>    
+                </div>
+                <a href="#" class="btn btn-default btnSendToTracking" id="btnSendToTracking" data-tooltip="tooltip" title="Send To Tracking"><span class="glyphicon glyphicon-send"></span></a>
+            </td>
+        </tr>
+    }
+    </tbody>
+</table>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="page-count">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                </div>
+                <div class="tp-pagination">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new
+               {
+                   page,
+                   sortOrder = ViewBag.CurrentSort,
+                   searchType = ViewBag.SearchType,
+                   basicString = ViewBag.BasicStringSearched,
+                   basicStatus = ViewBag.BasicStatusSearched,
+                   advancedStatus = ViewBag.AdvancedStatusSearched,
+                   advancedUser = ViewBag.AdvancedUserSearched,
+                   campaignName = ViewBag.CampaignName,
+                   isTested = ViewBag.IsTested,
+                   orderedFrom = ViewBag.OrderedFrom,
+                   orderedTo = ViewBag.OrderedTo,
+                   broadcastFrom = ViewBag.BroadcastFrom,
+                   broadcastTo = ViewBag.BroadcastTo
+               }), new PagedListRenderOptions() { })
+                </div>
+            </div>
+        </div>
+<!-- Modal -->
+@{
+    Html.RenderPartial("_Search", new CampaignSearchVm());
+}
+<script type="text/javascript">
+
+        var wfp = wfp || {};
+
+        $(document).ready(function () {
+
+            $('#searchString').keypress(function (e) {
+                if (e.which === 13) {
+                    $('form#frmSearch').submit();
+                    return false;
+                }
+            });
+
+            $('#btnClearSearch').click(function () {
+                debugger;
+                $('#clearSessionId').val('1');
+                $('form#frmSearch').submit();
+                //wfp.reload('/Status/Index');
+                return false;
+            });
+
+            $("#Status").select2().on("change", function (e) {
+                debugger;
+                if ($(this).val() === '') return;
+
+                $('form#frmSearch2').submit();
+                return;
+
+            });
+
+            $('.btnSendToTracking').click(function () {
+                debugger;
+                
+                var id = $(this).parent().parent().attr('id');
+                var orderNumber = $(this).parent().parent().data('order');
+                var txtIoNumber = $("#txtIONumber" + id);
+
+                if (txtIoNumber.val() === '') return;
+
+                var dataToPost = {
+                    id: id,
+                    segmentNumber: '',
+                    iONumber: txtIoNumber.val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Status/SendToTracking",
+                    data: dataToPost,
+                    success: function (response) {
+                        debugger;
+                        if (response === "") wfp.reload();
+                        if (response.IsSucess) {
+                            wfp.showSuccess('Order #: ' + orderNumber + ' has been moved to tracking successfully.');
+                            wfp.redirectTo();
+                        } else {
+                            wfp.showError(response.ErrorMessage);
+                        }
+                    },
+                    failure: function (response) {
+                        wfp.showError('There is erorr in service call.');
+                    },
+                    complete: function () {
+                    }
+                });
+            });
+
+            $(".drpCustomer").select2().on("change", function (e) {
+                debugger;
+                if ($(this).val() === '') return;
+
+                var dataToPost = {
+                    Id: $(this).parent().parent().attr('id'),
+                    UserId: $(this).val()
+                };
+
+                $.ajax({
+                    type: "POST",
+                    url: "/Status/ChangeAssigned",
+                    data: dataToPost,
+                    success: function (response) {
+                        debugger;
+                        if (response === "") wfp.reload();
+                        if (response.IsSucess) {
+                            wfp.showSuccess('Assigned to Customer has been updated successfully.');
+                            wfp.redirectTo();
+                        } else {
+                            wfp.showError(response.ErrorMessage);
+                        }
+                    },
+                    failure: function (response) {
+                        wfp.showError('There is erorr in service call.');
+                    },
+                    complete: function () {
+                    }
+                });
+            });
+        });
+
+</script>
