@@ -1,0 +1,53 @@
+﻿@using System.Threading.Tasks
+@using ADSDataDirect.Core.Entities
+@using ADSDataDirect.Enums
+
+@model List<ADSDataDirect.Web.Models.CampaignTrackingVm>
+
+@{
+    ViewData["Title"] = "Campaign Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var loggedInUser = Session["user"] as WfpUser;
+    var isLoggedIn = loggedInUser != null;
+    var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
+}
+
+@{
+    Html.RenderPartial("_HeaderCopy");
+}
+
+<div class="container" style="margin-top: 10px">
+
+    <div class="row">
+        <div class="col-md-12 headertab">
+            Campaign Sent
+        </div>
+    </div>
+    
+    @foreach (var vm in Model)
+    {
+        var pnlOrder = "pnl" + vm.OrderNumber;
+        <div class="panel panel-primary">
+            <div class="panel-heading">
+                @vm.OrderNumber - @vm.CampaignName ordered at @vm.OrderDate sent at @vm.DateSent sent through @(vm.IsCreatedThroughApi? "API" : "Email")
+                <div class="pull-right">
+                    <a class="btn btn-sm btn-primary" data-toggle="collapse" href="#@pnlOrder"><span class="glyphicon glyphicon-plus"></span></a>@**@
+                </div>
+            </div>
+            <div id="@pnlOrder" class="panel-collapse collapse in">
+                <div class="panel-body">@Html.Raw(vm.SentOrder)</div>
+            </div>
+        </div>
+    }
+
+</div>
+
+<script type="text/javascript">
+
+    var wfp = wfp || {};
+
+    $(document).ready(function () {
+
+    });
+</script>

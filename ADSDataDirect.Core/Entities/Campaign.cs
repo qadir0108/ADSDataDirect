@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ADSDataDirect.Core.Entities
 {
-    public class Campaign : BaseEntity, IBaseEntity
+    public sealed class Campaign : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
@@ -60,21 +60,21 @@ namespace ADSDataDirect.Core.Entities
         public string ReBroadcastedOrderNumber { get; set; }
 
         public Guid? AssetsId { get; set; }
-        public virtual CampaignAsset Assets { get; set; }
+        public CampaignAsset Assets { get; set; }
 
         public Guid? TestingId { get; set; }
-        public virtual CampaignTesting Testing { get; set; }
+        public CampaignTesting Testing { get; set; }
 
         public Guid? CreativeId { get; set; }
-        public virtual CampaignCreative Creative { get; set; }
+        public CampaignCreative Creative { get; set; }
 
         public Guid? ApprovedId { get; set; }
-        public virtual CampaignApproved Approved { get; set; }
+        public CampaignApproved Approved { get; set; }
 
-        public virtual ICollection<CampaignSegment> Segments { get; set; }
-        public virtual ICollection<CampaignTracking> Trackings { get; set; }
-        public virtual ICollection<ProData> ProDatas { get; set; }
-        public virtual ICollection<Notification> Notifications { get; set; }
+        public ICollection<CampaignSegment> Segments { get; set; }
+        public ICollection<CampaignTracking> Trackings { get; set; }
+        public ICollection<ProData> ProDatas { get; set; }
+        public ICollection<Notification> Notifications { get; set; }
 
         public Campaign()
         {

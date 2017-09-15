@@ -34,7 +34,10 @@ namespace ADSDataDirect.Web.Controllers
 
         public void SetupLoggedInUser(string userName)
         {
-            var user = Db.Users.Include(u => u.Roles).FirstOrDefault(x => x.UserName == userName);
+            var user = Db.Users
+                .Include(u => u.Roles)
+                .Include(x => x.Customer)
+                .FirstOrDefault(x => x.UserName == userName);
             Session["user"] = user;
         }
 
@@ -53,6 +56,18 @@ namespace ADSDataDirect.Web.Controllers
                 return LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
             }
         }
+
+        protected readonly string DefaultTemplate = $"~/Templates/Tracking1.xlsx";
+        //protected string TemplateFile
+        //{
+        //    get
+        //    {
+        //        if (LoggedInUser.Customer == null) return DefaultTemplate;
+        //        return string.IsNullOrEmpty(LoggedInUser?.Customer?.ReportTemplate) ?
+        //            DefaultTemplate :
+        //            $"~/Templates/{LoggedInUser?.Customer?.ReportTemplate}.xlsx";
+        //    }
+        //}
 
         readonly string _uploadPath = $"~/Uploads";
         protected string UploadPath
@@ -112,7 +127,7 @@ namespace ADSDataDirect.Web.Controllers
                     .Select(x => new SelectListItem()
                     {
                         Text = x.Text,
-                        Value = x.Value
+                        Value = x.Text
                     }).ToList();
                 items.Insert(0, new SelectListItem()
                 {
@@ -250,8 +265,8 @@ namespace ADSDataDirect.Web.Controllers
                         .OrderBy(x => x.CreatedAt).Select(
                              x => new SelectListItem()
                              {
-                                 Text = x.Name + " [" + x.WebDomain + "]",
-                                 Value = x.Code
+                                 Text = x.WhiteLabel,
+                                 Value = x.Id.ToString()
                              }).ToList();
                     _customers.Insert(0, new SelectListItem()
                     {
@@ -260,6 +275,30 @@ namespace ADSDataDirect.Web.Controllers
                     });
                 }
                 return _customers;
+            }
+        }
+
+        private List<SelectListItem> _customersWithWL;
+        protected IEnumerable<SelectListItem> CustomersWithWLList
+        {
+            get
+            {
+                if (_customersWithWL == null || _forceCustomers)
+                {
+                    _customersWithWL = Db.Customers
+                        .OrderBy(x => x.CreatedAt).Select(
+                             x => new SelectListItem()
+                             {
+                                 Text = x.WhiteLabel,
+                                 Value = x.WhiteLabel
+                             }).ToList();
+                    _customersWithWL.Insert(0, new SelectListItem()
+                    {
+                        Text = "Select Customer",
+                        Value = string.Empty
+                    });
+                }
+                return _customersWithWL;
             }
         }
 

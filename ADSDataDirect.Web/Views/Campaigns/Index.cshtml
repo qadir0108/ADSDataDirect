@@ -158,9 +158,7 @@
                                     }*@
                                         <a href="@Url.Action("Clone", "Campaigns", new {id = item.Id})" title="Clone" data-tooltip="tooltip">
                                             <span class="fa fa-clone"></span>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-3">
+                                        </a> |
                                         <a href="@Url.Action("Rebroad", "Campaigns", new {id = item.Id})" title="Re-broad" data-tooltip="tooltip">
                                             <span class="fa fa-repeat"></span>
                                         </a>
@@ -174,11 +172,19 @@
                                 <div class="col-md-3">
                                     <a href="@Url.Action("Delete", "Campaigns", new {id = item.Id})" title="Delete" data-tooltip="tooltip">
                                         <span class="fa fa-trash"></span>
-                                    </a>
+                                    </a> |
                                     @if (isAdmin)
                                     {
-                                        <a href="@Url.Action("Cancel", "Campaigns", new {id = item.Id})" title="Cancel" data-tooltip="tooltip" class="pull-right">
+                                        <a href="@Url.Action("Cancel", "Campaigns", new {id = item.Id})" title="Cancel" data-tooltip="tooltip">
                                             <span class="fa fa-times"></span>
+                                        </a>
+                                    }
+                                </div>
+                                <div class="col-md-3">
+                                    @if (isAdmin)
+                                    {
+                                        <a href="@Url.Action("Sent", "Tracking", new {id = item.Id})" title="Sent Orders" data-tooltip="tooltip" >
+                                            <span class="fa fa-envelope"></span>
                                         </a>
                                     }
                                 </div>

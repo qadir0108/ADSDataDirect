@@ -107,8 +107,8 @@
                         @Enum.GetName(typeof(UserStatus), item.Status)
                     </td>
                     <td>
-                        @Html.DropDownListFor(modelItem => item.WhiteLabel, new SelectList(ViewBag.WhiteLabel, "Value", "Value", item.WhiteLabel)
-                        , new { @class = "form-control input-md drpWhiteLabel", @id = "drpWhiteLabel", @style = "width:100%" })
+                        @Html.DropDownListFor(modelItem => item.CustomerId, new SelectList(ViewBag.WhiteLabel, "Value", "Text", item.CustomerId)
+                        , new { @class = "form-control input-md drpWhiteLabel", @id = "drpWhiteLabel", @style = "width:150%" })
                     </td>
                     <td style="min-width:190px">
                         @if (item.Status == 0)

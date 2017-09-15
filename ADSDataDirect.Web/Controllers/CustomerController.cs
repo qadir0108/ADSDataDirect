@@ -11,15 +11,16 @@ namespace ADSDataDirect.Web.Controllers
     [Authorize]
     public class CustomerController : BaseController
     {
-        private const int PageSize = 15;
         public ActionResult Index(CampaignSearchVm sc)
         {
             var customer = Db.Customers.Select(x =>
             new CustomerVm
             {
                 Id = x.Id.ToString(),
-                Code = x.Code,
-                Name = x.Name,
+                WhiteLabel = x.WhiteLabel,
+                CompanyName = x.CompanyName,
+                CompanyLogo = x.CompanyLogo,
+                ReportTemplate = x.ReportTemplate,
                 WebDomain = x.WebDomain,
                 Phone = x.Phone,
                 Email = x.Email,
@@ -33,6 +34,7 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult New()
         {
+            ViewBag.ReportTemplate = new SelectList(ReportTemplates, "Value", "Text");
             return View();
         }
 
@@ -46,11 +48,13 @@ namespace ADSDataDirect.Web.Controllers
                     Id = Guid.NewGuid(),
                     CreatedAt = DateTime.Now,
                     CreatedBy = LoggedInUser.Id,
-                    Code = customerVm.Code,
-                    Name = customerVm.Name,
+                    WhiteLabel = customerVm.WhiteLabel,
+                    CompanyName = customerVm.CompanyName,
+                    CompanyLogo = customerVm.CompanyLogo,
+                    ReportTemplate = customerVm.ReportTemplate,
+                    WebDomain = customerVm.WebDomain,
                     Email = customerVm.Email,
                     Phone = customerVm.Phone,
-                    WebDomain = customerVm.WebDomain,
                 };
                 Db.Customers.Add(customer);
                 Db.SaveChanges();
@@ -78,18 +82,20 @@ namespace ADSDataDirect.Web.Controllers
             {
                 throw new HttpException(404, "Not found");
             }
-            var vendor = new CustomerVm
+            var customerVm = new CustomerVm
             {
                 Id = x.Id.ToString(),
-                Code = x.Code,
-                Name = x.Name,
+                WhiteLabel = x.WhiteLabel,
+                CompanyName = x.CompanyName,
+                CompanyLogo = x.CompanyLogo,
+                ReportTemplate = x.ReportTemplate,
+                WebDomain = x.WebDomain,
                 Email = x.Email,
                 Phone = x.Phone,
-                WebDomain = x.WebDomain,
                 DateCreated = x.CreatedAt.ToString()
             };
-
-            return View("New", vendor);
+            ViewBag.ReportTemplate = new SelectList(ReportTemplates, "Value", "Text", customerVm.ReportTemplate);
+            return View("New", customerVm);
         }
 
         [HttpPost]
@@ -100,8 +106,10 @@ namespace ADSDataDirect.Web.Controllers
                 var customer = Db.Customers.Find(Guid.Parse(customerVm.Id));
                 if (customer != null)
                 {
-                    customer.Code = customerVm.Code;
-                    customer.Name = customerVm.Name;
+                    customer.WhiteLabel = customerVm.WhiteLabel;
+                    customer.CompanyName = customerVm.CompanyName;
+                    customer.CompanyLogo = customerVm.CompanyLogo;
+                    customer.ReportTemplate = customerVm.ReportTemplate;
                     customer.WebDomain = customerVm.WebDomain;
                     customer.Email = customerVm.Email;
                     customer.Phone = customerVm.Phone;

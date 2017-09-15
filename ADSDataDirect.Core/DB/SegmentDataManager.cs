@@ -29,24 +29,20 @@ namespace ADSDataDirect.Core.DB
                     parameter.TypeName = "dbo.ZipCodeFilters";
 
                     connection.Open();
-                    //LogHelper.AddLog(db, LogType.DataProcessing, "TT", $"Connection open sucessfully.");
                     SqlDataReader reader = command.ExecuteReader();
                     try
                     {
                         long index = 1;
                         while (reader.Read())
                         {
-                            //LogHelper.AddLog(db, LogType.DataProcessing, "TTT", $"Fetched record {index} sucessfully. ");
-                            var segmentData = new SegmentResponse()
+                            var segmentData = new SegmentResponse
                             {
-                                Index = index++,
+                                Index = index,
+                                Dealership_ID = parameters.OrderNumber //reader["Dealership_ID"] as string;
                             };
-                              
-                            if (reader["SalesMasterId"] != DBNull.Value)
-                                segmentData.SalesMasterId = reader.GetInt32(0); //reader["SalesMasterId"]
 
-                            if (reader["FirstName"] != DBNull.Value)
-                                segmentData.FirstName = reader["FirstName"] as string;
+                            segmentData.SalesMasterId = reader.GetInt32(0); //reader["SalesMasterId"]
+                            segmentData.FirstName = reader["FirstName"] as string;
 
                             if (reader["LastName"] != DBNull.Value)
                                 segmentData.LastName = reader["LastName"] as string;
@@ -68,13 +64,10 @@ namespace ADSDataDirect.Core.DB
 
                             if (reader["Zip4"] != DBNull.Value)
                                 segmentData.Zip4 = reader.GetInt16(8);
-
-                            if (reader["Dealership_ID"] != DBNull.Value)
-                                segmentData.State = reader["Dealership_ID"] as string;
-
-                            //LogHelper.AddLog(db, LogType.DataProcessing, "TTT", $"Record {index} loaded sucessfully. ");
-
+                            
                             data.Add(segmentData);
+
+                            index++;
                         }
                     }
                     finally

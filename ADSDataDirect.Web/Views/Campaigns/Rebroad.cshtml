@@ -109,7 +109,9 @@
             <br /><br />
             <div class="form-group pull-right">
                 <div class="no-color">
-                    <input type="submit" value="Rebroad" class="btn btn-default" /> |
+                    <button type="submit" class="btn btn-default" name="action:Rebroad" ><span class="glyphicon glyphicon-envelope"></span>Rebroad</button> |
+                    <button type="submit" class="btn btn-default" name="action:RebroadAPI" ><span class="glyphicon glyphicon-cog"></span>Rebroad API</button> |
+                    <a href="~/Tracking/Sent?id=@Model.Id" class="btn btn-default" data-tooltip="tooltip" title="View Sent Order"><span class="glyphicon glyphicon-menu-right"></span>View Sent</a>
                     @Html.ActionLink("Back to List", "Index")
                 </div>
             </div> 
@@ -118,7 +120,7 @@
     </div>
 </div>
 }
-
+<br /><br />
 <script type="text/javascript">
 
             var wfp = wfp || {};

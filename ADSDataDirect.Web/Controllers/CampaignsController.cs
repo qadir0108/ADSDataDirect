@@ -204,37 +204,37 @@ namespace ADSDataDirect.Web.Controllers
         {
             string fileName = $"Orders_{DateTime.Now:yyyyMMdd_HHmmss}.csv";
             var filePath = $"{DownloadPath}\\{fileName}";
-            if (Session["idsForPrint"] != null)
-            {
-                List<Guid> ids;
-                try
-                {
-                    ids = (Session["idsForPrint"] as string)?.Split(",".ToCharArray()).Select(Guid.Parse).ToList();
-                    var campagins = Db.Campaigns
-                        .Include(x => x.Testing).Include(x => x.Approved)
-                        .Where(x => ids.Contains(x.Id))
-                        .ToList()
-                        .Select(x => new CampaignVm()
-                        {
-                            OrderNumber = x.OrderNumber,
-                            CampaignName = x.CampaignName,
-                            DeployDate = x.Approved?.DeployDate ?? (x.Testing?.DeployDate ?? x.BroadcastDate),
-                            Quantity = x.Approved?.Quantity ?? (x.Testing?.Quantity ?? x.Quantity),
-                            Status = System.Enum.GetName(typeof(CampaignStatus), x.Status)
-                        });
+            if (Session["idsForPrint"] == null || string.IsNullOrEmpty(Session["idsForPrint"] as string))
+                return View("Error");
 
-                    campagins.ToCsv(filePath, new CsvDefinition()
+            List<Guid> ids;
+            try
+            {
+                ids = (Session["idsForPrint"] as string)?.Split(",".ToCharArray()).Select(Guid.Parse).ToList();
+                var campagins = Db.Campaigns
+                    .Include(x => x.Testing).Include(x => x.Approved)
+                    .Where(x => ids.Contains(x.Id))
+                    .ToList()
+                    .Select(x => new CampaignVm()
                     {
-                        EndOfLine = "\r\n",
-                        FieldSeparator = ',',
-                        TextQualifier = '"',
-                        Columns   = new List<string> { "OrderNumber", "CampaignName", "DeployDate", "Quantity", "Status" }
+                        OrderNumber = x.OrderNumber,
+                        CampaignName = x.CampaignName,
+                        DeployDate = x.Approved?.DeployDate ?? (x.Testing?.DeployDate ?? x.BroadcastDate),
+                        Quantity = x.Approved?.Quantity ?? (x.Testing?.Quantity ?? x.Quantity),
+                        Status = System.Enum.GetName(typeof(CampaignStatus), x.Status)
                     });
-                }
-                catch (Exception ex)
+
+                campagins.ToCsv(filePath, new CsvDefinition()
                 {
-                    throw new AdsException("Wrong Numbers" + ex.Message);
-                }
+                    EndOfLine = "\r\n",
+                    FieldSeparator = ',',
+                    TextQualifier = '"',
+                    Columns   = new List<string> { "OrderNumber", "CampaignName", "DeployDate", "Quantity", "Status" }
+                });
+            }
+            catch (Exception ex)
+            {
+                throw new AdsException("Wrong Numbers" + ex.Message);
             }
             return File(filePath, "text/csv", fileName);
         }
@@ -256,13 +256,13 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult NewSegment()
         {
-            //TempData["PianoMake"] = new SelectList(PianoMakeList, "Value", "Text");
+            //TempData["Customers"] = new SelectList(CustomersList, "Value", "Text");
             var segment = new CampaignSegment()
             {
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
                 SegmentNumber = "" + _c1++,
-                WhiteLabel = LoggedInUser.WhiteLabel
+                //WhiteLabel = LoggedInUser?.Customer?.WhiteLabel
             };
             return PartialView("~/Views/Shared/Editors/_NewSegment.cshtml", segment);
         }
@@ -280,7 +280,7 @@ namespace ADSDataDirect.Web.Controllers
             };
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
                 "Text", model.TestingUrgency);
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", LoggedInUser?.WhiteLabel);
+            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", LoggedInUser?.Customer?.WhiteLabel);
             return View(model);
         }
 
@@ -356,7 +356,7 @@ namespace ADSDataDirect.Web.Controllers
 
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
                 "Text", campaignVm.TestingUrgency);
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", LoggedInUser?.WhiteLabel);
+            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", LoggedInUser?.Customer?.WhiteLabel);
             return View(campaignVm);
         }
 
@@ -623,6 +623,7 @@ namespace ADSDataDirect.Web.Controllers
             return RedirectToAction("Index", "Campaigns");
         }
 
+        [HttpGet]
         public ActionResult Rebroad(Guid? id)
         {
             if (id == null)
@@ -645,14 +646,28 @@ namespace ADSDataDirect.Web.Controllers
             return View(campaign);
         }
 
-        [HttpPost, ActionName("Rebroad")]
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "Rebroad")]
         [ValidateAntiForgeryToken]
-        public ActionResult RebroadConfirmed(Guid?id, DateTime? reBroadcastedDate, long reBroadcastedQuantity, Guid? vendor, string[] segmentsSelected)
+        public ActionResult RebroadConfirmed(Guid?id, DateTime? reBroadcastedDate, long reBroadcastedQuantity, Guid? vendor)
+        {
+            return Rebroad(OrderVia.Email, id, reBroadcastedDate, reBroadcastedQuantity, vendor);
+        }
+
+        [HttpPost]
+        [MultipleButton(Name = "action", Argument = "RebroadAPI")]
+        [ValidateAntiForgeryToken]
+        public ActionResult RebroadConfirmedApi(Guid? id, DateTime? reBroadcastedDate, long reBroadcastedQuantity, Guid? vendor)
+        {
+            return Rebroad(OrderVia.Api, id, reBroadcastedDate, reBroadcastedQuantity, vendor);
+        }
+
+        private ActionResult Rebroad(OrderVia via, Guid? id, DateTime? reBroadcastedDate, long reBroadcastedQuantity, Guid? vendor)
         {
             if (reBroadcastedDate == null || vendor == null)
             {
                 TempData["Error"] = $"ReBroadcastedDate and Vendor is required.";
-                return RedirectToAction("Rebroad", "Campaigns", new { id  = id});
+                return RedirectToAction("Rebroad", "Campaigns", new { id = id });
             }
             Campaign campaign = Db.Campaigns.FirstOrDefault(x => x.Id == id);
             if (campaign.ReBroadcasted)
@@ -666,11 +681,24 @@ namespace ADSDataDirect.Web.Controllers
             campaign.ReBroadcastedOrderNumber = campaign.OrderNumber + "RDP";
             Db.SaveChanges();
 
+            switch (via)
+            {
+                case OrderVia.Email:
+                    BackgroundJob.Enqueue(() => CampaignProcessor.SendToVendor(via, vendor, campaign.OrderNumber, null, string.Empty));
+                    break;
+                case OrderVia.Api:
+                    string whiteLabel = LoggedInUser?.CustomerId == null ? "ADS" : LoggedInUser?.Customer.WhiteLabel;
+                    string whiteLabelDomain = Db.Customers.FirstOrDefault(x => x.WhiteLabel == whiteLabel)?.WebDomain;
+                    if (string.IsNullOrEmpty(whiteLabelDomain))
+                        throw new AdsException("White Label Web Domain can not be empty.");
+                    CampaignProcessor.SendToVendor(via, null, campaign.OrderNumber, null, whiteLabelDomain);
+                    break;
+            }
             // Send email to vendor
-            BackgroundJob.Enqueue(() => CampaignProcessor.SendToVendor(OrderVia.Email, vendor, campaign.OrderNumber, segmentsSelected, String.Empty));
-            
+            //BackgroundJob.Enqueue(() => CampaignProcessor.SendToVendor(OrderVia.Email, vendor, campaign.OrderNumber, null, String.Empty));
+
             TempData["Success"] = "Order #:" + campaign.OrderNumber + ", Campaign " + campaign.CampaignName + " Rebroad has been sent to vendor sucessfully.";
-            return RedirectToAction("Index", "Campaigns");
+            return RedirectToAction("Rebroad", "Campaigns", new {id = campaign.Id});
         }
     }
 }

@@ -9,7 +9,7 @@ using Microsoft.AspNet.Identity.EntityFramework;
 namespace ADSDataDirect.Core.Entities
 {
     // ID, UserName, Email, PhoneNumber and Password used from IdentityUser
-    public class WfpUser : IdentityUser
+    public sealed class WfpUser : IdentityUser
     {
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(Microsoft.AspNet.Identity.UserManager<WfpUser, string> manager)
         {
@@ -22,13 +22,15 @@ namespace ADSDataDirect.Core.Entities
                 {
                     var userId = userIdentity.GetUserId();
                     var user = ctx.Users.Include(x => x.Roles).FirstOrDefault(x => x.Id == userId);
-
-                    foreach (var role in user.Roles)
+                    if (user != null)
                     {
-                        var roleClaims = ctx.RoleClaims.Include("Claim").Where(x => x.RoleID == role.RoleId);
-                        foreach (var roleClaim in roleClaims)
+                        foreach (var role in user.Roles)
                         {
-                            userIdentity.AddClaim(new Claim(ClaimTypes.UserData, roleClaim.Claim.ClaimValue));
+                            var roleClaims = ctx.RoleClaims.Include("Claim").Where(x => x.RoleId == role.RoleId);
+                            foreach (var roleClaim in roleClaims)
+                            {
+                                userIdentity.AddClaim(new Claim(ClaimTypes.UserData, roleClaim.Claim.ClaimValue));
+                            }
                         }
                     }
                 }
@@ -52,14 +54,12 @@ namespace ADSDataDirect.Core.Entities
         public string ApiKey { get; set; }
         public bool IsTestsCreatives { get; set; }
 
-        public string CompanyName { get; set; }
-        public string CompanyLogo { get; set; }
-        public string WhiteLabel { get; set; }
-        public string ReportTemplate { get; set; }
-
+        public Guid? CustomerId { get; set; }
+        public Customer Customer { get; set; }
+        
         public DateTime CreatedAt { get; set; }
         public string CreatedById { get; set; }
-        public virtual WfpUser CreatedBy { get; set; }
+        public WfpUser CreatedBy { get; set; }
 
         public WfpUser()
         {

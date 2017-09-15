@@ -14,6 +14,7 @@ namespace ADSDataDirect.Web.ProData
 
         public string ResponseStatus { get; set; }
         public string ResponseMessage { get; set; }
+        public string RequestMessage { get; set; }
         public string ErrorMessage
         {
             get

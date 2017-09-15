@@ -37,10 +37,7 @@ namespace ADSDataDirect.Web.Controllers
                 Type = x.UserType,
                 FirstName = x.FirstName,
                 LastName = x.LastName,
-                CompanyName = x.CompanyName,
-                CompanyLogo = x.CompanyLogo,
-                WhiteLabel = x.WhiteLabel,
-                ReportTemplate = x.ReportTemplate,
+                CustomerId = x.CustomerId.ToString(),
                 IsTestsCreatives = x.IsTestsCreatives,
                 IsUsesApi = x.IsUsesApi
             }).ToList();
@@ -50,13 +47,14 @@ namespace ADSDataDirect.Web.Controllers
             return View("Users", model.ToPagedList(pageNumber, PageSize));
         }
 
-        public ActionResult ChangeWhiteLabel(Guid? userId, string whiteLabel)
+        public ActionResult ChangeWhiteLabel(Guid? userId, Guid? whiteLabel)
         {
             try
             {
                 var user = UserManager.FindById(userId.ToString());
-                user.WhiteLabel = whiteLabel;
+                user.CustomerId = whiteLabel;
                 Db.SaveChanges();
+                SetupLoggedInUser(user.UserName);
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)

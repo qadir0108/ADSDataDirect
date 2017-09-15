@@ -2,7 +2,7 @@
 {
     public enum ReportTemplate
     {
-        Template1,
-        Template2,
+        Tracking1,
+        Tracking2,
     }
 }

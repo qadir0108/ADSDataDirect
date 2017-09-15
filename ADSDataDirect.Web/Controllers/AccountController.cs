@@ -214,7 +214,7 @@ namespace ADSDataDirect.Web.Controllers
                 {
                     Id = Guid.NewGuid().ToString(),
                     CreatedAt = DateTime.Now,
-                    WhiteLabel = model.WhiteLabel,
+                    CustomerId = Guid.Parse(model.WhiteLabel),
                     UserName = model.UserName,
                     Email = model.Email,
                     Status = (int)UserStatus.Active,
@@ -229,7 +229,7 @@ namespace ADSDataDirect.Web.Controllers
                 }
                 AddErrors(result.Result);
             }
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text");
+            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", model.WhiteLabel);
             // If we got this far, something failed, redisplay form
             return View(model);
         }

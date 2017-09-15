@@ -120,7 +120,7 @@ namespace ADSDataDirect.Web.Controllers
 
             var proData = VendorsList.FirstOrDefault(x => x.Text.ToLowerInvariant().Contains("pro"));
             ViewBag.Vendor = new SelectList(VendorsList, "Value", "Text", proData);
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", campaignApprovedVm.WhiteLabel);
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text", campaignApprovedVm.WhiteLabel);
             
             return View(campaignApprovedVm);
         }
@@ -167,7 +167,7 @@ namespace ADSDataDirect.Web.Controllers
             }
             var proData = VendorsList.FirstOrDefault(x => x.Text.Contains("Pro"));
             ViewBag.Vendor = new SelectList(VendorsList, "Value", "Text", proData);
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", campaignApprovedVm.WhiteLabel);
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text", campaignApprovedVm.WhiteLabel);
 
             return View(campaignApprovedVm);
         }
@@ -208,8 +208,10 @@ namespace ADSDataDirect.Web.Controllers
                             BackgroundJob.Enqueue(() => CampaignProcessor.SendToVendor(via, vendorId, campaign.OrderNumber, segmentsSelected, string.Empty));
                         break;
                         case OrderVia.Api:
-                            string whiteLabel = string.IsNullOrEmpty(LoggedInUser?.WhiteLabel) ? "ADS" : LoggedInUser?.WhiteLabel;
-                            string whiteLabelDomain = CustomersList.FirstOrDefault(x => x.Value == whiteLabel)?.Text.Split(" ".ToCharArray()).LastOrDefault()?.Trim("[]".ToCharArray());
+                            string whiteLabel = LoggedInUser?.CustomerId == null ? "ADS" : LoggedInUser?.Customer.WhiteLabel;
+                            string whiteLabelDomain = Db.Customers.FirstOrDefault(x => x.WhiteLabel == whiteLabel)?.WebDomain;
+                            if(string.IsNullOrEmpty(whiteLabelDomain))
+                                throw new AdsException("White Label Web Domain can not be empty.");
                             CampaignProcessor.SendToVendor(via, vendorId, campaign.OrderNumber, segmentsSelected, whiteLabelDomain);
                         break;
                 }

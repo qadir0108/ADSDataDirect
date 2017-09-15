@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Data.Entity;
 using System.Linq;
+using System.Web;
+using System.Web.Hosting;
 using ADSDataDirect.Core;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
@@ -72,13 +74,13 @@ namespace ADSDataDirect.Web.Async
             var segments = db.CampaignSegments
                                    .Where(c => c.CampaignId == campaign.Id && segmentsSelected.Contains(c.SegmentNumber))
                                    .ToList();
-
             foreach (var segment in segments)
             {
+                string sentOrder, queuedCampaignId = null;
                 switch (orderVia)
                 {
                     case OrderVia.Email:
-                        EmailHelper.SendApprovedToVendor(vendor, campaign, segment);
+                        sentOrder = EmailHelper.SendApprovedToVendor(vendor, campaign, segment);
                         break;
                     case OrderVia.Api:
                         var response = ProDataApiManager.Create(campaign, segment, whiteLabelDomain);
@@ -86,9 +88,11 @@ namespace ADSDataDirect.Web.Async
                         {
                             throw new AdsException(response.ErrorMessage);
                         }
+                        sentOrder = response.RequestMessage;
+                        queuedCampaignId = response.queued_pending_campaign_id.ToString();
                         break;
                     default:
-                        throw new ArgumentOutOfRangeException(nameof(orderVia), orderVia, null);
+                        throw new AdsException("Invalid orderVia while sending to vendor multiple");
                 }
 
                 segment.SegmentStatus = (int)SegmentStatus.Monitoring;
@@ -108,20 +112,25 @@ namespace ADSDataDirect.Web.Async
                         SegmentNumber = segment.SegmentNumber,
                         Quantity = segment.Quantity,
                         DateSent = DateTime.Now,
-                        IsCreatedThroughApi = false
+                        SentOrder = sentOrder,
+                        IsCreatedThroughApi = orderVia == OrderVia.Api,
+                        QueuedCampaignId = queuedCampaignId
                     };
                     db.CampaignTrackings.Add(tracking);
+                    db.SaveChanges();
                 }
-                LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, $"Segment {segment.SegmentNumber} has been sent to vendor successfully.");
+
+                LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, $"Multi {segment.SegmentNumber} has been sent to vendor successfully.");
             }
         }
 
         private static void SendToVendorSingle(OrderVia orderVia, WfpictContext db, Campaign campaign, Vendor vendor, string whiteLabelDomain)
         {
+            string sentOrder, queuedCampaignId = null;
             switch (orderVia)
             {
                 case OrderVia.Email:
-                    EmailHelper.SendApprovedToVendor(vendor, campaign, null);
+                    sentOrder = EmailHelper.SendApprovedToVendor(vendor, campaign, null);
                     break;
                 case OrderVia.Api:
                     var response = ProDataApiManager.Create(campaign, null, whiteLabelDomain);
@@ -129,23 +138,15 @@ namespace ADSDataDirect.Web.Async
                     {
                         throw new AdsException(response.ErrorMessage);
                     }
+                    sentOrder = response.RequestMessage;
+                    queuedCampaignId = response.queued_pending_campaign_id.ToString();
                     break;
                 default:
-                    throw new ArgumentOutOfRangeException(nameof(orderVia), orderVia, null);
+                    throw new AdsException("Invalid orderVia while sending to vendor single");
             }
 
-            string orderNumberRdp = campaign.OrderNumber;
-            long quantity;
-            if (campaign.ReBroadcasted)
-            {
-                orderNumberRdp = campaign.ReBroadcastedOrderNumber;
-                quantity = campaign.ReBroadcastedQuantity;
-            }
-            else
-            {
-                orderNumberRdp = campaign.OrderNumber;
-                quantity = campaign.Approved.Quantity;
-            }
+            string orderNumberRdp = campaign.ReBroadcasted ? campaign.ReBroadcastedOrderNumber : campaign.OrderNumber;
+            long quantity = campaign.ReBroadcasted ? campaign.ReBroadcastedQuantity : campaign.Approved.Quantity;
 
             var campaignTracking =
                    db.CampaignTrackings.FirstOrDefault(x => x.CampaignId == campaign.Id && x.OrderNumber == orderNumberRdp && string.IsNullOrEmpty(x.SegmentNumber));
@@ -162,15 +163,18 @@ namespace ADSDataDirect.Web.Async
                     SegmentNumber = string.Empty,
                     Quantity = quantity,
                     DateSent = DateTime.Now,
-                    IsCreatedThroughApi = false
+                    SentOrder = sentOrder,
+                    IsCreatedThroughApi = orderVia == OrderVia.Api,
+                    QueuedCampaignId = queuedCampaignId
                 };
                 db.CampaignTrackings.Add(tracking);
+                db.SaveChanges();
+
             }
 
             LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, !campaign.ReBroadcasted
                     ? "Order has been sent to vendor successfully."
                     : "Order Rebroad has been sent to vendor sucessfully.");
-            db.SaveChanges();
         }
     }
 }

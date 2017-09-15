@@ -83,22 +83,24 @@ namespace ADSDataDirect.Web.Async.Helpers
             SendEmail(to, subject, body, ccEmails);
         }
 
-        public static void SendApprovedToVendor(Vendor vendor, Campaign campaign, CampaignSegment segment)
+        public static string SendApprovedToVendor(Vendor vendor, Campaign campaign, CampaignSegment segment)
         {
             string newOld = !campaign.ReBroadcasted ? "New" : "RDP";
-            string orderNumber = campaign.OrderNumber;
             string deployDate = campaign.Approved.DeployDate?.ToString("d");
             string deployTime = campaign.Approved.DeployDate?.ToString("hh:mm");
             string quantity = campaign.Approved.Quantity.ToString();
-                
+
+            string orderNumber;
             string subject;
             string segmentsHtml = string.Empty;
             if (segment == null)
             {
-                subject = $"{newOld} Order {campaign.Approved.CampaignName}, Order # {campaign.OrderNumber}";
+                orderNumber = $"ADS{campaign.OrderNumber}";
+                subject = $"{newOld} Order {campaign.Approved.CampaignName}, Order # {orderNumber}";
             } else
             {
-                subject = $"{newOld} Order {campaign.Approved.CampaignName}, Order # {segment.SegmentNumber}";
+                orderNumber = $"ADS{segment.SegmentNumber}";
+                subject = $"{newOld} Order {campaign.Approved.CampaignName}, Order # {orderNumber}";
                 segmentsHtml += $@"<table border=""1"">
                                 <tr><th align=""left"">Segment</th><td>{segment.SegmentNumber}</td></tr>
                                 <tr><th align=""left"">Subject Line</th><td>{segment.SubjectLine}</td></tr>
@@ -141,6 +143,7 @@ namespace ADSDataDirect.Web.Async.Helpers
                     <tr><th align=""left"">Segment Data:</th><td>{segmentsHtml}</td></tr>
                     </table></p> <p></p> {Footer}";
             SendEmail(vendor.Email, subject, body, vendor.CcEmails);
+            return body;
         }
 
         public static void SendNotificationsToVendor(Vendor vendor, List<Campaign> campaigns)

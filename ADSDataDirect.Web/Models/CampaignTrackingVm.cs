@@ -3,6 +3,7 @@ using System.Linq;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Web.ProData;
+using Antlr.Runtime.Misc;
 
 namespace ADSDataDirect.Web.Models
 {
@@ -15,9 +16,13 @@ namespace ADSDataDirect.Web.Models
         public string WhiteLabel { get; set; }
         public string FromLine { get; set; }
         public string SubjectLine { get; set; }
-        public string OrderDate { get; set; }
         public string Quantity { get; set; }
         public string Status { get; set; }
+        public string OrderDate { get; set; }
+        public string DateSent { get; set; }
+        public string SentOrder { get; set; }
+        public bool IsCreatedThroughApi { get; set; }
+        public string QueuedCampaignId { get; set; }
 
         public string IoNumber { get; set; }
         public string StartDate { get; set; }
@@ -36,6 +41,7 @@ namespace ADSDataDirect.Web.Models
         public string Mobile { get; set; }
 
         public List<CampaignTrackingDetailVm> PerLink { get; set; }
+        public List<CampaignSegmentVm> Segments { get; set; }
 
         public static CampaignTrackingVm FromCampaignTracking(Campaign campaign, CampaignTracking campaignTracking)
         {
@@ -48,10 +54,14 @@ namespace ADSDataDirect.Web.Models
                 WhiteLabel = campaign.Approved.WhiteLabel,
                 SubjectLine = campaign.Approved.SubjectLine,
                 FromLine = campaign.Approved.FromLine,
-                OrderDate = campaign.CreatedAt.ToString(StringConstants.DateFormatSlashes),
-                Status = ((CampaignStatus)campaign.Status).ToString(),
-
                 Quantity = campaignTracking.Quantity.ToString(),
+                Status = ((CampaignStatus)campaign.Status).ToString(),
+                OrderDate = campaign.CreatedAt.ToString(StringConstants.DateFormatSlashes),
+                DateSent = campaignTracking.CreatedAt.ToString(StringConstants.DateFormatSlashes),
+                SentOrder = campaignTracking.SentOrder,
+                IsCreatedThroughApi = campaignTracking.IsCreatedThroughApi,
+                QueuedCampaignId = campaignTracking.QueuedCampaignId,
+
                 IoNumber = campaignTracking.IoNumber,
                 StartDate = campaignTracking.StartDate?.ToString(StringConstants.DateFormatSlashes),
                 Opened = campaignTracking.Opened == 0 ? "NA" : campaignTracking.Opened.ToString(),
@@ -67,10 +77,16 @@ namespace ADSDataDirect.Web.Models
                 UnsubPercentage = campaignTracking.UnsubPercentage.ToString("0.00%"),
                 ClickToOpenPercentage = campaignTracking.ClickToOpenPercentage.ToString("0.00%"),
                 UnsubToOpenPercentage = campaignTracking.UnsubToOpenPercentage.ToString("0.00%"),
-
+                Segments = new List<CampaignSegmentVm>(),
                 PerLink = new List<CampaignTrackingDetailVm>()
             };
 
+            model.Segments = campaign.Segments.Where(x => !string.IsNullOrEmpty(x.SegmentDataFileUrl))
+                            .Select(x => new CampaignSegmentVm()
+                            {
+                                SegmentNumber = x.SegmentNumber,
+                                SegmentDataFileUrl = x.SegmentDataFileUrl
+                            }).OrderBy(x => x.SegmentNumber).ToList();
             var proDatas = campaign.ProDatas
                 .Where(x => x.OrderNumber == campaignTracking.OrderNumber && x.SegmentNumber == campaignTracking.SegmentNumber)
                 .OrderBy(x => ProDataHelper.GetIndex(x.Reportsite_URL));

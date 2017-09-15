@@ -5,6 +5,7 @@ namespace ADSDataDirect.Core.DB
 {
     public class SegmentParameters
     {
+        public string OrderNumber { get; set; }
         public long DataQuantity { get; set; }
         public string CustomerCode { get; set; }
         public List<string> ZipCodes { get; set; }

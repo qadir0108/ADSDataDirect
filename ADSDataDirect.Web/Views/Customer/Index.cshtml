@@ -36,7 +36,7 @@
             <tr>
                 <td>
                     @Html.SortIdentifier(currentSort, "Code")
-                    @Html.ActionLink("Code", "Index", columnSortParams1)
+                    @Html.ActionLink("White Label", "Index", columnSortParams1)
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "Name")
@@ -48,15 +48,19 @@
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "Status")
-                    @Html.ActionLink("Email", "Index", columnSortParams5)
+                    @Html.ActionLink("Logo", "Index", columnSortParams5)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "Status")
+                    @Html.ActionLink("Template", "Index", columnSortParams5)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CampaignName")
+                    @Html.ActionLink("Email", "Index", columnSortParams2)
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "CampaignName")
                     @Html.ActionLink("Phone", "Index", columnSortParams2)
-                </td>
-                <td>
-                    @Html.SortIdentifier(currentSort, "CreatedBy")
-                    @Html.ActionLink("Date Created", "Index", columnSortParams3)
                 </td>
                 <th></th>
             </tr>
@@ -65,22 +69,25 @@
             {
                 <tr>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Code)
+                        @Html.DisplayFor(modelItem => item.WhiteLabel)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Name)
+                        @Html.DisplayFor(modelItem => item.CompanyName)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.WebDomain)
+                    </td>
+                    <td>
+                        <img class="imgTemplate" src="@item.CompanyLogoImage"/>
+                    </td>
+                    <td>
+                        <img class="imgTemplate" src="@item.ReportTemplateImage" />
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.Phone)
-                    </td>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.DateCreated)
                     </td>
                     <td>
                         <a href="@Url.Action("Edit","Customer", new { id = item.Id })" id="btnEdit" class="btn btn-sm btn-default" title="Edit" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></a>
@@ -101,8 +108,25 @@
                 </div>
             </div>
         </div>
-
+<br /> <br/>
 <!-- Modal -->
+<style>
+.imgTemplate {
+    border: none;
+    max-width: 50px;
+    max-height: 50px;
+    margin: 0 auto;
+}
+
+.imgTemplate:hover {
+    -webkit-transform: scale(5);
+    -moz-transform: scale(5);
+    -o-transform: scale(5);
+    transform: scale(5);
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+</style>
 
 <script type="text/javascript">
 

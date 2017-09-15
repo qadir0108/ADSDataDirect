@@ -32,9 +32,13 @@ namespace ADSDataDirect.Web.Controllers
                 {
                     Id = Guid.NewGuid(),
                     CreatedAt = DateTime.Now,
-                    Code = dic.Key.Trim(),
-                    Name = dic.Key.Trim(),
-                    WebDomain = dic.Value.Trim()
+                    WhiteLabel = dic.Key.Trim(),
+                    CompanyName = dic.Key.Trim(),
+                    CompanyLogo = "logo1.png",
+                    ReportTemplate = "Tracking1.xlsx",
+                    WebDomain = dic.Value.Trim(),
+                    Email = "josh.silver@adsdatadirect.com",
+                    Phone = "(123)-1234-1234"
                 });
             }
             Db.SaveChanges();

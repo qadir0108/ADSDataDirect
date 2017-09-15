@@ -69,7 +69,7 @@ namespace ADSDataDirect.Web.Controllers
                     campagins = campagins.OrderByDescending(s => s.OrderNumber).ToList();
                     break;
                 default:
-                    campagins = campagins.OrderByDescending(s => s.CreatedAt).ToList();
+                    campagins = campagins.OrderByDescending(s => s.OrderNumber).ToList();
                     break;
             }
 
@@ -187,7 +187,35 @@ namespace ADSDataDirect.Web.Controllers
 
             // Paging
             int pageNumber = (sc.Page ?? 1);
-            return View(trackingVms.OrderBy(x => x.OrderNumber).ToPagedList(pageNumber, PageSize));
+            return View(trackingVms.ToPagedList(pageNumber, PageSize));
+        }
+
+        public ActionResult Sent(Guid? id)
+        {
+            Campaign campaign = Db.Campaigns
+                .Include(x => x.Approved)
+                .Include(x => x.ProDatas)
+                .Include(x => x.Trackings)
+                .FirstOrDefault(x => x.Id == id);
+
+            if (campaign == null)
+            {
+                TempData["Error"] = "Campaign not found.";
+                return RedirectToAction("Index", "Campaigns");
+            }
+            if (campaign.Approved == null)
+            {
+                TempData["Error"] = "Campaign is not passed through Testing and Approved phase.";
+                return RedirectToAction("Index", "Campaigns");
+            }
+            var trackingVms = new List<CampaignTrackingVm>();
+            foreach (var campaignTracking in campaign.Trackings.OrderByDescending(x => x.CreatedAt))
+            {
+                var model = CampaignTrackingVm.FromCampaignTracking(campaign, campaignTracking);
+                trackingVms.Add(model);
+            }
+            trackingVms = trackingVms.ToList();
+            return View(trackingVms);
         }
 
         public ActionResult Report(Guid? id)
@@ -255,11 +283,7 @@ namespace ADSDataDirect.Web.Controllers
                 imagePath = $"{UploadPath}\\{model.OrderNumber}.png",
                 fileName = $"{model.OrderNumber}.xlsx",
                 filePath = Path.Combine(DownloadPath, fileName);
-
-            string logoFilePath = !string.IsNullOrEmpty(LoggedInUser?.CompanyLogo)
-                ? $"{ImagesPath}\\{LoggedInUser.CompanyLogo}"
-                : $"{ImagesPath}\\logo1.png";
-
+            
             var helper = new ImageHelper(creativeUrl, imagePathTemp);
             if (!System.IO.File.Exists(imagePath))
             {
@@ -269,22 +293,25 @@ namespace ADSDataDirect.Web.Controllers
                 if (System.IO.File.Exists(imagePathTemp))
                     System.IO.File.Delete(imagePathTemp);
             }
-
-            string templateFile;
-            if (LoggedInUser?.ReportTemplate == "0" || string.IsNullOrEmpty(LoggedInUser?.ReportTemplate))
-                templateFile = $"~/Templates/Tracking1.xlsx";
-            else
-                templateFile = $"~/Templates/Tracking2.xlsx";
+            // !string.IsNullOrEmpty(LoggedInUser?.Customer?.CompanyLogo) $"{ImagesPath}\\{LoggedInUser?.Customer?.CompanyLogo}"
+            var whiteLable = Db.Customers.FirstOrDefault(x => x.WhiteLabel == campaign.Approved.WhiteLabel);
+            string logoFilePath = string.IsNullOrEmpty(campaign.Approved.WhiteLabel) || whiteLable == null
+                ? $"{ImagesPath}\\logo1.png"
+                : $"{ImagesPath}\\{whiteLable.CompanyLogo}";
 
             string logoResized = $"{ImagesPath}\\logoResized.png";
+            string templateFile = string.IsNullOrEmpty(campaign.Approved.WhiteLabel) || whiteLable == null
+                ? DefaultTemplate
+                : $"~/Templates/{whiteLable.ReportTemplate}.xlsx";
+
             if (templateFile == $"~/Templates/Tracking1.xlsx")
             {
-                helper.ResizeImage(logoFilePath, logoResized, 700, 116, true);
+                helper.ResizeImage(logoFilePath, logoResized, 650, 116, true);
                 TrackingReports.GenerateTemplate1(model, Server.MapPath(templateFile), logoResized, imagePath, filePath);
             }
-            else //if (templateFile == $"~/Templates/Tracking2.xlsx")
+            else
             {
-                helper.ResizeImage(logoFilePath, logoResized, 700, 86, true);
+                helper.ResizeImage(logoFilePath, logoResized, 500, 86, true);
                 TrackingReports.GenerateTemplate2(model, Server.MapPath(templateFile), logoResized, imagePath, filePath);
             }
 

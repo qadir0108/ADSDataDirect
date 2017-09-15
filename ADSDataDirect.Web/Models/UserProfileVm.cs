@@ -17,9 +17,6 @@
         public string ApiKey { get; set; }
         public bool IsTestsCreatives { get; set; }
 
-        public string CompanyName { get; set; }
-        public string CompanyLogo { get; set; }
-        public string WhiteLabel { get; set; }
-        public string ReportTemplate { get; set; }
+        public string CustomerId { get; set; }
     }
 }

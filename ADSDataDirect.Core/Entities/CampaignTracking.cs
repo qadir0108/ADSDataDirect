@@ -12,6 +12,7 @@ namespace ADSDataDirect.Core.Entities
         public string SegmentNumber { get; set; }
         public long Quantity { get; set; }
         public DateTime? DateSent { get; set; } // OrderCreationTime
+        public string SentOrder { get; set; }
         public bool IsCreatedThroughApi { get; set; }
         public string QueuedCampaignId { get; set; }
 

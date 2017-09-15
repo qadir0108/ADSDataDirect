@@ -41,7 +41,7 @@ $(function () {
     $.connection.hub.start()
         //.then(init)
         .done(function (state) {
-            debugger;
+            //debugger;
             //hub.server.startUpdatingClients();
         });
 });

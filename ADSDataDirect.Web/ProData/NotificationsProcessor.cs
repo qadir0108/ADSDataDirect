@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
+using System.Globalization;
 using System.Linq;
 using ADSDataDirect.Core;
 using ADSDataDirect.Core.Entities;
@@ -30,6 +31,7 @@ namespace ADSDataDirect.Web.ProData
                     .Include(x => x.Trackings)
                     .Where(x => x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
                     .Where(x => x.Approved != null)
+                    .Where(x => x.CreatedAt.Date >= DateTime.ParseExact("09/15/2017", "MM/dd/yyyy", CultureInfo.InvariantCulture))
                     .ToList();
 
                 LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules processing {campaigns.Count} campaigns.");
@@ -46,7 +48,7 @@ namespace ADSDataDirect.Web.ProData
                 // Send them 5 days = 120
                 // Expire notifications that are > 120 hrs
                 var toBeExpired = db.Notifications.ToList()
-                        .Where(x => (DateTime.Now.TimeOfDay.Hours - x.FoundAt?.TimeOfDay.Hours) >= 120)
+                        .Where(x => x.FoundAt != null && DateTime.Now.Subtract(x.FoundAt.Value).Hours >= 120)
                         .ToList();
                 if (toBeExpired.Count > 0)
                 {
@@ -61,7 +63,7 @@ namespace ADSDataDirect.Web.ProData
                 // Delete prodata log with time >= 12 hrs
                 var logs = db.SystemLogs.ToList()
                     .Where(x => (x.LogType == (int)LogType.RulesProcessing || x.LogType == (int)LogType.ProData) &&
-                                (DateTime.Now.TimeOfDay.Hours - x.CreatedAt.TimeOfDay.Hours) >= 12).ToList();
+                                DateTime.Now.Subtract(x.CreatedAt).Hours >= 12).ToList();
 
                 if (logs.Count > 0)
                 {

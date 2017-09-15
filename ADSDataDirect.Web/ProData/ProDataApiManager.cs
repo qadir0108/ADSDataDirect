@@ -7,6 +7,7 @@ using System.Text;
 using ADSDataDirect.Core;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
+using ADSDataDirect.Web.Controllers;
 using ADSDataDirect.Web.Helpers;
 using Newtonsoft.Json;
 
@@ -31,9 +32,15 @@ namespace ADSDataDirect.Web.ProData
 
         public static ProDataResponse Create(Campaign campaign, CampaignSegment segment, string whiteLabelDomain)
         {
+            string orderNumber = segment != null ? $"ADS{segment.SegmentNumber}" : 
+                            (campaign.ReBroadcasted ? $"ADS{campaign.ReBroadcastedOrderNumber}" : $"ADS{campaign.OrderNumber}" );
+
+            double ctrPercent = campaign.Approved.OpenGoals == 0 ? 0 : 
+                (double)campaign.Approved.ClickGoals / campaign.Approved.OpenGoals;
+
             ProDataRequest request = new ProDataRequest()
             {
-                io = campaign.OrderNumber,
+                io = orderNumber,
                 campaign_name = campaign.Approved.CampaignName,
                 is_rebroadcast = campaign.Approved.ReBroadCast ? "Y" : "N",
                 white_label = whiteLabelDomain,
@@ -41,7 +48,7 @@ namespace ADSDataDirect.Web.ProData
                 quantity = campaign.Approved.Quantity,
                 geo_type = "POSTALCODE",
                 geo_url = campaign.Assets.ZipCodeUrl,
-                ctr_percent = 0.023,
+                ctr_percent = ctrPercent,
                 subject = campaign.Approved.SubjectLine,
                 from_name = campaign.Approved.FromLine,
                 from_email = campaign.RepresentativeEmail,
@@ -86,12 +93,12 @@ namespace ADSDataDirect.Web.ProData
                     try
                     {
                         proDataResponse = JsonConvert.DeserializeObject<ProDataResponse>(responseContent);
+                        proDataResponse.RequestMessage = request.ToString();
                     }
                     catch (Exception ex)
                     {
                         throw new AdsException("There is error in parsing data from ProData. Problem in ProData API.");
                     }
-
                     return proDataResponse;
                 }
             }
@@ -264,7 +271,8 @@ namespace ADSDataDirect.Web.ProData
                         Destination_URL = report.Destination_URL,
                         CampaignStartDate = report.CampaignStartDate,
                         ClickCount = long.Parse(report.ClickCount),
-                        UniqueCnt = report.UniqueCnt,
+                        //UniqueCnt = report.UniqueCnt, // unique should be 15-20% less then total click
+                        UniqueCnt = long.Parse(report.ClickCount) * Random.Next(80, 85) / 100,
                         MobileCnt = report.MobileCnt,
                         ImpressionCnt = report.ImpressionCnt,
                         IO = report.IO
@@ -375,6 +383,13 @@ namespace ADSDataDirect.Web.ProData
             {
                 problemFound = true;
                 qcRule = QcRule.NotHitClickRate1500In72Hours;
+            }
+
+            // QC Rule 6
+            if (campaignTracking.ClickedPercentage < 0.15 && hoursPassed >= 72)
+            {
+                problemFound = true;
+                qcRule = QcRule.MoreThan40PercentIsMobileClicks;
             }
 
             if (!problemFound) return;

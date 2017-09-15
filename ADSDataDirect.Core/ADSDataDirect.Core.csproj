@@ -109,9 +109,9 @@
     <Compile Include="Migrations\201708281134090_Tracking.Designer.cs">
       <DependentUpon>201708281134090_Tracking.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201708300621310_Settings.cs" />
-    <Compile Include="Migrations\201708300621310_Settings.Designer.cs">
-      <DependentUpon>201708300621310_Settings.cs</DependentUpon>
+    <Compile Include="Migrations\201709150602143_Settings.cs" />
+    <Compile Include="Migrations\201709150602143_Settings.Designer.cs">
+      <DependentUpon>201709150602143_Settings.cs</DependentUpon>
     </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
@@ -155,8 +155,8 @@
     <EmbeddedResource Include="Migrations\201708281134090_Tracking.resx">
       <DependentUpon>201708281134090_Tracking.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201708300621310_Settings.resx">
-      <DependentUpon>201708300621310_Settings.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201709150602143_Settings.resx">
+      <DependentUpon>201709150602143_Settings.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

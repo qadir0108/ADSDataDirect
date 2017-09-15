@@ -99,8 +99,8 @@ namespace ADSDataDirect.Web
             ctx.RoleClaims.Add(new AspNetRoleClaims()
             {
                 Id = Guid.NewGuid(),
-                RoleID = roleId,
-                ClaimID = claimId,
+                RoleId = roleId,
+                ClaimId = claimId,
                 CreatedAt = DateTime.Now
             });
             ctx.SaveChanges();

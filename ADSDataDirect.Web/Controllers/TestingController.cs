@@ -14,7 +14,7 @@ using Nelibur.ObjectMapper;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class TestingController : BaseController
     {
         public ActionResult Index(Guid? id)
@@ -35,6 +35,22 @@ namespace ADSDataDirect.Web.Controllers
 
             if (campaign.Testing == null)
             {
+                if (campaign.Assets == null)
+                {
+                    var assetId = Guid.NewGuid();
+                    Db.CampaignAssets.Add(new CampaignAsset()
+                    {
+                        Id = assetId,
+                        CampaignId = campaign.Id,
+                        CreatedAt = DateTime.Now
+                    });
+                    campaign.AssetsId = assetId;
+                    Db.SaveChanges();
+                    campaign = Db.Campaigns
+                       .Include(x => x.Assets)
+                       .Include(x => x.Testing)
+                       .FirstOrDefault(x => x.Id == campaign.Id);
+                }
                 campaign.Assets.ZipCodeUrl = $"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}zip.csv";
                 campaign.Assets.CreativeUrl =$"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}.htm";
 
@@ -135,7 +151,7 @@ namespace ADSDataDirect.Web.Controllers
                     .Select(x => (ChannelType)System.Enum.Parse(typeof(ChannelType),x)).ToList();
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
                 "Text", campaignTestingVm.TestingUrgency);
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", campaignTestingVm.WhiteLabel);
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text", campaignTestingVm.WhiteLabel);
             
             return View(campaignTestingVm);
         }
@@ -231,7 +247,7 @@ namespace ADSDataDirect.Web.Controllers
             }
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
                 "Text", campaignTestingVm.TestingUrgency);
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", campaignTestingVm.WhiteLabel);
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text", campaignTestingVm.WhiteLabel);
             return View("EditTesting", campaignTestingVm);
         }
 

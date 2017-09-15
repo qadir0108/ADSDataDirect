@@ -59,8 +59,9 @@
                         @Html.ValidationMessageFor(model => Model.FromLine, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-2">
-                        @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control WhiteLabel" } })
-                        @Html.ValidationMessageFor(model => Model.WhiteLabel, "", new { @class = "text-danger" })
+                        @Html.DropDownList("WhiteLabel", null, htmlAttributes: new { @class = "form-control" })
+                        @*@Html.EditorFor(model => model.WhiteLabel, new {htmlAttributes = new {@class = "form-control WhiteLabel"}})*@
+                        @Html.ValidationMessageFor(model => Model.WhiteLabel, "", new {@class = "text-danger"})
                     </div>
                     <div class="col-md-2">
                         @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })

@@ -125,6 +125,19 @@ namespace ADSDataDirect.Web.Reports
                     cell.CellValue = new CellValue(model.FromLine);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
+                    uint rowNumber = 43;
+                    foreach (var segment in model.Segments)
+                    {
+                        cell = GetCell(worksheetPart.Worksheet, "A", rowNumber);
+                        cell.CellValue = new CellValue(segment.SegmentNumber);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+
+                        cell = GetCell(worksheetPart.Worksheet, "B", rowNumber);
+                        cell.CellValue = new CellValue(segment.SegmentDataFileUrl);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                        rowNumber++;
+                    }
+
                     #endregion
 
                     #region Second Page
@@ -216,6 +229,19 @@ namespace ADSDataDirect.Web.Reports
                     cell.CellValue = new CellValue(model.CampaignName);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
+                    uint rowNumber = 15;
+                    foreach (var segment in model.Segments)
+                    {
+                        cell = GetCell(worksheetPart.Worksheet, "C", rowNumber);
+                        cell.CellValue = new CellValue(segment.SegmentNumber);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+
+                        cell = GetCell(worksheetPart.Worksheet, "D", rowNumber);
+                        cell.CellValue = new CellValue(segment.SegmentDataFileUrl);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                        rowNumber++;
+                    }
+
                     // right side
                     cell = GetCell(worksheetPart.Worksheet, "L", 4);
                     cell.CellValue = new CellValue(model.Quantity);
@@ -234,43 +260,43 @@ namespace ADSDataDirect.Web.Reports
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
                     // key stats
-                    cell = GetCell(worksheetPart.Worksheet, "C", 19);
+                    cell = GetCell(worksheetPart.Worksheet, "C", 20);
                     cell.CellValue = new CellValue(model.Quantity);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = GetCell(worksheetPart.Worksheet, "C", 22);
+                    cell = GetCell(worksheetPart.Worksheet, "C", 23);
                     cell.CellValue = new CellValue(model.OpenedPercentage);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = GetCell(worksheetPart.Worksheet, "H", 22);
+                    cell = GetCell(worksheetPart.Worksheet, "H", 23);
                     cell.CellValue = new CellValue(model.Opened);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = GetCell(worksheetPart.Worksheet, "C", 25);
+                    cell = GetCell(worksheetPart.Worksheet, "C", 26);
                     cell.CellValue = new CellValue(model.ClickedPercentage);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = GetCell(worksheetPart.Worksheet, "H", 25);
+                    cell = GetCell(worksheetPart.Worksheet, "H", 26);
                     cell.CellValue = new CellValue(model.Clicked);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = GetCell(worksheetPart.Worksheet, "L", 25);
+                    cell = GetCell(worksheetPart.Worksheet, "L", 26);
                     cell.CellValue = new CellValue(model.ClickToOpenPercentage);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = GetCell(worksheetPart.Worksheet, "C", 28);
+                    cell = GetCell(worksheetPart.Worksheet, "C", 29);
                     cell.CellValue = new CellValue("Forwards : " + model.Forwards);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
                     
-                    cell = GetCell(worksheetPart.Worksheet, "C", 31);
+                    cell = GetCell(worksheetPart.Worksheet, "C", 32);
                     cell.CellValue = new CellValue(model.UnsubPercentage);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = GetCell(worksheetPart.Worksheet, "H", 31);
+                    cell = GetCell(worksheetPart.Worksheet, "H", 32);
                     cell.CellValue = new CellValue(model.Unsub);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = GetCell(worksheetPart.Worksheet, "L", 31);
+                    cell = GetCell(worksheetPart.Worksheet, "L", 32);
                     cell.CellValue = new CellValue(model.UnsubToOpenPercentage);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 

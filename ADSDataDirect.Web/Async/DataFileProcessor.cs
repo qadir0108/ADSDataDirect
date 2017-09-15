@@ -32,13 +32,14 @@ namespace ADSDataDirect.Web.Async
                         if (string.IsNullOrEmpty(trimmed)) continue;
                         list.Add(trimmed);
                     }
-                    LogHelper.AddLog(db, LogType.DataProcessing, orderNumber, zipCodeFile + " processed sucessfully.");
+                    LogHelper.AddLog(db, LogType.DataProcessing, orderNumber, $"ZipCodeFile {zipCodeFile} processed sucessfully.");
 
                     // SQL Data file
                     try
                     {
                         var data = SegmentDataManager.FetchSegmentsData(db, new SegmentParameters
                         {
+                            OrderNumber = orderNumber,
                             DataQuantity = dataQuantity,
                             CustomerCode = SegmentDataManager.CustomerCode,
                             ZipCodes = list
@@ -47,8 +48,8 @@ namespace ADSDataDirect.Web.Async
                         LogHelper.AddLog(db, LogType.DataProcessing, orderNumber, $"{data.Count} records feteched sucessfully.");
 
                         // write to local data file
-                        string amazonFileKey = $"{orderNumber}\\{orderNumber}data.csv";
-                        var filePath = $"{uploadPath}\\{amazonFileKey}";
+                        string fileName = $"{orderNumber}\\{orderNumber}data.csv";
+                        var filePath = $"{uploadPath}\\{fileName}";
                         data.ToCsv(filePath, new CsvDefinition()
                         {
                             EndOfLine = "\r\n",
@@ -70,22 +71,23 @@ namespace ADSDataDirect.Web.Async
                             "Index"
                                 }
                         });
+                        string amazonFileKey = $"{orderNumber}/{orderNumber}data.csv";
                         S3FileManager.Upload(amazonFileKey, filePath, true);
-                        LogHelper.AddLog(db, LogType.DataProcessing, orderNumber, $"{amazonFileKey} data file generated and uploaded to Amazon sucessfully.");
+                        LogHelper.AddLog(db, LogType.DataProcessing, orderNumber, $"{fileName} data file generated and uploaded to Amazon sucessfully.");
 
                         // Generating Segment data files
                         Campaign campaign =
                             db.Campaigns.Include(x => x.Segments).FirstOrDefault(x => x.OrderNumber == orderNumber);
 
                         var campaignTesting = db.CampaignsTesting.FirstOrDefault(x => x.CampaignId == campaign.Id);
-                        campaignTesting.DataFileUrl = amazonFileKey;
+                        campaignTesting.DataFileUrl = fileName;
                         campaignTesting.DateFetched = DateTime.Now;
                         db.SaveChanges();
 
                         foreach (var segment in campaign.Segments.OrderBy(x => x.SegmentNumber))
                         {
-                            string amazonFileKey1 = $"{campaign.OrderNumber}\\{segment.SegmentNumber}data.csv";
-                            var filePath1 = $"{uploadPath}\\{amazonFileKey1}";
+                            string fileName1 = $"{campaign.OrderNumber}\\{segment.SegmentNumber}data.csv";
+                            var filePath1 = $"{uploadPath}\\{fileName1}";
                             var data1 =
                                 data.Where(x => x.Index >= segment.FirstRangeStart && x.Index <= segment.FirstRangeEnd).ToList();
                             var data2 =
@@ -116,6 +118,7 @@ namespace ADSDataDirect.Web.Async
                                 "Index"
                                     }
                             });
+                            string amazonFileKey1 = $"{campaign.OrderNumber}/{segment.SegmentNumber}data.csv";
                             S3FileManager.Upload(amazonFileKey1, filePath, true);
 
                             segment.SegmentDataFileUrl = FileManager.GetFilePathLive(UploadFileType.DataFile,
@@ -125,7 +128,7 @@ namespace ADSDataDirect.Web.Async
                             segment.SegmentStatus = (int)SegmentStatus.Generated;
 
                             LogHelper.AddLog(db, LogType.DataProcessing, orderNumber,
-                                amazonFileKey1 + " data file generated and uploaded to Amazon sucessfully.");
+                                fileName1 + " data file generated and uploaded to Amazon sucessfully.");
 
                         }
                         db.SaveChanges();

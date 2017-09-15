@@ -8,7 +8,7 @@ namespace ADSDataDirect.Core.Entities
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
         
-        public string APIKey { get; set; }
+        public string ApiKey { get; set; }
         
         public ApiRequest()
         {

@@ -37,7 +37,7 @@ namespace ADSDataDirect.Web.API
                     throw new AdsException("Invalid Authentication API Key");
                 }
 
-                int todaysRequests = _db.ApiRequests.Count(x => x.APIKey == token && x.CreatedAt.Date == DateTime.Now.Date);
+                int todaysRequests = _db.ApiRequests.Count(x => x.ApiKey == token && x.CreatedAt.Date == DateTime.Now.Date);
                 if (todaysRequests > _apiMaxDailyLimit)
                 {
                     throw new AdsException("API Daily Max limit " + _apiMaxDailyLimit +
@@ -48,7 +48,7 @@ namespace ADSDataDirect.Web.API
                 {
                     Id = Guid.NewGuid(),
                     CreatedAt = DateTime.Now,
-                    APIKey = token
+                    ApiKey = token
                 });
                 _db.SaveChanges();
 
@@ -99,7 +99,7 @@ namespace ADSDataDirect.Web.API
                 {
                     Id = Guid.NewGuid(),
                     CreatedAt = DateTime.Now,
-                    APIKey = token
+                    ApiKey = token
                 });
                 _db.SaveChanges();
 

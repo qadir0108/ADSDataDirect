@@ -295,6 +295,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Helpers\AdsException.cs" />
+    <Compile Include="Helpers\AdsCache.cs" />
     <Compile Include="Models\SettingsVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
     <Compile Include="Models\VendorVm.cs" />
@@ -453,8 +454,8 @@
     <Content Include="images\location-pic-4.jpg" />
     <Content Include="images\location-pic-5.jpg" />
     <Content Include="images\location-pic.jpg" />
-    <Content Include="images\template1.png" />
-    <Content Include="images\template2.png" />
+    <Content Include="images\tracking1.png" />
+    <Content Include="images\tracking2.png" />
     <Content Include="images\mail.svg" />
     <Content Include="images\music.png" />
     <Content Include="images\page-header-img.jpg" />
@@ -935,6 +936,7 @@
     <Content Include="Views\Customer\Index.cshtml" />
     <Content Include="Views\Customer\New.cshtml" />
     <Content Include="Views\Notification\Settings.cshtml" />
+    <Content Include="Views\Tracking\Sent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
