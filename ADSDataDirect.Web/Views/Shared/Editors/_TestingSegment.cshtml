@@ -15,8 +15,11 @@
         <div class="panel-heading">
             Multi drop : @Model.SegmentNumber
             <div class="pull-right">
-                <a href="#" class="btn btn-primary btn-sm btnApprove" data-tooltip="tooltip" title="Approve" data-id="@Model.Id" data-segment="@Model.SegmentNumber">
+                <a style="margin-right: 5px" href="#" class="btn btn-primary btn-sm btnApprove" data-tooltip="tooltip" title="Approve" data-id="@Model.Id" data-segment="@Model.SegmentNumber">
                     <i class="fa fa-check" aria-hidden="true"></i>
+                </a>
+                <a href="#" class="btn btn-primary btn-sm btnDelete" data-tooltip="tooltip" title="Delete"  data-id="@Model.Id" data-segment="@Model.SegmentNumber">
+                    <i class="fa fa-remove" aria-hidden="true"></i>
                 </a>
             </div>
         </div>
@@ -56,8 +59,9 @@
                         @Html.ValidationMessageFor(model => Model.FromLine, "", new { @class = "text-danger" })
                     </div>
                     <div class="col-md-2">
-                        @Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })
-                        @Html.ValidationMessageFor(model => Model.WhiteLabel, "", new { @class = "text-danger" })
+                        @Html.DropDownList("WhiteLabel", null, htmlAttributes: new { @class = "form-control" })
+                        @*@Html.EditorFor(model => model.WhiteLabel, new { htmlAttributes = new { @class = "form-control" } })*@
+                        @Html.ValidationMessageFor(model => Model.WhiteLabel, "", new {@class = "text-danger"})
                     </div>
                     <div class="col-md-2">
                         @Html.EditorFor(model => model.Quantity, new { htmlAttributes = new { @class = "form-control" } })

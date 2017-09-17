@@ -256,7 +256,6 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult NewSegment()
         {
-            //TempData["Customers"] = new SelectList(CustomersList, "Value", "Text");
             var segment = new CampaignSegment()
             {
                 Id = Guid.NewGuid(),
@@ -264,6 +263,7 @@ namespace ADSDataDirect.Web.Controllers
                 SegmentNumber = "" + _c1++,
                 //WhiteLabel = LoggedInUser?.Customer?.WhiteLabel
             };
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text", LoggedInUser?.Customer?.WhiteLabel);
             return PartialView("~/Views/Shared/Editors/_NewSegment.cshtml", segment);
         }
 
@@ -280,7 +280,7 @@ namespace ADSDataDirect.Web.Controllers
             };
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
                 "Text", model.TestingUrgency);
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", LoggedInUser?.Customer?.WhiteLabel);
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text", LoggedInUser?.Customer?.WhiteLabel);
             return View(model);
         }
 
@@ -356,7 +356,7 @@ namespace ADSDataDirect.Web.Controllers
 
             ViewBag.TestingUrgency = new SelectList(EnumHelper.GetEnumTextValues(typeof(TestingUrgency)), "Value",
                 "Text", campaignVm.TestingUrgency);
-            ViewBag.WhiteLabel = new SelectList(CustomersList, "Value", "Text", LoggedInUser?.Customer?.WhiteLabel);
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text", LoggedInUser?.Customer?.WhiteLabel);
             return View(campaignVm);
         }
 

@@ -158,14 +158,29 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult NewSegment(string orderNumber)
         {
-            //TempData["PianoMake"] = new SelectList(PianoMakeList, "Value", "Text");
             var segment = new CampaignSegment()
             {
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
                 SegmentNumber = orderNumber + _c1++
             };
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text");
             return PartialView("~/Views/Shared/Editors/_NewSegment.cshtml", segment);
+        }
+
+        public ActionResult DeleteSegment(Guid? id)
+        {
+            try
+            {
+                var segment = Db.CampaignSegments.FirstOrDefault(x => x.Id == id);
+                Db.CampaignSegments.Remove(segment);
+                Db.SaveChanges();
+                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         // POST: Copy/Edit/5
@@ -237,6 +252,7 @@ namespace ADSDataDirect.Web.Controllers
                 }
 
                 TempData["Success"] = "Testing data saved successfully!";
+                return RedirectToAction("EditTesting", "Testing", new { id = campaignTestingVm.Id });
             }
             else
             {

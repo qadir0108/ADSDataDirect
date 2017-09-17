@@ -647,6 +647,47 @@
                    });
                });
         });
+
+        $('.btnDelete').click(function (e) {
+            debugger;
+
+            e.preventDefault();
+            var btnDelete = $(this);
+
+            var segment = $(this).data('segment');
+            var dataToPost = {
+                Id: $(this).data('id')
+            };
+
+            wfp.showSwal("Are you sure to delete multi " + segment + " ?",
+               function () {
+
+                   debugger;
+                   $.ajax({
+                       type: "POST",
+                       url: "/Testing/DeleteSegment",
+                       data: JSON.stringify(dataToPost),
+                       contentType: "application/json; charset=utf-8",
+                       success: function (response) {
+                           debugger;
+                           if (response === "") wfp.reload();
+                           if (response.IsSucess) {
+                               debugger;
+                               wfp.showSuccess('Multi ' + segment + ' has been DELETED successfully.');
+                               btnDelete.parent().parent().parent().remove();
+                           } else {
+                               wfp.showError(response.ErrorMessage);
+                           }
+                       },
+                       failure: function (response) {
+                           wfp.showError('There is erorr in service call.');
+                       },
+                       complete: function () {
+                       }
+                   });
+               });
+        });
+
         //// Javascript to enable link to tab
         //var url = document.location.toString();
         //if (url.match('#')) {
