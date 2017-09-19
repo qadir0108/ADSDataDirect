@@ -3,6 +3,7 @@ using System.Linq;
 using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
+using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
 using PagedList;
 
@@ -22,49 +23,14 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult Settings()
         {
-            SettingsVm sc = new SettingsVm();
-            var settingAuto = Db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyAutoProcessTracking);
-            if (settingAuto != null) sc.IsAutoProcessTracking = int.Parse(settingAuto.Value) == 1;
-
-            var settingSendNotifications = Db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeySendNotificationEmails);
-            if (settingSendNotifications != null) sc.IsSendNotificationEmails = int.Parse(settingSendNotifications.Value) == 1;
+            SettingsVm sc = SettingsManager.Instance.LoadSettings(Db);
             return View(sc);
         }
 
         [HttpPost]
         public ActionResult Settings(SettingsVm sc)
         {
-            var settingAuto = Db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyAutoProcessTracking);
-            if (settingAuto == null)
-            {
-                Db.Settings.Add(new Settings
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedAt = DateTime.Now,
-                    Key = StringConstants.KeyAutoProcessTracking,
-                    Value = sc.IsAutoProcessTracking ? "1" : "0"
-                });
-            }
-            else
-            {
-                settingAuto.Value = sc.IsAutoProcessTracking ? "1" : "0";
-            }
-            var settingSendNotifications = Db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeySendNotificationEmails);
-            if (settingSendNotifications == null)
-            {
-                Db.Settings.Add(new Settings
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedAt = DateTime.Now,
-                    Key = StringConstants.KeySendNotificationEmails,
-                    Value = sc.IsSendNotificationEmails ? "1" : "0"
-                });
-            }
-            else
-            {
-                settingSendNotifications.Value = sc.IsSendNotificationEmails ? "1" : "0";
-            }
-            Db.SaveChanges();
+            SettingsManager.Instance.SaveSettings(Db, sc);
             TempData["Success"] = "Notification Settings has been saved sucessfully.";
             return RedirectToAction("Settings");
         }

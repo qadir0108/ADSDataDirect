@@ -25,13 +25,14 @@ namespace ADSDataDirect.Web.ProData
                 LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules started at {DateTime.Now}");
 
                 // any camp that is in monitoring or any whose any segment is in monitoring
+                DateTime dtFrom = DateTime.ParseExact("09/15/2017", "MM/dd/yyyy", CultureInfo.InvariantCulture);
                 List<Campaign> campaigns = db.Campaigns
                     .Include(x => x.Approved)
                     .Include(x => x.Segments)
                     .Include(x => x.Trackings)
                     .Where(x => x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
                     .Where(x => x.Approved != null)
-                    .Where(x => x.CreatedAt.Date >= DateTime.ParseExact("09/15/2017", "MM/dd/yyyy", CultureInfo.InvariantCulture))
+                    .Where(x => DbFunctions.TruncateTime(x.CreatedAt) >= dtFrom)
                     .ToList();
 
                 LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules processing {campaigns.Count} campaigns.");

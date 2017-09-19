@@ -13,7 +13,7 @@ namespace ADSDataDirect.Core.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201709150602143_Settings"; }
+            get { return "201709191125232_Settings"; }
         }
         
         string IMigrationMetadata.Source

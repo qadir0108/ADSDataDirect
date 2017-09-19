@@ -20,6 +20,8 @@ namespace ADSDataDirect.Core.Entities
         public DateTime? ResolvedAt { get; set; }
         public DateTime? ExpiredAt { get; set; }
 
+        public string Message { get; set; }
+
         public bool IsNotification1Sent { get; set; } // 0800
         public bool IsNotification2Sent { get; set; } // 1200
         public bool IsNotification3Sent { get; set; } // 1700
