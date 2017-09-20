@@ -24,7 +24,10 @@ namespace ADSDataDirect.Web.Helpers
             var settingSendNotifications = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeySendNotificationEmails);
             if (settingSendNotifications != null) _settings.IsSendNotificationEmails = int.Parse(settingSendNotifications.Value) == 1;
 
-            var key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitOpenRateIn24Hours);
+            var key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotStartedInXHours);
+            _settings.NotStartedInXHoursValue = key != null ? int.Parse(key.Value) : 0;
+
+            key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitOpenRateIn24Hours);
             _settings.NotHitOpenRateIn24HoursValue = key != null ? double.Parse(key.Value) : 0.0;
 
             key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitOpenRateIn72Hours);
@@ -44,6 +47,7 @@ namespace ADSDataDirect.Web.Helpers
             SaveSetting(db, StringConstants.KeyAutoProcessTracking, settings.IsAutoProcessTracking ? "1" : "0");
             SaveSetting(db, StringConstants.KeySendNotificationEmails, settings.IsSendNotificationEmails ? "1" : "0");
 
+            SaveSetting(db, StringConstants.KeyNotStartedInXHours, settings.NotStartedInXHoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitOpenRateIn24Hours, settings.NotHitOpenRateIn24HoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitOpenRateIn72Hours, settings.NotHitOpenRateIn72HoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitClickRateIn24Hours, settings.NotHitClickRateIn24HoursValue.ToString(CultureInfo.InvariantCulture));

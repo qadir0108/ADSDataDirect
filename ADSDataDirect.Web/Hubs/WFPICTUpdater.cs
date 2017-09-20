@@ -19,7 +19,7 @@ namespace ADSDataDirect.Web.Hubs
         
 
         private readonly object _lock = new object();
-        private readonly TimeSpan _updateInterval = TimeSpan.FromSeconds(20);
+        private readonly TimeSpan _updateInterval = TimeSpan.FromSeconds(30);
         private Timer _timer;
         private volatile bool _isUpdating;
 

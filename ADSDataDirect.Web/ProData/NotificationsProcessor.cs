@@ -8,6 +8,7 @@ using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Web.Async.Helpers;
 using ADSDataDirect.Web.Helpers;
+using Z.EntityFramework.Plus;
 
 namespace ADSDataDirect.Web.ProData
 {
@@ -15,68 +16,58 @@ namespace ADSDataDirect.Web.ProData
     {
         public static void FetchAndCheckForQcRules()
         {
+            DateTime dtFrom = DateTime.ParseExact("09/15/2017", "MM/dd/2017",CultureInfo.InvariantCulture);
             using (var db = new WfpictContext())
             {
                 bool isAutoProcessTracking = false;
                 var settingAuto = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyAutoProcessTracking);
                 if (settingAuto != null) isAutoProcessTracking = int.Parse(settingAuto.Value) == 1;
-                if(!isAutoProcessTracking) return;
-
-                LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules started at {DateTime.Now}");
-
-                // any camp that is in monitoring or any whose any segment is in monitoring
-                DateTime dtFrom = DateTime.ParseExact("09/15/2017", "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                List<Campaign> campaigns = db.Campaigns
-                    .Include(x => x.Approved)
-                    .Include(x => x.Segments)
-                    .Include(x => x.Trackings)
-                    .Where(x => x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
-                    .Where(x => x.Approved != null)
-                    .Where(x => DbFunctions.TruncateTime(x.CreatedAt) >= dtFrom)
-                    .ToList();
-
-                LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules processing {campaigns.Count} campaigns.");
-
-                // Update Tracking clicked opened
-                int index = 1;
-                foreach (var campaign in campaigns)
+                if (isAutoProcessTracking)
                 {
-                    ProDataApiManager.FetchAndUpdateTrackings(db, campaign);
-                    LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules completed {index} out of {campaigns.Count} campaigns.");
-                    index++;
-                }
+                    // Delete old log
+                    db.SystemLogs.Where(x => x.LogType == (int)LogType.RulesProcessing || x.LogType == (int)LogType.ProData).Delete();
+                    db.SaveChanges();
 
-                // Send them 5 days = 120
-                // Expire notifications that are > 120 hrs
-                var toBeExpired = db.Notifications.ToList()
-                        .Where(x => x.FoundAt != null && DateTime.Now.Subtract(x.FoundAt.Value).Hours >= 120)
+                    LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules started at {DateTime.Now}");
+                    // any camp that is in monitoring or any whose any segment is in monitoring
+                   
+                    List<Campaign> campaigns = db.Campaigns
+                        .Include(x => x.Approved)
+                        .Include(x => x.Segments)
+                        .Include(x => x.Trackings)
+                        .Where(x => x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
+                        .Where(x => x.Approved != null)
+                        .Where(x => DbFunctions.TruncateTime(x.CreatedAt) >= dtFrom)
                         .ToList();
-                if (toBeExpired.Count > 0)
-                {
-                    LogHelper.AddLog(db, LogType.RulesProcessing, "", "Expiring 120hrs old notifications");
-                    foreach (var notification in toBeExpired)
+
+                    LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules processing {campaigns.Count} campaigns.");
+
+                    // Update Tracking clicked opened
+                    int index = 1;
+                    foreach (var campaign in campaigns)
                     {
-                        notification.Status = (int)NotificationStatus.Expired;
+                        ProDataApiManager.FetchAndUpdateTrackings(db, campaign);
+                        LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules completed {index} out of {campaigns.Count} campaigns.");
+                        index++;
                     }
-                    db.SaveChanges();
-                }
 
-                // Delete prodata log with time >= 12 hrs
-                var logs = db.SystemLogs.ToList()
-                    .Where(x => (x.LogType == (int)LogType.RulesProcessing || x.LogType == (int)LogType.ProData) &&
-                                DateTime.Now.Subtract(x.CreatedAt).Hours >= 12).ToList();
-
-                if (logs.Count > 0)
-                {
-                    foreach (var log in logs)
+                    // Send them 5 days = 120
+                    // Expire notifications that are > 120 hrs
+                    var toBeExpired = db.Notifications.ToList()
+                            .Where(x => x.FoundAt != null && DateTime.Now.Subtract(x.FoundAt.Value).Hours >= 120)
+                            .ToList();
+                    if (toBeExpired.Count > 0)
                     {
-                        db.SystemLogs.Remove(log);
+                        LogHelper.AddLog(db, LogType.RulesProcessing, "", "Expiring 120hrs old notifications");
+                        foreach (var notification in toBeExpired)
+                        {
+                            notification.Status = (int)NotificationStatus.Expired;
+                        }
+                        db.SaveChanges();
                     }
-                    db.SaveChanges();
+
+                    LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules finished at {DateTime.Now}, {campaigns.Count} campaigns refreshed.");
                 }
-
-                LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules finished at {DateTime.Now}, {campaigns.Count} campaigns refreshed.");
-
             }
         }
         

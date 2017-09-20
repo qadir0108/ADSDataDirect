@@ -124,12 +124,12 @@ namespace ADSDataDirect.Web.Controllers
                     ViewBag.CampaignName = sc.CampaignName;
                 }
 
-                if (!string.IsNullOrEmpty(sc.IsTested))
+                if (!string.IsNullOrEmpty(sc.AdvancedWhiteLabel))
                 {
-                    bool isTested = Boolean.Parse(sc.IsTested);
-                    campagins = campagins.Where(s => s.Testing != null
-                                                  && s.Testing?.IsTested == isTested).ToList();
-                    ViewBag.IsTested = sc.IsTested;
+                    campagins = campagins.Where(s => s.WhiteLabel == sc.AdvancedWhiteLabel
+                    || (s.Testing != null && s.Testing?.WhiteLabel == sc.AdvancedWhiteLabel)
+                    || (s.Approved != null && s.Approved?.WhiteLabel == sc.AdvancedWhiteLabel)).ToList();
+                    ViewBag.AdvancedWhiteLabelSearched = sc.AdvancedWhiteLabel;
                 }
 
                 if (!string.IsNullOrEmpty(sc.OrderedFrom))
@@ -170,6 +170,7 @@ namespace ADSDataDirect.Web.Controllers
             ViewBag.BasicStatus = StatusList;
             ViewBag.AdvancedStatus = StatusList;
             ViewBag.AdvancedUser = UsersList;
+            ViewBag.AdvancedWhiteLabel = CustomersWithWLList;
             ViewBag.Customer = UsersList;
 
             // Paging

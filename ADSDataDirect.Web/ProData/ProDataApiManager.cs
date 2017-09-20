@@ -356,14 +356,15 @@ namespace ADSDataDirect.Web.ProData
 
             int hoursPassed = DateTime.Now.Subtract(campaignTracking.DateSent.Value).Hours;
             bool problemFound = false;
-            QcRule qcRule = QcRule.NotStartedInFirst4Hours;
+            QcRule qcRule = QcRule.NotStartedInFirstXHours;
             // QC Rule 1
-            if (responseStatus == ProDataResponseStatus.NotFound.ToString() && hoursPassed >= 4)
+            if (responseStatus == ProDataResponseStatus.NotFound.ToString() && hoursPassed >= settings.NotStartedInXHoursValue)
             {
                 problemFound = true;
-                qcRule = QcRule.NotStartedInFirst4Hours;
+                qcRule = QcRule.NotStartedInFirstXHours;
+                message = $"{hoursPassed}Hrs passed and not yet started. Max allowed time {settings.NotStartedInXHoursValue}Hrs";
             }
-            
+
             // QC Rule 2
             if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn24HoursValue / 100.0) && hoursPassed >= 24)
             {

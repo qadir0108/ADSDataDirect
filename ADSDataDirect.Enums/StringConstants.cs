@@ -11,6 +11,7 @@
 
         public static readonly string KeyOrderCcEmails = "OrderCCEmails";
 
+        public static readonly string KeyNotStartedInXHours = "NotStartedInXHours";
         public static readonly string KeyNotHitOpenRateIn24Hours = "NotHitOpenRateIn24Hours";
         public static readonly string KeyNotHitOpenRateIn72Hours = "NotHitOpenRateIn72Hours";
         public static readonly string KeyNotHitClickRateIn24Hours = "NotHitClickRateIn24Hours";

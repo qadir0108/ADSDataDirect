@@ -2,7 +2,7 @@
 {
     public enum QcRule
     {
-        NotStartedInFirst4Hours, //If Campaign has not started in First 4 hours send a notification
+        NotStartedInFirstXHours, //If Campaign has not started in First 4 hours send a notification
         NotHitOpenRateIn24Hours, // If campaign has not hit Open rate of 5% in 24 hours send  notifcation
         NotHitOpenRateIn72Hours, // If campaing did not hit a 10% open rate send a notifcation (72hours) 
         NotHitClickRateIn24Hours,// If campaign has not hit .75% click Rate in 24 hours send notification

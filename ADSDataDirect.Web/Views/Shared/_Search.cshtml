@@ -15,12 +15,30 @@
                             <div class="col-md-6">
                                 <div class="row">
                                     <div class="col-md-6 form-group">
+                                        <label class="control-label" for="campaignName">Campaign Name</label>
+                                        <div class="input-group" style="width: 100%;">
+                                            <input id="campaignName" name="campaignName" type="text" class="form-control input-md" placeholder="Name">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6 form-group">
+                                        <label class="control-label" for="orderedFrom">White Label</label>
+                                        <div class="input-group">
+                                            <div class="input-group-addon">
+                                                <span class="glyphicon glyphicon"></span>
+                                            </div>
+                                            @Html.DropDownList("AdvancedWhiteLabel", null, htmlAttributes: new { @class = "form-control", @id = "advancedStatus" })
+                                            <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6 form-group">
                                         <label class="control-label" for="orderedFrom">Status</label>
                                         <div class="input-group">
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon"></span>
                                             </div>
-                                            @Html.DropDownList("AdvancedStatus", null, htmlAttributes: new { @class = "form-control", @id = "advancedStatus" })
+                                            @Html.DropDownList("AdvancedStatus", null, htmlAttributes: new {@class = "form-control", @id = "advancedStatus"})
                                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                         </div>
                                     </div>
@@ -30,7 +48,7 @@
                                             <div class="input-group-addon">
                                                 <span class="glyphicon glyphicon"></span>
                                             </div>
-                                            @Html.DropDownList("AdvancedUser", null, htmlAttributes: new { @class = "form-control", @id = "advancedUser" })
+                                            @Html.DropDownList("AdvancedUser", null, htmlAttributes: new {@class = "form-control", @id = "advancedUser"})
                                             <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                                         </div>
                                     </div>
@@ -79,27 +97,6 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="row">
-                                    <div class="col-md-6 form-group">
-                                        <label class="control-label" for="campaignName">Campaign Name</label>
-                                        <div class="input-group" style="width: 100%;">
-                                            <input id="campaignName" name="campaignName" type="text" class="form-control input-md" placeholder="Name">
-                                        </div>
-                                    </div>
-                                    <div class="col-md-6 form-group">
-                                        <label class="control-label" for="txtName">Tested?</label>
-                                        <br />
-                                        <div class="btn-group" data-toggle="buttons">
-                                            <label class="btn btn-primary">
-                                                @Html.RadioButtonFor(model => model.IsTested, "True")Yes
-                                            </label>
-                                            <label class="btn btn-primary">
-                                                @Html.RadioButtonFor(model => model.IsTested, "False")No
-                                            </label>
-                                        </div>
-                                    </div>
-                                </div>
-                                
                             </div>
                         </div>
                     </div>

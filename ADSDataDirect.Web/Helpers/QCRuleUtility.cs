@@ -8,7 +8,7 @@ namespace ADSDataDirect.Web.Helpers
         {
             switch (qcRule)
             {
-                case (int)QcRule.NotStartedInFirst4Hours:
+                case (int)QcRule.NotStartedInFirstXHours:
                     return "Campaign is not started in first four(4) hours of Order";
                 case (int)QcRule.NotHitOpenRateIn24Hours:
                     return "Campaign has not hit OPEN rate of 5% in 24 hours of Order";
