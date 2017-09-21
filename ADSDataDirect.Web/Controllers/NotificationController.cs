@@ -15,7 +15,11 @@ namespace ADSDataDirect.Web.Controllers
         // Notification
         public ActionResult Index(CampaignSearchVm sc)
         {
-            var notifications = Db.Notifications.Where(x => x.Status == (int)NotificationStatus.Found).ToList();
+            var notifications = Db.Notifications
+                .Where(x => x.Status == (int)NotificationStatus.Found)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
+
             // Paging
             int pageNumber = (sc.Page ?? 1);
             return View(notifications.ToPagedList(pageNumber, PageSize));

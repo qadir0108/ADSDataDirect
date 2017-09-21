@@ -167,18 +167,18 @@
                                     <div class="col-md-3">
                                         <a href="@Url.Action("Complete", "Campaigns", new {id = item.Id})" title="Complete" data-tooltip="tooltip">
                                             <span class="fa fa-check"></span>
+                                        </a> |
+                                        <a href="@Url.Action("Cancel", "Campaigns", new {id = item.Id})" title="Cancel" data-tooltip="tooltip">
+                                            <span class="fa fa-times"></span>
                                         </a>
                                     </div>
                                 }
                                 <div class="col-md-3">
                                     <a href="@Url.Action("Delete", "Campaigns", new {id = item.Id})" title="Delete" data-tooltip="tooltip">
                                         <span class="fa fa-trash"></span>
-                                    </a> |
+                                    </a>
                                     @if (isAdmin)
                                     {
-                                        <a href="@Url.Action("Cancel", "Campaigns", new {id = item.Id})" title="Cancel" data-tooltip="tooltip">
-                                            <span class="fa fa-times"></span>
-                                        </a>
                                         <a href="@Url.Action("Sent", "Tracking", new {id = item.Id})" title="Sent Orders" data-tooltip="tooltip" class="pull-right">
                                             <span class="fa fa-envelope"></span>
                                         </a>
@@ -238,7 +238,7 @@
                advancedStatus = ViewBag.AdvancedStatusSearched,
                advancedUser = ViewBag.AdvancedUserSearched,
                campaignName = ViewBag.CampaignName,
-               advancedWhiteLabel = ViewBag.AdvancedWhiteLabel,
+               advancedWhiteLabel = ViewBag.AdvancedWhiteLabelSearched,
                orderedFrom = ViewBag.OrderedFrom, orderedTo = ViewBag.OrderedTo,
                broadcastFrom = ViewBag.BroadcastFrom, broadcastTo = ViewBag.BroadcastTo
            }), new PagedListRenderOptions() { })
