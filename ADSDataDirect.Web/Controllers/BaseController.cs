@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Core.EntityManager;
 using ADSDataDirect.Enums;
+using ADSDataDirect.Web.Models;
 using Microsoft.AspNet.Identity.Owin;
 
 namespace ADSDataDirect.Web.Controllers
@@ -326,5 +327,155 @@ namespace ADSDataDirect.Web.Controllers
             }
         }
 
+        protected IQueryable<Campaign> FilterCampaigns(IQueryable<Campaign> campagins, CampaignSearchVm sc)
+        {
+            if (LoggedInUser != null && !IsAdmin)
+            {
+                campagins = campagins.Where(s => s.CreatedBy == LoggedInUser.UserName);
+            }
+
+            ViewBag.SearchType = sc.SearchType;
+            switch (sc.SearchType)
+            {
+                case "basic":
+                    if (!string.IsNullOrEmpty(sc.BasicString))
+                    {
+                        campagins = campagins.Where(s =>
+                        s.OrderNumber.Equals(sc.BasicString) ||
+                        s.ReBroadcastedOrderNumber == sc.BasicString ||
+                        s.CampaignName.IndexOf(sc.BasicString, StringComparison.InvariantCultureIgnoreCase) >= 0);
+                        ViewBag.BasicStringSearched = sc.BasicString;
+                    }
+                    else if (!string.IsNullOrEmpty(sc.BasicStatus))
+                    {
+                        int status = int.Parse(sc.BasicStatus);
+                        if (status == (int)CampaignStatus.Rebroadcasted)
+                            campagins = campagins.Where(s => s.ReBroadcasted);
+                        else if (status == (int)CampaignStatus.NotRebroadcasted)
+                            campagins = campagins.Where(s => s.ReBroadCast && !s.ReBroadcasted);
+                        else
+                            campagins = campagins.Where(s => s.Status == status);
+                        ViewBag.BasicStatusSearched = sc.BasicStatus;
+                    }
+                    else if (!string.IsNullOrEmpty(sc.BasicOrderNumber))
+                    {
+                        campagins = campagins.Where(s => s.Id.ToString().Equals(sc.BasicOrderNumber));
+                    }
+                    break;
+                case "advanced":
+                    if (!string.IsNullOrEmpty(sc.AdvancedStatus))
+                    {
+                        int status = int.Parse(sc.AdvancedStatus);
+                        if (status == (int)CampaignStatus.Rebroadcasted)
+                            campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP"));
+                        else
+                            campagins = campagins.Where(s => s.Status == status);
+                        ViewBag.AdvancedStatusSearched = sc.AdvancedStatus;
+                    }
+                    if (!string.IsNullOrEmpty(sc.AdvancedUser))
+                    {
+                        campagins = campagins.Where(s => s.CreatedBy == sc.AdvancedUser);
+                        ViewBag.AdvancedUserSearched = sc.AdvancedUser;
+                    }
+
+                    if (!string.IsNullOrEmpty(sc.CampaignName))
+                    {
+                        sc.CampaignName = sc.CampaignName.ToLowerInvariant();
+                        campagins = campagins.Where(s => s.CampaignName.IndexOf(sc.CampaignName, StringComparison.CurrentCultureIgnoreCase) >= 0);
+                        ViewBag.CampaignName = sc.CampaignName;
+                    }
+                    if (!string.IsNullOrEmpty(sc.AdvancedWhiteLabel))
+                    {
+                        campagins = campagins.Where(s => s.WhiteLabel == sc.AdvancedWhiteLabel
+                        || (s.Testing != null && s.Testing.WhiteLabel == sc.AdvancedWhiteLabel)
+                        || (s.Approved != null && s.Approved.WhiteLabel == sc.AdvancedWhiteLabel));
+                        ViewBag.AdvancedWhiteLabelSearched = sc.AdvancedWhiteLabel;
+                    }
+                    if (!string.IsNullOrEmpty(sc.OrderedFrom))
+                    {
+                        DateTime dateFrom = DateTime.ParseExact(sc.OrderedFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                        campagins = campagins.Where(s => s.CreatedAt.Date >= dateFrom.Date);
+                        ViewBag.OrderedFrom = sc.OrderedFrom;
+                    }
+                    if (!string.IsNullOrEmpty(sc.OrderedTo))
+                    {
+                        DateTime dateTo = DateTime.ParseExact(sc.OrderedTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                        campagins = campagins.Where(s => s.CreatedAt.Date <= dateTo.Date);
+                        ViewBag.OrderedTo = sc.OrderedTo;
+                    }
+                    if (!string.IsNullOrEmpty(sc.BroadcastFrom))
+                    {
+                        DateTime dateFrom = DateTime.ParseExact(sc.BroadcastFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                        campagins = campagins.Where(s => s.BroadcastDate.HasValue && s.BroadcastDate.Value >= dateFrom.Date);
+                        ViewBag.BroadcastFrom = sc.BroadcastFrom;
+                    }
+                    if (!string.IsNullOrEmpty(sc.BroadcastTo))
+                    {
+                        DateTime dateTo = DateTime.ParseExact(sc.BroadcastTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
+                        campagins = campagins.Where(s => s.BroadcastDate.HasValue && s.BroadcastDate.Value <= dateTo.Date);
+                        ViewBag.BroadcastTo = sc.BroadcastTo;
+                    }
+                    break;
+            }
+            return campagins;
+        }
+
+        protected IQueryable<Campaign> SortCampaigns(IQueryable<Campaign> campagins, CampaignSearchVm sc)
+        {
+            switch (sc.SortOrder)
+            {
+                case "OrderNumber":
+                    campagins = campagins.OrderBy(s => s.OrderNumber);
+                    break;
+                case "OrderNumber_desc":
+                    campagins = campagins.OrderByDescending(s => s.OrderNumber);
+                    break;
+                case "CampaignName":
+                    campagins = campagins.OrderBy(s => s.CampaignName);
+                    break;
+                case "CampaignName_desc":
+                    campagins = campagins.OrderByDescending(s => s.CampaignName);
+                    break;
+                case "CreatedBy":
+                    campagins = campagins.OrderBy(s => s.CreatedBy);
+                    break;
+                case "CreatedBy_desc":
+                    campagins = campagins.OrderByDescending(s => s.CreatedBy);
+                    break;
+                case "CreatedAt":
+                    campagins = campagins.OrderBy(s => s.CreatedAt);
+                    break;
+                case "CreatedAt_desc":
+                    campagins = campagins.OrderByDescending(s => s.CreatedAt);
+                    break;
+                case "BroadcastDate":
+                    campagins = campagins.OrderBy(s => s.BroadcastDate);
+                    break;
+                case "BroadcastDate_desc":
+                    campagins = campagins.OrderByDescending(s => s.BroadcastDate);
+                    break;
+                case "Quantity":
+                    campagins = campagins.OrderBy(s => s.Quantity);
+                    break;
+                case "Quantity_desc":
+                    campagins = campagins.OrderByDescending(s => s.Quantity);
+                    break;
+                case "Status":
+                    campagins = campagins.OrderBy(s => s.Status);
+                    break;
+                case "Status_desc":
+                    campagins = campagins.OrderByDescending(s => s.Status);
+                    break;
+                default:
+                    campagins = campagins.OrderByDescending(s => s.CreatedAt);
+                    break;
+            }
+            return campagins;
+        }
+
+        protected IQueryable<Campaign> FilterSortCampaigns(IQueryable<Campaign> campagins, CampaignSearchVm sc)
+        {
+            return SortCampaigns(FilterCampaigns(campagins, sc), sc);
+        }
     }
 }

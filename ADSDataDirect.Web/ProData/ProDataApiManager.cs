@@ -39,6 +39,8 @@ namespace ADSDataDirect.Web.ProData
             double ctrPercent = campaign.Approved.OpenGoals == 0 ? 0 : 
                 (double)campaign.Approved.ClickGoals / campaign.Approved.OpenGoals;
 
+            if (ctrPercent > 1.0) ctrPercent = ctrPercent/100.0;
+
             ProDataRequest request = new ProDataRequest()
             {
                 io = orderNumber,
@@ -49,6 +51,7 @@ namespace ADSDataDirect.Web.ProData
                 quantity = campaign.Approved.Quantity,
                 geo_type = "POSTALCODE",
                 geo_url = campaign.Assets.ZipCodeUrl,
+                open_percent = (double)campaign.Approved.OpenGoals / campaign.Approved.Quantity,
                 ctr_percent = ctrPercent,
                 subject = campaign.Approved.SubjectLine,
                 from_name = campaign.Approved.FromLine,
@@ -59,11 +62,13 @@ namespace ADSDataDirect.Web.ProData
             if (campaign.Approved.IsOpenPixel)
             {
                 request.is_open_pixel = "Y";
-                request.open_percent = (double)campaign.Approved.OpenGoals / campaign.Approved.Quantity;
                 request.open_pixel = campaign.Approved.OpenPixelUrl;
             }
             else
+            {
                 request.is_open_pixel = "N";
+            }
+                
 
             if (!string.IsNullOrEmpty(segment?.SegmentDataFileUrl))
             {
