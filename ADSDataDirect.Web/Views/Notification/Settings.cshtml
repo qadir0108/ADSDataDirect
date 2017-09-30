@@ -73,6 +73,46 @@
 
                                 </div>
                                 <div class="col-md-6">
+                                    
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NotStartedInXHoursValue, htmlAttributes: new { @class = "control-label col-md-5" })
+                                        <div class="col-md-7">
+                                            @Html.EditorFor(model => model.NotStartedInXHoursValue, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NotStartedInXHoursValue, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NotHitOpenRateIn24HoursValue, htmlAttributes: new { @class = "control-label col-md-5" })
+                                        <div class="col-md-7">
+                                            @Html.EditorFor(model => model.NotHitOpenRateIn24HoursValue, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NotHitOpenRateIn24HoursValue, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NotHitOpenRateIn72HoursValue, htmlAttributes: new { @class = "control-label col-md-5" })
+                                        <div class="col-md-7">
+                                            @Html.EditorFor(model => model.NotHitOpenRateIn72HoursValue, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NotHitOpenRateIn72HoursValue, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NotHitClickRateIn24HoursValue, htmlAttributes: new { @class = "control-label col-md-5" })
+                                        <div class="col-md-7">
+                                            @Html.EditorFor(model => model.NotHitClickRateIn24HoursValue, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NotHitClickRateIn24HoursValue, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="form-group">
+                                        @Html.LabelFor(model => model.NotHitClickRateIn72HoursValue, htmlAttributes: new { @class = "control-label col-md-5" })
+                                        <div class="col-md-7">
+                                            @Html.EditorFor(model => model.NotHitClickRateIn72HoursValue, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.ValidationMessageFor(model => model.NotHitOpenRateIn72HoursValue, "", new { @class = "text-danger" })
+                                        </div>
+                                    </div>
 
                                 </div>
                             </div>

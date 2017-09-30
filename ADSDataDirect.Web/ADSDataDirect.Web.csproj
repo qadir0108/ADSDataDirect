@@ -240,6 +240,10 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
+    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.6.21.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Plus.EF6.1.6.21\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -305,6 +309,7 @@
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Helpers\AdsException.cs" />
     <Compile Include="Helpers\AdsCache.cs" />
+    <Compile Include="Helpers\SettingsManager.cs" />
     <Compile Include="Models\SettingsVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
     <Compile Include="Models\VendorVm.cs" />

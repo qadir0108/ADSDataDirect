@@ -14,7 +14,7 @@ using Nelibur.ObjectMapper;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class ApprovedController : BaseController
     {
         public ActionResult Index(Guid? id)

@@ -9,6 +9,7 @@ using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Web.Controllers;
 using ADSDataDirect.Web.Helpers;
+using ADSDataDirect.Web.Models;
 using Newtonsoft.Json;
 
 namespace ADSDataDirect.Web.ProData
@@ -38,6 +39,8 @@ namespace ADSDataDirect.Web.ProData
             double ctrPercent = campaign.Approved.OpenGoals == 0 ? 0 : 
                 (double)campaign.Approved.ClickGoals / campaign.Approved.OpenGoals;
 
+            if (ctrPercent > 1.0) ctrPercent = ctrPercent/100.0;
+
             ProDataRequest request = new ProDataRequest()
             {
                 io = orderNumber,
@@ -48,6 +51,7 @@ namespace ADSDataDirect.Web.ProData
                 quantity = campaign.Approved.Quantity,
                 geo_type = "POSTALCODE",
                 geo_url = campaign.Assets.ZipCodeUrl,
+                open_percent = (double)campaign.Approved.OpenGoals / campaign.Approved.Quantity,
                 ctr_percent = ctrPercent,
                 subject = campaign.Approved.SubjectLine,
                 from_name = campaign.Approved.FromLine,
@@ -58,11 +62,13 @@ namespace ADSDataDirect.Web.ProData
             if (campaign.Approved.IsOpenPixel)
             {
                 request.is_open_pixel = "Y";
-                request.open_percent = (double)campaign.Approved.OpenGoals / campaign.Approved.Quantity;
                 request.open_pixel = campaign.Approved.OpenPixelUrl;
             }
             else
+            {
                 request.is_open_pixel = "N";
+            }
+                
 
             if (!string.IsNullOrEmpty(segment?.SegmentDataFileUrl))
             {
@@ -212,12 +218,14 @@ namespace ADSDataDirect.Web.ProData
         public static void FetchAndUpdateTrackings(WfpictContext db, Campaign campaign)
         {
             LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, $"Starting refresh at {DateTime.Now} ");
-            
+
+            var settings = SettingsManager.Instance.LoadSettings(db);
+
             // orignal order
             var data = Fetch(campaign.OrderNumber);
             SaveProData(db, campaign.Id, campaign.OrderNumber, string.Empty, data);
             var campaignTracking = UpdateTracking(db, campaign, campaign.OrderNumber, string.Empty, data);
-            SaveNotification(db, campaign.Id, campaign.OrderNumber, string.Empty, data.ResponseStatus, campaignTracking);
+            SaveNotification(db, settings, campaign.Id, campaign.OrderNumber, string.Empty, data.ResponseStatus, campaignTracking);
 
             // RDP
             if (campaign.ReBroadcasted)
@@ -225,7 +233,7 @@ namespace ADSDataDirect.Web.ProData
                 var data1 = Fetch(campaign.ReBroadcastedOrderNumber);
                 SaveProData(db, campaign.Id, campaign.ReBroadcastedOrderNumber, string.Empty, data1);
                 var campaignTracking1 = UpdateTracking(db, campaign, campaign.ReBroadcastedOrderNumber, string.Empty, data1);
-                SaveNotification(db, campaign.Id, campaign.ReBroadcastedOrderNumber, string.Empty, data1.ResponseStatus, campaignTracking1);
+                SaveNotification(db, settings, campaign.Id, campaign.ReBroadcastedOrderNumber, string.Empty, data1.ResponseStatus, campaignTracking1);
             }
 
             // segment order
@@ -236,7 +244,7 @@ namespace ADSDataDirect.Web.ProData
                 var data1 = Fetch(segment.SegmentNumber);
                 SaveProData(db, campaign.Id, campaign.OrderNumber, segment.SegmentNumber, data1);
                 var campaignTracking1 = UpdateTracking(db, campaign, campaign.OrderNumber, segment.SegmentNumber, data1);
-                SaveNotification(db, campaign.Id, campaign.OrderNumber, segment.SegmentNumber, data.ResponseStatus, campaignTracking1);
+                SaveNotification(db, settings, campaign.Id, campaign.OrderNumber, segment.SegmentNumber, data.ResponseStatus, campaignTracking1);
             }
         }
 
@@ -345,52 +353,61 @@ namespace ADSDataDirect.Web.ProData
             return campaignTracking;
         }
 
-        private static void SaveNotification(WfpictContext db, Guid? campaignId, string orderNumber, string segmentNumber, string responseStatus, CampaignTracking campaignTracking)
+        private static void SaveNotification(WfpictContext db, SettingsVm settings, Guid? campaignId, string orderNumber, string segmentNumber, string responseStatus, CampaignTracking campaignTracking)
         {
-            int? hoursPassed = DateTime.Now.Hour - campaignTracking.DateSent?.Hour;
+            if(!campaignTracking.DateSent.HasValue) return;
+
+            string message = string.Empty;
+
+            int hoursPassed = DateTime.Now.Subtract(campaignTracking.DateSent.Value).Hours;
             bool problemFound = false;
-            QcRule qcRule = QcRule.NotStartedInFirst4Hours;
+            QcRule qcRule = QcRule.NotStartedInFirstXHours;
             // QC Rule 1
-            if (responseStatus == ProDataResponseStatus.NotFound.ToString() && hoursPassed >= 4)
+            if (responseStatus == ProDataResponseStatus.NotFound.ToString() && hoursPassed >= settings.NotStartedInXHoursValue)
             {
                 problemFound = true;
-                qcRule = QcRule.NotStartedInFirst4Hours;
+                qcRule = QcRule.NotStartedInFirstXHours;
+                message = $"{hoursPassed}Hrs passed and not yet started. Max allowed time {settings.NotStartedInXHoursValue}Hrs";
             }
 
             // QC Rule 2
-            if (campaignTracking.OpenedPercentage < 0.05 && hoursPassed >= 24)
+            if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn24HoursValue / 100.0) && hoursPassed >= 24)
             {
                 problemFound = true;
-                qcRule = QcRule.NotHitOpenRate5In24Hours;
+                qcRule = QcRule.NotHitOpenRateIn24Hours;
+                message = $"{campaignTracking.OpenedPercentage} is less than {settings.NotHitOpenRateIn24HoursValue/100.0}";
             }
 
             // QC Rule 3
-            if (campaignTracking.OpenedPercentage < 0.10 && hoursPassed >= 72)
+            if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn72HoursValue / 100.0) && hoursPassed >= 72)
             {
                 problemFound = true;
-                qcRule = QcRule.NotHitOpenRate10In72Hours;
+                qcRule = QcRule.NotHitOpenRateIn72Hours;
+                message = $"{campaignTracking.OpenedPercentage} is less than {settings.NotHitOpenRateIn72HoursValue / 100.0}";
             }
 
             // QC Rule 4
-            if (campaignTracking.ClickedPercentage < 0.075 && hoursPassed >= 24)
+            if (campaignTracking.ClickedPercentage < (settings.NotHitClickRateIn24HoursValue / 100.0) && hoursPassed >= 24)
             {
                 problemFound = true;
-                qcRule = QcRule.NotHitClickRate750In24Hours;
+                qcRule = QcRule.NotHitClickRateIn24Hours;
+                message = $"{campaignTracking.ClickedPercentage} is less than {settings.NotHitClickRateIn24HoursValue / 100.0}";
             }
 
             // QC Rule 5
-            if (campaignTracking.ClickedPercentage < 0.15 && hoursPassed >= 72)
+            if (campaignTracking.ClickedPercentage < (settings.NotHitClickRateIn72HoursValue / 100.0) && hoursPassed >= 72)
             {
                 problemFound = true;
-                qcRule = QcRule.NotHitClickRate1500In72Hours;
+                qcRule = QcRule.NotHitClickRateIn72Hours;
+                message = $"{campaignTracking.ClickedPercentage} is less than {settings.NotHitClickRateIn72HoursValue / 100.0}";
             }
 
             // QC Rule 6
-            if (campaignTracking.ClickedPercentage < 0.15 && hoursPassed >= 72)
-            {
-                problemFound = true;
-                qcRule = QcRule.MoreThan40PercentIsMobileClicks;
-            }
+            //if (campaignTracking.ClickedPercentage)
+            //{
+            //    problemFound = true;
+            //    qcRule = QcRule.MoreThan40PercentIsMobileClicks;
+            //}
 
             if (!problemFound) return;
 
@@ -400,7 +417,7 @@ namespace ADSDataDirect.Web.ProData
 
             if (alreadyNoted == null)
             {
-                LogHelper.AddLog(db, LogType.RulesProcessing, orderNumber, "Problem found. QCRule " + qcRule);
+                LogHelper.AddLog(db, LogType.RulesProcessing, orderNumber, $"Problem found. QCRule {qcRule} , Message {message}");
                 db.Notifications.Add(new Notification()
                 {
                     Id = Guid.NewGuid(),
@@ -409,6 +426,7 @@ namespace ADSDataDirect.Web.ProData
                     OrderNumber = orderNumber,
                     SegmentNumber = segmentNumber,
                     Status = (int)NotificationStatus.Found,
+                    Message = message,
                     CheckTime = DateTime.Now,
                     FoundAt = DateTime.Now,
                     QcRule = (int)qcRule

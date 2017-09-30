@@ -14,7 +14,7 @@ using Nelibur.ObjectMapper;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class TestingController : BaseController
     {
         public ActionResult Index(Guid? id)
@@ -142,6 +142,15 @@ namespace ADSDataDirect.Web.Controllers
             foreach (var segment in campaign.Segments.OrderBy(x => x.SegmentNumber))
             {
                 var segmentVm = TinyMapper.Map<CampaignSegmentVm>(segment);
+                if (segmentVm.SegmentNumber.EndsWith("A")) // Multi-A, all same as of Main Order
+                {
+                    segmentVm.SubjectLine = campaignTestingVm.SubjectLine;
+                    segmentVm.FromLine = campaignTestingVm.FromLine;
+                    segmentVm.WhiteLabel = campaignTestingVm.WhiteLabel;
+                    segmentVm.Quantity = campaignTestingVm.Quantity;
+                    segmentVm.DeploymentDate = campaignTestingVm.DeployDate;
+                    segmentVm.CreativeFiles = campaignTestingVm.Assets.CreativeFiles;
+                }
                 campaignTestingVm.Segments.Add(segmentVm);
                 _c1 = segment.SegmentNumber.Replace(campaignTestingVm.OrderNumber, string.Empty).ToCharArray().Select(x => ++x).FirstOrDefault();
             }

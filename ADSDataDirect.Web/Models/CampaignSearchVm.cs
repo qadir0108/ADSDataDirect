@@ -12,8 +12,8 @@
 
         public string AdvancedStatus { get; set; }
         public string AdvancedUser { get; set; }
+        public string AdvancedWhiteLabel { get; set; }
         public string CampaignName { get; set; }
-        public string IsTested { get; set; }
         public string OrderedFrom { get; set; }
         public string OrderedTo { get; set; }
         public string BroadcastFrom { get; set; }

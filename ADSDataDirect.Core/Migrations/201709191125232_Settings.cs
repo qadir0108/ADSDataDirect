@@ -22,6 +22,7 @@ namespace ADSDataDirect.Core.Migrations
                     })
                 .PrimaryKey(t => t.Id);
             
+            AddColumn("dbo.Notification", "Message", c => c.String());
             AddColumn("dbo.CampaignTracking", "SentOrder", c => c.String());
             AddColumn("dbo.Customer", "WhiteLabel", c => c.String());
             AddColumn("dbo.Customer", "CompanyName", c => c.String());
@@ -58,6 +59,7 @@ namespace ADSDataDirect.Core.Migrations
             DropColumn("dbo.Customer", "CompanyName");
             DropColumn("dbo.Customer", "WhiteLabel");
             DropColumn("dbo.CampaignTracking", "SentOrder");
+            DropColumn("dbo.Notification", "Message");
             DropTable("dbo.Settings");
             CreateIndex("dbo.AspNetRoleClaims", "RoleID");
             CreateIndex("dbo.AspNetRoleClaims", "ClaimID");

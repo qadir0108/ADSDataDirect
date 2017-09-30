@@ -29,148 +29,21 @@ namespace ADSDataDirect.Web.Controllers
             ViewBag.OrderNumberSortParm = sc.SortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
 
             var campagins = Db.Campaigns
+                .Include(x => x.Testing)
                 .Include(x => x.Approved)
                 .Include(x => x.ProDatas)
                 .Include(x => x.Trackings)
+                .Include(x => x.Segments)
                 .OrderByDescending(x => x.CreatedAt)
-                .Where(x => x.Status == (int)CampaignStatus.Monitoring && x.Approved != null)
-                .ToList();
+                .Where(x => x.Approved != null && (x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring)) );
 
-            switch (sc.SortOrder)
-            {
-                case "CampaignName":
-                    campagins = campagins.OrderBy(s => s.CampaignName).ToList();
-                    break;
-                case "CampaignName_desc":
-                    campagins = campagins.OrderByDescending(s => s.CampaignName).ToList();
-                    break;
-                case "BroadcastDate":
-                    campagins = campagins.OrderBy(s => s.BroadcastDate).ToList();
-                    break;
-                case "BroadcastDate_desc":
-                    campagins = campagins.OrderByDescending(s => s.BroadcastDate).ToList();
-                    break;
-                case "CreatedBy":
-                    campagins = campagins.OrderBy(s => s.CreatedBy).ToList();
-                    break;
-                case "CreatedBy_desc":
-                    campagins = campagins.OrderByDescending(s => s.CreatedBy).ToList();
-                    break;
-                case "Status":
-                    campagins = campagins.OrderBy(s => s.Status).ToList();
-                    break;
-                case "Status_desc":
-                    campagins = campagins.OrderByDescending(s => s.Status).ToList();
-                    break;
-                case "OrderNumber":
-                    campagins = campagins.OrderBy(s => s.OrderNumber).ToList();
-                    break;
-                case "OrderNumber_desc":
-                    campagins = campagins.OrderByDescending(s => s.OrderNumber).ToList();
-                    break;
-                default:
-                    campagins = campagins.OrderByDescending(s => s.OrderNumber).ToList();
-                    break;
-            }
-
-            ViewBag.SearchType = sc.SearchType;
-            switch (sc.SearchType)
-            {
-                case "basic":
-                    if (!string.IsNullOrEmpty(sc.BasicString))
-                    {
-                        campagins = campagins.Where(s =>
-                        s.OrderNumber.Equals(sc.BasicString) ||
-                        s.ReBroadcastedOrderNumber == sc.BasicString ||
-                        s.CampaignName.IndexOf(sc.BasicString, StringComparison.InvariantCultureIgnoreCase) >= 0).ToList();
-                        ViewBag.BasicStringSearched = sc.BasicString;
-                    }
-                    else if (!string.IsNullOrEmpty(sc.BasicStatus))
-                    {
-                        int status = int.Parse(sc.BasicStatus);
-                        if (status == (int)CampaignStatus.Rebroadcasted)
-                            campagins = campagins.Where(s => s.ReBroadcasted).ToList();
-                        else if (status == (int)CampaignStatus.NotRebroadcasted)
-                            campagins = campagins.Where(s => s.ReBroadCast && !s.ReBroadcasted).ToList();
-                        else
-                            campagins = campagins.Where(s => s.Status == status).ToList();
-                        ViewBag.BasicStatusSearched = sc.BasicStatus;
-                    }
-                    else if (!string.IsNullOrEmpty(sc.BasicOrderNumber))
-                    {
-                        campagins = campagins.Where(s => s.Id.ToString().Equals(sc.BasicOrderNumber)).ToList();
-                    }
-                    break;
-                case "advanced":
-                    if (!string.IsNullOrEmpty(sc.AdvancedStatus))
-                    {
-                        int status = int.Parse(sc.AdvancedStatus);
-                        if (status == (int)CampaignStatus.Rebroadcasted)
-                            campagins = campagins.Where(s => s.OrderNumber.EndsWith("RDP")).ToList();
-                        else
-                            campagins = campagins.Where(s => s.Status == status).ToList();
-                        ViewBag.AdvancedStatusSearched = sc.AdvancedStatus;
-                    }
-                    if (!string.IsNullOrEmpty(sc.AdvancedUser))
-                    {
-                        campagins = campagins.Where(s => s.CreatedBy == sc.AdvancedUser).ToList();
-                        ViewBag.AdvancedUserSearched = sc.AdvancedUser;
-                    }
-
-                    if (!string.IsNullOrEmpty(sc.CampaignName))
-                    {
-                        sc.CampaignName = sc.CampaignName.ToLowerInvariant();
-                        campagins = campagins.Where(s => s.CampaignName.IndexOf(sc.CampaignName, StringComparison.CurrentCultureIgnoreCase) >= 0).ToList();
-                        ViewBag.CampaignName = sc.CampaignName;
-                    }
-
-                    if (!string.IsNullOrEmpty(sc.IsTested))
-                    {
-                        bool isTested = bool.Parse(sc.IsTested);
-                        campagins = campagins.Where(s => s.Testing != null
-                                                      && s.Testing?.IsTested == isTested).ToList();
-                        ViewBag.IsTested = sc.IsTested;
-                    }
-
-                    if (!string.IsNullOrEmpty(sc.OrderedFrom))
-                    {
-                        DateTime dateFrom = DateTime.ParseExact(sc.OrderedFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                        campagins = campagins.Where(s => s.CreatedAt.Date >= dateFrom.Date).ToList();
-                        ViewBag.OrderedFrom = sc.OrderedFrom;
-                    }
-
-                    if (!string.IsNullOrEmpty(sc.OrderedTo))
-                    {
-                        DateTime dateTo = DateTime.ParseExact(sc.OrderedTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                        campagins = campagins.Where(s => s.CreatedAt.Date <= dateTo.Date).ToList();
-                        ViewBag.OrderedTo = sc.OrderedTo;
-                    }
-
-                    if (!string.IsNullOrEmpty(sc.BroadcastFrom))
-                    {
-                        DateTime dateFrom = DateTime.ParseExact(sc.BroadcastFrom, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                        campagins = campagins.Where(s => s.BroadcastDate?.Date >= dateFrom.Date).ToList();
-                        ViewBag.BroadcastFrom = sc.BroadcastFrom;
-                    }
-
-                    if (!string.IsNullOrEmpty(sc.BroadcastTo))
-                    {
-                        DateTime dateTo = DateTime.ParseExact(sc.BroadcastTo, "MM/dd/yyyy", CultureInfo.InvariantCulture);
-                        campagins = campagins.Where(s => s.BroadcastDate?.Date <= dateTo.Date).ToList();
-                        ViewBag.BroadcastTo = sc.BroadcastTo;
-                    }
-                    break;
-            }
-           
-            if (LoggedInUser != null && !IsAdmin)
-            {
-                campagins = campagins.Where(s => s.CreatedBy == LoggedInUser.UserName).ToList();
-            }
+            campagins = FilterSortCampaigns(campagins, sc);
 
             ViewBag.BasicOrderNumber = OrderNumberList;
             ViewBag.BasicStatus = StatusList;
             ViewBag.AdvancedStatus = StatusList;
             ViewBag.AdvancedUser = UsersList;
+            ViewBag.AdvancedWhiteLabel = CustomersWithWLList;
 
             var trackingVms = new List<CampaignTrackingVm>();
             foreach (var campaign in campagins)
