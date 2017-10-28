@@ -26,6 +26,15 @@ namespace ADSDataDirect.Web.Async.Helpers
                 MakePublic(fileKey);
         }
 
+        public static bool Exists(string fileKey)
+        {
+            using (IAmazonS3 client = new AmazonS3Client(RegionEndpoint.USWest2))
+            {
+                S3FileInfo s3FileInfo = new S3FileInfo(client, Bucket, fileKey);
+                return s3FileInfo.Exists;
+            }
+        }
+
         public static void Download(string fileKey, string localFilePath)
         {
             using (IAmazonS3 client = new AmazonS3Client(RegionEndpoint.USWest2))

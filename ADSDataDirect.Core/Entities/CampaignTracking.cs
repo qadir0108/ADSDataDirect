@@ -19,10 +19,12 @@ namespace ADSDataDirect.Core.Entities
         // For report
         public string IoNumber { get; set; }
         public DateTime? StartDate { get; set; }
+        public long Deployed { get; set; }
         public long Opened { get; set; }
         public long Clicked { get; set; }
         public long Unsub { get; set; }
         public long Forwards { get; set; }
+        public double DeliveryPercentage { get; set; }
         public double OpenedPercentage { get; set; }
         public double ClickedPercentage { get; set; }
         public double UnsubPercentage { get; set; }

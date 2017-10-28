@@ -50,6 +50,7 @@ namespace ADSDataDirect.Web.Async
                         // write to local data file
                         string fileName = $"{orderNumber}\\{orderNumber}data.csv";
                         var filePath = $"{uploadPath}\\{fileName}";
+                        data.Sort((x, y) => x.Index.CompareTo(y.Index));
                         data.ToCsv(filePath, new CsvDefinition()
                         {
                             EndOfLine = "\r\n",
@@ -97,6 +98,7 @@ namespace ADSDataDirect.Web.Async
                                 data.Where(x => x.Index >= segment.ThirdRangeStart && x.Index <= segment.ThirdRangeEnd).ToList();
                             data2.AddRange(data3);
                             data1.AddRange(data2);
+                            data1 = data1.OrderBy(x => x.Index).ToList();
                             data1.ToCsv(filePath1, new CsvDefinition()
                             {
                                 EndOfLine = "\r\n",
@@ -119,7 +121,7 @@ namespace ADSDataDirect.Web.Async
                                     }
                             });
                             string amazonFileKey1 = $"{campaign.OrderNumber}/{segment.SegmentNumber}data.csv";
-                            S3FileManager.Upload(amazonFileKey1, filePath, true);
+                            S3FileManager.Upload(amazonFileKey1, filePath1, true);
 
                             segment.SegmentDataFileUrl = FileManager.GetFilePathLive(UploadFileType.DataFile,
                                 campaign.OrderNumber, string.Empty, segment.SegmentNumber);

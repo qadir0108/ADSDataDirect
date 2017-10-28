@@ -15,7 +15,7 @@
         <div class="form-horizontal">
             <div class="tabbable-panel">
                 <div class="tabbable-line">
-                    <ul class="nav nav-tabs ">
+                    <ul class="nav nav-tabs" id="myTab">
                         <li class="active">
                             <a href="#tab_default_1" data-toggle="tab">
                                 Details
@@ -674,7 +674,8 @@
                            if (response.IsSucess) {
                                debugger;
                                wfp.showSuccess('Multi ' + segment + ' has been DELETED successfully.');
-                               btnDelete.parent().parent().parent().remove();
+                               //btnDelete.parent().parent().parent().remove();
+                               wfp.redirectTo();
                            } else {
                                wfp.showError(response.ErrorMessage);
                            }
@@ -688,21 +689,14 @@
                });
         });
 
-        //// Javascript to enable link to tab
-        //var url = document.location.toString();
-        //if (url.match('#')) {
-        //    $('.nav-tabs a[href="#' + url.split('#')[1] + '-tab"]').tab('show');
-        //} //add a suffix
-
-        //// Change hash for page-reload
-        //$('.nav-tabs a').on('shown.bs.tab', function (e) {
-        //    window.location.hash = e.target.hash;
-        //    window.scrollTo(0, 0);
-        //})
-        //debugger;
-        //var from = wfp.getURLParameter('from');
-        //$('#tab' + from).tab('show');
-
+        $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+            localStorage.setItem('activeTab', $(e.target).attr('href'));
+        });
+        var activeTab = localStorage.getItem('activeTab');
+        if (activeTab) {
+            $('#myTab a[href="' + activeTab + '"]').tab('show');
+        }
+       
     });
 </script>
 

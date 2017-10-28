@@ -63,6 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DB\SegmentResponse1.cs" />
     <Compile Include="DB\SegmentResponse.cs" />
     <Compile Include="DB\SegmentParameters.cs" />
     <Compile Include="DB\SegmentDataManager.cs" />
@@ -113,6 +114,10 @@
     <Compile Include="Migrations\201709191125232_Settings.Designer.cs">
       <DependentUpon>201709191125232_Settings.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201710281632324_TrackingChanges.cs" />
+    <Compile Include="Migrations\201710281632324_TrackingChanges.Designer.cs">
+      <DependentUpon>201710281632324_TrackingChanges.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
     <Compile Include="Entities\WFPRole.cs" />
@@ -157,6 +162,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201709191125232_Settings.resx">
       <DependentUpon>201709191125232_Settings.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201710281632324_TrackingChanges.resx">
+      <DependentUpon>201710281632324_TrackingChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

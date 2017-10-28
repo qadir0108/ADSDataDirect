@@ -14,7 +14,7 @@ using Nelibur.ObjectMapper;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class ApprovedController : BaseController
     {
         public ActionResult Index(Guid? id)
@@ -80,8 +80,12 @@ namespace ADSDataDirect.Web.Controllers
                 campaign.ApprovedId = approvedId;
                 Db.SaveChanges();
             }
-            campaign.Status = (int)CampaignStatus.Approved;
-            Db.SaveChanges();
+            // Only update status when not in monitoring
+            if (campaign.Status < (int)CampaignStatus.Monitoring)
+            {
+                campaign.Status = (int)CampaignStatus.Approved;
+                Db.SaveChanges();
+            }
             return RedirectToAction("EditApproved", "Approved", new { id = campaign.ApprovedId });
 
         }

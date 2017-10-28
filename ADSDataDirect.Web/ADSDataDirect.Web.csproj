@@ -309,6 +309,7 @@
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Helpers\AdsException.cs" />
     <Compile Include="Helpers\AdsCache.cs" />
+    <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\SettingsManager.cs" />
     <Compile Include="Models\SettingsVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
@@ -943,7 +944,7 @@
     <Content Include="Views\Campaigns\Cancel.cshtml" />
     <Content Include="Views\Campaigns\Rebroad.cshtml" />
     <Content Include="Views\Campaigns\Complete.cshtml" />
-    <Content Include="Templates\Tracking2.xlsx" />
+    <Content Include="Templates\Tracking3.xlsx" />
     <Content Include="ADSDataDirect.Web.ruleset" />
     <Content Include="Views\Company\Permissions.cshtml" />
     <Content Include="Views\Company\Roles.cshtml" />
@@ -951,6 +952,7 @@
     <Content Include="Views\Customer\New.cshtml" />
     <Content Include="Views\Notification\Settings.cshtml" />
     <Content Include="Views\Tracking\Sent.cshtml" />
+    <Content Include="Templates\Tracking2.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

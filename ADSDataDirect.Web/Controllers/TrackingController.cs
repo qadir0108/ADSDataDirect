@@ -121,10 +121,6 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult DownloadReport(Guid? id, Guid? trackingId)
         {
-            if (id == null)
-            {
-                throw new HttpException(400, "Bad Request");
-            }
             Campaign campaign = Db.Campaigns
                 .Include(x => x.Assets)
                 .Include(x => x.Segments)
@@ -135,22 +131,22 @@ namespace ADSDataDirect.Web.Controllers
                 .FirstOrDefault(x => x.Id == id);
             if (campaign == null)
             {
-                throw new HttpException(404, "Not found");
+                TempData["Error"] = "Campaign not found.";
+                return RedirectToAction("Index", "Campaigns");
             }
             if (campaign.Approved == null)
             {
                 TempData["Error"] = "Campaign is not passed through Testing and Approved phase.";
                 return RedirectToAction("Index", "Campaigns");
             }
-
             var campaignTracking = campaign.Trackings.FirstOrDefault(x => x.Id == trackingId);
             if (campaignTracking == null)
             {
                 TempData["Error"] = "No Tracking data available.";
                 return RedirectToAction("Index", "Campaigns");
             }
-            var model = CampaignTrackingVm.FromCampaignTracking(campaign, campaignTracking);
 
+            var model = CampaignTrackingVm.FromCampaignTracking(campaign, campaignTracking);
             string creativeUrl = campaign.Assets.CreativeUrl,
                 imagePathTemp = $"{UploadPath}\\{model.OrderNumber}t.png",
                 imagePath = $"{UploadPath}\\{model.OrderNumber}.png",
@@ -177,11 +173,13 @@ namespace ADSDataDirect.Web.Controllers
                 ? DefaultTemplate
                 : $"~/Templates/{whiteLable.ReportTemplate}.xlsx";
 
-            if (templateFile == $"~/Templates/Tracking1.xlsx")
+            bool isStrategus = "Strategus".Equals(campaign.Approved.WhiteLabel);
+
+            if (templateFile == $"~/Templates/Tracking1.xlsx" || templateFile == $"~/Templates/Tracking2.xlsx")
             {
                 helper.ResizeImage(logoFilePath, logoResized, 650, 116, true);
-                TrackingReports.GenerateTemplate1(model, Server.MapPath(templateFile), logoResized, imagePath, filePath);
-            }
+                TrackingReports.GenerateTemplate1(model, Server.MapPath(templateFile),  !isStrategus, logoResized, imagePath, filePath);
+            } 
             else
             {
                 helper.ResizeImage(logoFilePath, logoResized, 500, 86, true);

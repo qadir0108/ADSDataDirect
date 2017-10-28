@@ -56,8 +56,13 @@ namespace ADSDataDirect.Web
 
             try
             {
-                EmailHelper.SendErrorEmail(ConfigurationManager.AppSettings["ErrorEmailAddress"], ex, currentController,
-                    currentAction);
+                if(ex is HttpException)
+                {
+                    if(((HttpException)ex).GetHttpCode() != 404)
+                    {
+                        EmailHelper.SendErrorEmail(ConfigurationManager.AppSettings["ErrorEmailAddress"], ex, currentController, currentAction);
+                    }
+                }
             }
             catch (Exception exx)
             {

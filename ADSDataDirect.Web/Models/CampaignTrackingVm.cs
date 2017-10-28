@@ -3,7 +3,6 @@ using System.Linq;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Web.ProData;
-using Antlr.Runtime.Misc;
 
 namespace ADSDataDirect.Web.Models
 {
@@ -26,10 +25,12 @@ namespace ADSDataDirect.Web.Models
 
         public string IoNumber { get; set; }
         public string StartDate { get; set; }
+        public string Deployed { get; set; }
         public string Opened { get; set; }
         public string Clicked { get; set; }
         public string Unsub { get; set; }
         public string Forwards { get; set; }
+        public string DeliveryPercentage { get; set; }
         public string OpenedPercentage { get; set; }
         public string ClickedPercentage { get; set; }
         public string UnsubPercentage { get; set; }
@@ -64,6 +65,7 @@ namespace ADSDataDirect.Web.Models
 
                 IoNumber = campaignTracking.IoNumber,
                 StartDate = campaignTracking.StartDate?.ToString(StringConstants.DateFormatSlashes),
+                Deployed = campaignTracking.Deployed == 0 ? "NA" : campaignTracking.Deployed.ToString(),
                 Opened = campaignTracking.Opened == 0 ? "NA" : campaignTracking.Opened.ToString(),
                 Clicked = campaignTracking.Clicked == 0 ? "NA" : campaignTracking.Clicked.ToString(),
                 Unsub = campaignTracking.Unsub == 0 ? "NA" : campaignTracking.Unsub.ToString(),
@@ -72,6 +74,7 @@ namespace ADSDataDirect.Web.Models
                 Desktop = campaignTracking.Desktop.ToString(),
                 Bounce = campaignTracking.Bounce.ToString(),
                 Opt = campaignTracking.Opt.ToString(),
+                DeliveryPercentage = campaignTracking.DeliveryPercentage.ToString("0.00%"),
                 OpenedPercentage = campaignTracking.OpenedPercentage.ToString("0.00%"),
                 ClickedPercentage = campaignTracking.ClickedPercentage.ToString("0.00%"),
                 UnsubPercentage = campaignTracking.UnsubPercentage.ToString("0.00%"),

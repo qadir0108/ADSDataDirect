@@ -11,6 +11,7 @@ using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
 using Hangfire;
 using Nelibur.ObjectMapper;
+using ADSDataDirect.Web.Async.Helpers;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -94,8 +95,13 @@ namespace ADSDataDirect.Web.Controllers
                 campaign.TestingId = testingId;
                 Db.SaveChanges();
             }
-            campaign.Status = (int)CampaignStatus.Testing;
-            Db.SaveChanges();
+
+            // Only update status when not in monitoring
+            if(campaign.Status < (int)CampaignStatus.Monitoring)
+            {
+                campaign.Status = (int)CampaignStatus.Testing;
+                Db.SaveChanges();
+            }
             return RedirectToAction("EditTesting", "Testing", new { id = campaign.TestingId });
         }
 
@@ -167,13 +173,27 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult NewSegment(string orderNumber)
         {
+            Campaign campaign = Db.Campaigns
+                  .Include(x => x.Assets).Include(x => x.Testing)
+                  .FirstOrDefault(x => x.OrderNumber == orderNumber);
+
             var segment = new CampaignSegment()
             {
                 Id = Guid.NewGuid(),
                 CreatedAt = DateTime.Now,
-                SegmentNumber = orderNumber + _c1++
+                SegmentNumber = orderNumber + _c1,
             };
-            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text");
+            if (_c1 == 'A')
+            {
+                segment.SubjectLine = campaign.Testing.SubjectLine;
+                segment.FromLine = campaign.Testing.FromLine;
+                segment.WhiteLabel = campaign.Testing.WhiteLabel;
+                segment.Quantity = campaign.Testing.Quantity;
+                segment.DeploymentDate = campaign.Testing.DeployDate;
+                segment.CreativeFiles = campaign.Assets.CreativeFiles;
+            }
+            _c1++;
+            ViewBag.WhiteLabel = new SelectList(CustomersWithWLList, "Value", "Text", campaign.Testing.WhiteLabel);
             return PartialView("~/Views/Shared/Editors/_NewSegment.cshtml", segment);
         }
 

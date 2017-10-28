@@ -17,24 +17,24 @@
             <div class="form-horizontal">
             <div class="tabbable-panel">
             <div class="tabbable-line">
-            <ul class="nav nav-tabs ">
+            <ul class="nav nav-tabs " id="myTab">
                 <li class="active">
                     <a href="#tab_default_1" data-toggle="tab">
                         Details
                     </a>
                 </li>
                 <li>
-                    <a href="#tab_default_2" data-toggle="tab">
+                    <a href="#tab_default_3" data-toggle="tab">
                         Additional Information
                     </a>
                 </li>
                 <li>
-                    <a href="#tab_default_3" data-toggle="tab">
+                    <a href="#tab_default_4" data-toggle="tab">
                         Data & Multi drop
                     </a>
                 </li>
                 <li>
-                    <a href="#tab_default_4" data-toggle="tab">
+                    <a href="#tab_default_5" data-toggle="tab">
                         Digital Plus
                     </a>
                 </li>
@@ -188,7 +188,7 @@
                 </div>
 
             </div>
-            <div class="tab-pane" id="tab_default_2">
+            <div class="tab-pane" id="tab_default_3">
                 <div class="headertab">
                     Additional Information
                 </div>
@@ -234,7 +234,7 @@
                     </div>
                 </div>
             </div>
-            <div class="tab-pane" id="tab_default_3">
+            <div class="tab-pane" id="tab_default_4">
 
                 <div class="headertab">
                     Data & Multi drop
@@ -263,7 +263,7 @@
                 }
 
             </div>
-            <div class="tab-pane" id="tab_default_4">
+            <div class="tab-pane" id="tab_default_5">
                 <div class="headertab">
                     Digital Plus
                 </div>
@@ -547,6 +547,14 @@
                            });
                        });
                 });
+
+                $('a[data-toggle="tab"]').on('show.bs.tab', function (e) {
+                    localStorage.setItem('activeTab', $(e.target).attr('href'));
+                });
+                var activeTab = localStorage.getItem('activeTab');
+                if (activeTab) {
+                    $('#myTab a[href="' + activeTab + '"]').tab('show');
+                }
             });
         </script>
 

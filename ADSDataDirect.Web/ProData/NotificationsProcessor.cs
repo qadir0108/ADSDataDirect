@@ -16,7 +16,7 @@ namespace ADSDataDirect.Web.ProData
     {
         public static void FetchAndCheckForQcRules()
         {
-            DateTime dtFrom = DateTime.ParseExact("09/15/2017", "MM/dd/2017",CultureInfo.InvariantCulture);
+            DateTime dtFrom = DateTime.ParseExact("10/15/2017", "MM/dd/2017",CultureInfo.InvariantCulture);
             using (var db = new WfpictContext())
             {
                 bool isAutoProcessTracking = false;

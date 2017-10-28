@@ -116,7 +116,7 @@ namespace ADSDataDirect.Web.ProData
         {
             if (ConfigurationManager.AppSettings["IsLive"] == "false")
             {
-                orderNumber = "2752";
+                orderNumber = "3105";
             }
 
             ProDataResponse proDataResponse = null;
@@ -225,7 +225,7 @@ namespace ADSDataDirect.Web.ProData
             var data = Fetch(campaign.OrderNumber);
             SaveProData(db, campaign.Id, campaign.OrderNumber, string.Empty, data);
             var campaignTracking = UpdateTracking(db, campaign, campaign.OrderNumber, string.Empty, data);
-            SaveNotification(db, settings, campaign.Id, campaign.OrderNumber, string.Empty, data.ResponseStatus, campaignTracking);
+            SaveNotification(db, settings, campaign.Id, campaign.OrderNumber, string.Empty, campaign.Approved.DeployDate, data.ResponseStatus, campaignTracking);
 
             // RDP
             if (campaign.ReBroadcasted)
@@ -233,7 +233,7 @@ namespace ADSDataDirect.Web.ProData
                 var data1 = Fetch(campaign.ReBroadcastedOrderNumber);
                 SaveProData(db, campaign.Id, campaign.ReBroadcastedOrderNumber, string.Empty, data1);
                 var campaignTracking1 = UpdateTracking(db, campaign, campaign.ReBroadcastedOrderNumber, string.Empty, data1);
-                SaveNotification(db, settings, campaign.Id, campaign.ReBroadcastedOrderNumber, string.Empty, data1.ResponseStatus, campaignTracking1);
+                SaveNotification(db, settings, campaign.Id, campaign.ReBroadcastedOrderNumber, string.Empty, campaign.ReBroadcastedDate, data1.ResponseStatus, campaignTracking1);
             }
 
             // segment order
@@ -244,7 +244,7 @@ namespace ADSDataDirect.Web.ProData
                 var data1 = Fetch(segment.SegmentNumber);
                 SaveProData(db, campaign.Id, campaign.OrderNumber, segment.SegmentNumber, data1);
                 var campaignTracking1 = UpdateTracking(db, campaign, campaign.OrderNumber, segment.SegmentNumber, data1);
-                SaveNotification(db, settings, campaign.Id, campaign.OrderNumber, segment.SegmentNumber, data.ResponseStatus, campaignTracking1);
+                SaveNotification(db, settings, campaign.Id, campaign.OrderNumber, segment.SegmentNumber, segment.DeploymentDate, data.ResponseStatus, campaignTracking1);
             }
         }
 
@@ -279,9 +279,12 @@ namespace ADSDataDirect.Web.ProData
                         Destination_URL = report.Destination_URL,
                         CampaignStartDate = report.CampaignStartDate,
                         ClickCount = long.Parse(report.ClickCount),
-                        //UniqueCnt = report.UniqueCnt, // unique should be 15-20% less then total click
+                        //UniqueCnt = report.UniqueCnt, 
+                        // unique should be 15-20% less then total click
                         UniqueCnt = long.Parse(report.ClickCount) * Random.Next(80, 85) / 100,
-                        MobileCnt = report.MobileCnt,
+                        //MobileCnt = report.MobileCnt,
+                        // mobile count should be 30-40 of total click
+                        MobileCnt = long.Parse(report.ClickCount) * Random.Next(30, 40) / 100,
                         ImpressionCnt = report.ImpressionCnt,
                         IO = report.IO
                     });
@@ -335,14 +338,16 @@ namespace ADSDataDirect.Web.ProData
             DateTime.TryParse(report.CampaignStartDate, out startDateTime);
             campaignTracking.IoNumber = report.IO;
             campaignTracking.StartDate = startDateTime;
+            campaignTracking.Deployed = (long)(campaignTracking.Quantity  * (1 + Random.Next(2, 30) / 10000.0));
             campaignTracking.Opened = campaign.Approved.IsUseApiDataForOpen ? report.ImpressionCnt : API.Campaign.GetOpens(campaignTracking.Quantity, startDateTime);
             campaignTracking.Clicked = reports.Sum(x => long.Parse(x.ClickCount));
             campaignTracking.Mobile = reports.Sum(x => x.MobileCnt);
             campaignTracking.Desktop = report.UniqueCnt;
             campaignTracking.Unsub = Random.Next(1, 100);
             campaignTracking.Forwards = Random.Next(1, 100);
-            campaignTracking.Bounce = Random.Next(1, 30);
+            campaignTracking.Bounce = campaignTracking.Deployed - campaignTracking.Quantity; //Random.Next(1, 30);
             campaignTracking.Opt = Random.Next(1, 30);
+            campaignTracking.DeliveryPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Quantity / campaignTracking.Deployed;
             campaignTracking.OpenedPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Opened / campaignTracking.Quantity;
             campaignTracking.ClickedPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Clicked / campaignTracking.Quantity;
             campaignTracking.UnsubPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Unsub / campaignTracking.Quantity;
@@ -353,13 +358,13 @@ namespace ADSDataDirect.Web.ProData
             return campaignTracking;
         }
 
-        private static void SaveNotification(WfpictContext db, SettingsVm settings, Guid? campaignId, string orderNumber, string segmentNumber, string responseStatus, CampaignTracking campaignTracking)
+        private static void SaveNotification(WfpictContext db, SettingsVm settings, Guid? campaignId, string orderNumber, string segmentNumber, DateTime? deployDate, string responseStatus, CampaignTracking campaignTracking)
         {
-            if(!campaignTracking.DateSent.HasValue) return;
+            if(!deployDate.HasValue) return;
 
             string message = string.Empty;
 
-            int hoursPassed = DateTime.Now.Subtract(campaignTracking.DateSent.Value).Hours;
+            int hoursPassed = DateTime.Now.Subtract(deployDate.Value).Hours;
             bool problemFound = false;
             QcRule qcRule = QcRule.NotStartedInFirstXHours;
             // QC Rule 1
