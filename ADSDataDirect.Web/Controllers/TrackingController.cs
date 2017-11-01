@@ -146,47 +146,52 @@ namespace ADSDataDirect.Web.Controllers
                 return RedirectToAction("Index", "Campaigns");
             }
 
+            var whiteLable = Db.Customers.FirstOrDefault(x => x.WhiteLabel == campaign.Approved.WhiteLabel);
+            if (whiteLable == null)
+            {
+                TempData["Error"] = "Campaign White Label not set in approved screen.";
+                return RedirectToAction("Index", "Campaigns");
+            }
+
             var model = CampaignTrackingVm.FromCampaignTracking(campaign, campaignTracking);
             string creativeUrl = campaign.Assets.CreativeUrl,
-                imagePathTemp = $"{UploadPath}\\{model.OrderNumber}t.png",
-                imagePath = $"{UploadPath}\\{model.OrderNumber}.png",
-                fileName = $"{model.OrderNumber}.xlsx",
-                filePath = Path.Combine(DownloadPath, fileName);
+                screenshotFilePathTemp = $"{UploadPath}\\{model.OrderNumber}t.png",
+                screenshotFilePath = $"{UploadPath}\\{model.OrderNumber}.png",
+                outputFileName = $"{model.OrderNumber}.xlsx",
+                outputFilePath = Path.Combine(DownloadPath, outputFileName);
             
-            var helper = new ImageHelper(creativeUrl, imagePathTemp);
-            if (!System.IO.File.Exists(imagePath))
+            var helper = new ImageHelper(creativeUrl, screenshotFilePathTemp);
+            if (!System.IO.File.Exists(screenshotFilePath))
             {
                 helper.Capture();
-                if (System.IO.File.Exists(imagePathTemp))
-                    helper.ResizeImage(imagePathTemp, imagePath, 600, 750, true);
-                if (System.IO.File.Exists(imagePathTemp))
-                    System.IO.File.Delete(imagePathTemp);
-            }
-            // !string.IsNullOrEmpty(LoggedInUser?.Customer?.CompanyLogo) $"{ImagesPath}\\{LoggedInUser?.Customer?.CompanyLogo}"
-            var whiteLable = Db.Customers.FirstOrDefault(x => x.WhiteLabel == campaign.Approved.WhiteLabel);
-            string logoFilePath = string.IsNullOrEmpty(campaign.Approved.WhiteLabel) || whiteLable == null
-                ? $"{ImagesPath}\\logo1.png"
-                : $"{ImagesPath}\\{whiteLable.CompanyLogo}";
-
-            string logoResized = $"{ImagesPath}\\logoResized.png";
-            string templateFile = string.IsNullOrEmpty(campaign.Approved.WhiteLabel) || whiteLable == null
-                ? DefaultTemplate
-                : $"~/Templates/{whiteLable.ReportTemplate}.xlsx";
-
-            bool isStrategus = "Strategus".Equals(campaign.Approved.WhiteLabel);
-
-            if (templateFile == $"~/Templates/Tracking1.xlsx" || templateFile == $"~/Templates/Tracking2.xlsx")
-            {
-                helper.ResizeImage(logoFilePath, logoResized, 650, 116, true);
-                TrackingReports.GenerateTemplate1(model, Server.MapPath(templateFile),  !isStrategus, logoResized, imagePath, filePath);
-            } 
-            else
-            {
-                helper.ResizeImage(logoFilePath, logoResized, 500, 86, true);
-                TrackingReports.GenerateTemplate2(model, Server.MapPath(templateFile), logoResized, imagePath, filePath);
             }
 
-            return File(filePath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", fileName);
+            int ScreenshotHeight = 100;
+            BaseTrackingReport report = null;
+            switch (whiteLable.ReportTemplate)
+            {
+                case "Tracking1":
+                case "Tracking2":
+                    report = new TrackingReportTemplate12(whiteLable.ReportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
+                    ScreenshotHeight = 750;
+                    break;
+                case "Tracking3":
+                case "Tracking4":
+                    report = new TrackingReportTemplate34(whiteLable.ReportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
+                    ScreenshotHeight = 600;
+                    break;
+                default:
+                    report = new TrackingReportTemplate12(whiteLable.ReportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
+                    break;
+            }
+            if (System.IO.File.Exists(screenshotFilePathTemp))
+            {
+                ImageResizer.Resize(screenshotFilePathTemp, screenshotFilePath, 600, ScreenshotHeight, true);
+                System.IO.File.Delete(screenshotFilePathTemp);
+            }
+            report.Generate(model, outputFilePath);
+            
+            return File(outputFilePath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", outputFileName);
         }
 
         public JsonResult RefreshProData(Guid? id)

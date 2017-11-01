@@ -57,19 +57,7 @@ namespace ADSDataDirect.Web.Controllers
                 return LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin);
             }
         }
-
-        protected readonly string DefaultTemplate = $"~/Templates/Tracking1.xlsx";
-        //protected string TemplateFile
-        //{
-        //    get
-        //    {
-        //        if (LoggedInUser.Customer == null) return DefaultTemplate;
-        //        return string.IsNullOrEmpty(LoggedInUser?.Customer?.ReportTemplate) ?
-        //            DefaultTemplate :
-        //            $"~/Templates/{LoggedInUser?.Customer?.ReportTemplate}.xlsx";
-        //    }
-        //}
-
+        
         readonly string _uploadPath = $"~/Uploads";
         protected string UploadPath
         {

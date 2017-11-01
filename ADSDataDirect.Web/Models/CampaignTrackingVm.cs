@@ -55,7 +55,7 @@ namespace ADSDataDirect.Web.Models
                 WhiteLabel = campaign.Approved.WhiteLabel,
                 SubjectLine = campaign.Approved.SubjectLine,
                 FromLine = campaign.Approved.FromLine,
-                Quantity = campaignTracking.Quantity.ToString(),
+                Quantity = string.Format("{0:n0}", campaignTracking.Quantity),
                 Status = ((CampaignStatus)campaign.Status).ToString(),
                 OrderDate = campaign.CreatedAt.ToString(StringConstants.DateFormatSlashes),
                 DateSent = campaignTracking.CreatedAt.ToString(StringConstants.DateFormatSlashes),
@@ -65,15 +65,15 @@ namespace ADSDataDirect.Web.Models
 
                 IoNumber = campaignTracking.IoNumber,
                 StartDate = campaignTracking.StartDate?.ToString(StringConstants.DateFormatSlashes),
-                Deployed = campaignTracking.Deployed == 0 ? "NA" : campaignTracking.Deployed.ToString(),
-                Opened = campaignTracking.Opened == 0 ? "NA" : campaignTracking.Opened.ToString(),
-                Clicked = campaignTracking.Clicked == 0 ? "NA" : campaignTracking.Clicked.ToString(),
-                Unsub = campaignTracking.Unsub == 0 ? "NA" : campaignTracking.Unsub.ToString(),
-                Forwards = campaignTracking.Forwards == 0 ? "NA" : campaignTracking.Forwards.ToString(),
-                Mobile = campaignTracking.Mobile.ToString(),
-                Desktop = campaignTracking.Desktop.ToString(),
-                Bounce = campaignTracking.Bounce.ToString(),
-                Opt = campaignTracking.Opt.ToString(),
+                Deployed = campaignTracking.Deployed == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Deployed),
+                Opened = campaignTracking.Opened == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Opened),
+                Clicked = campaignTracking.Clicked == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Clicked),
+                Unsub = campaignTracking.Unsub == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Unsub),
+                Forwards = campaignTracking.Forwards == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Forwards),
+                Mobile = string.Format("{0:n0}", campaignTracking.Mobile),
+                Desktop = string.Format("{0:n0}", campaignTracking.Desktop),
+                Bounce = string.Format("{0:n0}", campaignTracking.Bounce),
+                Opt = string.Format("{0:n0}", campaignTracking.Opt),
                 DeliveryPercentage = campaignTracking.DeliveryPercentage.ToString("0.00%"),
                 OpenedPercentage = campaignTracking.OpenedPercentage.ToString("0.00%"),
                 ClickedPercentage = campaignTracking.ClickedPercentage.ToString("0.00%"),
@@ -101,12 +101,11 @@ namespace ADSDataDirect.Web.Models
                     IoNumber = proData.IO,
                     OrderNumber = proData.Reportsite_URL,
                     Link = proData.Destination_URL,
-                    ClickCount = proData.ClickCount.ToString(),
-                    UniqueCount = proData.UniqueCnt.ToString(),
-                    MobileCount = proData.MobileCnt.ToString()
+                    ClickCount = string.Format("{0:n0}", proData.ClickCount),
+                    UniqueCount = string.Format("{0:n0}", proData.UniqueCnt),
+                    MobileCount = string.Format("{0:n0}", proData.MobileCnt)
                 });
             }
-
             return model;
         }
     }

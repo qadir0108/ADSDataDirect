@@ -310,6 +310,8 @@
     <Compile Include="Helpers\AdsException.cs" />
     <Compile Include="Helpers\AdsCache.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
+    <Compile Include="Helpers\ExcelHelper_Old.cs" />
+    <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Helpers\SettingsManager.cs" />
     <Compile Include="Models\SettingsVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
@@ -387,13 +389,16 @@
     <Compile Include="Models\UploadFileVm.cs" />
     <Compile Include="Models\UserProfileVm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Reports\BaseTrackingReport.cs" />
     <Compile Include="Reports\CampaignDatasetType.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CampaignDatasetType.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\TrackingReports.cs" />
+    <Compile Include="Reports\ITrackingReport.cs" />
     <Compile Include="Reports\ReportModel.cs" />
+    <Compile Include="Reports\TrackingReportTemplate34.cs" />
+    <Compile Include="Reports\TrackingReportTemplate12.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -953,6 +958,7 @@
     <Content Include="Views\Notification\Settings.cshtml" />
     <Content Include="Views\Tracking\Sent.cshtml" />
     <Content Include="Templates\Tracking2.xlsx" />
+    <Content Include="Templates\Tracking4.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
