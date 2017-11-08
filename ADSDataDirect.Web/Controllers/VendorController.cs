@@ -11,7 +11,6 @@ namespace ADSDataDirect.Web.Controllers
     [Authorize]
     public class VendorController : BaseController
     {
-        private const int PageSize = 15;
         public ActionResult Index(CampaignSearchVm sc)
         {
             var vendors = Db.Vendors.Select(x =>

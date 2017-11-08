@@ -61,7 +61,6 @@ namespace ADSDataDirect.Web
                  "~/js/toastr.min.js",
                  "~/js/jquery.blockUI.js",
                  "~/js/accounting.min.js", 
-                 "~/js/wfp.js",
                  "~/js/nav.js",
                  "~/js/jquery.unobtrusive-ajax.min.js",
                  "~/Scripts/select2.min.js",

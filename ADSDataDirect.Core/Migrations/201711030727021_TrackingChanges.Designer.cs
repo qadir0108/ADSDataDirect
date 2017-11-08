@@ -13,7 +13,7 @@ namespace ADSDataDirect.Core.Migrations
         
         string IMigrationMetadata.Id
         {
-            get { return "201710281632324_TrackingChanges"; }
+            get { return "201711030727021_TrackingChanges"; }
         }
         
         string IMigrationMetadata.Source

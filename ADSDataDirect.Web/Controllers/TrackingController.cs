@@ -166,7 +166,7 @@ namespace ADSDataDirect.Web.Controllers
                 helper.Capture();
             }
 
-            int ScreenshotHeight = 100;
+            int ScreenshotHeight = 500;
             BaseTrackingReport report = null;
             switch (whiteLable.ReportTemplate)
             {
@@ -178,7 +178,7 @@ namespace ADSDataDirect.Web.Controllers
                 case "Tracking3":
                 case "Tracking4":
                     report = new TrackingReportTemplate34(whiteLable.ReportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
-                    ScreenshotHeight = 600;
+                    ScreenshotHeight = 550;
                     break;
                 default:
                     report = new TrackingReportTemplate12(whiteLable.ReportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
@@ -213,9 +213,6 @@ namespace ADSDataDirect.Web.Controllers
                 }
 
                 ProDataApiManager.FetchAndUpdateTrackings(Db, campaign);
-
-                // Only updating prodata
-                //ProDataApiManager.FetchAndUpdateProDatas(Db, orderNumber);
 
                 return Json(new JsonResponse() { IsSucess = true });
             }

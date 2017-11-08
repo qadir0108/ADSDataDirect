@@ -8,6 +8,7 @@ using System.Web.Routing;
 using ADSDataDirect.Web.Async.Helpers;
 using ADSDataDirect.Web.Controllers;
 using ADSDataDirect.Web.Hangfire;
+using ADSDataDirect.Web.Smartsheet;
 
 namespace ADSDataDirect.Web
 {
@@ -23,9 +24,6 @@ namespace ADSDataDirect.Web
             BundleConfig.RegisterBundles(BundleTable.Bundles);
 
             HangfireBootstrapper.Instance.Start();
-
-            //ViewEngines.Engines.Clear();
-            //ViewEngines.Engines.Add(new RazorViewEngine());
         }
 
         protected void Application_End(object sender, EventArgs e)

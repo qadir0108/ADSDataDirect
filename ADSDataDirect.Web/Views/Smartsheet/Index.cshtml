@@ -1,0 +1,78 @@
+﻿@using ADSDataDirect.Core.Entities
+@using ADSDataDirect.Enums
+@using ADSDataDirect.Web.Helpers
+@using ADSDataDirect.Web.Models
+@using PagedList.Mvc
+@model List<string>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Smart sheets</h2>
+
+<table class="table">
+    @foreach (var item in Model)
+    {
+    <tr>
+        <td>
+            <label for="@item" class="control-label">@item </label>
+        </td>
+        <td>
+            <a class="btnImport" href="#" data-name="@item" title="Import" data-tooltip="tooltip">
+                <span class="fa fa-download"></span>
+            </a>
+        </td>
+    </tr>
+
+    }
+</table>
+
+<script type="text/javascript">
+
+        var wfp = wfp || {};
+
+        $(document).ready(function () {
+
+            $('.btnImport').click(function (e) {
+                debugger;
+
+                e.preventDefault();
+
+                var name = $(this).data('name');
+                var dataToPost = {
+                    sheetName: name
+                };
+
+                wfp.showSwal("Are you sure to import orders from Smartsheet: " + name + " ?",
+                    function () {
+
+                        debugger;
+                        $.ajax({
+                            type: "POST",
+                            url: "/Smartsheet/Import",
+                            data: JSON.stringify(dataToPost),
+                            contentType: "application/json; charset=utf-8",
+                            success: function (response) {
+                                debugger;
+                                if (response === "") wfp.reload();
+                                if (response.IsSucess) {
+                                    debugger;
+                                    wfp.showSucessSwal(response.Result);
+                                } else {
+                                    wfp.showErrorSwal(response.ErrorMessage);
+                                }
+                            },
+                            failure: function (response) {
+                                wfp.showError('There is erorr in service call.');
+                            },
+                            complete: function () {
+                            }
+                        });
+                    });
+            });
+
+        });
+
+</script>

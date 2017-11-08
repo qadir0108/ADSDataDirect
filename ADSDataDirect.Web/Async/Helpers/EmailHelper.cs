@@ -85,17 +85,17 @@ namespace ADSDataDirect.Web.Async.Helpers
 
         public static string SendApprovedToVendor(Vendor vendor, Campaign campaign, CampaignSegment segment)
         {
-            string newOld = !campaign.ReBroadcasted ? "New" : "RDP";
-            string deployDate = campaign.Approved.DeployDate?.ToString("d");
-            string deployTime = campaign.Approved.DeployDate?.ToString("hh:mm");
-            string quantity = campaign.Approved.Quantity.ToString();
+            string newOld = campaign.ReBroadcasted ? "RDP" : "New";
+            string deployDate = campaign.ReBroadcasted ? campaign.ReBroadcastedDate?.ToString("d") : campaign.Approved.DeployDate?.ToString("d");
+            string deployTime = campaign.ReBroadcasted ? campaign.ReBroadcastedDate?.ToString("hh:mm") : campaign.Approved.DeployDate?.ToString("hh:mm");
+            string quantity = campaign.ReBroadcasted ? campaign.ReBroadcastedQuantity.ToString() : campaign.Approved.Quantity.ToString();
 
             string orderNumber;
             string subject;
             string segmentsHtml = string.Empty;
             if (segment == null)
             {
-                orderNumber = $"ADS{campaign.OrderNumber}";
+                orderNumber = campaign.ReBroadcasted ? $"ADS{campaign.ReBroadcastedOrderNumber}" : $"ADS{campaign.OrderNumber}";
                 subject = $"{newOld} Order {campaign.Approved.CampaignName}, Order # {orderNumber}";
             } else
             {
@@ -135,7 +135,7 @@ namespace ADSDataDirect.Web.Async.Helpers
                     <tr><th align=""left"">Deploy Date:</th><td>{deployDate}</td></tr>
                     <tr><th align=""left"">Deploy Time:</th><td>{deployTime}</td></tr>
                     <tr><th align=""left"">ReportSite Link:</th><td>{campaign.Approved.ReportSiteLink}</td></tr>
-                    <tr><th align=""left"">Link Breakout:</th><td>{campaign.Approved.LinkBreakout}</td></tr>
+                    <tr><th align=""left"">Data Breakout:</th><td>{campaign.Testing.DataFileUrl}</td></tr>
                     <tr><th align=""left"">Has Open Pixel:</th><td>{(campaign.Approved.IsOpenPixel? "Yes": "No")}</td></tr>
                     <tr><th align=""left"">Open Pixel URL:</th><td>{campaign.Approved.OpenPixelUrl}</td></tr>
                     <tr><th align=""left"">Open Goals:</th><td>{campaign.Approved.OpenGoals}</td></tr>

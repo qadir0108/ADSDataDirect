@@ -131,7 +131,7 @@ namespace ADSDataDirect.Web.Reports
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
                     // Data Files
-                    if(Template.Equals(ReportTemplate.Tracking1.ToString()))
+                    if (Template.Equals(ReportTemplate.Tracking1.ToString()) && !model.IoNumber.EndsWith("RDP"))
                     {
                         uint rowNumber = 43;
                         foreach (var segment in model.Segments)

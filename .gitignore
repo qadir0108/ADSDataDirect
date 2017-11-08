@@ -240,3 +240,4 @@ ModelManifest.xml
 
 # FAKE - F# Make
 .fake/
+/ADSDataDirect.Web/Downloads/2500.xlsx

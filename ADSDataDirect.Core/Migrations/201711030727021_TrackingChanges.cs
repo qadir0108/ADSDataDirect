@@ -7,6 +7,7 @@ namespace ADSDataDirect.Core.Migrations
     {
         public override void Up()
         {
+            AddColumn("dbo.CampaignTesting", "PaceDays", c => c.Int(nullable: false));
             AddColumn("dbo.CampaignTracking", "Deployed", c => c.Long(nullable: false));
             AddColumn("dbo.CampaignTracking", "DeliveryPercentage", c => c.Double(nullable: false));
         }
@@ -15,6 +16,7 @@ namespace ADSDataDirect.Core.Migrations
         {
             DropColumn("dbo.CampaignTracking", "DeliveryPercentage");
             DropColumn("dbo.CampaignTracking", "Deployed");
+            DropColumn("dbo.CampaignTesting", "PaceDays");
         }
     }
 }

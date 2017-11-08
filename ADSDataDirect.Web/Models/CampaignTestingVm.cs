@@ -48,6 +48,8 @@ namespace ADSDataDirect.Web.Models
         public long Impressions { get; set; }
         public List<ChannelType> ChannelTypes { get; set; } // List<int> Enum.ChannelType
 
+        public int PaceDays { get; set; } // number of days campaign active for) 11/1 - 11/15
+
         public CampaignAsset Assets { get; set; }
 
         public ICollection<CampaignSegmentVm> Segments { get; set; }

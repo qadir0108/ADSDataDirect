@@ -20,7 +20,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>ADSDataDirect.Core-1.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -29,7 +30,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>ADSDataDirect.Core-1.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
@@ -114,9 +116,9 @@
     <Compile Include="Migrations\201709191125232_Settings.Designer.cs">
       <DependentUpon>201709191125232_Settings.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201710281632324_TrackingChanges.cs" />
-    <Compile Include="Migrations\201710281632324_TrackingChanges.Designer.cs">
-      <DependentUpon>201710281632324_TrackingChanges.cs</DependentUpon>
+    <Compile Include="Migrations\201711030727021_TrackingChanges.cs" />
+    <Compile Include="Migrations\201711030727021_TrackingChanges.Designer.cs">
+      <DependentUpon>201711030727021_TrackingChanges.cs</DependentUpon>
     </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
@@ -163,8 +165,8 @@
     <EmbeddedResource Include="Migrations\201709191125232_Settings.resx">
       <DependentUpon>201709191125232_Settings.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201710281632324_TrackingChanges.resx">
-      <DependentUpon>201710281632324_TrackingChanges.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201711030727021_TrackingChanges.resx">
+      <DependentUpon>201711030727021_TrackingChanges.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

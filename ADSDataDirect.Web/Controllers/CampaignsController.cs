@@ -500,10 +500,13 @@ namespace ADSDataDirect.Web.Controllers
             var proData = VendorsList.FirstOrDefault(x => x.Text.Contains("Pro"));
             ViewBag.Vendor = new SelectList(VendorsList, "Value", "Text", proData);
 
-            var campaignTracking = campaign.Trackings.FirstOrDefault(x => x.SegmentNumber == string.Empty);
-
-            long opennedFromOrignal = campaignTracking?.Opened ?? campaign.Quantity;
-            campaign.ReBroadcastedQuantity = opennedFromOrignal;
+            if(!campaign.ReBroadcasted)
+            {
+                var campaignTracking = campaign.Trackings.FirstOrDefault(x => x.SegmentNumber == string.Empty);
+                long opennedFromOrignal = campaignTracking?.Opened ?? campaign.Quantity;
+                campaign.ReBroadcastedQuantity = opennedFromOrignal;
+                campaign.ReBroadcastedDate = campaign.ReBroadcastDate;
+            }
             return View(campaign);
         }
 

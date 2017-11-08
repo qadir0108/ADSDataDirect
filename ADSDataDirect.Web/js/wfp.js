@@ -58,6 +58,34 @@ wfp.showError = function (message) {
     toastr.error(message, wfp.appName);
 }
 
+wfp.showSucessSwal = function (message, yesCallback) {
+    swal({ title: message, text: "", type: "success", showCancelButton: false, confirmButtonText: "Ok"},
+        function (isConfirm) {
+            if (isConfirm) {
+                //debugger;
+                if (yesCallback)
+                    yesCallback();
+                else
+                    return true;
+            } else {
+            }
+        });
+}
+
+wfp.showErrorSwal = function (message, yesCallback) {
+    swal({ title: message, text: "", type: "error", showCancelButton: false, confirmButtonText: "Ok" },
+        function (isConfirm) {
+            if (isConfirm) {
+                //debugger;
+                if (yesCallback)
+                    yesCallback();
+                else
+                    return true;
+            } else {
+            }
+        });
+}
+
 wfp.showSwal = function (message, yesCallback, noCallback) {
     swal({ title: message, text: "You will not be able to undo", type: "warning", showLoaderOnConfirm: true, showCancelButton: true, cancelButtonText: "No", confirmButtonText: "Yes", confirmButtonColor: "#DD6B55" },
         function (isConfirm) {

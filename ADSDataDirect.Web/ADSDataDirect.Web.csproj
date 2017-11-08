@@ -35,7 +35,8 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>ADSDataDirect.Web-1.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -44,7 +45,8 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>ADSDataDirect.Web-1.ruleset</CodeAnalysisRuleSet>
+    <CodeAnalysisRuleSet>
+    </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
@@ -141,9 +143,11 @@
       <HintPath>..\packages\MyToolkit.AspNet.Mvc.2.5.16\lib\net45\MyToolkit.AspNetMvc.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Newtonsoft.Json, Version=9.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
-      <HintPath>..\packages\Newtonsoft.Json.9.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
     </Reference>
     <Reference Include="PagedList, Version=1.17.0.0, Culture=neutral, PublicKeyToken=abbb863e9397c5e1, processorArchitecture=MSIL">
       <HintPath>..\packages\PagedList.1.17.0.0\lib\net40\PagedList.dll</HintPath>
@@ -155,6 +159,12 @@
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="smartsheet-csharp-sdk, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\smartsheet-csharp-sdk.2.2.1\lib\net40\smartsheet-csharp-sdk.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.DirectoryServices" />
@@ -293,6 +303,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\SmartsheetController.cs" />
     <Compile Include="Hangfire\HangfireBootstrapper .cs" />
     <Compile Include="Hangfire\ApplicationPreload.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -313,6 +324,7 @@
     <Compile Include="Helpers\ExcelHelper_Old.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Helpers\SettingsManager.cs" />
+    <Compile Include="Models\MessageVm.cs" />
     <Compile Include="Models\SettingsVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
     <Compile Include="Models\VendorVm.cs" />
@@ -399,6 +411,8 @@
     <Compile Include="Reports\ReportModel.cs" />
     <Compile Include="Reports\TrackingReportTemplate34.cs" />
     <Compile Include="Reports\TrackingReportTemplate12.cs" />
+    <Compile Include="Smart Sheet\SheetMap.cs" />
+    <Compile Include="Smart Sheet\SmartsheetManager.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -430,6 +444,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
+    <Content Include="icons\logo.png" />
     <Content Include="images\logo.png" />
     <Content Include="images\app-screen.png" />
     <Content Include="images\arrow.png" />
@@ -650,7 +665,12 @@
     <Content Include="fonts\CWB0XYA8bzo0kSThX0UTuA.woff2" />
     <Content Include="fonts\d-6IYplOFocCacKzxwXSOFtXRa8TVwTICgirnJhmVJw.woff2" />
     <Content Include="json.json" />
-    <Content Include="ADSDataDirect.Web-1.ruleset" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="Properties\PublishProfiles\Local.pubxml" />
     <Content Include="Reports\CampaignDatasetType.xsc">
       <DependentUpon>CampaignDatasetType.xsd</DependentUpon>
@@ -949,7 +969,6 @@
     <Content Include="Views\Campaigns\Cancel.cshtml" />
     <Content Include="Views\Campaigns\Rebroad.cshtml" />
     <Content Include="Views\Campaigns\Complete.cshtml" />
-    <Content Include="Templates\Tracking3.xlsx" />
     <Content Include="ADSDataDirect.Web.ruleset" />
     <Content Include="Views\Company\Permissions.cshtml" />
     <Content Include="Views\Company\Roles.cshtml" />
@@ -958,7 +977,9 @@
     <Content Include="Views\Notification\Settings.cshtml" />
     <Content Include="Views\Tracking\Sent.cshtml" />
     <Content Include="Templates\Tracking2.xlsx" />
+    <Content Include="Templates\Tracking3.xlsx" />
     <Content Include="Templates\Tracking4.xlsx" />
+    <Content Include="Views\Smartsheet\Index.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

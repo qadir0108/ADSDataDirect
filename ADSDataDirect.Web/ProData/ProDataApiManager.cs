@@ -160,61 +160,6 @@ namespace ADSDataDirect.Web.ProData
             }
         }
 
-        public static void FetchAndUpdateProDatas(WfpictContext db, string orderNumber)
-        {
-            var logs = db.SystemLogs.Where(x => x.OrderNumber == orderNumber && x.LogType == (int)LogType.ProData);
-            foreach (var log in logs)
-            {
-                db.SystemLogs.Remove(log);
-            }
-            db.SaveChanges();
-
-            LogHelper.AddLog(db, LogType.ProData, orderNumber,
-                $"Starting refresh at {DateTime.Now} ");
-            LogHelper.AddLog(db, LogType.ProData, orderNumber, $"Deleting Old ProData ");
-
-            var campagin = db.Campaigns.FirstOrDefault(x => x.OrderNumber == orderNumber);
-            var proDatas = db.ProDatas.Where(x => x.CampaignId == campagin.Id);
-            foreach (var proData in proDatas)
-            {
-                db.ProDatas.Remove(proData);
-            }
-            db.SaveChanges();
-
-            var data = Fetch(orderNumber);
-            if (data.reports != null && data.reports.report != null)
-            {
-                var reports = data.reports.report;
-                LogHelper.AddLog(db, LogType.ProData, orderNumber, $"{reports.Length} records fetched from ProData ");
-                foreach (var report in reports)
-                {
-                    db.ProDatas.Add(new Core.Entities.ProData()
-                    {
-                        Id = Guid.NewGuid(),
-                        CreatedAt = DateTime.Now,
-                        CampaignId = campagin.Id,
-                        CampaignName = report.CampaignName,
-                        Reportsite_URL = report.Reportsite_URL,
-                        Destination_URL = report.Destination_URL,
-                        CampaignStartDate = report.CampaignStartDate,
-                        ClickCount = long.Parse(report.ClickCount),
-                        UniqueCnt = report.UniqueCnt,
-                        MobileCnt = report.MobileCnt,
-                        ImpressionCnt = report.ImpressionCnt,
-                        IO = report.IO
-                    });
-                }
-                db.SaveChanges();
-                LogHelper.AddLog(db, LogType.ProData, orderNumber,$"Refresh completed successfully at {DateTime.Now} ");
-            }
-            else
-            {
-                LogHelper.AddLog(db, LogType.ProData, orderNumber, $"Prodata response. {data.ToJson()} ");
-                throw new AdsException("There is error in getting data from ProData. Problem in ProData API.");
-            }
-            
-        }
-
         public static void FetchAndUpdateTrackings(WfpictContext db, Campaign campaign)
         {
             LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, $"Starting refresh at {DateTime.Now} ");
@@ -340,12 +285,15 @@ namespace ADSDataDirect.Web.ProData
             campaignTracking.StartDate = startDateTime;
             campaignTracking.Deployed = (long)(campaignTracking.Quantity  * (1 + Random.Next(2, 30) / 10000.0));
             campaignTracking.Opened = campaign.Approved.IsUseApiDataForOpen ? report.ImpressionCnt : API.Campaign.GetOpens(campaignTracking.Quantity, startDateTime);
+            if (campaign.Approved.WhiteLabel == StringConstants.CustomerStrategus)
+                campaignTracking.Opened = (long)(((campaignTracking.Quantity * Random.Next(160000, 190000))/ 10000.0)/100.0);
+
             campaignTracking.Clicked = reports.Sum(x => long.Parse(x.ClickCount));
             campaignTracking.Mobile = reports.Sum(x => x.MobileCnt);
             campaignTracking.Desktop = report.UniqueCnt;
             campaignTracking.Unsub = Random.Next(1, 100);
             campaignTracking.Forwards = Random.Next(1, 100);
-            campaignTracking.Bounce = campaignTracking.Deployed - campaignTracking.Quantity; //Random.Next(1, 30);
+            campaignTracking.Bounce = campaignTracking.Deployed - campaignTracking.Quantity;
             campaignTracking.Opt = Random.Next(1, 30);
             campaignTracking.DeliveryPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Quantity / campaignTracking.Deployed;
             campaignTracking.OpenedPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Opened / campaignTracking.Quantity;
