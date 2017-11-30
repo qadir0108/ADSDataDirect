@@ -117,11 +117,11 @@ namespace ADSDataDirect.Web.Smartsheet
             campaign.CreatedAt = DateTime.Now;
             campaign.CreatedBy = "Smartsheet";
             campaign.Status = (int)CampaignStatus.OrderRecevied;
-            campaign.WhiteLabel = StringConstants.CustomerStrategus;
+            campaign.WhiteLabel = sheetMap.GetCellByColumnName(row, "White Label").DisplayValue;
             campaign.CampaignName = sheetMap.GetCellByColumnName(row, "Campaign Name").DisplayValue;
             campaign.BroadcastDate = sheetMap.GetCellByColumnName(row, "Broadcast Date").Value.ToSafeDateTime();
-            campaign.RepresentativeName = sheetMap.GetCellByColumnName(row, "Contact").DisplayValue;
-            campaign.RepresentativeEmail = sheetMap.GetCellByColumnName(row, "Contact").DisplayValue;
+            campaign.RepresentativeName = sheetMap.GetCellByColumnName(row, "Production Rep").DisplayValue;
+            campaign.RepresentativeEmail = sheetMap.GetCellByColumnName(row, "Production Rep").DisplayValue;
 
             campaign.Quantity = sheetMap.GetCellByColumnName(row, "QTY").DisplayValue.ToSafeInt();
             campaign.GeoDetails = sheetMap.GetCellByColumnName(row, "GEO").DisplayValue;

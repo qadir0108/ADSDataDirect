@@ -39,6 +39,18 @@ namespace ADSDataDirect.Web.Helpers
             key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitClickRateIn72Hours);
             _settings.NotHitClickRateIn72HoursValue = key != null ? double.Parse(key.Value) : 0.0;
 
+            key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyExceededOpenRateIn24Hours);
+            _settings.ExceededOpenRateIn24HoursValue = key != null ? double.Parse(key.Value) : 0.0;
+
+            key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyExceededOpenRateIn72Hours);
+            _settings.ExceededOpenRateIn72HoursValue = key != null ? double.Parse(key.Value) : 0.0;
+
+            key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyExceededClickRateIn24Hours);
+            _settings.ExceededClickRateIn24HoursValue = key != null ? double.Parse(key.Value) : 0.0;
+
+            key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyExceededClickRateIn72Hours);
+            _settings.ExceededClickRateIn72HoursValue = key != null ? double.Parse(key.Value) : 0.0;
+
             return _settings;
         }
 
@@ -52,6 +64,11 @@ namespace ADSDataDirect.Web.Helpers
             SaveSetting(db, StringConstants.KeyNotHitOpenRateIn72Hours, settings.NotHitOpenRateIn72HoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitClickRateIn24Hours, settings.NotHitClickRateIn24HoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitClickRateIn72Hours, settings.NotHitClickRateIn72HoursValue.ToString(CultureInfo.InvariantCulture));
+
+            SaveSetting(db, StringConstants.KeyExceededOpenRateIn24Hours, settings.ExceededOpenRateIn24HoursValue.ToString(CultureInfo.InvariantCulture));
+            SaveSetting(db, StringConstants.KeyExceededOpenRateIn72Hours, settings.ExceededOpenRateIn72HoursValue.ToString(CultureInfo.InvariantCulture));
+            SaveSetting(db, StringConstants.KeyExceededClickRateIn24Hours, settings.ExceededClickRateIn24HoursValue.ToString(CultureInfo.InvariantCulture));
+            SaveSetting(db, StringConstants.KeyExceededClickRateIn72Hours, settings.ExceededClickRateIn72HoursValue.ToString(CultureInfo.InvariantCulture));
         }
 
         private void SaveSetting(WfpictContext db, string key, string value)

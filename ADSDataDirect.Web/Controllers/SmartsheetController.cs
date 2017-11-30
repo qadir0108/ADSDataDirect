@@ -34,6 +34,11 @@ namespace ADSDataDirect.Web.Controllers
                     {
                         Db.Campaigns.Add(campaign);
                         Db.SaveChanges();
+
+                        // Create Testing Record
+                        // Create Segment A Record
+                        // Process and Upload Data Files
+                        // Update Data File URL to Smartsheet
                         bool isUpdated = mgr.Update(sheetName, campaign.Price, campaign.OrderNumber);
                         if (isUpdated)
                             count++;

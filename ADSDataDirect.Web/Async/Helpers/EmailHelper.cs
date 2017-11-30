@@ -101,13 +101,13 @@ namespace ADSDataDirect.Web.Async.Helpers
             {
                 orderNumber = $"ADS{segment.SegmentNumber}";
                 subject = $"{newOld} Order {campaign.Approved.CampaignName}, Order # {orderNumber}";
+                //                   <tr><th align=""left"">Data File</th><td>{segment.SegmentDataFileUrl}</td></tr>
                 segmentsHtml += $@"<table border=""1"">
                                 <tr><th align=""left"">Segment</th><td>{segment.SegmentNumber}</td></tr>
                                 <tr><th align=""left"">Subject Line</th><td>{segment.SubjectLine}</td></tr>
                                 <tr><th align=""left"">From Line</th><td>{segment.FromLine}</td></tr>
                                 <tr><th align=""left"">White Label</th><td>{segment.WhiteLabel}</td></tr>
                                 <tr><th align=""left"">Deployment Date</th><td>{segment.DeploymentDate}</td></tr>
-                                <tr><th align=""left"">Data File</th><td>{segment.SegmentDataFileUrl}</td></tr>
                                 <tr><th align=""left"">Total Records</th><td>{NumberHelper.GetTotal(
                     segment.FirstRangeStart, segment.FirstRangeEnd, segment.SecondRangeStart, segment.SecondRangeEnd,
                     segment.ThirdRangeStart, segment.ThirdRangeEnd)}</td></tr></table>";

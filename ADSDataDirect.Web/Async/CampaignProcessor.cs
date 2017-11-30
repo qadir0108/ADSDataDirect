@@ -41,6 +41,7 @@ namespace ADSDataDirect.Web.Async
                 Campaign campaign = db.Campaigns
                     .Include(x => x.Assets)
                     .Include(x => x.Segments)
+                    .Include(x => x.Testing)
                     .Include(x => x.Approved)
                     .Include(x => x.Trackings)
                     .FirstOrDefault(x => x.OrderNumber == orderNumber);

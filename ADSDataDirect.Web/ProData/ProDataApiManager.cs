@@ -310,84 +310,125 @@ namespace ADSDataDirect.Web.ProData
         {
             if(!deployDate.HasValue) return;
 
-            string message = string.Empty;
+            string message;
 
             int hoursPassed = DateTime.Now.Subtract(deployDate.Value).Hours;
-            bool problemFound = false;
-            QcRule qcRule = QcRule.NotStartedInFirstXHours;
+
             // QC Rule 1
-            if (responseStatus == ProDataResponseStatus.NotFound.ToString() && hoursPassed >= settings.NotStartedInXHoursValue)
+            if (responseStatus == ProDataResponseStatus.NotFound.ToString() &&
+                hoursPassed >= settings.NotStartedInXHoursValue)
             {
-                problemFound = true;
-                qcRule = QcRule.NotStartedInFirstXHours;
-                message = $"{hoursPassed}Hrs passed and not yet started. Max allowed time {settings.NotStartedInXHoursValue}Hrs";
+                //message = $"{hoursPassed}Hrs passed and not yet started. Max allowed time {settings.NotStartedInXHoursValue}Hrs";
+                message = $"Campaign started {deployDate.Value} as of {DateTime.Now}, Campaign has no traffic.";
+                SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotStartedInFirstXHours,
+                    message);
+            }
+            else // If Started
+            {
+                // QC Rule 10 
+                if (campaignTracking.OpenedPercentage < 0.01) // less than 1%
+                {
+                    message = $"Number of Opens in last 24hrs, No Open Traffic in 24hrs.";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.OpenTrafficInLast24Hours, message);
+                }
+
+                // QC Rule 10
+                if (campaignTracking.ClickedPercentage < 0.01)
+                {
+                    message = $"Number of Clicks in last 24hrs, No Click Traffic in 24hrs.";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ClickTrafficInLast24Hours, message);
+                }
             }
 
-            // QC Rule 2
-            if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn24HoursValue / 100.0) && hoursPassed >= 24)
+            if (hoursPassed >= 24)
             {
-                problemFound = true;
-                qcRule = QcRule.NotHitOpenRateIn24Hours;
-                message = $"{campaignTracking.OpenedPercentage} is less than {settings.NotHitOpenRateIn24HoursValue/100.0}";
-            }
+                // QC Rule 2
+                if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn24HoursValue / 100.0))
+                {
+                    message = $"{campaignTracking.Opened} / {campaignTracking.Quantity} is Less than required value {settings.NotHitOpenRateIn24HoursValue}% in first 24hrs";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitOpenRateIn24Hours, message);
+                }
 
-            // QC Rule 3
-            if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn72HoursValue / 100.0) && hoursPassed >= 72)
+                // QC Rule 4
+                if (campaignTracking.ClickedPercentage < (settings.NotHitClickRateIn24HoursValue / 100.0))
+                {
+                    message = $"{campaignTracking.Clicked} / {campaignTracking.Quantity} is Less than required value {settings.NotHitClickRateIn24HoursValue}% in first 24hrs";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitClickRateIn24Hours, message);
+                }
+
+                // QC Rule 6
+                if (campaignTracking.OpenedPercentage > (settings.ExceededOpenRateIn24HoursValue / 100.0))
+                {
+                    message = $"{campaignTracking.Opened} / {campaignTracking.Quantity} is Greater than required value {settings.ExceededOpenRateIn24HoursValue}% in first 24hrs";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ExceededOpenRateIn24Hours, message);
+                }
+
+                // QC Rule 8
+                if (campaignTracking.ClickedPercentage > (settings.ExceededClickRateIn24HoursValue / 100.0))
+                {
+                    message = $"{campaignTracking.Clicked} / {campaignTracking.Quantity} is Greater than required value {settings.ExceededClickRateIn24HoursValue}% in first 24hrs";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ExceededClickRateIn24Hours, message);
+                }
+            }
+            else if (hoursPassed >= 72)
             {
-                problemFound = true;
-                qcRule = QcRule.NotHitOpenRateIn72Hours;
-                message = $"{campaignTracking.OpenedPercentage} is less than {settings.NotHitOpenRateIn72HoursValue / 100.0}";
+                // QC Rule 3
+                if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn72HoursValue / 100.0))
+                {
+                    message = $"{campaignTracking.Opened} / {campaignTracking.Quantity} is Less than required value {settings.NotHitOpenRateIn72HoursValue}% in first 72hrs";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitOpenRateIn72Hours, message);
+                }
+
+                // QC Rule 5
+                if (campaignTracking.ClickedPercentage < (settings.NotHitClickRateIn72HoursValue / 100.0))
+                {
+                    message = $"{campaignTracking.Clicked} / {campaignTracking.Quantity} is Less than required value {settings.NotHitClickRateIn72HoursValue}% in first 72hrs";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitClickRateIn72Hours, message);
+                }
+
+                // QC Rule 7
+                if (campaignTracking.OpenedPercentage > (settings.ExceededOpenRateIn72HoursValue / 100.0))
+                {
+                    message = $"{campaignTracking.Opened} / {campaignTracking.Quantity} is Greater than required value {settings.ExceededOpenRateIn72HoursValue}% in first 72hrs";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ExceededOpenRateIn72Hours, message);
+                }
+
+                // QC Rule 9
+                if (campaignTracking.ClickedPercentage > (settings.ExceededClickRateIn72HoursValue / 100.0))
+                {
+                    message = $"{campaignTracking.Clicked} / {campaignTracking.Quantity} is Greater than required value {settings.ExceededClickRateIn72HoursValue}% in first 72hrs";
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ExceededClickRateIn72Hours, message);
+                }
             }
+            
+        }
 
-            // QC Rule 4
-            if (campaignTracking.ClickedPercentage < (settings.NotHitClickRateIn24HoursValue / 100.0) && hoursPassed >= 24)
-            {
-                problemFound = true;
-                qcRule = QcRule.NotHitClickRateIn24Hours;
-                message = $"{campaignTracking.ClickedPercentage} is less than {settings.NotHitClickRateIn24HoursValue / 100.0}";
-            }
-
-            // QC Rule 5
-            if (campaignTracking.ClickedPercentage < (settings.NotHitClickRateIn72HoursValue / 100.0) && hoursPassed >= 72)
-            {
-                problemFound = true;
-                qcRule = QcRule.NotHitClickRateIn72Hours;
-                message = $"{campaignTracking.ClickedPercentage} is less than {settings.NotHitClickRateIn72HoursValue / 100.0}";
-            }
-
-            // QC Rule 6
-            //if (campaignTracking.ClickedPercentage)
-            //{
-            //    problemFound = true;
-            //    qcRule = QcRule.MoreThan40PercentIsMobileClicks;
-            //}
-
-            if (!problemFound) return;
+        private static void SaveNotificationRecord(WfpictContext db, 
+            Guid? campaignId, string orderNumber, string segmentNumber, 
+            QcRule qcRule, string message )
+        {
 
             var alreadyNoted = db.Notifications
                 .FirstOrDefault(x => x.CampaignId == campaignId && x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber
-                             && x.QcRule == (int)qcRule && x.Status == (int)NotificationStatus.Found);
+                                     && x.QcRule == (int)qcRule && x.Status == (int)NotificationStatus.Found);
 
-            if (alreadyNoted == null)
+            if (alreadyNoted != null) return;
+
+            LogHelper.AddLog(db, LogType.RulesProcessing, orderNumber, $"Problem found. QCRule {qcRule} , Message {message}");
+            db.Notifications.Add(new Notification()
             {
-                LogHelper.AddLog(db, LogType.RulesProcessing, orderNumber, $"Problem found. QCRule {qcRule} , Message {message}");
-                db.Notifications.Add(new Notification()
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedAt = DateTime.Now,
-                    CampaignId = campaignId,
-                    OrderNumber = orderNumber,
-                    SegmentNumber = segmentNumber,
-                    Status = (int)NotificationStatus.Found,
-                    Message = message,
-                    CheckTime = DateTime.Now,
-                    FoundAt = DateTime.Now,
-                    QcRule = (int)qcRule
-                });
-                db.SaveChanges();
-            }
-
+                Id = Guid.NewGuid(),
+                CreatedAt = DateTime.Now,
+                CampaignId = campaignId,
+                OrderNumber = orderNumber,
+                SegmentNumber = segmentNumber,
+                Status = (int)NotificationStatus.Found,
+                Message = message,
+                CheckTime = DateTime.Now,
+                FoundAt = DateTime.Now,
+                QcRule = (int)qcRule
+            });
+            db.SaveChanges();
         }
-
     }
 }

@@ -18,6 +18,10 @@
         public static readonly string KeyNotHitOpenRateIn72Hours = "NotHitOpenRateIn72Hours";
         public static readonly string KeyNotHitClickRateIn24Hours = "NotHitClickRateIn24Hours";
         public static readonly string KeyNotHitClickRateIn72Hours = "NotHitClickRateIn72Hours";
+        public static readonly string KeyExceededOpenRateIn24Hours = "ExceededOpenRateIn24Hours";
+        public static readonly string KeyExceededOpenRateIn72Hours = "ExceededOpenRateIn72Hours";
+        public static readonly string KeyExceededClickRateIn24Hours = "ExceededClickRateIn24Hours";
+        public static readonly string KeyExceededClickRateIn72Hours = "ExceededClickRateIn72Hours";
 
         public static readonly string KeyAutoProcessTracking = "AutoProcessTracking";
         public static readonly string KeySendNotificationEmails = "SendNotificationEmails";

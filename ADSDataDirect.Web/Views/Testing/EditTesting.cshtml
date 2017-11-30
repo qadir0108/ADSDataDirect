@@ -580,9 +580,8 @@
         $('#OmniDeployDate').datetimepicker({
             format: 'M/DD/YYYY hh:mm:ss A'
         });
-        $("#divOpenGoalPercentage").text('Open Goal %: ' + $.percentage($("#OpenGoals").val(), $("#Quantity").val()).toFixed(0));
-        $("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
-
+        $("#divOpenGoalPercentage").text('Open Goal %: ' + ($("#OpenGoals").val() / $("#Quantity").val() * 100).toFixed(2));
+        $("#divClickGoalPercentage").text('Click Goal %: ' + ($("#ClickGoals").val()/ $("#Quantity").val() * 100).toFixed(2));
 
         $('#Assets_ZipCodeFile').prop('readonly', "readonly");
         $('#Assets_CreativeFiles').prop('readonly', "readonly");
@@ -600,11 +599,11 @@
 
         $("#OpenGoals").on("keyup keydown change mouseup", function (event) {
             debugger;
-            $("#divOpenGoalPercentage").text('Open Goal %: ' + $.percentage($("#OpenGoals").val(), $("#Quantity").val()).toFixed(0));
+            $("#divOpenGoalPercentage").text('Open Goal %: ' + ($("#OpenGoals").val() / $("#Quantity").val() * 100).toFixed(2));
         });
 
         $("#ClickGoals").on("keyup keydown change mouseup", function (event) {
-            $("#divClickGoalPercentage").text('Click Goal %: ' + $.percentage($("#ClickGoals").val(), $("#Quantity").val()).toFixed(0));
+            $("#divClickGoalPercentage").text('Click Goal %: ' + ($("#ClickGoals").val() / $("#Quantity").val() * 100).toFixed(2));
         });
 
         $('#addSegment').click(function (e) {
