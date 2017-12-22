@@ -15,7 +15,7 @@ namespace ADSDataDirect.Web.Async
 {
     public static class DataFileProcessor
     {
-        public static void FetchSqlDataFile(string uploadPath, string orderNumber, string zipCodeFile, long dataQuantity)
+        public static void FetchSqlDataFile(string uploadPath, Guid campaignId, string orderNumber, string zipCodeFile, long dataQuantity)
         {
             using (var db = new WfpictContext())
             {
@@ -47,6 +47,9 @@ namespace ADSDataDirect.Web.Async
 
                         LogHelper.AddLog(db, LogType.DataProcessing, orderNumber, $"{data.Count} records feteched sucessfully.");
 
+                        // Generate URLs
+                        data = GenerateURLs(db, campaignId, orderNumber, data);
+                        
                         // write to local data file
                         string fileName = $"{orderNumber}\\{orderNumber}data.csv";
                         var filePath = $"{uploadPath}\\{fileName}";
@@ -69,7 +72,8 @@ namespace ADSDataDirect.Web.Async
                             "Zip4",
                             "Apt",
                             "Dealership_ID",
-                            "Index"
+                            "Index",
+                            "URL","OpenURL", "BannnerURL"
                                 }
                         });
                         string amazonFileKey = $"{orderNumber}/{orderNumber}data.csv";
@@ -117,8 +121,9 @@ namespace ADSDataDirect.Web.Async
                                 "Zip4",
                                 "Apt",
                                 "Dealership_ID",
-                                "Index"
-                                    }
+                                "Index",
+                                "URL","OpenURL", "BannnerURL"
+                                }
                             });
                             string amazonFileKey1 = $"{campaign.OrderNumber}/{segment.SegmentNumber}data.csv";
                             S3FileManager.Upload(amazonFileKey1, filePath1, true);
@@ -148,6 +153,38 @@ namespace ADSDataDirect.Web.Async
                     LogHelper.AddError(db, LogType.DataProcessing, orderNumber, "Error processing " + zipCodeFile + " " + ex.Message);
                 }
             }
+        }
+
+        private static List<SegmentResponse> GenerateURLs(WfpictContext db, Guid campaignId, string orderNumber, List<SegmentResponse> datas)
+        {
+            db.CampaignLinks.RemoveRange(db.CampaignLinks.Where(x => x.CampaignId == campaignId));
+            db.SaveChanges();
+
+            string baseURL = "http://url.verumdm.com";
+            foreach (var data in datas)
+            {
+                string URL = $"{orderNumber}/u/{data.Index}";
+                string OpenURL = $"{orderNumber}/o/{data.Index}";
+                string BannerURL = $"{orderNumber}/b/{data.Index}";
+
+                db.CampaignLinks.Add(new CampaignLink()
+                {
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.Now,
+                    CampaignId = campaignId,
+                    OrderNumber = orderNumber,
+                    SalesMasterId = data.SalesMasterId,
+                    URL = URL,
+                    OpenURL = OpenURL,
+                    BannerURL = BannerURL
+                });
+
+                data.URL = $"{baseURL}/{URL}";
+                data.OpenURL = $"{baseURL}/{OpenURL}";
+                data.BannerURL = $"{baseURL}/{BannerURL}";
+            }
+            db.SaveChanges();
+            return datas;
         }
     }
 }

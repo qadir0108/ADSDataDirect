@@ -326,14 +326,14 @@ namespace ADSDataDirect.Web.ProData
             else // If Started
             {
                 // QC Rule 10 
-                if (campaignTracking.OpenedPercentage < 0.01) // less than 1%
+                if (campaignTracking.OpenedPercentage < 0.01 && hoursPassed > 0 ) // less than 1% and deploy date time passed
                 {
                     message = $"Number of Opens in last 24hrs, No Open Traffic in 24hrs.";
                     SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.OpenTrafficInLast24Hours, message);
                 }
 
                 // QC Rule 10
-                if (campaignTracking.ClickedPercentage < 0.01)
+                if (campaignTracking.ClickedPercentage < 0.01 && hoursPassed > 0) // less than 1% and deploy date time passed
                 {
                     message = $"Number of Clicks in last 24hrs, No Click Traffic in 24hrs.";
                     SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ClickTrafficInLast24Hours, message);

@@ -13,5 +13,8 @@
         public string Apt { get; set; }
         public short Zip4 { get; set; }
         public string Dealership_ID { get; set; }
+        public string URL { get; set; }
+        public string OpenURL { get; set; }
+        public string BannerURL { get; set; }
     }
 }

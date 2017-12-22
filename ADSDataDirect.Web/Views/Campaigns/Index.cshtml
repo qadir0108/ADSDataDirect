@@ -196,7 +196,14 @@
                                                     <span class="fa fa-download"></span>
                                                 </a>
                                             }
+                                            if (item.Segments.Count != 0)
+                                            {
+                                                <a target="_blank" href="~/Tracking/DownloadData/@item.Id" class="pull-right" title="Tracking Links Data" data-tooltip="tooltip">
+                                                    <span class="fa fa-download"></span>
+                                                </a>
+                                            }
                                         }
+
                                     }
                                 </div>
                             </div>
