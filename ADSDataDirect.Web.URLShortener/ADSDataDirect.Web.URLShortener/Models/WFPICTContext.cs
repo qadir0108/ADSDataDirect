@@ -22,7 +22,7 @@ namespace ADSDataDirect.Core.Entities
             modelBuilder.Conventions.Remove<PluralizingTableNameConvention>();
         }
 
-        public DbSet<CampaignLink> CampaignLinks { get; set; }
+        public DbSet<DynamicCodingLink> DynamicCodingLinks { get; set; }
 
         public static WfpictContext Create()
         {

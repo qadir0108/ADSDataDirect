@@ -7,13 +7,13 @@ namespace ADSDataDirect.Core.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class CampaignLinks : IMigrationMetadata
+    public sealed partial class DynamicCoding : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(CampaignLinks));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(DynamicCoding));
         
         string IMigrationMetadata.Id
         {
-            get { return "201712210157424_CampaignLinks"; }
+            get { return "201712271831330_DynamicCoding"; }
         }
         
         string IMigrationMetadata.Source

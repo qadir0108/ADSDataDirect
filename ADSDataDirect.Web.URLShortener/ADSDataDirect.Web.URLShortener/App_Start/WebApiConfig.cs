@@ -17,7 +17,7 @@ namespace ADSDataDirect.Web.URLShortener
             config.Routes.MapHttpRoute(
                 name: "DefaultApi",
                 routeTemplate: "{controller}/{action}",
-                defaults: new { controller = "redirect", action="get" }
+                defaults: new { controller = "redirectapi", action="get" }
             );
         }
     }

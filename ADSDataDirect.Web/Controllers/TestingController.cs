@@ -217,7 +217,7 @@ namespace ADSDataDirect.Web.Controllers
         [ValidateAntiForgeryToken]
         [MultipleButton(Name = "action", Argument = "EditTesting")]
         public ActionResult EditTesting([Bind(Include =
-                     "Assets,Segments,Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,DataFileQuantity,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes,PaceDays"
+                     "Assets,Segments,Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,DataFileQuantity,DataFileUrl,DateFetched,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes,PaceDays,IsDynamicCoding,DynamicCodingFile"
              )]CampaignTestingVm campaignTestingVm)
         {
             if (ModelState.IsValid)
@@ -315,7 +315,7 @@ namespace ADSDataDirect.Web.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         [MultipleButton(Name = "action", Argument = "Approve")]
-        public ActionResult Approve([Bind(Include = "Assets,Segments,Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,DataFileQuantity,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes")]CampaignTestingVm campaignTestingVm)
+        public ActionResult Approve([Bind(Include = "Assets,Segments,Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,DataFileQuantity,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes,")]CampaignTestingVm campaignTestingVm)
         {
             if (ModelState.IsValid)
             {
@@ -381,5 +381,28 @@ namespace ADSDataDirect.Web.Controllers
             return RedirectToAction("EditTesting", new { id = campaignTestingVm.Id });
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        [MultipleButton(Name = "action", Argument = "ProcessDynamicCoding")]
+        public ActionResult ProcessDynamicCoding([Bind(Include = "Id,CampaignId,OrderNumber")] CampaignTestingVm campaignTestingVm)
+        {
+            var campaignTesting = Db.CampaignsTesting.FirstOrDefault(x => x.CampaignId == campaignTestingVm.CampaignId);
+
+            try
+            {
+                if (string.IsNullOrEmpty(campaignTesting.DataFileUrl))
+                    throw new Exception("Please process Data Files first.");
+
+                DynamicCodingHelper.ProcessInput(Db, UploadPath, campaignTesting.DataFileUrl, campaignTesting.DynamicCodingFile, 
+                                                campaignTesting.CampaignId, campaignTestingVm.OrderNumber);
+                
+                TempData["Success"] = "Dynamic Coding File has been processed succesfully.";
+            }
+            catch (Exception ex)
+            {
+                TempData["Error"] = ex.Message;
+            }
+            return RedirectToAction("EditTesting", new { id = campaignTestingVm.Id });
+        }
     }
 }

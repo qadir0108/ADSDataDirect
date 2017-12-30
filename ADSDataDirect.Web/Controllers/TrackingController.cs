@@ -70,7 +70,7 @@ namespace ADSDataDirect.Web.Controllers
                 .Include(x => x.ProDatas)
                 .Include(x => x.Trackings)
                 .FirstOrDefault(x => x.Id == id);
-
+            
             if (campaign == null)
             {
                 TempData["Error"] = "Campaign not found.";
@@ -81,6 +81,10 @@ namespace ADSDataDirect.Web.Controllers
                 TempData["Error"] = "Campaign is not passed through Testing and Approved phase.";
                 return RedirectToAction("Index", "Campaigns");
             }
+
+            Session["id"] = id;
+            Session["OrderNumber"] = campaign.OrderNumber;
+
             var trackingVms = new List<CampaignTrackingVm>();
             foreach (var campaignTracking in campaign.Trackings.OrderByDescending(x => x.CreatedAt))
             {
@@ -221,39 +225,6 @@ namespace ADSDataDirect.Web.Controllers
                 return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message });
             }
         }
-
-        public ActionResult DownloadData(Guid? id)
-        {
-            List<CampaignLinkVm> links = Db.CampaignLinks
-                .Where(x => x.CampaignId == id).ToList()
-                .Select(x => CampaignLinkVm.FromLink(x))
-                .ToList();
-
-            if (links.Count == 0) return null;
-
-            string linksDataFileName = $"{links.FirstOrDefault().OrderNumber}links.csv";
-
-            var filePath = $"{UploadPath}\\{linksDataFileName}";
-            links.ToCsv(filePath, new CsvDefinition()
-            {
-                EndOfLine = "\r\n",
-                FieldSeparator = ',',
-                TextQualifier = '"',
-                Columns =
-                    new List<string>
-                    {
-                            "SalesMasterId",
-                            "URL",
-                            "URLRedemed",
-                            "OpenURL",
-                            "OpenURLRedemed",
-                            "BannerURL",
-                            "BannerURLRedemed"
-                    }
-            });
-            
-            return File(filePath, "text/csv", linksDataFileName);
-        }
-
+        
     }
 }

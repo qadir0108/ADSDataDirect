@@ -47,9 +47,6 @@ namespace ADSDataDirect.Web.Async
 
                         LogHelper.AddLog(db, LogType.DataProcessing, orderNumber, $"{data.Count} records feteched sucessfully.");
 
-                        // Generate URLs
-                        data = GenerateURLs(db, campaignId, orderNumber, data);
-                        
                         // write to local data file
                         string fileName = $"{orderNumber}\\{orderNumber}data.csv";
                         var filePath = $"{uploadPath}\\{fileName}";
@@ -62,18 +59,17 @@ namespace ADSDataDirect.Web.Async
                             Columns =
                                 new List<string>
                                 {
-                            "SalesMasterId",
-                            "FirstName",
-                            "LastName",
-                            "Address",
-                            "City",
-                            "State",
-                            "Zip",
-                            "Zip4",
-                            "Apt",
-                            "Dealership_ID",
-                            "Index",
-                            "URL","OpenURL", "BannnerURL"
+                                    "SalesMasterId",
+                                    "FirstName",
+                                    "LastName",
+                                    "Address",
+                                    "City",
+                                    "State",
+                                    "Zip",
+                                    "Zip4",
+                                    "Apt",
+                                    "Dealership_ID",
+                                    "Index",
                                 }
                         });
                         string amazonFileKey = $"{orderNumber}/{orderNumber}data.csv";
@@ -85,7 +81,7 @@ namespace ADSDataDirect.Web.Async
                             db.Campaigns.Include(x => x.Segments).FirstOrDefault(x => x.OrderNumber == orderNumber);
 
                         var campaignTesting = db.CampaignsTesting.FirstOrDefault(x => x.CampaignId == campaign.Id);
-                        campaignTesting.DataFileUrl = fileName;
+                        campaignTesting.DataFileUrl = amazonFileKey;
                         campaignTesting.DateFetched = DateTime.Now;
                         db.SaveChanges();
 
@@ -111,19 +107,18 @@ namespace ADSDataDirect.Web.Async
                                 Columns =
                                     new List<string>
                                     {
-                                "SalesMasterId",
-                                "FirstName",
-                                "LastName",
-                                "Address",
-                                "City",
-                                "State",
-                                "Zip",
-                                "Zip4",
-                                "Apt",
-                                "Dealership_ID",
-                                "Index",
-                                "URL","OpenURL", "BannnerURL"
-                                }
+                                        "SalesMasterId",
+                                        "FirstName",
+                                        "LastName",
+                                        "Address",
+                                        "City",
+                                        "State",
+                                        "Zip",
+                                        "Zip4",
+                                        "Apt",
+                                        "Dealership_ID",
+                                        "Index",
+                                    }
                             });
                             string amazonFileKey1 = $"{campaign.OrderNumber}/{segment.SegmentNumber}data.csv";
                             S3FileManager.Upload(amazonFileKey1, filePath1, true);
@@ -153,38 +148,6 @@ namespace ADSDataDirect.Web.Async
                     LogHelper.AddError(db, LogType.DataProcessing, orderNumber, "Error processing " + zipCodeFile + " " + ex.Message);
                 }
             }
-        }
-
-        private static List<SegmentResponse> GenerateURLs(WfpictContext db, Guid campaignId, string orderNumber, List<SegmentResponse> datas)
-        {
-            db.CampaignLinks.RemoveRange(db.CampaignLinks.Where(x => x.CampaignId == campaignId));
-            db.SaveChanges();
-
-            string baseURL = "http://url.verumdm.com";
-            foreach (var data in datas)
-            {
-                string URL = $"{orderNumber}/u/{data.Index}";
-                string OpenURL = $"{orderNumber}/o/{data.Index}";
-                string BannerURL = $"{orderNumber}/b/{data.Index}";
-
-                db.CampaignLinks.Add(new CampaignLink()
-                {
-                    Id = Guid.NewGuid(),
-                    CreatedAt = DateTime.Now,
-                    CampaignId = campaignId,
-                    OrderNumber = orderNumber,
-                    SalesMasterId = data.SalesMasterId,
-                    URL = URL,
-                    OpenURL = OpenURL,
-                    BannerURL = BannerURL
-                });
-
-                data.URL = $"{baseURL}/{URL}";
-                data.OpenURL = $"{baseURL}/{OpenURL}";
-                data.BannerURL = $"{baseURL}/{BannerURL}";
-            }
-            db.SaveChanges();
-            return datas;
         }
     }
 }

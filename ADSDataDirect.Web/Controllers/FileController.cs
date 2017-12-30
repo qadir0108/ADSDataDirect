@@ -56,6 +56,9 @@ namespace ADSDataDirect.Web.Controllers
                     {
                         switch (fileVm.FileType)
                         {
+                            case "DynamicCodingFile":
+                                amazonFileKey = string.Format("{0}/dynamic_coding.csv", fileVm.OrderNumber);
+                                break;
                             case "Assets_CreativeFiles":
                                 amazonFileKey = string.Format("{0}/{0}_html.zip", fileVm.OrderNumber);
                                 break;

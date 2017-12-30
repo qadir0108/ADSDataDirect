@@ -6,54 +6,49 @@ using System.Linq;
 using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
-using System.Web.Http;
+using System.Web.Mvc;
 
 namespace ADSDataDirect.Web.URLShortener.Controllers
 {
-    public class RedirectController : ApiController
+    public class RedirectController : Controller
     {
         [HttpGet]
         [ActionName("get")]
         [Route("{orderNumber}/{type}/{id}")]
         // GET: api/Redirect/5
-        public async Task<IHttpActionResult> Get(string orderNumber, string type, string id)
+        public ActionResult Get(string orderNumber, string type, string id)
         {
-           
             string join = $"{orderNumber}/{type}/{id}";
-            string redirectURL = "http://verumdm.com";
+            string redirectURL = "http://www.google.com";
             try
             {
                 using (WfpictContext context= new WfpictContext())
                 {
-                    CampaignLink link;
-                    switch (type)
+                    // Pick that 2501/u/1 that is not yet redemed! e.g. link with unique 90750431
+                    DynamicCodingLink link = context.DynamicCodingLinks
+                        .FirstOrDefault(x => x.OrderNumber == orderNumber 
+                                          && x.VerumURL == join
+                                          && x.IsURLRedemed == false);
+                    if (link == null)
                     {
-                        case "u":
-                            link = context.CampaignLinks.FirstOrDefault(x => x.OrderNumber == orderNumber && x.URL == join);
-                            if (link == null) break;
-                            redirectURL = $"https://vt.orbee.co?oa_aid=98&oa_cpid=9&oa_vtid=EB28225D1&oa_source=www.glakeshonda.com&oa_uid={link.SalesMasterId}";
-                            link.IsURLRedemed = true;
-                            break;
-                        case "o":
-                            link = context.CampaignLinks.FirstOrDefault(x => x.OrderNumber == orderNumber && x.OpenURL == join);
-                            if (link == null) break;
-                            redirectURL = $"https://rs.orbee.co?oa_aid=98&oa_cpid=9&oa_ctid=EB28225D1&oa_uid={link.SalesMasterId}&oa_campaign=GreatLakesHonda&oa_dest=http%3A%2F%2Fwww.glakeshonda.com%2Fnew-inventory%2Findex.htm%3Futm_source%3DEchoMCM%26utm_medium%3DAcquisition%26utm_content%3DTheme%26utm_campaign%3DEB28225D1";
-                            link.IsOpenURLRedemed = true;
-                            break;
-                        case "b":
-                            link = context.CampaignLinks.FirstOrDefault(x => x.OrderNumber == orderNumber && x.BannerURL == join);
-                            if (link == null) break;
-                            redirectURL = $"https://rs.orbee.co?oa_aid=98&oa_cpid=9&oa_ctid=EB28225D3&oa_uid={link.SalesMasterId}&oa_campaign=GreatLakesHonda&oa_dest=http%3A%2F%2Fwww.glakeshonda.com%2F%3Futm_source%3DEchoMCM%26utm_medium%3DAcquisition%26utm_content%3DHome%26utm_campaign%3DEB28225D3";
-                            link.IsBannerURLRedemed = true;
-                            break;
+                        // consume other links that are not yet in the same Order
+                        link = context.DynamicCodingLinks
+                        .FirstOrDefault(x => x.OrderNumber == orderNumber
+                                            && x.URLType == "u"
+                                            && x.IsURLRedemed == false);
                     }
+
+                    if (link == null) throw new Exception("No more link");
+
+                    redirectURL = link.OrignalURL; 
+                    link.IsURLRedemed = true;
                     context.SaveChanges();
                 }
-                
             }
             catch { }
 
-            return Redirect(redirectURL);
+            return View(redirectURL);
+            //return Redirect(redirectURL);
         }
 
     }

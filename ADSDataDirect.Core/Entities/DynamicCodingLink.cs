@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ADSDataDirect.Core.Entities
 {
-    public sealed class CampaignLink : BaseEntity, IBaseEntity
+    public sealed class DynamicCodingLink : BaseEntity, IBaseEntity
     {
         [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public Guid Id { get; set; }
@@ -13,17 +13,13 @@ namespace ADSDataDirect.Core.Entities
 
         public int SalesMasterId { get; set; }
 
-        // https://verum.com/3011/u/1 by adding basePath
-        public string URL { get; set; } // 3010/u/1
+        public string OrignalURL { get; set; } // orbee link
+        public string URLType { get; set; } // u, o, b
+        //// 3010/u/1 https://verum.com/3011/u/1 by adding basePath 
+        public string VerumURL { get; set; } // 3010/u/1
         public bool IsURLRedemed { get; set; }
 
-        public string OpenURL { get; set; }
-        public bool IsOpenURLRedemed { get; set; }
-
-        public string BannerURL { get; set; } // 3010/b/1 // https://verum.com/3011/b/1
-        public bool IsBannerURLRedemed { get; set; }
-
-        public CampaignLink()
+        public DynamicCodingLink()
         {
         }
     }

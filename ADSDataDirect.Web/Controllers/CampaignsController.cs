@@ -414,6 +414,13 @@ namespace ADSDataDirect.Web.Controllers
             }
             Db.SaveChanges();
 
+            var notifications = Db.Notifications.Where(x => x.CampaignId == campaign.Id);
+            foreach (var notification in notifications)
+            {
+                Db.Notifications.Remove(notification);
+            }
+            Db.SaveChanges();
+
             Db.Campaigns.Remove(campaign);
             Db.SaveChanges();
             ForceOrders = true;

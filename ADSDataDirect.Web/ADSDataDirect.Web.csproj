@@ -304,6 +304,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controllers\SmartsheetController.cs" />
+    <Compile Include="Controllers\DynamicCodingController.cs" />
+    <Compile Include="DynamicCoding\DynamicCodingLookupVm.cs" />
     <Compile Include="Hangfire\HangfireBootstrapper .cs" />
     <Compile Include="Hangfire\ApplicationPreload.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -320,11 +322,14 @@
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Helpers\AdsException.cs" />
     <Compile Include="Helpers\AdsCache.cs" />
+    <Compile Include="DynamicCoding\DynamicCodingProcessor.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\ExcelHelper_Old.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
     <Compile Include="Helpers\SettingsManager.cs" />
-    <Compile Include="Models\CampaignLinkVm.cs" />
+    <Compile Include="Helpers\StringListRandomizer.cs" />
+    <Compile Include="DynamicCoding\DynamicCodingLinkVm.cs" />
+    <Compile Include="DynamicCoding\DynamicCodingInput.cs" />
     <Compile Include="Models\NotificationSearchVm.cs" />
     <Compile Include="Models\NotificationVm.cs" />
     <Compile Include="Models\MessageVm.cs" />

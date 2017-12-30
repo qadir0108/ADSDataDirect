@@ -59,6 +59,9 @@
                                     @Html.HiddenFor(model => model.Assets.Id)
                                     @Html.HiddenFor(model => model.Assets.CampaignId)
                                     @Html.HiddenFor(model => model.Assets.CreatedAt)
+                                    @Html.HiddenFor(model => model.DataFileQuantity)
+                                    @Html.HiddenFor(model => model.DataFileUrl)
+                                    @Html.HiddenFor(model => model.DateFetched)
 
                                     <div class="form-group">
                                         <label class="control-label col-md-2 pre">Campaign Name</label>
@@ -400,147 +403,191 @@
                             </div>
                         </div>
 
-                    <div class="tab-pane" id="tab_default_4">
-                            
-                        <div class="headertab">
-                            Data & Multi drop
-                        </div>
-                      
-                        <div class="row">
-                            <div class="form-group col-md-6">
-                                @Html.LabelFor(model => model.DataFileQuantity, htmlAttributes: new { @class = "control-label col-md-4" })
-                                <div class="col-md-8">
-                                    @Html.EditorFor(model => model.DataFileQuantity, new { htmlAttributes = new { @class = "form-control" } })
-                                    @Html.ValidationMessageFor(model => model.DataFileQuantity, "", new { @class = "text-danger" })
-                                </div>
-                            </div>
-
-                            <div class="form-group col-md-6">
-                                <label class="control-label col-md-2">Drops : <span id="nDrops">@(Model.Segments?.Count)</span></label>
-                                <div class="col-md-6">
-                                    <a id="addSegment" class="btn btn-primary" data-tooltip="tooltip" title="Add another drop" href="javascript:;">
-                                        Add another drop
-                                    </a>
-                                </div>
-                                <div class="col-md-4">
-                                    <div class="form-group">
-                                        <input type="submit" value="Process Data Files" class="btn btn-default" name="action:FetchProcessDataFiles" />
-                                    </div>
-                                </div>
-
-                            </div>
-
-                        </div>
-
-                        @using (Html.BeginCollectionItem("Segments"))
-                        {
-                            if (Model.Segments != null)
-                            {
-                                foreach (var segment in Model.Segments.OrderBy(x => x.SegmentNumber))
-                                {
-                                    Html.RenderPartial("Editors/_TestingSegment", segment);
-                                }
-                            }
-                        }
-
-                    </div>
-                        
-                        <div class="tab-pane" id="tab_default_5">
+                        <div class="tab-pane" id="tab_default_4">
 
                             <div class="headertab">
-                                Digital Plus
+                                Data & Multi drop
+                                <div class="pull-right">
+                                    <a target="_blank" href="~/DynamicCoding/DownloadVendor/@Model.CampaignId" class="btn btn-sm btn-primary" title="Links for Vendor" data-tooltip="tooltip">
+                                        <span class="fa fa-download"></span>
+                                    </a>
+                                    <a target="_blank" href="~/DynamicCoding/DownloadProgress/@Model.CampaignId" class="btn btn-sm btn-primary" title="Links Progress" data-tooltip="tooltip">
+                                        <span class="fa fa-download"></span>
+                                    </a>
+                                </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-6">
 
+                            <div class="row">
+                                <div class="form-group col-md-5">
+                                    @Html.LabelFor(model => model.DataFileQuantity, htmlAttributes: new { @class = "control-label col-md-5" })
+                                    <div class="col-md-7">
+                                        @Html.EditorFor(model => model.DataFileQuantity, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => model.DataFileQuantity, "", new { @class = "text-danger" })
+                                    </div>
+                                </div>
+
+                                <div class="form-group col-md-7">
+                                    <label class="control-label col-md-2">Drops : <span id="nDrops">@(Model.Segments?.Count)</span></label>
+                                    <div class="col-md-3">
+                                        <a id="addSegment" class="btn btn-primary" data-tooltip="tooltip" title="Add another drop" href="javascript:;">
+                                            Add drop
+                                        </a>
+                                    </div>
+                                    <div class="col-md-3">
+                                        <div class="form-group">
+                                            <input type="submit" value="Data Files" class="btn btn-default" name="action:FetchProcessDataFiles" />
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <input type="submit" value="Dynamic Coding" class="btn btn-default" name="action:ProcessDynamicCoding" />
+                                        </div>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
+                                <div class="form-group col-md-5">
                                     <div class="form-group">
-                                        @Html.LabelFor(model => model.IsOmniOrder, htmlAttributes: new { @class = "control-label col-md-3" })
-                                        <div class="col-md-9">
+                                        <div class="control-label col-md-5">Dynamic Coding?</div>
+                                        <div class="col-md-7">
                                             <div class="">
-                                                <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
                                                     <label class="btn btn-primary">
-                                                        @Html.RadioButtonFor(model => model.IsOmniOrder, "True")Yes
+                                                        @Html.RadioButtonFor(model => model.IsDynamicCoding, "True")Yes
                                                     </label>
                                                     <label class="btn btn-primary">
-                                                        @Html.RadioButtonFor(model => model.IsOmniOrder, "False")No
+                                                        @Html.RadioButtonFor(model => model.IsDynamicCoding, "False")No
                                                     </label>
                                                 </div>
-                                                @Html.ValidationMessageFor(model => model.IsOmniOrder, "", new { @class = "text-danger" })
+                                                @Html.ValidationMessageFor(model => model.IsDynamicCoding, "", new { @class = "text-danger" })
                                             </div>
                                         </div>
                                     </div>
-
+                                </div>
+                                <div class="form-group col-md-7">
                                     <div class="form-group">
-                                        @Html.LabelFor(model => model.OmniDeployDate, htmlAttributes: new { @class = "control-label col-md-3" })
-                                        <div class="col-md-9">
-                                            @Html.EditorFor(model => model.OmniDeployDate, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.OmniDeployDate, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.Impressions, htmlAttributes: new { @class = "control-label col-md-3" })
-                                        <div class="col-md-9">
-                                            @Html.EditorFor(model => model.Impressions, new { htmlAttributes = new { @class = "form-control" } })
-                                            @Html.ValidationMessageFor(model => model.Impressions, "", new { @class = "text-danger" })
-                                        </div>
-                                    </div>
-
-                                    <div class="form-group">
-                                        <label class="control-label col-md-3">Chanel Type</label>
-                                        <div class="col-md-9">
-                                            <div class="input-group">
-                                                @foreach (var value in Enum.GetValues(typeof(ChannelType)))
-                                                {
-                                                    var id = "dayofweek" + value;
-                                                    var name = Enum.GetName(typeof(ChannelType), value);
-                                                    ChannelType e = (ChannelType)value;
-                                                    var isChecked = Model.ChannelTypes == null ? "" :
-                                                        Model.ChannelTypes.Contains(e) ? "checked" : "";
-
-                                                    <div class="checkbox checkbox-primary">
-                                                        <input id="@id" type="checkbox" value="@value" name="ChannelTypes" @isChecked />
-                                                        <label for="@id" class="control-label">@name </label>
-                                                    </div>
-                                                }
-                                            </div>
+                                        @Html.LabelFor(model => model.DynamicCodingFile, htmlAttributes: new { @class = "control-label col-md-4" })
+                                        <div class="col-md-8">
+                                            @Html.EditorFor(model => model.DynamicCodingFile, new { htmlAttributes = new { @class = "form-control" } })
+                                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "DynamicCodingFile", OrderNumber = Model.OrderNumber })
+                                            @Html.ValidationMessageFor(model => model.DynamicCodingFile, "", new { @class = "text-danger" })
                                         </div>
                                     </div>
 
                                 </div>
+                            </div>
 
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.Assets.BannersFile, htmlAttributes: new { @class = "control-label col-md-3" })
-                                        <div class="col-md-9">
-                                            @Html.EditorFor(model => model.Assets.BannersFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_BannersFile", OrderNumber = Model.OrderNumber })
-                                            @Html.ValidationMessageFor(model => model.Assets.BannersFile, "", new { @class = "text-danger" })
+                                @using (Html.BeginCollectionItem("Segments"))
+                                {
+                                    if (Model.Segments != null)
+                                    {
+                                        foreach (var segment in Model.Segments.OrderBy(x => x.SegmentNumber))
+                                        {
+                                            Html.RenderPartial("Editors/_TestingSegment", segment);
+                                        }
+                                    }
+                                }
+
+                            </div>
+
+                            <div class="tab-pane" id="tab_default_5">
+
+                                <div class="headertab">
+                                    Digital Plus
+                                </div>
+                                <div class="row">
+                                    <div class="col-md-6">
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.IsOmniOrder, htmlAttributes: new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                <div class="">
+                                                    <div class="btn-group" data-toggle="buttons" style="padding-bottom: 10px">
+                                                        <label class="btn btn-primary">
+                                                            @Html.RadioButtonFor(model => model.IsOmniOrder, "True")Yes
+                                                        </label>
+                                                        <label class="btn btn-primary">
+                                                            @Html.RadioButtonFor(model => model.IsOmniOrder, "False")No
+                                                        </label>
+                                                    </div>
+                                                    @Html.ValidationMessageFor(model => model.IsOmniOrder, "", new { @class = "text-danger" })
+                                                </div>
+                                            </div>
                                         </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.OmniDeployDate, htmlAttributes: new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.EditorFor(model => model.OmniDeployDate, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.OmniDeployDate, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Impressions, htmlAttributes: new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.EditorFor(model => model.Impressions, new { htmlAttributes = new { @class = "form-control" } })
+                                                @Html.ValidationMessageFor(model => model.Impressions, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            <label class="control-label col-md-3">Chanel Type</label>
+                                            <div class="col-md-9">
+                                                <div class="input-group">
+                                                    @foreach (var value in Enum.GetValues(typeof(ChannelType)))
+                                                    {
+                                                        var id = "dayofweek" + value;
+                                                        var name = Enum.GetName(typeof(ChannelType), value);
+                                                        ChannelType e = (ChannelType)value;
+                                                        var isChecked = Model.ChannelTypes == null ? "" :
+                                                            Model.ChannelTypes.Contains(e) ? "checked" : "";
+
+                                                        <div class="checkbox checkbox-primary">
+                                                            <input id="@id" type="checkbox" value="@value" name="ChannelTypes" @isChecked />
+                                                            <label for="@id" class="control-label">@name </label>
+                                                        </div>
+                                                    }
+                                                </div>
+                                            </div>
+                                        </div>
+
                                     </div>
 
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.Assets.BannerLinksFile, htmlAttributes: new { @class = "control-label col-md-3" })
-                                        <div class="col-md-9">
-                                            @Html.EditorFor(model => model.Assets.BannerLinksFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_BannerLinksFile", OrderNumber = Model.OrderNumber })
-                                            @Html.ValidationMessageFor(model => model.Assets.BannerLinksFile, "", new { @class = "text-danger" })
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Assets.BannersFile, htmlAttributes: new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.EditorFor(model => model.Assets.BannersFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
+                                                @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_BannersFile", OrderNumber = Model.OrderNumber })
+                                                @Html.ValidationMessageFor(model => model.Assets.BannersFile, "", new { @class = "text-danger" })
+                                            </div>
                                         </div>
-                                    </div>
 
-                                    <div class="form-group">
-                                        @Html.LabelFor(model => model.Assets.MiscFile, htmlAttributes: new { @class = "control-label col-md-3" })
-                                        <div class="col-md-9">
-                                            @Html.EditorFor(model => model.Assets.MiscFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
-                                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_MiscFile", OrderNumber = Model.OrderNumber })
-                                            @Html.ValidationMessageFor(model => model.Assets.MiscFile, "", new { @class = "text-danger" })
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Assets.BannerLinksFile, htmlAttributes: new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.EditorFor(model => model.Assets.BannerLinksFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
+                                                @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_BannerLinksFile", OrderNumber = Model.OrderNumber })
+                                                @Html.ValidationMessageFor(model => model.Assets.BannerLinksFile, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+
+                                        <div class="form-group">
+                                            @Html.LabelFor(model => model.Assets.MiscFile, htmlAttributes: new { @class = "control-label col-md-3" })
+                                            <div class="col-md-9">
+                                                @Html.EditorFor(model => model.Assets.MiscFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
+                                                @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "Assets_MiscFile", OrderNumber = Model.OrderNumber })
+                                                @Html.ValidationMessageFor(model => model.Assets.MiscFile, "", new { @class = "text-danger" })
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
                             </div>
-                        </div>
 
-                    </div>
+                        </div>
                 </div>
             </div>
            
@@ -591,11 +638,13 @@
         $('#Assets_BannersFile').prop('readonly', "readonly");
         $('#Assets_BannerLinksFile').prop('readonly', "readonly");
         $('#Assets_MiscFile').prop('readonly', "readonly");
+        $('#DynamicCodingFile').prop('readonly', "readonly");
 
         $("input[name='IsTested']:checked").closest("label.btn").addClass("active");
         $("input[name='ReBroadCast']:checked").closest("label.btn").addClass("active");
         $("input[name='IsOpenPixel']:checked").closest("label.btn").addClass("active");
         $("input[name='IsOmniOrder']:checked").closest("label.btn").addClass("active");
+        $("input[name='IsDynamicCoding']:checked").closest("label.btn").addClass("active");
 
         $("#OpenGoals").on("keyup keydown change mouseup", function (event) {
             debugger;

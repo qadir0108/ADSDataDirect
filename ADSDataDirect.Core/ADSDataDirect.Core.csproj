@@ -70,7 +70,8 @@
     <Compile Include="DB\SegmentParameters.cs" />
     <Compile Include="DB\SegmentDataManager.cs" />
     <Compile Include="Entities\CampaignAsset.cs" />
-    <Compile Include="Entities\CampaignLink.cs" />
+    <Compile Include="Entities\DynamicCodingLink.cs" />
+    <Compile Include="Entities\DynamicCodingLookup.cs" />
     <Compile Include="Entities\Settings.cs" />
     <Compile Include="Entities\SystemLog.cs" />
     <Compile Include="Entities\Notification.cs" />
@@ -121,9 +122,9 @@
     <Compile Include="Migrations\201711030727021_TrackingChanges.Designer.cs">
       <DependentUpon>201711030727021_TrackingChanges.cs</DependentUpon>
     </Compile>
-    <Compile Include="Migrations\201712210157424_CampaignLinks.cs" />
-    <Compile Include="Migrations\201712210157424_CampaignLinks.Designer.cs">
-      <DependentUpon>201712210157424_CampaignLinks.cs</DependentUpon>
+    <Compile Include="Migrations\201712271831330_DynamicCoding.cs" />
+    <Compile Include="Migrations\201712271831330_DynamicCoding.Designer.cs">
+      <DependentUpon>201712271831330_DynamicCoding.cs</DependentUpon>
     </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
@@ -173,8 +174,8 @@
     <EmbeddedResource Include="Migrations\201711030727021_TrackingChanges.resx">
       <DependentUpon>201711030727021_TrackingChanges.cs</DependentUpon>
     </EmbeddedResource>
-    <EmbeddedResource Include="Migrations\201712210157424_CampaignLinks.resx">
-      <DependentUpon>201712210157424_CampaignLinks.cs</DependentUpon>
+    <EmbeddedResource Include="Migrations\201712271831330_DynamicCoding.resx">
+      <DependentUpon>201712271831330_DynamicCoding.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

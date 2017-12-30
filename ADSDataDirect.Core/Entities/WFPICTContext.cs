@@ -40,7 +40,8 @@ namespace ADSDataDirect.Core.Entities
         public DbSet<ApiRequest> ApiRequests { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }
         public DbSet<Settings> Settings { get; set; }
-        public DbSet<CampaignLink> CampaignLinks { get; set; }
+        public DbSet<DynamicCodingLookup> DynamicCodingLookups { get; set; }
+        public DbSet<DynamicCodingLink> DynamicCodingLinks { get; set; }
 
         public static WfpictContext Create()
         {
