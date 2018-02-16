@@ -10,7 +10,7 @@ using System.Collections.Generic;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    //[Authorize]
+    [Authorize]
     public class SmartsheetController : BaseController
     {
         public ActionResult Index()

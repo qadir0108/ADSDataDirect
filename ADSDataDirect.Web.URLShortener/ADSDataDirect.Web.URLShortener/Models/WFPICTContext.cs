@@ -13,6 +13,7 @@ namespace ADSDataDirect.Core.Entities
             Configuration.LazyLoadingEnabled = true;
             Configuration.ProxyCreationEnabled = false;
 
+            Database.SetInitializer<WfpictContext>(null);
             //Database.SetInitializer(new MigrateDatabaseToLatestVersion<WfpictContext, Configuration>());
         }
 

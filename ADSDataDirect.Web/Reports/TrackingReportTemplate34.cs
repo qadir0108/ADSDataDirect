@@ -79,7 +79,7 @@ namespace ADSDataDirect.Web.Reports
                     cell.CellValue = new CellValue(model.CampaignName);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    if(!model.IoNumber.EndsWith("RDP"))
+                    if(!string.IsNullOrEmpty(model.IoNumber) && !model.IoNumber.EndsWith("RDP"))
                     {
                         uint rowNumber = 18;
                         foreach (var segment in model.Segments)

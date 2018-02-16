@@ -479,12 +479,12 @@ namespace ADSDataDirect.Web.Controllers
             }
             var notCompletedSegments = Db.CampaignSegments
                 .Where(x => x.CampaignId == campaign.Id && x.SegmentStatus != (int)SegmentStatus.Complete);
-            if (notCompletedSegments.Any())
-            {
-                string segments = string.Join(",", notCompletedSegments.Select(x => x.SegmentNumber));
-                TempData["Error"] = "You have " + segments + " in progess and is not complete.";
-                return RedirectToAction("Index", "Campaigns");
-            }
+            //if (notCompletedSegments.Any())
+            //{
+            //    string segments = string.Join(",", notCompletedSegments.Select(x => x.SegmentNumber));
+            //    TempData["Error"] = "You have " + segments + " in progess and is not complete.";
+            //    return RedirectToAction("Index", "Campaigns");
+            //}
             campaign.Status = (int)CampaignStatus.Completed;
             Db.SaveChanges();
             TempData["Success"] = "Campaign " + campaign.CampaignName + " has been completed sucessfully.";

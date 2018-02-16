@@ -169,9 +169,15 @@ namespace ADSDataDirect.Web.Async
                     QueuedCampaignId = queuedCampaignId
                 };
                 db.CampaignTrackings.Add(tracking);
-                db.SaveChanges();
-
+            } else
+            {
+                campaignTracking.Quantity = quantity;
+                campaignTracking.DateSent = DateTime.Now;
+                campaignTracking.SentOrder = sentOrder;
+                campaignTracking.IsCreatedThroughApi = orderVia == OrderVia.Api;
+                campaignTracking.QueuedCampaignId = queuedCampaignId;
             }
+            db.SaveChanges();
 
             LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, !campaign.ReBroadcasted
                     ? "Order has been sent to vendor successfully."

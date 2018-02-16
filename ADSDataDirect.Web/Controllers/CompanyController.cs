@@ -11,6 +11,7 @@ using PagedList;
 
 namespace ADSDataDirect.Web.Controllers
 {
+    [Authorize]
     public class CompanyController : BaseController
     {
         private ApplicationUserManager _userManager;

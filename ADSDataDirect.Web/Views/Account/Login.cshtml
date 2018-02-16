@@ -41,7 +41,7 @@
                     @*<a href="~/ICT APPLICATIONS User Manual_v1.0.pdf">Download User Manual</a>*@
                 </div>
                 <div class="col-md-4 text-right">
-                    <input type="submit" value="Log in" class="btn btn-default"/>
+                    <input type="submit" value="Log in" id="btnSubmit" class="btn btn-default"/>
                 </div>
             </div>
             }
@@ -53,6 +53,14 @@
 <script type="text/javascript">
     
     var wfp = wfp || {};
+
+    $(document).ajaxStart(function () {
+        $("#btnSubmit").prop("disabled", true);
+    });
+
+    $(document).ajaxStop(function () {
+        $("#btnSubmit").prop("disabled", false);
+    });
 
         function SaveRegistrationSuccess(response) {
             debugger;
