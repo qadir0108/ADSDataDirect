@@ -121,7 +121,7 @@ namespace ADSDataDirect.Web.Async
                     db.SaveChanges();
                 }
 
-                LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, $"Multi {segment.SegmentNumber} has been sent to vendor successfully.");
+                LogHelper.AddLog(db, LogType.Vendor, campaign.OrderNumber, $"Multi {segment.SegmentNumber} has been sent to vendor successfully.");
             }
         }
 
@@ -179,7 +179,7 @@ namespace ADSDataDirect.Web.Async
             }
             db.SaveChanges();
 
-            LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, !campaign.ReBroadcasted
+            LogHelper.AddLog(db, LogType.Vendor, campaign.OrderNumber, !campaign.ReBroadcasted
                     ? "Order has been sent to vendor successfully."
                     : "Order Rebroad has been sent to vendor sucessfully.");
         }

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<RuleSet Name="SonarQube - adsdatadirect Sonar way" Description="This rule set was automatically generated from SonarQube.&#xD;&#xA;http://localhost:9000/profiles/show?key=AV4SZVSBj6MjXWCq_1BW" ToolsVersion="14.0">
+<RuleSet Name="SonarQube - NXSdatadirect Sonar way" Description="This rule set was automatically generated from SonarQube.&#xD;&#xA;http://localhost:9000/profiles/show?key=AV4SZVSBj6MjXWCq_1BW" ToolsVersion="14.0">
   <Rules AnalyzerId="SonarAnalyzer.CSharp" RuleNamespace="SonarAnalyzer.CSharp">
     <Rule Id="S100" Action="None" />
     <Rule Id="S1006" Action="Warning" />

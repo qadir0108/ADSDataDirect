@@ -1,6 +1,7 @@
 ﻿var wfp = wfp || {};
 
-wfp.appName = 'ADS Data Direct';
+var titles = document.title.split('-');
+wfp.appName = titles[0];
 
 var imagesPath = '/images/';
 

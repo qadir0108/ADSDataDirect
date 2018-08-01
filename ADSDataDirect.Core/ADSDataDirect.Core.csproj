@@ -126,6 +126,10 @@
     <Compile Include="Migrations\201712271831330_DynamicCoding.Designer.cs">
       <DependentUpon>201712271831330_DynamicCoding.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201808011851063_BannerUrl.cs" />
+    <Compile Include="Migrations\201808011851063_BannerUrl.Designer.cs">
+      <DependentUpon>201808011851063_BannerUrl.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
     <Compile Include="Entities\WFPRole.cs" />
@@ -176,6 +180,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201712271831330_DynamicCoding.resx">
       <DependentUpon>201712271831330_DynamicCoding.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201808011851063_BannerUrl.resx">
+      <DependentUpon>201808011851063_BannerUrl.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

@@ -65,6 +65,7 @@ namespace ADSDataDirect.Web.Controllers
                     LinkBreakout = $"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}linkr.csv",
                     IsOpenPixel = testing.IsOpenPixel,
                     OpenPixelUrl = testing.OpenPixelUrl,
+                    BannerUrl = testing.BannerUrl,
                     OpenGoals = testing.OpenGoals,
                     ClickGoals = testing.ClickGoals,
                     DataFileQuantity = testing.DataFileQuantity,
@@ -131,7 +132,7 @@ namespace ADSDataDirect.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult EditApproved([Bind(Include = "Assets,Segments,Id,CampaignId,ReferenceNumber,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,DeployDate,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,LinkBreakout,ReportSiteLink,CreatedAt,CreatedBy,IsUseApiDataForOpen,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,DataFileQuantity,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes")] CampaignApprovedVm campaignApprovedVm)
+        public ActionResult EditApproved([Bind(Include = "Assets,Segments,Id,CampaignId,ReferenceNumber,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,DeployDate,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,LinkBreakout,ReportSiteLink,CreatedAt,CreatedBy,IsUseApiDataForOpen,IsOpenPixel,OpenPixelUrl,BannerUrl,OpenGoals,ClickGoals,DataFileQuantity,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes")] CampaignApprovedVm campaignApprovedVm)
         {
             if (ModelState.IsValid)
             {

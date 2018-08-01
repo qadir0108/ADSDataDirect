@@ -153,7 +153,7 @@ namespace ADSDataDirect.Web.Controllers
         public ActionResult Create(
             [Bind(
                  Include =
-                     "Assets,Segments,ID,OrderNumber,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,IsPersonalization,IsMatchback,IsSuppression,IsOpenPixel,OpenPixelUrl,WhiteLabel,OptOut,SpecialInstructions,IsAddViewInBrowser,IsAddOptOut,DataFileQuantity,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes")] CampaignVm campaignVm)
+                     "Assets,Segments,ID,OrderNumber,CreatedAt,CampaignName,BroadcastDate,RepresentativeName,RepresentativeEmail,ReBroadCast,ReBroadcastDate,Price,TestingUrgency,GeoDetails,Demographics,Quantity,FromLine,SubjectLine,IsPersonalization,IsMatchback,IsSuppression,IsOpenPixel,OpenPixelUrl,BannerUrl,WhiteLabel,OptOut,SpecialInstructions,IsAddViewInBrowser,IsAddOptOut,DataFileQuantity,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes")] CampaignVm campaignVm)
         {
             if (ModelState.IsValid)
             {

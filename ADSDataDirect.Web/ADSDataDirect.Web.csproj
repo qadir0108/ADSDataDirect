@@ -320,6 +320,13 @@
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
+    <Compile Include="HasOffers\Advertisers\AdvertisersManager.cs" />
+    <Compile Include="HasOffers\Advertisers\GetAdvertisersListResponse.cs" />
+    <Compile Include="HasOffers\Campaigns\CampaignsManager.cs" />
+    <Compile Include="HasOffers\Campaigns\GetCampaignsListResponse.cs" />
+    <Compile Include="HasOffers\HasOffersManager.cs" />
+    <Compile Include="HasOffers\Publishers\GetPublishersListResponse.cs" />
+    <Compile Include="HasOffers\Publishers\PublishersManager.cs" />
     <Compile Include="Helpers\AdsException.cs" />
     <Compile Include="Helpers\AdsCache.cs" />
     <Compile Include="DynamicCoding\DynamicCodingProcessor.cs" />

@@ -25,7 +25,7 @@ namespace ADSDataDirect.Web.ProData
                 if (isAutoProcessTracking)
                 {
                     // Delete old log
-                    db.SystemLogs.Where(x => x.LogType == (int)LogType.RulesProcessing || x.LogType == (int)LogType.ProData).Delete();
+                    db.SystemLogs.Where(x => x.LogType == (int)LogType.RulesProcessing || x.LogType == (int)LogType.Vendor).Delete();
                     db.SaveChanges();
 
                     LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules started at {DateTime.Now}");

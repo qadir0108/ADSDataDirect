@@ -12,8 +12,11 @@ namespace ADSDataDirect.Web.Async.Helpers
 {
     public static class EmailHelper
     {
-        private const string Footer = @"<br/><br/>Thanks<br/>
-                                        <b>ADS Data Direct</b><br/>http://www.adsdatadirect.com";
+        readonly static string clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+        readonly static string clientName = System.Configuration.ConfigurationManager.AppSettings["ClientName"];
+        readonly static string clientAppURL = System.Configuration.ConfigurationManager.AppSettings["ClientAppURL"];
+
+        readonly static string Footer = $"<br/><br/>Thanks<br/><b>{clientName}</b><br/>{clientAppURL}";
 
         public static void SendOrderEmailToClient(Campaign campaign, WfpUser loggedInUser)
         {
@@ -53,7 +56,7 @@ namespace ADSDataDirect.Web.Async.Helpers
         {
             string subject = $"New Order Received, Order # {campaign.OrderNumber}, Campaign Date {campaign.BroadcastDate?.ToString("d")}, QTY {campaign.Quantity} , Date Submitted {campaign.CreatedAt:d}";
 
-            string body = $@"<br/><p>Dear ADS team, <br/><br/> New Order has been entered into system. Order details is as below;</p>
+            string body = $@"<br/><p>Dear team, <br/><br/> New Order has been entered into system. Order details is as below;</p>
                         <table border=""2"">
                         <tr><th align=""left"">Order #:</th><td>{campaign.OrderNumber}</td></tr>
                         <tr><th align=""left"">Status:</th><td>{(CampaignStatus)campaign.Status}</td></tr>
@@ -95,11 +98,12 @@ namespace ADSDataDirect.Web.Async.Helpers
             string segmentsHtml = string.Empty;
             if (segment == null)
             {
-                orderNumber = campaign.ReBroadcasted ? $"ADS{campaign.ReBroadcastedOrderNumber}" : $"ADS{campaign.OrderNumber}";
+                // {clientCode} ADS / NSX
+                orderNumber = campaign.ReBroadcasted ? $"{clientCode}{campaign.ReBroadcastedOrderNumber}" : $"{clientCode}{campaign.OrderNumber}";
                 subject = $"{newOld} Order {campaign.Approved.CampaignName}, Order # {orderNumber}";
             } else
             {
-                orderNumber = $"ADS{segment.SegmentNumber}";
+                orderNumber = $"{clientCode}{segment.SegmentNumber}";
                 subject = $"{newOld} Order {campaign.Approved.CampaignName}, Order # {orderNumber}";
                 //                   <tr><th align=""left"">Data File</th><td>{segment.SegmentDataFileUrl}</td></tr>
                 segmentsHtml += $@"<table border=""1"">
@@ -134,14 +138,16 @@ namespace ADSDataDirect.Web.Async.Helpers
                     <tr><th align=""left"">Special Instructions:</th><td>{campaign.Approved.SpecialInstructions}</td></tr>
                     <tr><th align=""left"">Deploy Date:</th><td>{deployDate}</td></tr>
                     <tr><th align=""left"">Deploy Time:</th><td>{deployTime}</td></tr>
-                    <tr><th align=""left"">ReportSite Link:</th><td>{campaign.Approved.ReportSiteLink}</td></tr>
                     <tr><th align=""left"">Data Breakout:</th><td>{campaign.Testing.DataFileUrl}</td></tr>
                     <tr><th align=""left"">Has Open Pixel:</th><td>{(campaign.Approved.IsOpenPixel? "Yes": "No")}</td></tr>
                     <tr><th align=""left"">Open Pixel URL:</th><td>{campaign.Approved.OpenPixelUrl}</td></tr>
+                    <tr><th align=""left"">Omni Channel:</th><td>{(campaign.Approved.IsOmniOrder? "Y" : "N")}</td></tr>
+                    <tr><th align=""left"">Banner URL:</th><td>{campaign.Approved.BannerUrl}</td></tr>
                     <tr><th align=""left"">Open Goals:</th><td>{campaign.Approved.OpenGoals}</td></tr>
                     <tr><th align=""left"">Click Goals:</th><td>{campaign.Approved.ClickGoals}</td></tr>
                     <tr><th align=""left"">Segment Data:</th><td>{segmentsHtml}</td></tr>
                     </table></p> <p></p> {Footer}";
+            // <tr><th align=""left"">ReportSite Link:</th><td>{campaign.Approved.ReportSiteLink}</td></tr>
             SendEmail(vendor.Email, subject, body, vendor.CcEmails);
             return body;
         }

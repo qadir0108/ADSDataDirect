@@ -9,6 +9,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Owin;
 using Owin;
+using System;
+using ADSDataDirect.Enums;
 
 [assembly: OwinStartup(typeof(Startup))]
 namespace ADSDataDirect.Web
@@ -53,7 +55,24 @@ namespace ADSDataDirect.Web
             using (WfpictContext ctx = new WfpictContext())
             {
                 var userManager = new UserManager<WfpUser>(new UserStore<WfpUser>(ctx));
-                userManager.FindByName("admin");
+                if(userManager.FindByName("kamran.qadir") != null)
+                    return;
+
+                var adminUser = new WfpUser
+                {
+                    Id = Guid.NewGuid().ToString(),
+                    CreatedAt = DateTime.Now,
+                    UserName = "kamran.qadir",
+                    Email = "qadir0108@gmail.com",
+                    Status = (int)UserStatus.Active,
+                    UserType = (int)UserType.Admin
+                };
+                var result = userManager.CreateAsync(adminUser, "P@kistan1");
+                if (result.Result == IdentityResult.Success)
+                {
+                    //Success
+                }
+                
             }
         }
     }

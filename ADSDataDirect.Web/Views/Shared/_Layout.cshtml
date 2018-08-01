@@ -6,14 +6,14 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ADS Data Direct - @ViewBag.Title</title>
+    <title>@System.Configuration.ConfigurationManager.AppSettings["ClientName"] - @ViewBag.Title</title>
     @*@Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")*@
     @Styles.Render("~/Theme/CSS")
 
     @Scripts.Render("~/Theme/JS")
     @Scripts.Render("~/Theme/jQueryUI")
-    <script src="~/js/wfp.js?version=1"></script>
+    <script src="~/js/wfp.js?version=3"></script>
     <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
 </head>
 <body>
@@ -35,7 +35,7 @@
 
         <footer>
             <p>
-                &copy; @DateTime.Now.Year - ADS Data Direct
+                &copy; @DateTime.Now.Year - @System.Configuration.ConfigurationManager.AppSettings["ClientName"]
             </p>
         </footer>
     </div>

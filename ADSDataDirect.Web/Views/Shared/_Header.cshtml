@@ -21,7 +21,7 @@
 			<div class="col-md-10">
 				<div class="navigation">
 					<div class="menu-button">
-                        ADS Data Direct
+                        @System.Configuration.ConfigurationManager.AppSettings["ClientName"]
 					</div>
 					<ul data-breakpoint="800" class="flexnav">
 						@if (isLoggedIn)

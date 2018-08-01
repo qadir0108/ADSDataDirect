@@ -58,6 +58,7 @@ namespace ADSDataDirect.Web.Models
         // Digital Plus
         public bool IsOpenPixel { get; set; }
         public string OpenPixelUrl { get; set; }
+        public string BannerUrl { get; set; }
         public bool IsOmniOrder { get; set; }
         public DateTime? OmniDeployDate { get; set; }
         public long Impressions { get; set; }

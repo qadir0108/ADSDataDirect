@@ -43,7 +43,7 @@ namespace ADSDataDirect.Web.Controllers
                     CompanyLogo = "logo1.png",
                     ReportTemplate = "Tracking1",
                     WebDomain = dic.Value.Trim(),
-                    Email = "josh.silver@adsdatadirect.com",
+                    Email = "josh@nxsda.com", //"josh.silver@adsdatadirect.com",
                     Phone = "(123)-1234-1234"
                 });
             }

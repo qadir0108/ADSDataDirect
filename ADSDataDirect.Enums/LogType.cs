@@ -2,7 +2,7 @@
 {
     public enum LogType
     {
-        ProData,
+        Vendor,
         MailChimp,
         FileProcessing,
         DataProcessing,

@@ -162,7 +162,7 @@ namespace ADSDataDirect.Web.ProData
 
         public static void FetchAndUpdateTrackings(WfpictContext db, Campaign campaign)
         {
-            LogHelper.AddLog(db, LogType.ProData, campaign.OrderNumber, $"Starting refresh at {DateTime.Now} ");
+            LogHelper.AddLog(db, LogType.Vendor, campaign.OrderNumber, $"Starting refresh at {DateTime.Now} ");
 
             var settings = SettingsManager.Instance.LoadSettings(db);
 
@@ -196,7 +196,7 @@ namespace ADSDataDirect.Web.ProData
         private static void SaveProData(WfpictContext db, Guid? campaignId, string orderNumber, string segmentNumber, ProDataResponse data)
         {
             // Delete Old
-            LogHelper.AddLog(db, LogType.ProData, orderNumber, $"Deleting Old ProData ");
+            LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Deleting Old ProData ");
             var proDatas = db.ProDatas.Where(x => x.CampaignId == campaignId && x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber);
             foreach (var proData in proDatas)
             {
@@ -208,7 +208,7 @@ namespace ADSDataDirect.Web.ProData
             if (data.reports != null && data.reports.report != null)
             {
                 var reports = data.reports.report;
-                LogHelper.AddLog(db, LogType.ProData, orderNumber, $"{reports.Length} records fetched from ProData ");
+                LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"{reports.Length} records fetched from ProData ");
                 foreach (var report in reports)
                 {
                     db.ProDatas.Add(new Core.Entities.ProData()
@@ -235,7 +235,7 @@ namespace ADSDataDirect.Web.ProData
                     });
                 }
                 db.SaveChanges();
-                LogHelper.AddLog(db, LogType.ProData, orderNumber, $"Refresh completed successfully at {DateTime.Now} ");
+                LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Refresh completed successfully at {DateTime.Now} ");
             }
             
         }

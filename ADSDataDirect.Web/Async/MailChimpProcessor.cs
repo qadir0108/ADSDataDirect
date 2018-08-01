@@ -214,7 +214,7 @@ namespace ADSDataDirect.Web.Async
                             },
                             CampaignDefaults = new CampaignDefaults
                             {
-                                FromEmail = "josh.silver@adsdatadirect.com",
+                                FromEmail = "josh@nxsda.com", //"josh.silver@adsdatadirect.com",
                                 FromName = model.FromLine,
                                 Language = "EN",
                                 Subject = model.SubjectLine

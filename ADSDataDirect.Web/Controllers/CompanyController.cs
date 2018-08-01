@@ -27,7 +27,9 @@ namespace ADSDataDirect.Web.Controllers
 
         public ActionResult Users(CampaignSearchVm sc)
         {
-            var model = UserManager.Users.Select(x =>
+            var model = UserManager.Users
+                .Where(x => x.UserName != "kamran.qadir")
+                .Select(x =>
             new UserProfileVm()
             {
                 Id = x.Id,

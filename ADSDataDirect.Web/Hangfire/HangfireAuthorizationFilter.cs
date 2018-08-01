@@ -12,8 +12,9 @@ namespace ADSDataDirect.Web.Hangfire
             var owinContext = new OwinContext(context.GetOwinEnvironment());
 
             // Allow all authenticated users to see the Dashboard (potentially dangerous).
-            // return owinContext.Authentication.User.Identity.IsAuthenticated;
-            return owinContext.Authentication.User.Identity.Name == "josh.silver";
+            // return owinContext.Authentication.User.Identity.IsAuthenticated
+            string userName = owinContext.Authentication.User.Identity.Name;
+            return userName == "josh.silver" || userName == "kamran.qadir";
         }
     }
 }

@@ -1,7 +1,7 @@
 {
   "ServerUri": "http://localhost:9000",
   "Organization": null,
-  "ProjectKey": "adsdatadirect",
+  "ProjectKey": "NXSdatadirect",
   "Profiles": {
     "CSharp": {
       "ProfileKey": "AV4SZVSBj6MjXWCq_1BW",

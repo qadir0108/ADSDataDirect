@@ -26,7 +26,7 @@
         <div class="col-md-1 listing-action" id="divTools" style="text-align: right">
         @if (isAdmin)
         {
-            <a href="#" class="btn btn-default" id="btnRefresh" data-tooltip="tooltip" title="Refresh from ProData"><span class="glyphicon glyphicon-refresh"></span></a>
+            <a href="#" class="btn btn-default" id="btnRefresh" data-tooltip="tooltip" title="Refresh from Vendor"><span class="glyphicon glyphicon-refresh"></span></a>
         }
         </div>
     </div>
@@ -237,7 +237,7 @@
                                     debugger;
                                     if (response === "") wfp.reload();
                                     if (response.IsSucess) {
-                                        wfp.showSuccess('ProData has been refreshed successfully.');
+                                        wfp.showSuccess('Data has been refreshed successfully.');
                                         wfp.reload();
                                     } else {
                                         wfp.showError(response.ErrorMessage);

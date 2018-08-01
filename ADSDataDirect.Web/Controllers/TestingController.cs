@@ -78,6 +78,7 @@ namespace ADSDataDirect.Web.Controllers
 
                     IsOpenPixel = campaign.IsOpenPixel,
                     OpenPixelUrl = campaign.OpenPixelUrl,
+                    BannerUrl = campaign.BannerUrl,
                     OpenGoals = campaign.Quantity * 12 / 100,
                     ClickGoals = campaign.Quantity * 15 / 100,
                     DataFileQuantity = campaign.DataFileQuantity,
@@ -217,7 +218,7 @@ namespace ADSDataDirect.Web.Controllers
         [ValidateAntiForgeryToken]
         [MultipleButton(Name = "action", Argument = "EditTesting")]
         public ActionResult EditTesting([Bind(Include =
-                     "Assets,Segments,Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy,IsOpenPixel,OpenPixelUrl,OpenGoals,ClickGoals,DataFileQuantity,DataFileUrl,DateFetched,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes,PaceDays,IsDynamicCoding,DynamicCodingFile"
+                     "Assets,Segments,Id,CampaignId,OrderNumber,CampaignName,WhiteLabel,ReBroadCast,ReBroadcastDate,FromLine,SubjectLine,HtmlImageFiles,CreativeURL,TestSeedList,FinalSeedList,IsTested,TestingTime,TestingUrgency,DeployDate,ZipCodeFile,ZipURL,GeoDetails,Demographics,Quantity,SpecialInstructions,CreatedAt,CreatedBy,IsOpenPixel,OpenPixelUrl,BannerUrl,OpenGoals,ClickGoals,DataFileQuantity,DataFileUrl,DateFetched,IsOmniOrder,OmniDeployDate,Impressions,ChannelTypes,PaceDays,IsDynamicCoding,DynamicCodingFile"
              )]CampaignTestingVm campaignTestingVm)
         {
             if (ModelState.IsValid)
