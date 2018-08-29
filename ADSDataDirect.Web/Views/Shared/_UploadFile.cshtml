@@ -37,7 +37,7 @@
             var linkDownload = $('#linkDownload_@Model.FileType');
             var linkDelete = $('#linkDelete_@Model.FileType');
             var ifHtmlImageFiles = '@(Model.FileType == "Assets_CreativeFiles" || Model.FileType.StartsWith("CreativeFiles")
-                || Model.FileType == "CompanyLogo" || Model.FileType == "Assets_BannersFile" || Model.FileType == "Assets_MiscFile")';
+                || Model.FileType == "CompanyLogo" || Model.FileType == "Assets_BannersFile" || Model.FileType == "Assets_MiscFile" || Model.FileType == "OpenModelImageFile")';
 
             //debugger;
             if (txtSelectedFile.val() === '') {

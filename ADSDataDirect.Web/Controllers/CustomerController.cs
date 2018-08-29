@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Data.Entity;
 using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
@@ -13,7 +14,8 @@ namespace ADSDataDirect.Web.Controllers
     {
         public ActionResult Index(CampaignSearchVm sc)
         {
-            var customer = Db.Customers.Select(x =>
+            var customer = Db.Customers
+                .Select(x =>
             new CustomerVm
             {
                 Id = x.Id.ToString(),
@@ -24,6 +26,11 @@ namespace ADSDataDirect.Web.Controllers
                 WebDomain = x.WebDomain,
                 Phone = x.Phone,
                 Email = x.Email,
+                IsUseOpenModel = x.IsUseOpenModel,
+                OpenInitial = x.OpenInitial,
+                OpenEnd = x.OpenEnd,
+                ClickInitial = x.ClickInitial,
+                ClickEnd = x.ClickEnd,
                 DateCreated = x.CreatedAt.ToString()
             }).ToList();
 
@@ -55,11 +62,16 @@ namespace ADSDataDirect.Web.Controllers
                     WebDomain = customerVm.WebDomain,
                     Email = customerVm.Email,
                     Phone = customerVm.Phone,
+                    IsUseOpenModel = customerVm.IsUseOpenModel,
+                    OpenInitial = customerVm.OpenInitial,
+                    OpenEnd = customerVm.OpenEnd,
+                    ClickInitial = customerVm.ClickInitial,
+                    ClickEnd = customerVm.ClickEnd
                 };
                 Db.Customers.Add(customer);
                 Db.SaveChanges();
 
-                ForceCustomers = true;
+                SetForceCustomers(true);
 
                 TempData["Success"] = "New White Label has been added successfully!";
                 return RedirectToAction("Index");
@@ -92,6 +104,11 @@ namespace ADSDataDirect.Web.Controllers
                 WebDomain = x.WebDomain,
                 Email = x.Email,
                 Phone = x.Phone,
+                IsUseOpenModel = x.IsUseOpenModel,
+                OpenInitial = x.OpenInitial,
+                OpenEnd = x.OpenEnd,
+                ClickInitial = x.ClickInitial,
+                ClickEnd = x.ClickEnd,
                 DateCreated = x.CreatedAt.ToString()
             };
             ViewBag.ReportTemplate = new SelectList(ReportTemplates, "Value", "Text", customerVm.ReportTemplate);
@@ -113,11 +130,16 @@ namespace ADSDataDirect.Web.Controllers
                     customer.WebDomain = customerVm.WebDomain;
                     customer.Email = customerVm.Email;
                     customer.Phone = customerVm.Phone;
+                    customer.IsUseOpenModel = customerVm.IsUseOpenModel;
+                    customer.OpenInitial = customerVm.OpenInitial;
+                    customer.OpenEnd = customerVm.OpenEnd;
+                    customer.ClickInitial = customerVm.ClickInitial;
+                    customer.ClickEnd = customerVm.ClickEnd;
                 }
                 Db.SaveChanges();
                 TempData["Success"] = "White Label settings has been updated successfully!";
 
-                ForceCustomers = true;
+                SetForceCustomers(true);
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -136,7 +158,7 @@ namespace ADSDataDirect.Web.Controllers
                 {
                     Db.Customers.Remove(customer);
                     Db.SaveChanges();
-                    ForceCustomers = true;
+                    SetForceCustomers(true);
                 }
                 return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
             }
@@ -146,5 +168,6 @@ namespace ADSDataDirect.Web.Controllers
                     JsonRequestBehavior.AllowGet);
             }
         }
+
     }
 }

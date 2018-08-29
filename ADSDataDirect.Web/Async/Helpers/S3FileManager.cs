@@ -1,4 +1,5 @@
-﻿using Amazon;
+﻿using ADSDataDirect.Enums;
+using Amazon;
 using Amazon.S3;
 using Amazon.S3.IO;
 using Amazon.S3.Model;
@@ -7,7 +8,24 @@ namespace ADSDataDirect.Web.Async.Helpers
 {
     public class S3FileManager
     {
-        public readonly static string Bucket = "marketing247";
+        readonly static string clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+
+        private static string _serverPrefix = $"https://{Bucket}.s3.amazonaws.com/";
+
+        public static string Bucket {
+            get
+            {
+                return (clientCode == Client.ADS.ToString()) ? "marketing247" : "marketing248";
+            }
+        }
+
+        public static string ServerPrefix
+        {
+            get
+            {
+                return _serverPrefix;
+            }
+        }
 
         public static void Upload(string fileKey, string localFilePath, bool ifMakePublic = true, bool overWrite = false)
         {

@@ -45,6 +45,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Client.cs" />
     <Compile Include="OrderVia.cs" />
     <Compile Include="ReportTemplate.cs" />
     <Compile Include="LogStatus.cs" />

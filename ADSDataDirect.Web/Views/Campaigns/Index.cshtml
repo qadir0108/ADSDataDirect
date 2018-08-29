@@ -176,15 +176,21 @@
                                 <div class="col-md-3">
                                     <a href="@Url.Action("Delete", "Campaigns", new {id = item.Id})" title="Delete" data-tooltip="tooltip">
                                         <span class="fa fa-trash"></span>
-                                    </a>
+                                    </a> |
                                     @if (isAdmin)
-                                    {
-                                        <a href="@Url.Action("Sent", "Tracking", new {id = item.Id})" title="Sent Orders" data-tooltip="tooltip" class="pull-right">
+                                    { 
+                                        <a href="@Url.Action("Sent", "Tracking", new {id = item.Id})" title="Sent Orders" data-tooltip="tooltip">
                                             <span class="fa fa-envelope"></span>
                                         </a>
                                     }
                                 </div>
                                 <div class="col-md-3">
+                                    @if (isAdmin)
+                                    {
+                                        <a href="@Url.Action("View", "OpenModel", new {id = item.Id})" title="Open Model" data-tooltip="tooltip">
+                                            <span class="glyphicon glyphicon-folder-open"></span>
+                                        </a>
+                                    }
                                     @if (isAdmin)
                                     {
                                        

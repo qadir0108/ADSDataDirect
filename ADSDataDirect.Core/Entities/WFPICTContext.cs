@@ -36,6 +36,7 @@ namespace ADSDataDirect.Core.Entities
         public DbSet<ProData> ProDatas { get; set; }
         public DbSet<Vendor> Vendors { get; set; }
         public DbSet<Customer> Customers { get; set; }
+        public DbSet<OpenModelKeyword> OpenModelKeywords { get; set; }
         public DbSet<Notification> Notifications { get; set; }
         public DbSet<ApiRequest> ApiRequests { get; set; }
         public DbSet<SystemLog> SystemLogs { get; set; }

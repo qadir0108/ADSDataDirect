@@ -61,7 +61,7 @@ namespace ADSDataDirect.Web.Controllers
                     Demographics = testing.Demographics,
                     Quantity = testing.Quantity,
                     SpecialInstructions = testing.SpecialInstructions,
-                    ReportSiteLink = $"http://report-site.com/c/ADS{campaign.OrderNumber}",
+                    ReportSiteLink = $"http://report-site.com/c/{ClientCode}{campaign.OrderNumber}",
                     LinkBreakout = $"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}linkr.csv",
                     IsOpenPixel = testing.IsOpenPixel,
                     OpenPixelUrl = testing.OpenPixelUrl,

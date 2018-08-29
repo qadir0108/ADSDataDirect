@@ -10,6 +10,7 @@ using ADSDataDirect.Core.EntityManager;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Web.Models;
 using Microsoft.AspNet.Identity.Owin;
+using ADSDataDirect.Core.Static;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -17,6 +18,16 @@ namespace ADSDataDirect.Web.Controllers
     {
         protected readonly Random Random = new Random();
         protected const int PageSize = 10;
+
+        private readonly string clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+
+        protected string ClientCode
+        {
+            get
+            {
+                return clientCode;
+            }
+        }
 
         private WfpictContext _db;
         protected WfpictContext Db
@@ -122,6 +133,25 @@ namespace ADSDataDirect.Web.Controllers
                 items.Insert(0, new SelectListItem()
                 {
                     Text = "Select Template",
+                    Value = string.Empty
+                });
+                return items;
+            }
+        }
+
+        protected IEnumerable<SelectListItem> SfidClientCampaigns
+        {
+            get
+            {
+                var items = SfidLookup.GetCampaigns()
+                    .Select(x => new SelectListItem()
+                    {
+                        Text = x.Value,
+                        Value = x.Key.ToString()
+                    }).ToList();
+                items.Insert(0, new SelectListItem()
+                {
+                    Text = "Select Client Campaign",
                     Value = string.Empty
                 });
                 return items;
@@ -238,11 +268,10 @@ namespace ADSDataDirect.Web.Controllers
         }
 
         private static bool _forceCustomers;
-        protected static bool ForceCustomers
-        {
-            get { return _forceCustomers; }
-            set { _forceCustomers = value; }
-        }
+        protected static bool GetForceCustomers()
+        { return _forceCustomers; }
+        protected static void SetForceCustomers(bool value)
+        { _forceCustomers = value; }
 
         private List<SelectListItem> _customers;
         protected IEnumerable<SelectListItem> CustomersList

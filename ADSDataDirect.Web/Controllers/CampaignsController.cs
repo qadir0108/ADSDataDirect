@@ -351,6 +351,13 @@ namespace ADSDataDirect.Web.Controllers
 
                 copy.ApprovedId = approvedId;
                 Db.SaveChanges();
+
+                // update some values from approved
+                copy.CampaignName = approved.CampaignName;
+                copy.WhiteLabel = approved.WhiteLabel;
+                copy.BroadcastDate = approved.DeployDate;
+                copy.Quantity = approved.Quantity;
+                Db.SaveChanges();
             }
             ForceOrders = true;
             TempData["Success"] = "Order : " + campaign.OrderNumber + " has been cloned to Order: " + newOrderNumber + " sucessfully.";

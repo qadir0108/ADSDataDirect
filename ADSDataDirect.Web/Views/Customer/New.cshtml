@@ -23,6 +23,11 @@
                         </li>
                         <li>
                             <a href="#tab_default_2" data-toggle="tab">
+                                Open Model
+                            </a>
+                        </li>
+                        <li>
+                            <a href="#tab_default_3" data-toggle="tab">
                                 Details
                             </a>
                         </li>
@@ -61,7 +66,6 @@
                                         </div>
                                     </div>
 
-
                                 </div>
                                 <div class="col-md-6">
                                     
@@ -94,6 +98,74 @@
                         </div>
 
                         <div class="tab-pane" id="tab_default_2">
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label col-md-3">Use Open Model</label>
+                                        <div class="col-md-9">
+                                            <div class="">
+                                                <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsUseOpenModel, "True")Yes
+                                                    </label>
+                                                    <label class="btn btn-primary">
+                                                        @Html.RadioButtonFor(model => model.IsUseOpenModel, "False")No
+                                                    </label>
+                                                </div>
+                                                @Html.ValidationMessageFor(model => model.IsUseOpenModel, "", new { @class = "text-danger" })
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    @*<a href="@Url.Action("EditKeywords","Customer", new { id = Model.Id })" id="btnEditKeywords" class="btn btn-default" title="Edit Key words" data-tooltip="tooltip" data-id="@Model.Id"><i class="glyphicon glyphicon-pencil" aria-hidden="true"></i> Edit Keywords</a>*@
+                                </div>
+                            </div>
+
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="col-md-3">
+                                        Open Initial
+                                    </div>
+                                    <div class="col-md-3">
+                                        Open End
+                                    </div>
+                                    <div class="col-md-3">
+                                        Click Initial
+                                    </div>
+                                    <div class="col-md-3">
+                                        Click End
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.OpenInitial, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => Model.OpenInitial, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.OpenEnd, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => Model.OpenEnd, "", new { @class = "text-danger" })
+                                    </div>
+
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.ClickInitial, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => Model.ClickInitial, "", new { @class = "text-danger" })
+                                    </div>
+                                    <div class="col-md-3">
+                                        @Html.EditorFor(model => model.ClickEnd, new { htmlAttributes = new { @class = "form-control" } })
+                                        @Html.ValidationMessageFor(model => Model.ClickEnd, "", new { @class = "text-danger" })
+                                    </div>
+
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="tab-pane" id="tab_default_3">
 
                             <div class="row">
                                 <div class="col-md-6">
@@ -155,6 +227,9 @@
 
     $(function () {
         debugger;
+
+        $("input[name='IsUseOpenModel']:checked").closest("label.btn").addClass("active");
+
         if ($('#Id').val() !== '')
             $('#WhiteLabel').prop('readonly', "readonly");
 

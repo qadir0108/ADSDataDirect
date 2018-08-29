@@ -13,6 +13,7 @@ using ADSDataDirect.Web.Models;
 using ADSDataDirect.Web.ProData;
 using ADSDataDirect.Web.Reports;
 using PagedList;
+using ADSDataDirect.Web.Async.Helpers;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -123,7 +124,7 @@ namespace ADSDataDirect.Web.Controllers
             return View(trackingVms);
         }
 
-        public ActionResult DownloadReport(Guid? id, Guid? trackingId)
+        public ActionResult DownloadReport(Guid? id, Guid? trackingId, string template)
         {
             Campaign campaign = Db.Campaigns
                 .Include(x => x.Assets)
@@ -156,6 +157,7 @@ namespace ADSDataDirect.Web.Controllers
                 TempData["Error"] = "Campaign White Label not set in approved screen.";
                 return RedirectToAction("Index", "Campaigns");
             }
+            var reportTemplate = !string.IsNullOrEmpty(template) ? template : whiteLable.ReportTemplate;
 
             var model = CampaignTrackingVm.FromCampaignTracking(campaign, campaignTracking);
             string creativeUrl = campaign.Assets.CreativeUrl,
@@ -163,29 +165,37 @@ namespace ADSDataDirect.Web.Controllers
                 screenshotFilePath = $"{UploadPath}\\{model.OrderNumber}.png",
                 outputFileName = $"{model.OrderNumber}.xlsx",
                 outputFilePath = Path.Combine(DownloadPath, outputFileName);
-            
-            var helper = new ImageHelper(creativeUrl, screenshotFilePathTemp);
-            if (!System.IO.File.Exists(screenshotFilePath))
+
+            if (whiteLable.IsUseOpenModel)
             {
-                helper.Capture();
+                S3FileManager.Download(campaign.Assets.OpenModelImageFile, screenshotFilePath);
+            }
+            else
+            {
+                var helper = new ImageHelper(creativeUrl, screenshotFilePathTemp);
+                if (!System.IO.File.Exists(screenshotFilePath))
+                {
+                    helper.Capture();
+                }
             }
 
             int ScreenshotHeight = 500;
             BaseTrackingReport report = null;
-            switch (whiteLable.ReportTemplate)
+            switch (reportTemplate)
             {
                 case "Tracking1":
                 case "Tracking2":
-                    report = new TrackingReportTemplate12(whiteLable.ReportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
+                case "ReTargetting":
+                    report = new TrackingReportTemplate12(reportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
                     ScreenshotHeight = 750;
                     break;
                 case "Tracking3":
                 case "Tracking4":
-                    report = new TrackingReportTemplate34(whiteLable.ReportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
+                    report = new TrackingReportTemplate34(reportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
                     ScreenshotHeight = 550;
                     break;
                 default:
-                    report = new TrackingReportTemplate12(whiteLable.ReportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
+                    report = new TrackingReportTemplate12(reportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
                     break;
             }
             if (System.IO.File.Exists(screenshotFilePathTemp))

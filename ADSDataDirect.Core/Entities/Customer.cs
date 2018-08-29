@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace ADSDataDirect.Core.Entities
@@ -15,7 +16,13 @@ namespace ADSDataDirect.Core.Entities
         public string WebDomain { get; set; }
         public string Email { get; set; }
         public string Phone { get; set; }
-        
+
+        public bool IsUseOpenModel { get; set; }
+        public long OpenInitial { get; set; }
+        public long OpenEnd { get; set; }
+        public long ClickInitial { get; set; }
+        public long ClickEnd { get; set; }
+
         public Customer()
         {
         }

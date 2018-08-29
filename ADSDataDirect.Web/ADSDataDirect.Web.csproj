@@ -58,6 +58,9 @@
     <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
       <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
     </Reference>
+    <Reference Include="EPPlus, Version=4.5.2.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.2.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
     <Reference Include="Hangfire.Core, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Core.1.6.12\lib\net45\Hangfire.Core.dll</HintPath>
       <Private>True</Private>
@@ -184,6 +187,7 @@
     <Reference Include="System.ComponentModel.DataAnnotations" />
     <Reference Include="System.Core" />
     <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Security" />
     <Reference Include="System.Web.Http, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.WebApi.Core.5.2.3\lib\net45\System.Web.Http.dll</HintPath>
       <Private>True</Private>
@@ -303,8 +307,10 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\KeywordController.cs" />
     <Compile Include="Controllers\SmartsheetController.cs" />
     <Compile Include="Controllers\DynamicCodingController.cs" />
+    <Compile Include="Controllers\OpenModelController.cs" />
     <Compile Include="DynamicCoding\DynamicCodingLookupVm.cs" />
     <Compile Include="Hangfire\HangfireBootstrapper .cs" />
     <Compile Include="Hangfire\ApplicationPreload.cs" />
@@ -330,6 +336,7 @@
     <Compile Include="Helpers\AdsException.cs" />
     <Compile Include="Helpers\AdsCache.cs" />
     <Compile Include="DynamicCoding\DynamicCodingProcessor.cs" />
+    <Compile Include="Helpers\CsvReader.cs" />
     <Compile Include="Helpers\ExcelHelper.cs" />
     <Compile Include="Helpers\ExcelHelper_Old.cs" />
     <Compile Include="Helpers\ImageResizer.cs" />
@@ -337,12 +344,18 @@
     <Compile Include="Helpers\StringListRandomizer.cs" />
     <Compile Include="DynamicCoding\DynamicCodingLinkVm.cs" />
     <Compile Include="DynamicCoding\DynamicCodingInput.cs" />
+    <Compile Include="Models\CampaignTrackingMetricDetailVm.cs" />
+    <Compile Include="Models\CampaignTrackingMetricVm.cs" />
+    <Compile Include="Models\CampaignTrackingOpenModelVm.cs" />
+    <Compile Include="Models\OpenModelInputVm.cs" />
+    <Compile Include="Models\KeywordVm.cs" />
     <Compile Include="Models\NotificationSearchVm.cs" />
     <Compile Include="Models\NotificationVm.cs" />
     <Compile Include="Models\MessageVm.cs" />
     <Compile Include="Models\SettingsVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
     <Compile Include="Models\VendorVm.cs" />
+    <Compile Include="OpenModel\OpenModelProcessor.cs" />
     <Compile Include="ProData\NotificationsProcessor.cs" />
     <Compile Include="Async\CampaignProcessor.cs" />
     <Compile Include="Async\DataFileProcessor.cs" />
@@ -995,6 +1008,11 @@
     <Content Include="Templates\Tracking3.xlsx" />
     <Content Include="Templates\Tracking4.xlsx" />
     <Content Include="Views\Smartsheet\Index.cshtml" />
+    <Content Include="Views\Keyword\Index.cshtml" />
+    <Content Include="Views\Keyword\New.cshtml" />
+    <Content Include="Views\OpenModel\View.cshtml" />
+    <Content Include="Views\OpenModel\SaveInput.cshtml" />
+    <Content Include="Templates\ReTargeting.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

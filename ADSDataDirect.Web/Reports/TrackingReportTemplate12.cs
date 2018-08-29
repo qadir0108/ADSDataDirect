@@ -130,8 +130,8 @@ namespace ADSDataDirect.Web.Reports
                     cell.CellValue = new CellValue(model.FromLine);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    // Data Files
-                    if (Template.Equals(ReportTemplate.Tracking1.ToString()) && !model.IoNumber.EndsWith("RDP"))
+                    // Template 1 Data Files
+                    if (Template.Equals(ReportTemplate.Tracking1.ToString()) && ( !string.IsNullOrEmpty(model.IoNumber) && !model.IoNumber.EndsWith("RDP") ))
                     {
                         uint rowNumber = 43;
                         foreach (var segment in model.Segments)
@@ -146,7 +146,19 @@ namespace ADSDataDirect.Web.Reports
                             rowNumber++;
                         }
                     }
-                    
+
+                    // Template ReTargetting
+                    if (Template.Equals(ReportTemplate.ReTargeting.ToString()))
+                    {
+                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 44);
+                        cell.CellValue = new CellValue(model.RetargetingImpressions);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+
+                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 45);
+                        cell.CellValue = new CellValue(model.RetargetingClicks);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    }
+
                     #endregion
 
                     #region Second Page

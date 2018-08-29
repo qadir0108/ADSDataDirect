@@ -1,0 +1,99 @@
+﻿@using ADSDataDirect.Web.Models
+@model ADSDataDirect.Web.Models.KeywordVm
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>@(Model == null ? "New" : "Edit")  Keyword</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Keyword<span class="required">*</span></label>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.Keyword, new { htmlAttributes = new { @class = "form-control" } })
+                            @Html.ValidationMessageFor(model => model.Keyword, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-3">Rule Percentage<span class="required">*</span></label>
+                        <div class="col-md-9">
+                            @Html.EditorFor(model => model.RulePercentage, new { htmlAttributes = new { @class = "form-control", @type = "number", @min = "0", @max = "10", @step = "0.05" } })
+                            @Html.ValidationMessageFor(model => model.RulePercentage, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-10 col-md-2">
+                    <a href="/Keyword" class="btn btn-sm">Cancel</a>
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+
+            <br /><br />
+
+        </div>
+    </div>
+
+}
+
+<style>
+    #imgTemplate {
+        border: none;
+        width: 100px;
+        height: 100px;
+        margin: 0 auto;
+    }
+
+    #imgTemplate:hover {
+        -webkit-transform: scale(5);
+        -moz-transform: scale(5);
+        -o-transform: scale(5);
+        transform: scale(5);
+        transition: all 0.3s;
+        -webkit-transition: all 0.3s;
+    }
+</style>
+
+
+<script type="text/javascript">
+
+    var wfp = wfp || {};
+
+    $(function () {
+        debugger;
+
+        $("input[name='IsUseOpenModel']:checked").closest("label.btn").addClass("active");
+
+        if ($('#Id').val() !== '')
+            $('#WhiteLabel').prop('readonly', "readonly");
+
+        $('#CompanyLogo').prop('readonly', "readonly");
+
+        var img = '/images/' + $("#ReportTemplate").find('option:selected').text().toLowerCase() + '.png';
+        $("img[id=imgTemplate]").attr("src", img);
+
+        $("#ReportTemplate").change(function () {
+            debugger;
+            var img = '/images/' + $(this).find('option:selected').text().toLowerCase() + '.png';
+            $("img[id=imgTemplate]").attr("src", img);
+
+        });
+
+    });
+</script>

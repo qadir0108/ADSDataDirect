@@ -15,7 +15,6 @@ namespace ADSDataDirect.Web.Async.Helpers
         static string _orderNumber;
         static bool _isAddOptout;
         static bool _isAddViewinBrowser;
-        static string _serverPrefix = $"https://{S3FileManager.Bucket}.s3.amazonaws.com/";
 
         public static HtmlProcessResult ProcessHtmlZip(string uploadPath, string zipFilePath, string orderNumber, bool isAddOptout, bool isAddViewinBrowser)
         {
@@ -48,7 +47,7 @@ namespace ADSDataDirect.Web.Async.Helpers
 
             // Upload html
             S3FileManager.Upload(htmlFileKey, htmlFilePath, true);
-            string filePathLive = $"{_serverPrefix}{htmlFileKey}";
+            string filePathLive = $"{S3FileManager.ServerPrefix}{htmlFileKey}";
 
             // Create images directory
             S3FileManager.CreateDirectory(imagesLive);
@@ -70,7 +69,7 @@ namespace ADSDataDirect.Web.Async.Helpers
 
         public static UploadFileStatus ProcessHtml(string htmlFile, string outputFilePath)
         {
-            string imagesPath = string.Format("{0}{1}/{1}img/", _serverPrefix, _orderNumber);
+            string imagesPath = string.Format("{0}{1}/{1}img/", S3FileManager.ServerPrefix, _orderNumber);
 
             HtmlDocument doc = new HtmlDocument();
             doc.Load(htmlFile);
@@ -119,28 +118,28 @@ namespace ADSDataDirect.Web.Async.Helpers
             switch (uploadFileType)
             {
                     case UploadFileType.ZipFile:
-                        fileName = string.Format("{0}{1}/{1}zip.csv", _serverPrefix, orderNumber);
+                        fileName = string.Format("{0}{1}/{1}zip.csv", S3FileManager.ServerPrefix, orderNumber);
                         break;
                     case UploadFileType.TestSeedFile:
-                        fileName = string.Format("{0}{1}/{1}test.csv", _serverPrefix, orderNumber);
+                        fileName = string.Format("{0}{1}/{1}test.csv", S3FileManager.ServerPrefix, orderNumber);
                     break;
                     case UploadFileType.LiveSeedFile:
-                        fileName = string.Format("{0}{1}/{1}live.csv", _serverPrefix, orderNumber);
+                        fileName = string.Format("{0}{1}/{1}live.csv", S3FileManager.ServerPrefix, orderNumber);
                     break;
                     case UploadFileType.SuppressionFile:
-                        fileName = string.Format("{0}{1}/{1}supp.csv", _serverPrefix, orderNumber);
+                        fileName = string.Format("{0}{1}/{1}supp.csv", S3FileManager.ServerPrefix, orderNumber);
                     break;
                     case UploadFileType.BannersFile:
-                            fileName = $"{_serverPrefix}{orderNumber}/_banner{extension}";
+                            fileName = $"{S3FileManager.ServerPrefix}{orderNumber}/_banner{extension}";
                         break;
                     case UploadFileType.BannersLinksFile:
-                            fileName = $"{_serverPrefix}{orderNumber}/_bannerlinks{extension}";
+                            fileName = $"{S3FileManager.ServerPrefix}{orderNumber}/_bannerlinks{extension}";
                         break;
                     case UploadFileType.MiscFile:
-                        fileName = $"{_serverPrefix}{orderNumber}/_misc{extension}";
+                        fileName = $"{S3FileManager.ServerPrefix}{orderNumber}/_misc{extension}";
                         break;
                     case UploadFileType.DataFile:
-                        fileName = $"{_serverPrefix}{orderNumber}/{segmentNumber}data.csv";
+                        fileName = $"{S3FileManager.ServerPrefix}{orderNumber}/{segmentNumber}data.csv";
                         break;
             }
             return fileName;

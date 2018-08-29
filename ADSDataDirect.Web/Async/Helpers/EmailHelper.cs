@@ -173,8 +173,8 @@ namespace ADSDataDirect.Web.Async.Helpers
         {
             if (ConfigurationManager.AppSettings["IsLive"] == "true")
             {
-                string subject = "ADSLive: An error has been occured.";
-                string body = $@"<p>ADSLive: An error has been occured.</p>
+                string subject = $"{clientCode}Live: An error has been occured.";
+                string body = $@"<p>{clientCode}Live: An error has been occured.</p>
                             <p>Controller : {currentController}</p><p>Action : {currentAction}</p>
                             <p>Error Details : {ex.GetExceptionMessage()}</p>";
                 SendEmail(to, subject, body);

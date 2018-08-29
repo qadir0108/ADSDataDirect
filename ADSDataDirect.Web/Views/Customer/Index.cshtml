@@ -60,7 +60,7 @@
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "CampaignName")
-                    @Html.ActionLink("Phone", "Index", columnSortParams2)
+                    @Html.ActionLink("Use Open Model", "Index", columnSortParams2)
                 </td>
                 <th></th>
             </tr>
@@ -87,7 +87,7 @@
                         @Html.DisplayFor(modelItem => item.Email)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.Phone)
+                        @(item.IsUseOpenModel ? "Yes" : "No")
                     </td>
                     <td>
                         <a href="@Url.Action("Edit","Customer", new { id = item.Id })" id="btnEdit" class="btn btn-sm btn-default" title="Edit" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></a>

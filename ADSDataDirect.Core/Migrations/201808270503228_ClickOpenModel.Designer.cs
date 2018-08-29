@@ -7,13 +7,13 @@ namespace ADSDataDirect.Core.Migrations
     using System.Resources;
     
     [GeneratedCode("EntityFramework.Migrations", "6.1.3-40302")]
-    public sealed partial class BannerUrl : IMigrationMetadata
+    public sealed partial class ClickOpenModel : IMigrationMetadata
     {
-        private readonly ResourceManager Resources = new ResourceManager(typeof(BannerUrl));
+        private readonly ResourceManager Resources = new ResourceManager(typeof(ClickOpenModel));
         
         string IMigrationMetadata.Id
         {
-            get { return "201808011851063_BannerUrl"; }
+            get { return "201808270503228_ClickOpenModel"; }
         }
         
         string IMigrationMetadata.Source

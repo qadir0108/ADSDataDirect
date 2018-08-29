@@ -1,0 +1,351 @@
+﻿@using System.Threading.Tasks
+@using ADSDataDirect.Core.Entities
+@using ADSDataDirect.Enums
+
+@model List<ADSDataDirect.Web.Models.CampaignTrackingOpenModelVm>
+
+@{
+    ViewData["Title"] = "Campaign Report";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var id = Url.RequestContext.RouteData.Values["id"];
+    //var id = Request.Url.Segments.Last();
+    var loggedInUser = Session["user"] as WfpUser;
+    var isLoggedIn = loggedInUser != null;
+    var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
+}
+
+@{
+    Html.RenderPartial("_HeaderCopy");
+}
+
+<div class="container" style="margin-top: 10px">
+
+    <div class="row">
+        <div class="col-md-10 headertab">
+            Campaign Tracking - Custom Data Model
+        </div>
+        <div class="col-md-2 listing-action" id="divTools" style="text-align: right">
+            @if (isAdmin)
+            {
+                <a href="#" class="btn btn-default" id="btnOpenModel" data-tooltip="tooltip" title="Change Input links"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="#" class="btn btn-default" id="btnProcess" data-tooltip="tooltip" title="Process Model"><span class="glyphicon glyphicon-cog"></span></a>
+            }
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Order #
+                </th>
+                <th>
+                    Campaign Name
+                </th>
+                <th>
+                    White Label
+                </th>
+                <th>
+                    Deploy Date
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Opened
+                </th>
+                <th>
+                    Clicked
+                </th>
+                <th>
+                    # of Links
+                </th>
+                <th>
+                    Img Uploaded
+                </th>
+                @*<th>
+                    Status
+                </th>*@
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                var divDrillDownId = "divDrillDown" + item.TrackingId;
+
+                <tr>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.CampaignId)
+                        @Html.DisplayFor(modelItem => item.OrderNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CampaignName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WhiteLabel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Opened)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Clicked)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OpenModelLinksCount)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.OpenModelImgUploaded)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.Status)
+                    </td>*@
+                    <td style="min-width: 90px" class="no-right-padding pull-right">
+                        <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
+                        @*<a href="~/Tracking/DownloadReport?id=@item.CampaignId&trackingId=@item.TrackingId" target="_blank" class="btn btn-sm btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>*@
+                        <a href="#" 
+                            data-toggle="modal" data-target="#myModal" target="_blank"
+                           data-id='@item.CampaignId' data-trackingid='@item.TrackingId' class="btn btn-sm btn-default" id="btnShowDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
+                        <a href="~/OpenModel/ExportMetricsAndUrls?id=@item.CampaignId&trackingId=@item.TrackingId" target="_blank" class="btn btn-sm btn-default" data-tooltip="tooltip" title="Export Metric & URLs"><span class="glyphicon glyphicon-download-alt"></span></a>
+
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="8">
+                        <div id="@divDrillDownId" class="divDrillDown">
+                            <div class="row">
+                                <div class="col-md-4">
+
+                                    <dl class="dl-horizontal">
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.CampaignName)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.CampaignName)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.IoNumber)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.IoNumber)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.StartDate)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.StartDate)
+                                        </dd>
+                                        <dt>
+                                            EmailsSent
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.Quantity)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.Opened)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.Opened)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.OpenedPercentage)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.OpenedPercentage)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.Clicked)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.ClickedPercentage)
+                                        </dd>
+                                        <dt>
+                                            CtrPercentage
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.ClickToOpenPercentage)
+                                        </dd>
+
+                                    </dl>
+
+                                </div>
+                                <div class="col-md-8">
+
+                                    <table class="table">
+                                        <thead>
+                                            <tr>
+                                                <th>
+                                                    IO #
+                                                </th>
+                                                <th>
+                                                    Link
+                                                </th>
+                                                <th>
+                                                    Quantity Per Link
+                                                </th>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            @if (item.PerLink != null)
+                                            {
+                                                foreach (var item1 in item.PerLink)
+                                                {
+                                                    <tr>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item1.IoNumber)
+                                                        </td>
+                                                        <td style="word-wrap:break-word;word-break:break-all;">
+                                                            @item1.Link
+                                                            @*@Html.Raw(string.Format("<a href=\"{0}\" target=\"blank\">{1}</a>", item1.Link, item1.Link.Substring(0, item1.Link.Length > 80 ? 80 : item1.Link.Length)))*@
+                                                        </td>
+                                                        <td>
+                                                            @Html.DisplayFor(modelItem => item1.ClickCount)
+                                                        </td>
+                                                    </tr>
+                                                }
+                                            }
+                                        </tbody>
+                                    </table>
+
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</div>
+
+   <!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Download Report</h4>
+            </div>
+            <form id="frm" role="form">
+                <div class="modal-body">
+                    <input id="txtId" name="txtId" type="hidden">
+                    <input id="txttrackingId" name="txttrackingId" type="hidden">
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPasswordRetype">Select Template<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                            </div>
+                            @Html.DropDownList("Templates", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnDownload" id="btnDownload">Download</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+
+    var wfp = wfp || {};
+
+    $(document).ready(function () {
+
+        $(".divDrillDown").hide();
+
+        $(".btnDrill").click(function () {
+            debugger;
+            var id = $(this).data('id');
+            $("#divDrillDown" + id).slideToggle("slow");
+        });
+
+        $('#btnOpenModel').click(function (e) {
+            debugger;
+            e.preventDefault();
+            wfp.reload("/OpenModel/SaveInput/" + '@id');
+        });
+
+        $('#myModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget);
+            var modal = $(this);
+            $('#frm')[0].reset();
+            debugger;
+            $('#txtId').val(button.data('id'));
+            $('#txttrackingId').val(button.data('trackingid'));
+            //modal.find('.modal-title').text('Send to Vendor : ' + button.data('name') + ', Order Number : ' + button.data('order'));
+        });
+
+        $('#btnProcess').click(function (e) {
+            debugger;
+
+            e.preventDefault();
+
+            var dataToPost = {
+                id: '@id'
+            };
+
+            $.ajax({
+                type: "POST",
+                url: "/OpenModel/ProcessModel",
+                data: JSON.stringify(dataToPost),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    debugger;
+                    if (response === "") wfp.reload();
+                    if (response.IsSucess) {
+                        wfp.showSuccess('Click Open Model has been processed successfully.');
+                        wfp.redirectTo();
+                    } else {
+                        wfp.showError(response.ErrorMessage);
+                    }
+                },
+                failure: function (response) {
+                    wfp.showError('There is erorr in service call.');
+                },
+                complete: function () {
+                }
+            });
+
+        });
+
+        $('#btnDownload').click(function (e) {
+            debugger;
+            e.preventDefault();
+
+            if ($('#Templates').find('option:selected').val() === '') {
+                wfp.showError("Please select Template");
+                return;
+            }
+
+            var id = $('#txtId').val();
+            var trackingId = $('#txttrackingId').val();
+            var template = $('#Templates').find('option:selected').val();
+
+            var url = '../../Tracking/DownloadReport?id=' + id + '&trackingId=' + trackingId + '&template=' + template;
+            //window.open(url);
+            var win = window.open(url, '_blank');
+            win.focus();
+
+            $('#myModal').modal('hide');
+        });
+
+    });
+</script>

@@ -1,0 +1,119 @@
+﻿@using ADSDataDirect.Web.Models
+@model ADSDataDirect.Web.Models.OpenModelInputVm
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<h2>Custom Open Model Inputs</h2>
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="container">
+        <div class="form-horizontal">
+            @Html.ValidationSummary(false, "", new { @class = "text-danger" })
+            @Html.HiddenFor(model => model.Id)
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2 pre">Links File</label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.OpenModelLinksFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
+                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "OpenModelLinksFile", OrderNumber = Model.OrderNumber })
+                            @Html.ValidationMessageFor(model => model.OpenModelLinksFile, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2 pre">Image File</label>
+                        <div class="col-md-10">
+                            @Html.EditorFor(model => model.OpenModelImageFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
+                            @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "OpenModelImageFile", OrderNumber = Model.OrderNumber })
+                            @Html.ValidationMessageFor(model => model.OpenModelImageFile, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-6">
+
+                    <div class="form-group">
+                        <label class="control-label col-md-2 pre">Sfid Client Campaigns</label>
+                        <div class="col-md-10">
+                            @Html.DropDownListFor(modelItem => Model.SFDClientId, new SelectList(ViewBag.SfidClientCampaigns, "Value", "Text", Model.SFDClientId)
+                        , new { @class = "form-control input-md" })
+                            @Html.ValidationMessageFor(model => model.OpenModelImageFile, "", new { @class = "text-danger" })
+                        </div>
+                    </div>
+
+                </div>
+                <div class="col-md-6">
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-md-offset-10 col-md-2">
+                    <a href="/OpenModel/View/@Model.Id" class="btn btn-sm">Cancel</a>
+                    <input type="submit" value="Save" class="btn btn-default" />
+                </div>
+            </div>
+
+            <br /><br />
+
+        </div>
+            </div>
+
+            }
+
+            <style>
+                #imgTemplate {
+                    border: none;
+                    width: 100px;
+                    height: 100px;
+                    margin: 0 auto;
+                }
+
+                    #imgTemplate:hover {
+                        -webkit-transform: scale(5);
+                        -moz-transform: scale(5);
+                        -o-transform: scale(5);
+                        transform: scale(5);
+                        transition: all 0.3s;
+                        -webkit-transition: all 0.3s;
+                    }
+            </style>
+
+
+            <script type="text/javascript">
+
+                var wfp = wfp || {};
+
+                $(function () {
+                    debugger;
+
+                    $("input[name='IsUseOpenModel']:checked").closest("label.btn").addClass("active");
+
+                    if ($('#Id').val() !== '')
+                        $('#WhiteLabel').prop('readonly', "readonly");
+
+                    $('#OpenModelLinksFile').prop('readonly', "readonly");
+                    $('#OpenModelImageFile').prop('readonly', "readonly");
+
+                    var img = '/images/' + $("#ReportTemplate").find('option:selected').text().toLowerCase() + '.png';
+                    $("img[id=imgTemplate]").attr("src", img);
+
+                    $("#ReportTemplate").change(function () {
+                        debugger;
+                        var img = '/images/' + $(this).find('option:selected').text().toLowerCase() + '.png';
+                        $("img[id=imgTemplate]").attr("src", img);
+
+                    });
+
+                });
+            </script>

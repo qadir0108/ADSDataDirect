@@ -34,6 +34,8 @@ namespace ADSDataDirect.Core.Entities
         public long Opt { get; set; }
         public long Desktop { get; set; }
         public long Mobile { get; set; }
+        public long RetargetingImpressions { get; set; }
+        public long RetargetingClicks { get; set; }
 
         public CampaignTracking()
         {

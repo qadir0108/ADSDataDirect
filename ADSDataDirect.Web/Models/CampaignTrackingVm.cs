@@ -40,6 +40,8 @@ namespace ADSDataDirect.Web.Models
         public string Opt { get; set; }
         public string Desktop { get; set; }
         public string Mobile { get; set; }
+        public string RetargetingImpressions { get; set; }
+        public string RetargetingClicks { get; set; }
 
         public List<CampaignTrackingDetailVm> PerLink { get; set; }
         public List<CampaignSegmentVm> Segments { get; set; }
@@ -70,10 +72,13 @@ namespace ADSDataDirect.Web.Models
                 Clicked = campaignTracking.Clicked == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Clicked),
                 Unsub = campaignTracking.Unsub == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Unsub),
                 Forwards = campaignTracking.Forwards == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Forwards),
-                Mobile = string.Format("{0:n0}", campaignTracking.Mobile),
-                Desktop = string.Format("{0:n0}", campaignTracking.Desktop),
                 Bounce = string.Format("{0:n0}", campaignTracking.Bounce),
                 Opt = string.Format("{0:n0}", campaignTracking.Opt),
+                Desktop = string.Format("{0:n0}", campaignTracking.Desktop),
+                Mobile = string.Format("{0:n0}", campaignTracking.Mobile),
+                RetargetingImpressions = string.Format("{0:n0}", campaignTracking.RetargetingImpressions),
+                RetargetingClicks = string.Format("{0:n0}", campaignTracking.RetargetingClicks),
+
                 DeliveryPercentage = campaignTracking.DeliveryPercentage.ToString("0.00%"),
                 OpenedPercentage = campaignTracking.OpenedPercentage.ToString("0.00%"),
                 ClickedPercentage = campaignTracking.ClickedPercentage.ToString("0.00%"),

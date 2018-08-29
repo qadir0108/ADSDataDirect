@@ -41,6 +41,12 @@ namespace ADSDataDirect.Core.Entities
         public string MiscUrl { get; set; }
         public int MiscStatus { get; set; } // Enum.UploadFileStatus
 
+        // Custom Open Model
+        public string OpenModelLinksFile { get; set; }
+        public int OpenModelLinksCount { get; set; }
+        public string OpenModelImageFile { get; set; }
+        public int SFDClientId { get; set; }
+
         public CampaignAsset()
         {
         }
