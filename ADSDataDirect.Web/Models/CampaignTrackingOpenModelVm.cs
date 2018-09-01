@@ -2,7 +2,7 @@
 using System.Linq;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
-using ADSDataDirect.Web.ProData;
+using ADSDataDirect.Infrastructure.Db;
 
 namespace ADSDataDirect.Web.Models
 {
@@ -60,14 +60,14 @@ namespace ADSDataDirect.Web.Models
                 FromLine = campaign.Approved.FromLine,
                 Quantity = string.Format("{0:n0}", campaignTracking.Quantity),
                 Status = ((CampaignStatus)campaign.Status).ToString(),
-                OrderDate = campaign.CreatedAt.ToString(StringConstants.DateFormatSlashes),
-                DateSent = campaignTracking.CreatedAt.ToString(StringConstants.DateFormatSlashes),
+                OrderDate = campaign.CreatedAt.ToString(StringConstants.DateFormatDashes),
+                DateSent = campaignTracking.CreatedAt.ToString(StringConstants.DateFormatDashes),
                 SentOrder = campaignTracking.SentOrder,
                 IsCreatedThroughApi = campaignTracking.IsCreatedThroughApi,
                 QueuedCampaignId = campaignTracking.QueuedCampaignId,
 
                 IoNumber = campaignTracking.IoNumber,
-                StartDate = campaignTracking.StartDate?.ToString(StringConstants.DateFormatSlashes),
+                StartDate = campaignTracking.StartDate?.ToString(StringConstants.DateFormatDashes),
                 Deployed = campaignTracking.Deployed == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Deployed),
                 Opened = campaignTracking.Opened == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Opened),
                 Clicked = campaignTracking.Clicked == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Clicked),

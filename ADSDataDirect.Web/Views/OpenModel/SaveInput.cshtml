@@ -17,8 +17,8 @@
                 <div class="col-md-6">
 
                     <div class="form-group">
-                        <label class="control-label col-md-2 pre">Links File</label>
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3 pre">Links File</label>
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.OpenModelLinksFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
                             @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "OpenModelLinksFile", OrderNumber = Model.OrderNumber })
                             @Html.ValidationMessageFor(model => model.OpenModelLinksFile, "", new { @class = "text-danger" })
@@ -29,8 +29,8 @@
                 <div class="col-md-6">
 
                     <div class="form-group">
-                        <label class="control-label col-md-2 pre">Image File</label>
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3 pre">Image File</label>
+                        <div class="col-md-9">
                             @Html.EditorFor(model => model.OpenModelImageFile, new { disabled = "disabled", htmlAttributes = new { @class = "form-control" } })
                             @Html.Partial("_UploadFile", new UploadFileVm() { FileType = "OpenModelImageFile", OrderNumber = Model.OrderNumber })
                             @Html.ValidationMessageFor(model => model.OpenModelImageFile, "", new { @class = "text-danger" })
@@ -41,20 +41,37 @@
             </div>
 
             <div class="row">
+                
                 <div class="col-md-6">
-
                     <div class="form-group">
-                        <label class="control-label col-md-2 pre">Sfid Client Campaigns</label>
-                        <div class="col-md-10">
+                        <label class="control-label col-md-3">Report Type</label>
+                        <div class="col-md-9">
+                            <div class="">
+                                <div class="btn-group" data-toggle="buttons" style="padding-bottom:10px">
+                                    <label class="btn btn-primary">
+                                        @Html.RadioButtonFor(model => model.IsReportType, "False") Static
+                                    </label>
+                                    <label class="btn btn-primary">
+                                        @Html.RadioButtonFor(model => model.IsReportType, "True") Dataroma
+                                    </label>
+                                </div>
+                                @Html.ValidationMessageFor(model => model.IsReportType, "", new { @class = "text-danger" })
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col-md-6">
+                    <div class="form-group" id="divClientCampaigns">
+                        <label class="control-label col-md-3 pre">SFID Client Campaigns</label>
+                        <div class="col-md-9">
                             @Html.DropDownListFor(modelItem => Model.SFDClientId, new SelectList(ViewBag.SfidClientCampaigns, "Value", "Text", Model.SFDClientId)
                         , new { @class = "form-control input-md" })
                             @Html.ValidationMessageFor(model => model.OpenModelImageFile, "", new { @class = "text-danger" })
                         </div>
                     </div>
-
                 </div>
-                <div class="col-md-6">
-                </div>
+                
             </div>
 
             <div class="row">
@@ -97,7 +114,17 @@
                 $(function () {
                     debugger;
 
-                    $("input[name='IsUseOpenModel']:checked").closest("label.btn").addClass("active");
+                    $("input[name='IsReportType']:checked").closest("label.btn").addClass("active");
+                    $('#divClientCampaigns').hide();
+                    $("input[name='IsReportType']").on('change', function () {
+                        debugger;
+                        var isDataroma = $("input[name=IsReportType]:checked").val() === "True";
+                        if (isDataroma) {
+                            $('#divClientCampaigns').show(1000);;
+                        } else {
+                            $('#divClientCampaigns').hide(1000);;
+                        }
+                    });
 
                     if ($('#Id').val() !== '')
                         $('#WhiteLabel').prop('readonly', "readonly");

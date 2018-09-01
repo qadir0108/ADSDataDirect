@@ -1,9 +1,9 @@
 ﻿using System;
 using System.IO;
 using System.Web.Mvc;
-using ADSDataDirect.Web.Async.Helpers;
-using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
+using ADSDataDirect.Infrastructure.S3;
+using ADSDataDirect.Infrastructure.FileManagment;
 
 namespace ADSDataDirect.Web.Controllers
 {

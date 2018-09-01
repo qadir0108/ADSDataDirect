@@ -7,12 +7,13 @@ using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
-using ADSDataDirect.Web.Async;
 using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
 using Hangfire;
 using Nelibur.ObjectMapper;
 using PagedList;
+using ADSDataDirect.Infrastructure.Campaigns;
+using ADSDataDirect.Infrastructure.Csv;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -24,21 +25,20 @@ namespace ADSDataDirect.Web.Controllers
         // GET: Campaigns
         public ActionResult Index(CampaignSearchVm sc)
         {
-            //FileManager.ProcessHtml("C:\\123.htm", "C:\\1.htm");
-            //FileManager.UploadFile(UploadFileType.ZipFile, @"C:\\zip_codesCopy.csv", "123");
             if (LoggedInUser == null) return RedirectToAction("LogOff", "Account");
 
             ViewBag.CurrentSort = sc.SortOrder;
             ViewBag.OrderNumberSortParm = sc.SortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
             ViewBag.CampaignNameSortParm = sc.SortOrder == "CampaignName" ? "CampaignName_desc" : "CampaignName";
-            ViewBag.CreatedBySortParm = sc.SortOrder == "CreatedBy" ? "CreatedBy_desc" : "CreatedBy";
-            ViewBag.CreatedAtSortParm = sc.SortOrder == "CreatedAt" ? "CreatedAt_desc" : "CreatedAt";
+            ViewBag.FromLineSortParm = sc.SortOrder == "FromLine" ? "FromLine_desc" : "FromLine";
+            ViewBag.SubjectLineSortParm = sc.SortOrder == "SubjectLine" ? "SubjectLine_desc" : "SubjectLine";
             ViewBag.DeployDateSortParm = sc.SortOrder == "DeployDate" ? "DeployDate_desc" : "DeployDate";
             ViewBag.QuantitySortParm = sc.SortOrder == "Quantity" ? "Quantity_desc" : "Quantity";
             ViewBag.StatusSortParm = sc.SortOrder == "Status" ? "Status_desc" : "Status";
 
             var campagins =
                 Db.Campaigns
+                .Include(x => x.Assets)
                 .Include(x => x.Testing)
                 .Include(x => x.Approved)
                 .Include(x => x.Segments);

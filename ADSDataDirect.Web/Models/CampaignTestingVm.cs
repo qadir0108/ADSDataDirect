@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
+using ADSDataDirect.Infrastructure.Reports;
+using ADSDataDirect.Infrastructure.Db;
 
 namespace ADSDataDirect.Web.Models
 {

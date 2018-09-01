@@ -60,7 +60,7 @@
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "CampaignName")
-                    @Html.ActionLink("Use Open Model", "Index", columnSortParams2)
+                    @Html.ActionLink("Use Reporting Model", "Index", columnSortParams2)
                 </td>
                 <th></th>
             </tr>
@@ -89,9 +89,11 @@
                     <td>
                         @(item.IsUseOpenModel ? "Yes" : "No")
                     </td>
-                    <td>
+                    <td style="min-width:150px">
                         <a href="@Url.Action("Edit","Customer", new { id = item.Id })" id="btnEdit" class="btn btn-sm btn-default" title="Edit" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></a>
                         <a href="#" id="btnDelete" class="btn btn-sm btn-default btnDelete" title="Delete" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a href="@Url.Action("DownloadOrdersStatus","Customer", new { id = item.Id })" class="btn btn-sm btn-default" title="Download Orders Status Report" data-tooltip="tooltip" data-id="@item.Id"><i class="glyphicon glyphicon-download-alt" aria-hidden="true"></i></a>
+
                     </td>
                 </tr>
             }

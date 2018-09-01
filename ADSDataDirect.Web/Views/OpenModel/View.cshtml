@@ -23,13 +23,13 @@
 
     <div class="row">
         <div class="col-md-10 headertab">
-            Campaign Tracking - Custom Data Model
+            Campaign Tracking - Reporting Model
         </div>
         <div class="col-md-2 listing-action" id="divTools" style="text-align: right">
             @if (isAdmin)
             {
-                <a href="#" class="btn btn-default" id="btnOpenModel" data-tooltip="tooltip" title="Change Input links"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="#" class="btn btn-default" id="btnProcess" data-tooltip="tooltip" title="Process Model"><span class="glyphicon glyphicon-cog"></span></a>
+                <a href="#" class="btn btn-default" id="btnOpenModel" data-tooltip="tooltip" title="Upload Html links"><span class="glyphicon glyphicon-pencil"></span></a>
+                <a href="#" class="btn btn-default" id="btnProcess" data-tooltip="tooltip" title="Process Reporting Model"><span class="glyphicon glyphicon-cog"></span></a>
             }
         </div>
     </div>
@@ -162,6 +162,12 @@
                                         </dd>
                                         <dt>
                                             @Html.DisplayNameFor(model => item.Clicked)
+                                        </dt>
+                                        <dd>
+                                            @Html.DisplayFor(model => item.Clicked)
+                                        </dd>
+                                        <dt>
+                                            @Html.DisplayNameFor(model => item.ClickedPercentage)
                                         </dt>
                                         <dd>
                                             @Html.DisplayFor(model => item.ClickedPercentage)

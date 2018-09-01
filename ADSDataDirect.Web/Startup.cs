@@ -3,7 +3,6 @@ using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Web;
 using ADSDataDirect.Web.Hangfire;
 using ADSDataDirect.Web.Hubs;
-using ADSDataDirect.Web.ProData;
 using Hangfire;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
@@ -11,6 +10,7 @@ using Microsoft.Owin;
 using Owin;
 using System;
 using ADSDataDirect.Enums;
+using ADSDataDirect.Infrastructure.Notifications;
 
 [assembly: OwinStartup(typeof(Startup))]
 namespace ADSDataDirect.Web

@@ -5,10 +5,9 @@ using System.Web.Http;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
-using ADSDataDirect.Web.Async.Helpers;
 using ADSDataDirect.Web.Controllers;
 using ADSDataDirect.Web.Hangfire;
-using ADSDataDirect.Web.Smartsheet;
+using ADSDataDirect.Infrastructure.Emails;
 
 namespace ADSDataDirect.Web
 {

@@ -1,19 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
 using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
-using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
-using ADSDataDirect.Web.ProData;
-using ADSDataDirect.Web.Reports;
 using PagedList;
-using ADSDataDirect.Web.Async.Helpers;
+using ADSDataDirect.Infrastructure.Reports;
+using ADSDataDirect.Infrastructure.S3;
+using ADSDataDirect.Infrastructure.Image;
+using ADSDataDirect.Infrastructure.ProData;
+using ADSDataDirect.Infrastructure.Db;
 
 namespace ADSDataDirect.Web.Controllers
 {

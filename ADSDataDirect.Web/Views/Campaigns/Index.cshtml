@@ -17,8 +17,8 @@
 
     var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
     var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
-    var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
-    var columnSortParams4 = new { sortOrder = ViewBag.CreatedAtSortParm };
+    var columnSortParams3 = new { sortOrder = ViewBag.FromLineSortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.SubjectLineSortParm };
     var columnSortParams5 = new { sortOrder = ViewBag.DeployDateSortParm };
     var columnSortParams6 = new { sortOrder = ViewBag.QuantitySortParm };
     var columnSortParams7 = new { sortOrder = ViewBag.StatusSortParm };
@@ -76,9 +76,6 @@
         
         <table class="table">
             <tr>
-                @*<th>
-                        @Html.DisplayNameFor(model => model.CreatedAt)
-                    </th>*@
                 <td>
                     @Html.SortIdentifier(currentSort, "OrderNumber")
                     @Html.ActionLink("#", "Index", columnSortParams1)
@@ -87,26 +84,22 @@
                 <td>
                     @Html.SortIdentifier(currentSort, "CampaignName")
                     @Html.ActionLink("Campaign Name", "Index", columnSortParams2)
-                    @*@Html.DisplayNameFor(model => model.CampaignName)*@
                 </td>
                 <td>
-                    @Html.SortIdentifier(currentSort, "CreatedBy")
-                    @Html.ActionLink("Order by", "Index", columnSortParams3)
-                    @*@Html.DisplayNameFor(model => model.RepresentativeName)*@
+                    @Html.SortIdentifier(currentSort, "FromLine")
+                    @Html.ActionLink("From Line", "Index", columnSortParams3)
                 </td>
                 <td>
-                    @Html.SortIdentifier(currentSort, "CreatedAt")
-                    @Html.ActionLink("Ordered At", "Index", columnSortParams4)
-                    @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
-                </td>
-                <td>
-                    @Html.SortIdentifier(currentSort, "DeployDate")
-                    @Html.ActionLink("Deploy Date", "Index", columnSortParams5)
-                    @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
+                    @Html.SortIdentifier(currentSort, "SubjectLine")
+                    @Html.ActionLink("Subject Line", "Index", columnSortParams4)
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "Quantity")
                     @Html.ActionLink("Quantity", "Index", columnSortParams6)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "DeployDate")
+                    @Html.ActionLink("Deploy Date", "Index", columnSortParams5)
                 </td>
                 <td>
                     @Html.SortIdentifier(currentSort, "Status")
@@ -131,23 +124,21 @@
                         @(item.Approved != null ? item.Approved.CampaignName : item.Testing  != null ? item.Testing.CampaignName : item.CampaignName)
                     </td>
                     <td>
-                        @Html.DisplayFor(modelItem => item.CreatedBy)
+                        @(item.Approved != null ? item.Approved.FromLine : item.Testing != null ? item.Testing.FromLine : item.FromLine)
                     </td>
                     <td>
-                        @(item.CreatedAt.ToString(StringConstants.TimeStampFormat))
+                        @(item.Approved != null ? item.Approved.SubjectLine : item.Testing != null ? item.Testing.SubjectLine : item.SubjectLine)
                     </td>
                     <td>
-                        @*@(item.BroadcastDate?.ToString(StringConstants.TimeStampFormat))*@
+                        @(item.Approved?.Quantity ?? (item.Testing?.Quantity ?? item.Quantity))
+                    </td>
+                    <td>
                         @((item.Approved?.DeployDate ?? (item.Testing?.DeployDate ?? item.BroadcastDate))?.ToString(StringConstants.TimeStampFormat))
                     </td>
                     <td class="no-right-padding no-left-padding">
-                        @(item.Approved?.Quantity ?? (item.Testing?.Quantity ?? item.Quantity))
-                    </td>
-
-                    <td class="no-right-padding no-left-padding">
                         @Enum.GetName(typeof(CampaignStatus), item.Status)
                     </td>
-                    <td class="no-right-padding no-left-padding">
+                    <td class="no-right-padding no-left-padding" style="min-width:280px">
                         <div class="row">
                             <div class="col-md-12">
                                 @if (isAdmin)
@@ -187,9 +178,15 @@
                                 <div class="col-md-3">
                                     @if (isAdmin)
                                     {
-                                        <a href="@Url.Action("View", "OpenModel", new {id = item.Id})" title="Open Model" data-tooltip="tooltip">
+                                        <a href="@Url.Action("View", "OpenModel", new { id = item.Id })" title="Reporting" data-tooltip="tooltip">
                                             <span class="glyphicon glyphicon-folder-open"></span>
                                         </a>
+                                        if (item.Assets != null && !string.IsNullOrEmpty(item.Assets.OpenModelLinksFile))
+                                        {
+                                        <a target="_blank" href="/File/DownloadFile?FileName=@item.Assets.OpenModelLinksFile" title="Download Links" data-tooltip="tooltip">
+                                            <span class="glyphicon glyphicon-download-alt"></span>
+                                        </a>
+                                        }
                                     }
                                     @if (isAdmin)
                                     {

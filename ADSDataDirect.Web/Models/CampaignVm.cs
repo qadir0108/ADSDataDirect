@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
 using Nelibur.ObjectMapper;
+using ADSDataDirect.Infrastructure.Db;
 
 namespace ADSDataDirect.Web.Models
 {

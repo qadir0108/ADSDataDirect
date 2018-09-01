@@ -470,6 +470,18 @@ namespace ADSDataDirect.Web.Controllers
                 case "CampaignName_desc":
                     campagins = campagins.OrderByDescending(s => s.CampaignName);
                     break;
+                case "FromLine":
+                    campagins = campagins.OrderBy(s => s.FromLine);
+                    break;
+                case "FromLine_desc":
+                    campagins = campagins.OrderByDescending(s => s.FromLine);
+                    break;
+                case "SubjectLine":
+                    campagins = campagins.OrderBy(s => s.SubjectLine);
+                    break;
+                case "SubjectLine_desc":
+                    campagins = campagins.OrderByDescending(s => s.SubjectLine);
+                    break;
                 case "CreatedBy":
                     campagins = campagins.OrderBy(s => s.CreatedBy);
                     break;

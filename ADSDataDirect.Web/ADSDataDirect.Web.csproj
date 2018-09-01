@@ -49,32 +49,12 @@
     </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.Core.3.3.17.9\lib\net45\AWSSDK.Core.dll</HintPath>
-    </Reference>
-    <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
-      <HintPath>..\packages\AWSSDK.S3.3.3.11\lib\net45\AWSSDK.S3.dll</HintPath>
-    </Reference>
-    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
-      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
-    </Reference>
-    <Reference Include="EPPlus, Version=4.5.2.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
-      <HintPath>..\packages\EPPlus.4.5.2.1\lib\net40\EPPlus.dll</HintPath>
-    </Reference>
     <Reference Include="Hangfire.Core, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.Core.1.6.12\lib\net45\Hangfire.Core.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Hangfire.SqlServer, Version=1.6.12.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Hangfire.SqlServer.1.6.12\lib\net45\Hangfire.SqlServer.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
-      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="MailChimp.Net.V3, Version=1.9.5.0, Culture=neutral, PublicKeyToken=37d26d538413c581, processorArchitecture=MSIL">
-      <HintPath>..\packages\MailChimp.Net.V3.1.9.5.0\lib\net45\MailChimp.Net.V3.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="Microsoft.AspNet.SignalR.Core, Version=2.2.2.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
@@ -165,9 +145,6 @@
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
     </Reference>
-    <Reference Include="smartsheet-csharp-sdk, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\smartsheet-csharp-sdk.2.2.1\lib\net40\smartsheet-csharp-sdk.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.DirectoryServices" />
@@ -254,10 +231,6 @@
       <HintPath>..\packages\Antlr.3.4.1.9004\lib\Antlr3.Runtime.dll</HintPath>
     </Reference>
     <Reference Include="WindowsBase" />
-    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.6.21.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
-      <HintPath>..\packages\Z.EntityFramework.Plus.EF6.1.6.21\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
   </ItemGroup>
   <ItemGroup>
     <Reference Include="EntityFramework">
@@ -311,7 +284,6 @@
     <Compile Include="Controllers\SmartsheetController.cs" />
     <Compile Include="Controllers\DynamicCodingController.cs" />
     <Compile Include="Controllers\OpenModelController.cs" />
-    <Compile Include="DynamicCoding\DynamicCodingLookupVm.cs" />
     <Compile Include="Hangfire\HangfireBootstrapper .cs" />
     <Compile Include="Hangfire\ApplicationPreload.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
@@ -326,41 +298,16 @@
     <Compile Include="Controllers\TestController.cs" />
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
-    <Compile Include="HasOffers\Advertisers\AdvertisersManager.cs" />
-    <Compile Include="HasOffers\Advertisers\GetAdvertisersListResponse.cs" />
-    <Compile Include="HasOffers\Campaigns\CampaignsManager.cs" />
-    <Compile Include="HasOffers\Campaigns\GetCampaignsListResponse.cs" />
-    <Compile Include="HasOffers\HasOffersManager.cs" />
-    <Compile Include="HasOffers\Publishers\GetPublishersListResponse.cs" />
-    <Compile Include="HasOffers\Publishers\PublishersManager.cs" />
-    <Compile Include="Helpers\AdsException.cs" />
     <Compile Include="Helpers\AdsCache.cs" />
-    <Compile Include="DynamicCoding\DynamicCodingProcessor.cs" />
-    <Compile Include="Helpers\CsvReader.cs" />
-    <Compile Include="Helpers\ExcelHelper.cs" />
-    <Compile Include="Helpers\ExcelHelper_Old.cs" />
-    <Compile Include="Helpers\ImageResizer.cs" />
-    <Compile Include="Helpers\SettingsManager.cs" />
-    <Compile Include="Helpers\StringListRandomizer.cs" />
-    <Compile Include="DynamicCoding\DynamicCodingLinkVm.cs" />
-    <Compile Include="DynamicCoding\DynamicCodingInput.cs" />
-    <Compile Include="Models\CampaignTrackingMetricDetailVm.cs" />
-    <Compile Include="Models\CampaignTrackingMetricVm.cs" />
+    <Compile Include="Helpers\ControllerExceptionHelper.cs" />
     <Compile Include="Models\CampaignTrackingOpenModelVm.cs" />
     <Compile Include="Models\OpenModelInputVm.cs" />
     <Compile Include="Models\KeywordVm.cs" />
     <Compile Include="Models\NotificationSearchVm.cs" />
     <Compile Include="Models\NotificationVm.cs" />
     <Compile Include="Models\MessageVm.cs" />
-    <Compile Include="Models\SettingsVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
     <Compile Include="Models\VendorVm.cs" />
-    <Compile Include="OpenModel\OpenModelProcessor.cs" />
-    <Compile Include="ProData\NotificationsProcessor.cs" />
-    <Compile Include="Async\CampaignProcessor.cs" />
-    <Compile Include="Async\DataFileProcessor.cs" />
-    <Compile Include="Async\MailChimpProcessor.cs" />
-    <Compile Include="ProData\ProDataHelper.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="API\AdsController.cs" />
     <Compile Include="Controllers\ApprovedController.cs" />
@@ -381,43 +328,18 @@
     <Compile Include="Helpers\AjaxAuthorizeAttribute.cs" />
     <Compile Include="Helpers\AuthorizeRole.cs" />
     <Compile Include="Helpers\AuthorizeClaim.cs" />
-    <Compile Include="Helpers\CsvHelper.cs" />
-    <Compile Include="Helpers\EmailChecker.cs" />
-    <Compile Include="Helpers\ExcelUtility.cs" />
-    <Compile Include="Async\Helpers\FileManager.cs" />
-    <Compile Include="Async\Helpers\FileManagerFTP.cs" />
-    <Compile Include="Async\FileProcessor.cs" />
-    <Compile Include="Async\Helpers\FileUploader.cs" />
-    <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\KeyGenerator.cs" />
     <Compile Include="Helpers\ListExtensions.cs" />
     <Compile Include="Helpers\MultipleButtonAttribute.cs" />
     <Compile Include="Hangfire\HangfireAuthorizationFilter.cs" />
-    <Compile Include="ProData\ProDataApiManager.cs" />
-    <Compile Include="Async\Helpers\S3FileManager.cs" />
-    <Compile Include="Helpers\NumberHelper.cs" />
-    <Compile Include="Helpers\QCRuleUtility.cs" />
     <Compile Include="Helpers\SortSearchExtension.cs" />
-    <Compile Include="Helpers\StringHelper.cs" />
-    <Compile Include="Helpers\Extensions.cs" />
-    <Compile Include="Async\Helpers\EmailHelper.cs" />
-    <Compile Include="Helpers\ExceptionHelper.cs" />
-    <Compile Include="Helpers\FileHelper.cs" />
     <Compile Include="Helpers\GatePassGenerator.cs" />
     <Compile Include="Hubs\WFPICTHub.cs" />
     <Compile Include="Hubs\WFPICTUpdater.cs" />
     <Compile Include="API\Campaign.cs" />
-    <Compile Include="Models\CampaignTrackingDetailVm.cs" />
-    <Compile Include="Models\CampaignSegmentVm.cs" />
     <Compile Include="Models\CampaignApprovedVm.cs" />
     <Compile Include="Models\CampaignTestingVm.cs" />
     <Compile Include="Models\CampaignVm.cs" />
-    <Compile Include="Helpers\CreativeHelper.cs" />
-    <Compile Include="Models\CreativeVm.cs" />
-    <Compile Include="Models\CampaignTrackingVm.cs" />
-    <Compile Include="Models\HtmlProcessResult.cs" />
-    <Compile Include="ProData\ProDataRequest.cs" />
-    <Compile Include="ProData\ProDataResponse.cs" />
     <Compile Include="Models\CompanyPermissionVm.cs" />
     <Compile Include="Models\CompanyRoleVm.cs" />
     <Compile Include="Models\CampaignSearchVm.cs" />
@@ -429,18 +351,12 @@
     <Compile Include="Models\UploadFileVm.cs" />
     <Compile Include="Models\UserProfileVm.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Reports\BaseTrackingReport.cs" />
     <Compile Include="Reports\CampaignDatasetType.Designer.cs">
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>CampaignDatasetType.xsd</DependentUpon>
     </Compile>
-    <Compile Include="Reports\ITrackingReport.cs" />
     <Compile Include="Reports\ReportModel.cs" />
-    <Compile Include="Reports\TrackingReportTemplate34.cs" />
-    <Compile Include="Reports\TrackingReportTemplate12.cs" />
-    <Compile Include="Smart Sheet\SheetMap.cs" />
-    <Compile Include="Smart Sheet\SmartsheetManager.cs" />
     <Compile Include="Startup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -472,7 +388,6 @@
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
-    <Content Include="icons\logo.png" />
     <Content Include="images\logo.png" />
     <Content Include="images\app-screen.png" />
     <Content Include="images\arrow.png" />
@@ -693,9 +608,6 @@
     <Content Include="fonts\CWB0XYA8bzo0kSThX0UTuA.woff2" />
     <Content Include="fonts\d-6IYplOFocCacKzxwXSOFtXRa8TVwTICgirnJhmVJw.woff2" />
     <Content Include="json.json" />
-    <Content Include="NLog.config">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
@@ -1050,7 +962,6 @@
     <EmbeddedResource Include="Reports\Campaign.rdlc" />
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\AWSSDK.S3.3.3.11\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
     <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\Google.Protobuf.dll" />
     <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.CSharp.dll" />
     <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.dll" />

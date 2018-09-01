@@ -7,7 +7,7 @@
         public const string DateFormatSlashes = "MM/dd/yyyy";
         public const string DateTimeFormatSlashes = "MM/dd/yyyy HH:mm:ss";
         public const string DateTimeFormatDashes = "yyyy-MM-dd HH:mm:ss"; // "2017-07-10 14:30:00"
-        public const string DateFormatDashes = "dd-MM-yy";
+        public const string DateFormatDashes = "MM-dd-yyyy";
         public const string DateTimeDisplayFormatReview = "F";
         public const string TimeFormat = "h:mm tt";
 

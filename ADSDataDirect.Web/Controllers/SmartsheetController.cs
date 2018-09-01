@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Web.Models;
-using PagedList;
-using ADSDataDirect.Web.Smartsheet;
 using System.Collections.Generic;
+using ADSDataDirect.Infrastructure.Smartsheet;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -16,7 +12,7 @@ namespace ADSDataDirect.Web.Controllers
         public ActionResult Index()
         {
             var mgr = new SmartsheetManager(Db);
-            List<string> data = mgr.GetSheets().Data.Select(x => x.Name).ToList();
+            List<string> data = mgr.GetSheetNames();
             return View(data);
         }
 

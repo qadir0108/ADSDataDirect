@@ -34,29 +34,177 @@
     </CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="AWSSDK.Core, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.Core.3.3.17.9\lib\net45\AWSSDK.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="AWSSDK.S3, Version=3.3.0.0, Culture=neutral, PublicKeyToken=885c28607f98e604, processorArchitecture=MSIL">
+      <HintPath>..\packages\AWSSDK.S3.3.3.11\lib\net45\AWSSDK.S3.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.7.2.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.7.2\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="EntityFramework.SqlServer, Version=6.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089, processorArchitecture=MSIL">
+      <HintPath>..\packages\EntityFramework.6.1.3\lib\net45\EntityFramework.SqlServer.dll</HintPath>
+    </Reference>
+    <Reference Include="EPPlus, Version=4.5.2.1, Culture=neutral, PublicKeyToken=ea159fdaa78159a1, processorArchitecture=MSIL">
+      <HintPath>..\packages\EPPlus.4.5.2.1\lib\net40\EPPlus.dll</HintPath>
+    </Reference>
+    <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
+      <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
+    </Reference>
+    <Reference Include="MailChimp.Net.V3, Version=1.9.5.0, Culture=neutral, PublicKeyToken=37d26d538413c581, processorArchitecture=MSIL">
+      <HintPath>..\packages\MailChimp.Net.V3.1.9.5.0\lib\net45\MailChimp.Net.V3.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\RestSharp.105.2.3\lib\net46\RestSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="smartsheet-csharp-sdk, Version=2.2.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\smartsheet-csharp-sdk.2.2.1\lib\net40\smartsheet-csharp-sdk.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
+    <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.IO.Compression" />
+    <Reference Include="System.IO.Compression.FileSystem" />
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.0.1\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.4.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Net.Http.Formatting, Version=5.2.3.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.AspNet.WebApi.Client.5.2.3\lib\net45\System.Net.Http.Formatting.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Security" />
+    <Reference Include="System.Web" />
+    <Reference Include="System.Web.Mvc">
+      <HintPath>..\packages\Microsoft.AspNet.Mvc.5.2.3\lib\net45\System.Web.Mvc.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
     <Reference Include="System.Data" />
     <Reference Include="System.Net.Http" />
     <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="Z.EntityFramework.Plus.EF6, Version=1.6.21.0, Culture=neutral, PublicKeyToken=59b66d028979105b, processorArchitecture=MSIL">
+      <HintPath>..\packages\Z.EntityFramework.Plus.EF6.1.6.21\lib\net45\Z.EntityFramework.Plus.EF6.dll</HintPath>
+    </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ClickModel.cs" />
-    <Compile Include="ClickModeler.cs" />
-    <Compile Include="OpenModelerProData.cs" />
+    <Compile Include="Common\StringHelper.cs" />
+    <Compile Include="Common\StringListRandomizer.cs" />
+    <Compile Include="Creatives\CreativeHelper.cs" />
+    <Compile Include="DataReports\CustomerOrdersStatusReports.cs" />
+    <Compile Include="Emails\EmailChecker.cs" />
+    <Compile Include="Excel\ExcelHelper.cs" />
+    <Compile Include="Excel\ExcelHelper_Old.cs" />
+    <Compile Include="Excel\ExcelUtility.cs" />
+    <Compile Include="DataReports\MetricReportsGenerator.cs" />
+    <Compile Include="Exceptions\AdsException.cs" />
+    <Compile Include="Campaigns\CampaignProcessor.cs" />
+    <Compile Include="Campaigns\DataFileProcessor.cs" />
+    <Compile Include="Campaigns\FileProcessor.cs" />
+    <Compile Include="Emails\EmailHelper.cs" />
+    <Compile Include="FileManagment\FileHelper.cs" />
+    <Compile Include="FileManagment\FileManager.cs" />
+    <Compile Include="FileManagment\FileManagerFTP.cs" />
+    <Compile Include="FileManagment\FileUploader.cs" />
+    <Compile Include="FileManagment\HtmlProcessResult.cs" />
+    <Compile Include="Image\ImageHelper.cs" />
+    <Compile Include="Image\ImageResizer.cs" />
+    <Compile Include="MailChimps\CreativeVm.cs" />
+    <Compile Include="DataReports\CampaignTrackingMetricDetailVm.cs" />
+    <Compile Include="DataReports\CampaignTrackingMetricVm.cs" />
+    <Compile Include="Reports\BaseTrackingReport.cs" />
+    <Compile Include="Db\CampaignSegmentVm.cs" />
+    <Compile Include="Db\CampaignTrackingDetailVm.cs" />
+    <Compile Include="Db\CampaignTrackingVm.cs" />
+    <Compile Include="Reports\ITrackingReport.cs" />
+    <Compile Include="Reports\TrackingReportTemplate12.cs" />
+    <Compile Include="Reports\TrackingReportTemplate34.cs" />
+    <Compile Include="S3\S3FileManager.cs" />
+    <Compile Include="MailChimps\MailChimpProcessor.cs" />
+    <Compile Include="Csv\CsvHelper.cs" />
+    <Compile Include="Csv\CsvReader.cs" />
+    <Compile Include="Db\SettingsManager.cs" />
+    <Compile Include="Db\SettingsVm.cs" />
+    <Compile Include="Exceptions\ExceptionHelper.cs" />
+    <Compile Include="Notifications\QCRuleUtility.cs" />
+    <Compile Include="Common\NumberHelper.cs" />
+    <Compile Include="ReportingModel\ClickModel.cs" />
+    <Compile Include="DynamicCoding\DynamicCodingInput.cs" />
+    <Compile Include="DynamicCoding\DynamicCodingLinkVm.cs" />
+    <Compile Include="DynamicCoding\DynamicCodingLookupVm.cs" />
+    <Compile Include="DynamicCoding\DynamicCodingProcessor.cs" />
+    <Compile Include="Extensions.cs" />
+    <Compile Include="HasOffers\Advertisers\AdvertisersManager.cs" />
+    <Compile Include="HasOffers\Advertisers\GetAdvertisersListResponse.cs" />
+    <Compile Include="HasOffers\Campaigns\CampaignsManager.cs" />
+    <Compile Include="HasOffers\Campaigns\GetCampaignsListResponse.cs" />
+    <Compile Include="HasOffers\HasOffersManager.cs" />
+    <Compile Include="HasOffers\Publishers\GetPublishersListResponse.cs" />
+    <Compile Include="HasOffers\Publishers\PublishersManager.cs" />
+    <Compile Include="ProData\OpenModelerProData.cs" />
+    <Compile Include="Notifications\NotificationsProcessor.cs" />
+    <Compile Include="ProData\ProDataApiManager.cs" />
+    <Compile Include="ProData\ProDataHelper.cs" />
+    <Compile Include="ProData\ProDataRequest.cs" />
+    <Compile Include="ProData\ProDataResponse.cs" />
+    <Compile Include="ReportingModel\ReportingModelProcessor.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SmartSheet\SheetMap.cs" />
+    <Compile Include="SmartSheet\SmartsheetManager.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="ADSDataDirect.Infrastructure.ruleset" />
+    <None Include="App.config" />
+    <Content Include="icons\logo.png" />
+    <Content Include="NLog.config">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <None Include="NLog.xsd">
+      <SubType>Designer</SubType>
+    </None>
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <Analyzer Include="..\packages\AWSSDK.S3.3.3.11\analyzers\dotnet\cs\AWSSDK.S3.CodeAnalysis.dll" />
     <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\Google.Protobuf.dll" />
     <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.CSharp.dll" />
     <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ADSDataDirect.Core\ADSDataDirect.Core.csproj">
+      <Project>{73d3925f-4b91-419c-bb37-1cf35b705466}</Project>
+      <Name>ADSDataDirect.Core</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\ADSDataDirect.Enums\ADSDataDirect.Enums.csproj">
+      <Project>{1be0cde0-0f59-413c-b089-663db5ef00e1}</Project>
+      <Name>ADSDataDirect.Enums</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Vms\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

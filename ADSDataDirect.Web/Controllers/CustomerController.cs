@@ -6,6 +6,8 @@ using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Web.Models;
 using PagedList;
+using System.Collections.Generic;
+using ADSDataDirect.Infrastructure.DataReports;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -169,5 +171,42 @@ namespace ADSDataDirect.Web.Controllers
             }
         }
 
+        public ActionResult DownloadOrdersStatus(Guid? id)
+        {
+            try
+            {
+                var customer = Db.Customers.Find(id);
+                if (customer == null)
+                {
+                    TempData["Error"] = "White label not found.";
+                    return RedirectToAction("Index", "Customer");
+                }
+
+                if (string.IsNullOrEmpty(customer.WhiteLabel))
+                {
+                    TempData["Error"] = "Customer White label is not set.";
+                    return RedirectToAction("Index", "Customer");
+                }
+
+                List<Campaign> campaigns = Db.Campaigns
+                .Include(x => x.Assets)
+                .Include(x => x.Segments)
+                .Include(x => x.ProDatas)
+                .Include(x => x.Testing)
+                .Include(x => x.Approved)
+                .Include(x => x.Trackings)
+                .Where(x => x.Approved != null && x.Approved.WhiteLabel == customer.WhiteLabel)
+                .ToList();
+
+                CustomerOrdersStatusReports.Generate(Response, customer.WhiteLabel, campaigns);
+
+                return null;
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message },
+                    JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

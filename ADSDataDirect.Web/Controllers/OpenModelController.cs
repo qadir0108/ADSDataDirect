@@ -5,11 +5,12 @@ using System.Linq;
 using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Web.Models;
-using ADSDataDirect.Web.OpenModel;
 using ADSDataDirect.Web.Helpers;
-using ADSDataDirect.Web.Async.Helpers;
 using System.IO;
-using OfficeOpenXml;
+using ADSDataDirect.Infrastructure.S3;
+using ADSDataDirect.Infrastructure.Csv;
+using ADSDataDirect.Infrastructure.ReportingModel;
+using ADSDataDirect.Infrastructure.DataReports;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -136,7 +137,7 @@ namespace ADSDataDirect.Web.Controllers
                     throw new AdsException("Please upload link files first.");
                 }
 
-                OpenModelProcessor.PopulateFakeData(Db, campaign);
+                OpenModelProcessor.PopulateFakeData(Db, campaign, UploadPath);
 
                 return Json(new JsonResponse() { IsSucess = true });
             }
@@ -180,25 +181,8 @@ namespace ADSDataDirect.Web.Controllers
                 return RedirectToAction("Index", "Campaigns");
             }
 
-            var metric = CampaignTrackingMetricVm.FromCampaignTracking(campaign, campaignTracking);
-            var urls = CampaignTrackingMetricDetailVm.FromCampaignTracking(campaign, campaignTracking);
+            MetricReportsGenerator.Generate(Response, campaign, campaignTracking);
 
-            ExcelPackage excel = new ExcelPackage();
-            var workSheet = excel.Workbook.Worksheets.Add("Strat Metrics");
-            workSheet.Cells[1, 1].LoadFromCollection(metric, true);
-
-            var workSheet2 = excel.Workbook.Worksheets.Add("Strat URLs");
-            workSheet2.Cells[1, 1].LoadFromCollection(urls, true);
-
-            using (var memoryStream = new MemoryStream())
-            {
-                Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment;  filename=MetricsURLs.xlsx");
-                excel.SaveAs(memoryStream);
-                memoryStream.WriteTo(Response.OutputStream);
-                Response.Flush();
-                Response.End();
-            }
             return null;
         }
     }

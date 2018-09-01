@@ -6,12 +6,14 @@ using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
-using ADSDataDirect.Web.Async;
 using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
 using Hangfire;
 using Nelibur.ObjectMapper;
-using ADSDataDirect.Web.Async.Helpers;
+using ADSDataDirect.Infrastructure.Campaigns;
+using ADSDataDirect.Infrastructure.DynamicCoding;
+using ADSDataDirect.Infrastructure.Reports;
+using ADSDataDirect.Infrastructure.Db;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -53,7 +55,7 @@ namespace ADSDataDirect.Web.Controllers
                        .FirstOrDefault(x => x.Id == campaign.Id);
                 }
                 campaign.Assets.ZipCodeUrl = $"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}zip.csv";
-                campaign.Assets.CreativeUrl =$"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}.htm";
+                campaign.Assets.CreativeUrl =$"http://www.digitaldynamixs.net/ep2/{campaign.OrderNumber}/{campaign.OrderNumber}.html";
 
                 var testingId = Guid.NewGuid();
                 var testing = new CampaignTesting()

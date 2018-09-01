@@ -10,6 +10,7 @@ namespace ADSDataDirect.Web.Models
         public string OpenModelLinksFile { get; set; }
         public string OpenModelImageFile { get; set; }
         public string SFDClientId { get; set; }
+        public bool IsReportType { get; set; } // Static or Dataroma
 
     }
 }

@@ -6,11 +6,12 @@ using System.Linq;
 using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
-using ADSDataDirect.Web.Async;
-using ADSDataDirect.Web.Async.Helpers;
 using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
 using Hangfire;
+using ADSDataDirect.Infrastructure.MailChimps;
+using ADSDataDirect.Infrastructure.S3;
+using ADSDataDirect.Infrastructure.Creatives;
 
 namespace ADSDataDirect.Web.Controllers
 {
