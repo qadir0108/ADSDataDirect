@@ -114,6 +114,7 @@
     <Compile Include="Common\StringHelper.cs" />
     <Compile Include="Common\StringListRandomizer.cs" />
     <Compile Include="Creatives\CreativeHelper.cs" />
+    <Compile Include="DataReports\CustomerOrdersStatusVm.cs" />
     <Compile Include="DataReports\CustomerOrdersStatusReports.cs" />
     <Compile Include="Emails\EmailChecker.cs" />
     <Compile Include="Excel\ExcelHelper.cs" />
@@ -203,9 +204,7 @@
       <Name>ADSDataDirect.Enums</Name>
     </ProjectReference>
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Vms\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

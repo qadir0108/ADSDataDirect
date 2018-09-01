@@ -3,7 +3,6 @@
 @{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
-<h2>Custom Open Model Inputs</h2>
 @using (Html.BeginForm())
 {
     @Html.AntiForgeryToken()
@@ -12,6 +11,13 @@
         <div class="form-horizontal">
             @Html.ValidationSummary(false, "", new { @class = "text-danger" })
             @Html.HiddenFor(model => model.Id)
+
+            <div class="row" style="padding-bottom: 5px">
+                <div class="col-md-12 headertab">
+                    Reporting Model Inputs - Order #: @Model.OrderNumber
+                </div>
+            </div>
+
 
             <div class="row">
                 <div class="col-md-6">

@@ -102,7 +102,7 @@ namespace ADSDataDirect.Web.Controllers
                 }
                 Db.SaveChanges();
                 
-                TempData["Success"] = "Open Model Input data saved successfully!";
+                TempData["Success"] = "Reporting Model Input data saved successfully!";
                 return RedirectToAction("View", "OpenModel", new { id = vm.Id });
             }
             else

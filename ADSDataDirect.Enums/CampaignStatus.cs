@@ -10,5 +10,6 @@
         Completed = 5,
         Cancelled = 6,
         NotRebroadcasted = 7,
+        Invoiced = 8,
     }
 }
