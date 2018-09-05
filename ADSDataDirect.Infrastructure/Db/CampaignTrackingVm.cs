@@ -97,7 +97,7 @@ namespace ADSDataDirect.Infrastructure.Db
                             }).OrderBy(x => x.SegmentNumber).ToList();
             var proDatas = campaign.ProDatas
                 .Where(x => x.OrderNumber == campaignTracking.OrderNumber && x.SegmentNumber == campaignTracking.SegmentNumber)
-                .OrderBy(x => ProDataHelper.GetIndex(x.Reportsite_URL));
+                .OrderByDescending(x => x.ClickCount);
 
             foreach (var proData in proDatas)
             {

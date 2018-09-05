@@ -293,7 +293,7 @@ namespace ADSDataDirect.Infrastructure.ProData
 
             campaignTracking.Clicked = reports.Sum(x => long.Parse(x.ClickCount));
             campaignTracking.Mobile = reports.Sum(x => x.MobileCnt);
-            campaignTracking.Desktop = report.UniqueCnt;
+            campaignTracking.Desktop = reports.Sum(x => x.UniqueCnt); //report.UniqueCnt;
             campaignTracking.Unsub = Random.Next(1, 100);
             campaignTracking.Forwards = Random.Next(1, 100);
             campaignTracking.Bounce = campaignTracking.Deployed - campaignTracking.Quantity;

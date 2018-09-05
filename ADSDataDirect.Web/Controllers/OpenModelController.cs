@@ -91,14 +91,15 @@ namespace ADSDataDirect.Web.Controllers
 
                 campaign.Assets.OpenModelLinksFile = vm.OpenModelLinksFile;
                 campaign.Assets.OpenModelImageFile = vm.OpenModelImageFile;
-                campaign.Assets.SFDClientId = int.Parse(vm.SFDClientId);
+                if(!string.IsNullOrEmpty(vm.SFDClientId))
+                    campaign.Assets.SFDClientId = int.Parse(vm.SFDClientId);
 
                 if (!string.IsNullOrEmpty(campaign.Assets.OpenModelLinksFile))
                 {
-                string filePath = Path.Combine(UploadPath, campaign.Assets.OpenModelLinksFile);
-                S3FileManager.Download(campaign.Assets.OpenModelLinksFile, filePath);
-                List<string> links = CsvReader.ReadCsv(filePath);
-                campaign.Assets.OpenModelLinksCount = links.Count;
+                    string filePath = Path.Combine(UploadPath, campaign.Assets.OpenModelLinksFile);
+                    S3FileManager.Download(campaign.Assets.OpenModelLinksFile, filePath);
+                    List<string> links = CsvReader.ReadCsv(filePath);
+                    campaign.Assets.OpenModelLinksCount = links.Count;
                 }
                 Db.SaveChanges();
                 

@@ -70,17 +70,17 @@ namespace ADSDataDirect.Infrastructure.Reports
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
                     // send / delviery
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 14);
-                    cell.CellValue = new CellValue(model.DeliveryPercentage);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    //cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 14);
+                    //cell.CellValue = new CellValue(model.DeliveryPercentage);
+                    //cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 15);
-                    cell.CellValue = new CellValue(model.Deployed);
+                    cell.CellValue = new CellValue(model.Quantity); // model.Deployed
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 16);
-                    cell.CellValue = new CellValue(model.Quantity);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    //cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 16);
+                    //cell.CellValue = new CellValue(model.Quantity);
+                    //cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
                     // opened
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 22);
@@ -210,15 +210,15 @@ namespace ADSDataDirect.Infrastructure.Reports
 
             cell = ExcelHelper.GetCell(worksheet, "F", rowNumber);
             cell.CellValue = new CellValue(row.ClickCount);
-            cell.DataType = new EnumValue<CellValues>(CellValues.String);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
             cell = ExcelHelper.GetCell(worksheet, "G", rowNumber);
             cell.CellValue = new CellValue(row.UniqueCount);
-            cell.DataType = new EnumValue<CellValues>(CellValues.String);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
             cell = ExcelHelper.GetCell(worksheet, "H", rowNumber);
             cell.CellValue = new CellValue(row.MobileCount);
-            cell.DataType = new EnumValue<CellValues>(CellValues.String);
+            cell.DataType = new EnumValue<CellValues>(CellValues.Number);
         }
 
     }

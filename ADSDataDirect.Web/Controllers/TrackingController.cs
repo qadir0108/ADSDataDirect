@@ -167,7 +167,7 @@ namespace ADSDataDirect.Web.Controllers
 
             if (whiteLable.IsUseOpenModel)
             {
-                S3FileManager.Download(campaign.Assets.OpenModelImageFile, screenshotFilePath);
+                S3FileManager.Download(campaign.Assets.OpenModelImageFile, screenshotFilePathTemp);
             }
             else
             {
@@ -199,7 +199,7 @@ namespace ADSDataDirect.Web.Controllers
             }
             if (System.IO.File.Exists(screenshotFilePathTemp))
             {
-                ImageResizer.Resize(screenshotFilePathTemp, screenshotFilePath, 600, ScreenshotHeight, true);
+                ImageResizer.Resize(screenshotFilePathTemp, screenshotFilePath, 400, ScreenshotHeight, true);
                 System.IO.File.Delete(screenshotFilePathTemp);
             }
             report.Generate(model, outputFilePath);

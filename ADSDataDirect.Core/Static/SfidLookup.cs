@@ -34,6 +34,7 @@ namespace ADSDataDirect.Core.Static
 
         public static string GetCampaignName(int id)
         {
+            if (id < 1 || id > 13) return string.Empty;
             return ClientCampaigns[id];
         }
     }

@@ -26,8 +26,10 @@ namespace ADSDataDirect.Infrastructure.DataReports
 
             using (var memoryStream = new MemoryStream())
             {
+                string orderNumber = campaign.ReBroadcasted ? $"{campaign.ReBroadcastedOrderNumber}" : $"{campaign.OrderNumber}";
+                string fileName = $"{orderNumber}report.xlsx";
                 Response.ContentType = "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet";
-                Response.AddHeader("content-disposition", "attachment;  filename=MetricsURLs.xlsx");
+                Response.AddHeader($"content-disposition", $"attachment;  filename={fileName}");
                 excel.SaveAs(memoryStream);
                 memoryStream.WriteTo(Response.OutputStream);
                 Response.Flush();

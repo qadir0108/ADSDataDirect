@@ -9,20 +9,20 @@ namespace ADSDataDirect.Infrastructure.DataReports
 {
     public class CampaignTrackingMetricVm
     {
-        public string SFD_ID { get; set; }
+        public int SFD_ID { get; set; }
         public string Client_ID { get; set; }
         public string Campaign_Name { get; set; }
         public string From_Line { get; set; }
         public string Subject_Line { get; set; }
         public string Deployment_Date { get; set; }
-        public string Delivered { get; set; }
+        public long Delivered { get; set; }
         public string Open_Rate { get; set; }
-        public string Total_Opens { get; set; }
-        public string Total_Clicks { get; set; }
+        public long Total_Opens { get; set; }
+        public long Total_Clicks { get; set; }
         public string Click_Percentage { get; set; }
         public string HTML_CTR { get; set; }
-        public string Desktop { get; set; }
-        public string Mobile { get; set; }
+        public long Desktop { get; set; }
+        public long Mobile { get; set; }
         public string Image_URL { get; set; }
         
         public static CampaignTrackingMetricVm[] FromCampaignTracking(Campaign campaign, CampaignTracking campaignTracking)
@@ -33,20 +33,20 @@ namespace ADSDataDirect.Infrastructure.DataReports
             {
                 new CampaignTrackingMetricVm
                 {
-                    SFD_ID = campaign.Assets.SFDClientId.ToString(),
+                    SFD_ID = campaign.Assets.SFDClientId,
                     Client_ID = SfidLookup.GetCampaignName(campaign.Assets.SFDClientId),
                     Campaign_Name = campaign.Approved.CampaignName,
                     From_Line = campaign.Approved.FromLine,
                     Subject_Line = campaign.Approved.SubjectLine,
                     Deployment_Date = campaign.Approved.DeployDate?.ToString(StringConstants.DateFormatDashes),
-                    Delivered = string.Format("{0:n0}", campaignTracking.Quantity),
+                    Delivered = campaignTracking.Quantity,
                     Open_Rate = campaignTracking.OpenedPercentage.ToString("0.00%"),
-                    Total_Opens = campaignTracking.Opened == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Opened),
-                    Total_Clicks = campaignTracking.Clicked == 0 ? "NA" : string.Format("{0:n0}", campaignTracking.Clicked),
+                    Total_Opens = campaignTracking.Opened,
+                    Total_Clicks = campaignTracking.Clicked,
                     Click_Percentage = campaignTracking.ClickedPercentage.ToString("0.00%"),
                     HTML_CTR = campaignTracking.ClickToOpenPercentage.ToString("0.00%"),
-                    Mobile = string.Format("{0:n0}", campaignTracking.Mobile),
-                    Desktop = string.Format("{0:n0}", campaignTracking.Desktop),
+                    Mobile = campaignTracking.Mobile,
+                    Desktop = campaignTracking.Desktop,
                     Image_URL = filePathLive
                 }
             };
