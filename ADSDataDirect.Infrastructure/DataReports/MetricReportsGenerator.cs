@@ -20,6 +20,9 @@ namespace ADSDataDirect.Infrastructure.DataReports
             ExcelPackage excel = new ExcelPackage();
             var workSheet = excel.Workbook.Worksheets.Add("Strat Metrics");
             workSheet.Cells[1, 1].LoadFromCollection(metric, true);
+            workSheet.Cells[2, 8].Style.Numberformat.Format = "0.00%";
+            workSheet.Cells[2, 11].Style.Numberformat.Format = "0.00%";
+            workSheet.Cells[2, 12].Style.Numberformat.Format = "0.00%";
 
             var workSheet2 = excel.Workbook.Worksheets.Add("Strat URLs");
             workSheet2.Cells[1, 1].LoadFromCollection(urls, true);

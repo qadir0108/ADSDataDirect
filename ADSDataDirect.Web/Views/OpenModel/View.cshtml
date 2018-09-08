@@ -9,7 +9,6 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 
     var id = Url.RequestContext.RouteData.Values["id"];
-    //var id = Request.Url.Segments.Last();
     var loggedInUser = Session["user"] as WfpUser;
     var isLoggedIn = loggedInUser != null;
     var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
@@ -22,14 +21,13 @@
 <div class="container" style="margin-top: 10px">
 
     <div class="row">
-        <div class="col-md-10 headertab">
-            Campaign Tracking - Reporting Model
+        <div class="col-md-11 headertab">
+            Campaign Reporting Model
         </div>
-        <div class="col-md-2 listing-action" id="divTools" style="text-align: right">
+        <div class="col-md-1 listing-action" id="divTools" style="text-align: right">
             @if (isAdmin)
             {
                 <a href="#" class="btn btn-default" id="btnOpenModel" data-tooltip="tooltip" title="Upload Html links"><span class="glyphicon glyphicon-pencil"></span></a>
-                <a href="#" class="btn btn-default" id="btnProcess" data-tooltip="tooltip" title="Process Reporting Model"><span class="glyphicon glyphicon-cog"></span></a>
             }
         </div>
     </div>
@@ -107,7 +105,8 @@
                     @*<td>
                         @Html.DisplayFor(modelItem => item.Status)
                     </td>*@
-                    <td style="min-width: 90px" class="no-right-padding pull-right">
+                    <td style="min-width: 100px" class="no-right-padding no-left-padding pull-right">
+                        <a href="#" class="btn btn-sm btn-primary btnProcess" data-id="@item.CampaignId" data-ordernumber="@item.OrderNumber" data-tooltip="tooltip" title="Process Reporting Model"><span class="glyphicon glyphicon-cog"></span></a>
                         <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
                         @*<a href="~/Tracking/DownloadReport?id=@item.CampaignId&trackingId=@item.TrackingId" target="_blank" class="btn btn-sm btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>*@
                         <a href="#" 
@@ -299,13 +298,16 @@
             //modal.find('.modal-title').text('Send to Vendor : ' + button.data('name') + ', Order Number : ' + button.data('order'));
         });
 
-        $('#btnProcess').click(function (e) {
+        $('.btnProcess').click(function (e) {
             debugger;
 
             e.preventDefault();
-
+            var id = $(this).data('id');
+            var ordernumber = $(this).data('ordernumber');
+            
             var dataToPost = {
-                id: '@id'
+                id: id,
+                orderNumber: ordernumber
             };
 
             $.ajax({

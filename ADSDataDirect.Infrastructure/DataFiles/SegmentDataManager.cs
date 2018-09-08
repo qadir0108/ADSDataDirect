@@ -4,9 +4,8 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Web.Configuration;
 using ADSDataDirect.Core.Entities;
-using ADSDataDirect.Enums;
 
-namespace ADSDataDirect.Core.DB
+namespace ADSDataDirect.Infrastructure.DataFiles
 {
     public static class SegmentDataManager
     {

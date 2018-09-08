@@ -11,8 +11,8 @@ using ADSDataDirect.Web.Models;
 using Hangfire;
 using Nelibur.ObjectMapper;
 using ADSDataDirect.Infrastructure.Campaigns;
+using ADSDataDirect.Infrastructure.DataFiles;
 using ADSDataDirect.Infrastructure.DynamicCoding;
-using ADSDataDirect.Infrastructure.Reports;
 using ADSDataDirect.Infrastructure.Db;
 
 namespace ADSDataDirect.Web.Controllers
@@ -373,7 +373,7 @@ namespace ADSDataDirect.Web.Controllers
                 if (campaign.Testing.DataFileQuantity == 0)
                     throw new AdsException("DataFileQuantity is Zero.");
 
-                BackgroundJob.Enqueue(() => DataFileProcessor.FetchSqlDataFile(UploadPath, campaign.Id, campaign.OrderNumber, campaign.Assets.ZipCodeFile, campaign.Testing.DataFileQuantity));
+                BackgroundJob.Enqueue(() => DataFileProcessor.FetchSqlDataFile(UploadPath, IsNXS, campaign.Id, campaign.OrderNumber, campaign.Assets.ZipCodeFile, campaign.Testing.DataFileQuantity));
 
                 TempData["Success"] = "SQL Data is being fetched and processed, please wait about 5m ...";
             }

@@ -56,9 +56,10 @@ namespace ADSDataDirect.Web.Controllers
                                     : ViewBag.SearchIds;
             Session["idsForPrint"] = idsForPrint;
 
+            string view = IsNXS ? "IndexNXS" : "Index";
             // Paging
             int pageNumber = (sc.Page ?? 1);
-            return View(campagins.ToPagedList(pageNumber, PageSize));
+            return View(view, campagins.ToPagedList(pageNumber, PageSize));
         }
         
         public ActionResult Download()
@@ -325,39 +326,61 @@ namespace ADSDataDirect.Web.Controllers
 
             if (campaign.Testing != null)
             {
-                var testingId = Guid.NewGuid();
-                var testing = new CampaignTesting();
-                Db.CampaignsTesting.Add(testing);
-                Db.Entry(testing).CurrentValues.SetValues(Db.Entry(campaign.Testing).CurrentValues);
-                testing.Id = testingId;
-                testing.CreatedAt = DateTime.Now;
-                testing.CampaignId = copy.Id;
-                Db.SaveChanges();
+                //var testingId = Guid.NewGuid();
+                //var testing = new CampaignTesting();
+                //Db.CampaignsTesting.Add(testing);
+                //Db.Entry(testing).CurrentValues.SetValues(Db.Entry(campaign.Testing).CurrentValues);
+                //testing.Id = testingId;
+                //testing.CreatedAt = DateTime.Now;
+                //testing.CampaignId = copy.Id;
+                //Db.SaveChanges();
+                //copy.TestingId = testingId;
+                //Db.SaveChanges();
 
-                copy.TestingId = testingId;
+                // don't add new testing, update some values from testing
+                copy.CampaignName = campaign.Testing.CampaignName;
+                copy.WhiteLabel = campaign.Testing.WhiteLabel;
+                copy.FromLine = campaign.Testing.FromLine;
+                copy.SubjectLine = campaign.Testing.SubjectLine;
+                copy.BroadcastDate = campaign.Testing.DeployDate;
+                copy.Quantity = campaign.Testing.Quantity;
+                copy.ReBroadcastDate = campaign.Testing.ReBroadcastDate;
+                copy.GeoDetails = campaign.Testing.GeoDetails;
+                copy.Demographics = campaign.Testing.Demographics;
+                copy.SpecialInstructions = campaign.Testing.SpecialInstructions;
+                copy.IsOpenPixel = campaign.Testing.IsOpenPixel;
+                copy.OpenPixelUrl = campaign.Testing.OpenPixelUrl;
                 Db.SaveChanges();
             }
 
             if (campaign.Approved != null)
             {
-                var approvedId = Guid.NewGuid();
-                var approved = new CampaignApproved();
-                Db.CampaignsApproved.Add(approved);
-                Db.Entry(approved).CurrentValues.SetValues(Db.Entry(campaign.Approved).CurrentValues);
-                approved.Id = approvedId;
-                approved.CreatedAt = DateTime.Now;
-                approved.CampaignId = copy.Id;
-                Db.SaveChanges();
+                //var approvedId = Guid.NewGuid();
+                //var approved = new CampaignApproved();
+                //Db.CampaignsApproved.Add(approved);
+                //Db.Entry(approved).CurrentValues.SetValues(Db.Entry(campaign.Approved).CurrentValues);
+                //approved.Id = approvedId;
+                //approved.CreatedAt = DateTime.Now;
+                //approved.CampaignId = copy.Id;
+                //Db.SaveChanges();
+                //copy.ApprovedId = approvedId;
+                //Db.SaveChanges();
 
-                copy.ApprovedId = approvedId;
+                // don't add new approved, update copy some values from approved
+                copy.CampaignName = campaign.Approved.CampaignName;
+                copy.WhiteLabel = campaign.Approved.WhiteLabel;
+                copy.FromLine = campaign.Approved.FromLine;
+                copy.SubjectLine = campaign.Approved.SubjectLine;
+                copy.BroadcastDate = campaign.Approved.DeployDate;
+                copy.Quantity = campaign.Approved.Quantity;
+                copy.ReBroadcastDate = campaign.Approved.ReBroadcastDate;
+                copy.GeoDetails = campaign.Approved.GeoDetails;
+                copy.Demographics = campaign.Approved.Demographics;
+                copy.SpecialInstructions = campaign.Approved.SpecialInstructions;
+                copy.IsOpenPixel = campaign.Approved.IsOpenPixel;
+                copy.OpenPixelUrl = campaign.Approved.OpenPixelUrl;
                 Db.SaveChanges();
-
-                // update some values from approved
-                copy.CampaignName = approved.CampaignName;
-                copy.WhiteLabel = approved.WhiteLabel;
-                copy.BroadcastDate = approved.DeployDate;
-                copy.Quantity = approved.Quantity;
-                Db.SaveChanges();
+                
             }
             ForceOrders = true;
             TempData["Success"] = "Order : " + campaign.OrderNumber + " has been cloned to Order: " + newOrderNumber + " sucessfully.";

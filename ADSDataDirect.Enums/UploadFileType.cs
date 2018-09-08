@@ -8,6 +8,7 @@
         LiveSeedFile,
         SuppressionFile,
         DataFile,
+        DataFileOpener,
         BannersFile,
         BannersLinksFile,
         MiscFile

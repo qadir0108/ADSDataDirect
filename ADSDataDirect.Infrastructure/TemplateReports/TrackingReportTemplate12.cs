@@ -1,17 +1,15 @@
-﻿using ADSDataDirect.Enums;
-using ADSDataDirect.Infrastructure.Db;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using ADSDataDirect.Enums;
 using ADSDataDirect.Infrastructure.Image;
 using ADSDataDirect.Web.Helpers;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
 
-namespace ADSDataDirect.Infrastructure.Reports
+namespace ADSDataDirect.Infrastructure.TemplateReports
 {
     public class TrackingReportTemplate12 : BaseTrackingReport, ITrackingReport 
     {
@@ -22,7 +20,7 @@ namespace ADSDataDirect.Infrastructure.Reports
             LogoHeight = 116;
         }
 
-        public override void Generate(CampaignTrackingVm model, string outputFilePath)
+        public override void Generate(TemplateReportVm model, string outputFilePath)
         {
             ImageResizer.Resize(LogoFilePath, LogoResized, LogoWidth, LogoHeight, true);
 
@@ -76,7 +74,7 @@ namespace ADSDataDirect.Infrastructure.Reports
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 15);
                     cell.CellValue = new CellValue(model.Quantity); // model.Deployed
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     //cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 16);
                     //cell.CellValue = new CellValue(model.Quantity);
@@ -85,44 +83,44 @@ namespace ADSDataDirect.Infrastructure.Reports
                     // opened
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 22);
                     cell.CellValue = new CellValue(model.OpenedPercentage);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 23);
                     cell.CellValue = new CellValue(model.Opened);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     // clicks
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "A", 26);
                     cell.CellValue = new CellValue(model.Clicked);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 26);
                     cell.CellValue = new CellValue(model.ClickedPercentage);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 26);
                     cell.CellValue = new CellValue(model.ClickToOpenPercentage);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     // bounce & opt
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "A", 29);
                     cell.CellValue = new CellValue(model.Bounce);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 29);
                     cell.CellValue = new CellValue(model.Opt);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     // desktop & mobile
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 37);
                     cell.CellValue = new CellValue(model.Desktop);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 38);
                     cell.CellValue = new CellValue(model.Mobile);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
-                    // desktop & mobile
+                    // subject from
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "H", 14);
                     cell.CellValue = new CellValue(model.SubjectLine);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
@@ -153,11 +151,11 @@ namespace ADSDataDirect.Infrastructure.Reports
                     {
                         cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 44);
                         cell.CellValue = new CellValue(model.RetargetingImpressions);
-                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                         cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 45);
                         cell.CellValue = new CellValue(model.RetargetingClicks);
-                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.Number);
                     }
 
                     #endregion
@@ -202,22 +200,22 @@ namespace ADSDataDirect.Infrastructure.Reports
             }
         }
 
-        public override void PopulateRowTemplate(Worksheet worksheet, CampaignTrackingDetailVm row, uint rowNumber)
+        public override void PopulateRowTemplate(Worksheet worksheet, TemplateReportDetailVm row, uint rowNumber)
         {
             Cell cell = ExcelHelper.GetCell(worksheet, "A", rowNumber);
             cell.CellValue = new CellValue(row.Link);
             cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
             cell = ExcelHelper.GetCell(worksheet, "F", rowNumber);
-            cell.CellValue = new CellValue(row.ClickCount);
+            cell.CellValue = new CellValue(row.ClickCount.ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
             cell = ExcelHelper.GetCell(worksheet, "G", rowNumber);
-            cell.CellValue = new CellValue(row.UniqueCount);
+            cell.CellValue = new CellValue(row.UniqueCount.ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
             cell = ExcelHelper.GetCell(worksheet, "H", rowNumber);
-            cell.CellValue = new CellValue(row.MobileCount);
+            cell.CellValue = new CellValue(row.MobileCount.ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.Number);
         }
 

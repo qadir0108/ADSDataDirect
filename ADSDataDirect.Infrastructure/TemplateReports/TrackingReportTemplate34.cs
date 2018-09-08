@@ -1,17 +1,15 @@
-﻿using ADSDataDirect.Enums;
-using ADSDataDirect.Infrastructure.Db;
+﻿using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Linq;
+using ADSDataDirect.Enums;
 using ADSDataDirect.Infrastructure.Image;
 using ADSDataDirect.Web.Helpers;
 using DocumentFormat.OpenXml;
 using DocumentFormat.OpenXml.Packaging;
 using DocumentFormat.OpenXml.Spreadsheet;
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Web;
 
-namespace ADSDataDirect.Infrastructure.Reports
+namespace ADSDataDirect.Infrastructure.TemplateReports
 {
     public class TrackingReportTemplate34 : BaseTrackingReport, ITrackingReport 
     {
@@ -22,7 +20,7 @@ namespace ADSDataDirect.Infrastructure.Reports
             LogoHeight = 86;
         }
 
-        public override void Generate(CampaignTrackingVm model, string outputFilePath)
+        public override void Generate(TemplateReportVm model, string outputFilePath)
         {
             ImageResizer.Resize(LogoFilePath, LogoResized, LogoWidth, LogoHeight, true);
 
@@ -99,31 +97,31 @@ namespace ADSDataDirect.Infrastructure.Reports
                     // right side
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "L", 6);
                     cell.CellValue = new CellValue(model.Quantity);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     // key stats
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 23);
                     cell.CellValue = new CellValue(model.Quantity);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "H", 26);
                     cell.CellValue = new CellValue(model.Opened);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "H", 29);
                     cell.CellValue = new CellValue(model.Clicked);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     // Shared and Un-sub stats
                     if (Template.Equals(ReportTemplate.Tracking3.ToString()))
                     {
-                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 32);
-                        cell.CellValue = new CellValue("Forwards : " + model.Forwards);
-                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                        //cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 32);
+                        //cell.CellValue = new CellValue("Forwards : " + model.Forwards);
+                        //cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
                         cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "H", 35);
                         cell.CellValue = new CellValue(model.Unsub);
-                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.Number);
                     }
                     #endregion
 
@@ -170,14 +168,14 @@ namespace ADSDataDirect.Infrastructure.Reports
             }
         }
 
-        public override void PopulateRowTemplate(Worksheet worksheet, CampaignTrackingDetailVm row, uint rowNumber)
+        public override void PopulateRowTemplate(Worksheet worksheet, TemplateReportDetailVm row, uint rowNumber)
         {
             Cell cell = ExcelHelper.GetCell(worksheet, "A", rowNumber);
             cell.CellValue = new CellValue(row.Link);
             cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
             cell = ExcelHelper.GetCell(worksheet, "L", rowNumber);
-            cell.CellValue = new CellValue(row.ClickCount);
+            cell.CellValue = new CellValue(row.ClickCount.ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.Number);
         }
 

@@ -925,6 +925,9 @@
     <Content Include="Views\OpenModel\View.cshtml" />
     <Content Include="Views\OpenModel\SaveInput.cshtml" />
     <Content Include="Templates\ReTargeting.xlsx" />
+    <Content Include="Views\Campaigns\IndexNXS.cshtml" />
+    <Content Include="Views\Customer\IndexNXS.cshtml" />
+    <Content Include="Views\Customer\NewNXS.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

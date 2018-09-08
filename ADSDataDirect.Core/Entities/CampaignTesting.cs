@@ -35,6 +35,8 @@ namespace ADSDataDirect.Core.Entities
         public string DataFileUrl { get; set; } // aws/2500data.csv
         public DateTime? DateFetched { get; set; }
 
+        public string DataFileUrlOpener { get; set; } // http://marketing247.s3.amazonaws.com/2500/2500opener.csv
+
         // Digital Plus
         public bool IsOpenPixel { get; set; }
         public string OpenPixelUrl { get; set; }

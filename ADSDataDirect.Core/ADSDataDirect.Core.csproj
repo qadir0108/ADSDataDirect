@@ -70,10 +70,6 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="DB\SegmentResponse1.cs" />
-    <Compile Include="DB\SegmentResponse.cs" />
-    <Compile Include="DB\SegmentParameters.cs" />
-    <Compile Include="DB\SegmentDataManager.cs" />
     <Compile Include="Entities\CampaignAsset.cs" />
     <Compile Include="Entities\OpenModelKeyword.cs" />
     <Compile Include="Entities\DynamicCodingLink.cs" />
@@ -136,6 +132,10 @@
     <Compile Include="Migrations\201808270503228_ClickOpenModel.Designer.cs">
       <DependentUpon>201808270503228_ClickOpenModel.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201809071448232_Opener.cs" />
+    <Compile Include="Migrations\201809071448232_Opener.Designer.cs">
+      <DependentUpon>201809071448232_Opener.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
     <Compile Include="Entities\WFPRole.cs" />
@@ -190,6 +190,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201808270503228_ClickOpenModel.resx">
       <DependentUpon>201808270503228_ClickOpenModel.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201809071448232_Opener.resx">
+      <DependentUpon>201809071448232_Opener.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

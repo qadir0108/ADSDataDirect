@@ -1,0 +1,175 @@
+﻿@using ADSDataDirect.Web.Helpers
+@using PagedList.Mvc
+@model PagedList.IPagedList<ADSDataDirect.Web.Models.CustomerVm>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    string currentSort = ViewBag.CurrentSort;
+    if (string.IsNullOrEmpty(currentSort))
+    {
+        currentSort = "OrderNumber_desc";
+    }
+
+    var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
+    var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
+    var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.BroadcastDateSortParm };
+    var columnSortParams5 = new { sortOrder = ViewBag.StatusSortParm };
+
+}
+
+<div class="row">
+        <div class="col-md-11">
+            <div class="dashboard-page-head">
+                <div class="page-header">
+                    <h1>Customer White Labels<small></small></h1>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-1 listing-action" id="divTools1" style="text-align:left">
+            @Html.ActionLink("New", "New","Customer", null, new { @class = "btn btn-default", @title = "New White Label", @data_tooltip = "tooltip" })
+        </div>
+</div>
+        <table class="table">
+            <tr>
+                <td>
+                    @Html.SortIdentifier(currentSort, "Code")
+                    @Html.ActionLink("White Label", "Index", columnSortParams1)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "Name")
+                    @Html.ActionLink("Name", "Index", columnSortParams4)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "WebDomain")
+                    @Html.ActionLink("WebDomain", "Index", columnSortParams4)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "Status")
+                    @Html.ActionLink("Logo", "Index", columnSortParams5)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "Status")
+                    @Html.ActionLink("Template", "Index", columnSortParams5)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CampaignName")
+                    @Html.ActionLink("Email", "Index", columnSortParams2)
+                </td>
+                <td>
+                    @Html.SortIdentifier(currentSort, "CampaignName")
+                    @Html.ActionLink("Use Reporting Model", "Index", columnSortParams2)
+                </td>
+                <th></th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WhiteLabel)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CompanyName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.WebDomain)
+                    </td>
+                    <td>
+                        <img class="imgTemplate" src="@item.CompanyLogoImage"/>
+                    </td>
+                    <td>
+                        <img class="imgTemplate" src="@item.ReportTemplateImage" />
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @(item.IsUseOpenModel ? "Yes" : "No")
+                    </td>
+                    <td style="min-width:150px">
+                        <a href="@Url.Action("Edit","Customer", new { id = item.Id })" id="btnEdit" class="btn btn-sm btn-default" title="Edit" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-edit" aria-hidden="true"></i></a>
+                        <a href="#" id="btnDelete" class="btn btn-sm btn-default btnDelete" title="Delete" data-tooltip="tooltip" data-id="@item.Id"><i class="fa fa-trash" aria-hidden="true"></i></a>
+                        <a href="@Url.Action("DownloadOrdersStatus","Customer", new { id = item.Id })" class="btn btn-sm btn-default" title="Download Orders Status Report" data-tooltip="tooltip" data-id="@item.Id"><i class="glyphicon glyphicon-download-alt" aria-hidden="true"></i></a>
+
+                    </td>
+                </tr>
+            }
+
+        </table>
+
+        <div class="row">
+            <div class="col-md-12 text-center">
+                <div class="page-count">
+                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                </div>
+                <div class="tp-pagination">
+                    @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort }), new PagedListRenderOptions() { })
+                </div>
+            </div>
+        </div>
+<br /> <br/>
+<!-- Modal -->
+<style>
+.imgTemplate {
+    border: none;
+    max-width: 50px;
+    max-height: 50px;
+    margin: 0 auto;
+}
+
+.imgTemplate:hover {
+    -webkit-transform: scale(5);
+    -moz-transform: scale(5);
+    -o-transform: scale(5);
+    transform: scale(5);
+    transition: all 0.3s;
+    -webkit-transition: all 0.3s;
+}
+</style>
+
+<script type="text/javascript">
+
+        var wfp = wfp || {};
+
+        $(document).ready(function () {
+
+            $('.btnDelete').click(function (e) {
+                debugger;
+                e.preventDefault();
+
+                var dataToPost = {
+                    id: $(this).data('id')
+                };
+
+                wfp.showSwal("Are you sure to delete?", function () {
+
+                    $.ajax({
+                        type: "POST",
+                        url: "/Customer/Delete",
+                        data: dataToPost,
+                        success: function (response) {
+                            debugger;
+                            if (response === "") wfp.reload();
+                            if (response.IsSucess) {
+                                wfp.showSuccess('Customer White Label has been deleted successfully.');
+                                wfp.redirectTo('/Customer/Index');
+                            } else {
+                                wfp.showError(response.ErrorMessage);
+                            }
+                        },
+                        failure: function (response) {
+                            wfp.showError('There is erorr in service call.');
+                        },
+                        complete: function () {
+                        }
+                    });
+
+                });
+            });
+            
+        });
+
+</script>

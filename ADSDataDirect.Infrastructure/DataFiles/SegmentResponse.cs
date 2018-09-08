@@ -1,4 +1,4 @@
-﻿namespace ADSDataDirect.Core.DB
+﻿namespace ADSDataDirect.Infrastructure.DataFiles
 {
     public class SegmentResponse
     {

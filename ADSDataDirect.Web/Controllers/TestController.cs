@@ -6,7 +6,6 @@ using System.Data.Entity;
 using System.IO;
 using System.Linq;
 using ADSDataDirect.Web.Helpers;
-using ADSDataDirect.Core.DB;
 using ADSDataDirect.Web.Models;
 
 namespace ADSDataDirect.Web.Controllers

@@ -8,11 +8,11 @@ using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Web.Models;
 using PagedList;
-using ADSDataDirect.Infrastructure.Reports;
 using ADSDataDirect.Infrastructure.S3;
 using ADSDataDirect.Infrastructure.Image;
 using ADSDataDirect.Infrastructure.ProData;
 using ADSDataDirect.Infrastructure.Db;
+using ADSDataDirect.Infrastructure.TemplateReports;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -158,7 +158,7 @@ namespace ADSDataDirect.Web.Controllers
             }
             var reportTemplate = !string.IsNullOrEmpty(template) ? template : whiteLable.ReportTemplate;
 
-            var model = CampaignTrackingVm.FromCampaignTracking(campaign, campaignTracking);
+            var model = TemplateReportVm.FromCampaignTracking(campaign, campaignTracking);
             string creativeUrl = campaign.Assets.CreativeUrl,
                 screenshotFilePathTemp = $"{UploadPath}\\{model.OrderNumber}t.png",
                 screenshotFilePath = $"{UploadPath}\\{model.OrderNumber}.png",

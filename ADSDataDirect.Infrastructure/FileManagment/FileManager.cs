@@ -140,6 +140,9 @@ namespace ADSDataDirect.Infrastructure.FileManagment
                     case UploadFileType.DataFile:
                         fileName = $"{S3FileManager.ServerPrefix}{orderNumber}/{segmentNumber}data.csv";
                         break;
+                    case UploadFileType.DataFileOpener:
+                        fileName = $"{S3FileManager.ServerPrefix}{orderNumber}/{orderNumber}opener.csv";
+                        break;
             }
             return fileName;
         }

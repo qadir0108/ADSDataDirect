@@ -10,7 +10,6 @@ using ADSDataDirect.Web.Models;
 using Hangfire;
 using Nelibur.ObjectMapper;
 using ADSDataDirect.Infrastructure.Campaigns;
-using ADSDataDirect.Infrastructure.Reports;
 using ADSDataDirect.Infrastructure.Db;
 
 namespace ADSDataDirect.Web.Controllers

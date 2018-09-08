@@ -37,7 +37,8 @@ namespace ADSDataDirect.Web.Controllers
                 return RedirectToAction("Index", "Campaigns");
             }
 
-            string screenshotFilePath = $"{UploadPath}\\{campaign.OrderNumber}.png";
+            Session["id"] = id;
+            Session["OrderNumber"] = campaign.OrderNumber;
 
             var trackingVms = new List<CampaignTrackingOpenModelVm>();
             foreach (var campaignTracking in campaign.Trackings)
@@ -116,7 +117,7 @@ namespace ADSDataDirect.Web.Controllers
             return View("OpenModelInput", vm);
         }
 
-        public JsonResult ProcessModel(Guid? id)
+        public JsonResult ProcessModel(Guid? id, string orderNumber)
         {
             try
             {
@@ -138,7 +139,7 @@ namespace ADSDataDirect.Web.Controllers
                     throw new AdsException("Please upload link files first.");
                 }
 
-                OpenModelProcessor.PopulateFakeData(Db, campaign, UploadPath);
+                ReportingModelProcessor.PopulateFakeData(Db, campaign, orderNumber, UploadPath);
 
                 return Json(new JsonResponse() { IsSucess = true });
             }

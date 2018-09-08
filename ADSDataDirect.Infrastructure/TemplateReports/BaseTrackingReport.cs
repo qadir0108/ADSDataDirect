@@ -1,9 +1,8 @@
-﻿using ADSDataDirect.Infrastructure.Db;
-using DocumentFormat.OpenXml.Spreadsheet;
-using System;
+﻿using System;
 using System.Web;
+using DocumentFormat.OpenXml.Spreadsheet;
 
-namespace ADSDataDirect.Infrastructure.Reports
+namespace ADSDataDirect.Infrastructure.TemplateReports
 {
     public class BaseTrackingReport : ITrackingReport
     {
@@ -29,12 +28,12 @@ namespace ADSDataDirect.Infrastructure.Reports
             ScreenshotFilePath = screenshotFilePath;
         }
 
-        public virtual void Generate(CampaignTrackingVm model, string outputFilePath)
+        public virtual void Generate(TemplateReportVm model, string outputFilePath)
         {
             throw new NotImplementedException();
         }
 
-        public virtual void PopulateRowTemplate(Worksheet worksheet, CampaignTrackingDetailVm row, uint rowNumber)
+        public virtual void PopulateRowTemplate(Worksheet worksheet, TemplateReportDetailVm row, uint rowNumber)
         {
             throw new NotImplementedException();
         }

@@ -16,11 +16,11 @@ namespace ADSDataDirect.Infrastructure.DataReports
         public string Subject_Line { get; set; }
         public string Deployment_Date { get; set; }
         public long Delivered { get; set; }
-        public string Open_Rate { get; set; }
+        public double Open_Rate { get; set; }
         public long Total_Opens { get; set; }
         public long Total_Clicks { get; set; }
-        public string Click_Percentage { get; set; }
-        public string HTML_CTR { get; set; }
+        public double Click_Percentage { get; set; }
+        public double HTML_CTR { get; set; }
         public long Desktop { get; set; }
         public long Mobile { get; set; }
         public string Image_URL { get; set; }
@@ -40,11 +40,11 @@ namespace ADSDataDirect.Infrastructure.DataReports
                     Subject_Line = campaign.Approved.SubjectLine,
                     Deployment_Date = campaign.Approved.DeployDate?.ToString(StringConstants.DateFormatDashes),
                     Delivered = campaignTracking.Quantity,
-                    Open_Rate = campaignTracking.OpenedPercentage.ToString("0.00%"),
+                    Open_Rate = campaignTracking.OpenedPercentage,
                     Total_Opens = campaignTracking.Opened,
                     Total_Clicks = campaignTracking.Clicked,
-                    Click_Percentage = campaignTracking.ClickedPercentage.ToString("0.00%"),
-                    HTML_CTR = campaignTracking.ClickToOpenPercentage.ToString("0.00%"),
+                    Click_Percentage = campaignTracking.ClickedPercentage,
+                    HTML_CTR = campaignTracking.ClickToOpenPercentage,
                     Mobile = campaignTracking.Mobile,
                     Desktop = campaignTracking.Desktop,
                     Image_URL = filePathLive

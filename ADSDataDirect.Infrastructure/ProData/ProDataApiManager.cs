@@ -7,12 +7,12 @@ using System.Text;
 using ADSDataDirect.Core;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
-using Newtonsoft.Json;
 using ADSDataDirect.Infrastructure.Db;
+using Newtonsoft.Json;
 
 namespace ADSDataDirect.Infrastructure.ProData
 {
-    public class ProDataApiManager
+    public static class ProDataApiManager
     {
         private static string _urlTracking = "http://campaign-data-analytics.com/report_api/tracking/io/ADS{0}.json";
         private static string _urlCreateOrder = "http://www1.report-site.com/report_api/ads_create_campaign/format/json";
@@ -31,13 +31,13 @@ namespace ADSDataDirect.Infrastructure.ProData
 
         public static ProDataResponse Create(Campaign campaign, CampaignSegment segment, string whiteLabelDomain)
         {
-            string orderNumber = segment != null ? $"ADS{segment.SegmentNumber}" : 
-                            (campaign.ReBroadcasted ? $"ADS{campaign.ReBroadcastedOrderNumber}" : $"ADS{campaign.OrderNumber}" );
+            string orderNumber = segment != null ? $"ADS{segment.SegmentNumber}" :
+                            (campaign.ReBroadcasted ? $"ADS{campaign.ReBroadcastedOrderNumber}" : $"ADS{campaign.OrderNumber}");
 
-            double ctrPercent = campaign.Approved.OpenGoals == 0 ? 0 : 
+            double ctrPercent = campaign.Approved.OpenGoals == 0 ? 0 :
                 (double)campaign.Approved.ClickGoals / campaign.Approved.OpenGoals;
 
-            if (ctrPercent > 1.0) ctrPercent = ctrPercent/100.0;
+            if (ctrPercent > 1.0) ctrPercent = ctrPercent / 100.0;
 
             ProDataRequest request = new ProDataRequest()
             {
@@ -66,7 +66,7 @@ namespace ADSDataDirect.Infrastructure.ProData
             {
                 request.is_open_pixel = "N";
             }
-                
+
 
             if (!string.IsNullOrEmpty(segment?.SegmentDataFileUrl))
             {
@@ -110,7 +110,7 @@ namespace ADSDataDirect.Infrastructure.ProData
 
         #endregion
 
-        protected static ProDataResponse Fetch(string orderNumber)
+        private static ProDataResponse Fetch(string orderNumber)
         {
             if (ConfigurationManager.AppSettings["IsLive"] == "false")
             {
@@ -150,7 +150,7 @@ namespace ADSDataDirect.Infrastructure.ProData
                                 ResponseMessage = "There is error in parsing data from ProData. Problem in ProData API."
                             };
                         }
-                        
+
                     }
 
                     return proDataResponse;
@@ -182,7 +182,7 @@ namespace ADSDataDirect.Infrastructure.ProData
             // segment order
             foreach (var segment in campaign.Segments.Where(x => x.SegmentStatus == (int)SegmentStatus.Monitoring))
             {
-                if (segment.SegmentStatus != (int) SegmentStatus.Monitoring) continue;
+                if (segment.SegmentStatus != (int)SegmentStatus.Monitoring) continue;
 
                 var data1 = Fetch(segment.SegmentNumber);
                 SaveProData(db, campaign.Id, campaign.OrderNumber, segment.SegmentNumber, data1);
@@ -191,7 +191,7 @@ namespace ADSDataDirect.Infrastructure.ProData
             }
         }
 
-        protected static void SaveProData(WfpictContext db, Guid? campaignId, string orderNumber, string segmentNumber, ProDataResponse data)
+        private static void SaveProData(WfpictContext db, Guid? campaignId, string orderNumber, string segmentNumber, ProDataResponse data)
         {
             // Delete Old
             LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Deleting Old ProData ");
@@ -209,7 +209,7 @@ namespace ADSDataDirect.Infrastructure.ProData
                 LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"{reports.Length} records fetched from ProData ");
                 foreach (var report in reports)
                 {
-                    var proData = new Core.Entities.ProData()
+                    db.ProDatas.Add(new Core.Entities.ProData()
                     {
                         Id = Guid.NewGuid(),
                         CreatedAt = DateTime.Now,
@@ -230,28 +230,33 @@ namespace ADSDataDirect.Infrastructure.ProData
                         MobileCnt = long.Parse(report.ClickCount) * Random.Next(30, 40) / 100,
                         ImpressionCnt = report.ImpressionCnt,
                         IO = report.IO
-                    };
-                    db.ProDatas.Add(proData);
-                    // Update UniqueCnt & MobileCnt, to be used in UpdateTracking(function)
-                    report.UniqueCnt = proData.UniqueCnt;
-                    report.MobileCnt = proData.MobileCnt;
+                    });
                 }
                 db.SaveChanges();
                 LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Refresh completed successfully at {DateTime.Now} ");
             }
-            
+
         }
 
-        protected static CampaignTracking UpdateTracking(WfpictContext db, Campaign campaign, string orderNumber, string segmentNumber, ProDataResponse data, Customer customer = null)
+        private static CampaignTracking UpdateTracking(WfpictContext db, Campaign campaign, string orderNumber, string segmentNumber, ProDataResponse data)
         {
             var campaignTracking = campaign.Trackings.FirstOrDefault(x => x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber);
-
-            long quantity = campaign.ReBroadcasted ? campaign.ReBroadcastedQuantity : campaign.Approved.Quantity;
-            string orderNumberRdp = campaign.ReBroadcasted ? campaign.ReBroadcastedOrderNumber : campaign.OrderNumber;
 
             // Save tracking for Old orders
             if (campaignTracking == null)
             {
+                string orderNumberRdp;
+                long quantity;
+                if (campaign.ReBroadcasted)
+                {
+                    orderNumberRdp = campaign.ReBroadcastedOrderNumber;
+                    quantity = campaign.ReBroadcastedQuantity;
+                }
+                else
+                {
+                    orderNumberRdp = campaign.OrderNumber;
+                    quantity = campaign.Approved.Quantity;
+                }
                 var trackingId = Guid.NewGuid();
                 campaignTracking = new CampaignTracking()
                 {
@@ -276,32 +281,18 @@ namespace ADSDataDirect.Infrastructure.ProData
             DateTime.TryParse(report.CampaignStartDate, out startDateTime);
             campaignTracking.IoNumber = report.IO;
             campaignTracking.StartDate = startDateTime;
-            campaignTracking.Deployed = (long)(campaignTracking.Quantity  * (1 + Random.Next(2, 30) / 10000.0));
-
-            // Prodata & ProData fake Open Modeler
-            if(customer == null)
-            {
-                campaignTracking.Opened = campaign.Approved.IsUseApiDataForOpen ? report.ImpressionCnt : OpenModelerProData.GetOpens(campaignTracking.Quantity, startDateTime);
-                if (campaign.Approved.WhiteLabel == StringConstants.CustomerStrategus)
-                    campaignTracking.Opened = (long)(((campaignTracking.Quantity * Random.Next(160000, 190000)) / 10000.0) / 100.0);
-            } else
-            {
-                int openRandom = Random.Next((int)customer.OpenInitial, (int)customer.OpenEnd);
-                long openCountTotal = (long)((openRandom * campaign.Approved.Quantity / 100000.0) / 100.0);
-                campaignTracking.Opened = openCountTotal;
-            }
+            campaignTracking.Deployed = (long)(campaignTracking.Quantity * (1 + Random.Next(2, 30) / 10000.0));
+            campaignTracking.Opened = campaign.Approved.IsUseApiDataForOpen ? report.ImpressionCnt : OpenModelerProData.GetOpens(campaignTracking.Quantity, startDateTime);
+            if (campaign.Approved.WhiteLabel == StringConstants.CustomerStrategus)
+                campaignTracking.Opened = (long)(((campaignTracking.Quantity * Random.Next(160000, 190000)) / 10000.0) / 100.0);
 
             campaignTracking.Clicked = reports.Sum(x => long.Parse(x.ClickCount));
             campaignTracking.Mobile = reports.Sum(x => x.MobileCnt);
-            campaignTracking.Desktop = reports.Sum(x => x.UniqueCnt); //report.UniqueCnt;
+            campaignTracking.Desktop = report.UniqueCnt;
             campaignTracking.Unsub = Random.Next(1, 100);
             campaignTracking.Forwards = Random.Next(1, 100);
             campaignTracking.Bounce = campaignTracking.Deployed - campaignTracking.Quantity;
             campaignTracking.Opt = Random.Next(1, 30);
-            var retargetingClicks = (long)(((campaignTracking.Quantity * Random.Next(160000, 190000)) / 100000.0) / 100.0);
-            campaignTracking.RetargetingClicks = retargetingClicks;
-            campaignTracking.RetargetingImpressions = (long)(retargetingClicks / (Random.Next(90, 130) / 10000.0));
-
             campaignTracking.DeliveryPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Quantity / campaignTracking.Deployed;
             campaignTracking.OpenedPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Opened / campaignTracking.Quantity;
             campaignTracking.ClickedPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Clicked / campaignTracking.Quantity;
@@ -309,13 +300,13 @@ namespace ADSDataDirect.Infrastructure.ProData
             campaignTracking.ClickToOpenPercentage = campaignTracking.Opened == 0 ? 0 : (double)campaignTracking.Clicked / campaignTracking.Opened;
             campaignTracking.UnsubToOpenPercentage = campaignTracking.Opened == 0 ? 0 : (double)campaignTracking.Unsub / campaignTracking.Opened;
             db.SaveChanges();
-            
+
             return campaignTracking;
         }
 
-        protected static void SaveNotification(WfpictContext db, SettingsVm settings, Guid? campaignId, string orderNumber, string segmentNumber, DateTime? deployDate, string responseStatus, CampaignTracking campaignTracking)
+        private static void SaveNotification(WfpictContext db, SettingsVm settings, Guid? campaignId, string orderNumber, string segmentNumber, DateTime? deployDate, string responseStatus, CampaignTracking campaignTracking)
         {
-            if(!deployDate.HasValue) return;
+            if (!deployDate.HasValue) return;
 
             string message;
 
@@ -333,7 +324,7 @@ namespace ADSDataDirect.Infrastructure.ProData
             else // If Started
             {
                 // QC Rule 10 
-                if (campaignTracking.OpenedPercentage < 0.01 && hoursPassed > 0 ) // less than 1% and deploy date time passed
+                if (campaignTracking.OpenedPercentage < 0.01 && hoursPassed > 0) // less than 1% and deploy date time passed
                 {
                     message = $"Number of Opens in last 24hrs, No Open Traffic in 24hrs.";
                     SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.OpenTrafficInLast24Hours, message);
@@ -407,12 +398,12 @@ namespace ADSDataDirect.Infrastructure.ProData
                     SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ExceededClickRateIn72Hours, message);
                 }
             }
-            
+
         }
 
-        private static void SaveNotificationRecord(WfpictContext db, 
-            Guid? campaignId, string orderNumber, string segmentNumber, 
-            QcRule qcRule, string message )
+        private static void SaveNotificationRecord(WfpictContext db,
+            Guid? campaignId, string orderNumber, string segmentNumber,
+            QcRule qcRule, string message)
         {
 
             var alreadyNoted = db.Notifications
@@ -437,9 +428,5 @@ namespace ADSDataDirect.Infrastructure.ProData
             });
             db.SaveChanges();
         }
-
-        #region Fake
-      
-        #endregion
     }
 }

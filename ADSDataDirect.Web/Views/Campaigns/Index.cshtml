@@ -17,8 +17,8 @@
 
     var columnSortParams1 = new { sortOrder = ViewBag.OrderNumberSortParm };
     var columnSortParams2 = new { sortOrder = ViewBag.CampaignNameSortParm };
-    var columnSortParams3 = new { sortOrder = ViewBag.FromLineSortParm };
-    var columnSortParams4 = new { sortOrder = ViewBag.SubjectLineSortParm };
+    var columnSortParams3 = new { sortOrder = ViewBag.CreatedBySortParm };
+    var columnSortParams4 = new { sortOrder = ViewBag.CreatedAtSortParm };
     var columnSortParams5 = new { sortOrder = ViewBag.DeployDateSortParm };
     var columnSortParams6 = new { sortOrder = ViewBag.QuantitySortParm };
     var columnSortParams7 = new { sortOrder = ViewBag.StatusSortParm };
@@ -26,7 +26,7 @@
     var loggedInUser = Session["user"] as WfpUser;
     var isLoggedIn = loggedInUser != null;
     var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
-    
+
 }
 
 
@@ -35,9 +35,9 @@
     <div class="col-md-2">
         <h1>Orders<small></small></h1>
         @*<div class="dashboard-page-head">
-            <div class="page-header">
-            </div>
-        </div>*@
+                <div class="page-header">
+                </div>
+            </div>*@
     </div>
     <form id="frmSearch" method="post">
         <div class="col-md-2 no-left-padding " data-tooltip="tooltip" title="Search">
@@ -51,7 +51,7 @@
                 <div class="input-group-addon">
                     <span class="glyphicon glyphicon-search"></span>
                 </div>
-                <input type="hidden" id="searchType" name="searchType" value="basic"/>
+                <input type="hidden" id="searchType" name="searchType" value="basic" />
                 <input type="text" id="basicString" name="basicString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.BasicStringSearched">
                 <div class="input-group-addon">
                     <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
@@ -65,7 +65,7 @@
             <a class="btn btn-default" href="/Campaigns/Download" data-tooltip="tooltip" title="Download">
                 <span class="glyphicon glyphicon-download"></span>
             </a>
-            @Html.ActionLink("New", "Create", null, new {@class = "btn btn-default", @data_tooltip = "tooltip", @title = "Place New Order"})
+            @Html.ActionLink("New", "Create", null, new { @class = "btn btn-default", @data_tooltip = "tooltip", @title = "Place New Order" })
             <a href="#" id="btnPending" title="Pending" data-tooltip="tooltip" class="btn btn-default">
                 <span class="fa fa-clock-o"></span>
             </a>
@@ -73,186 +73,183 @@
     </form>
 
 </div>
-        
-        <table class="table">
-            <tr>
-                <td>
-                    @Html.SortIdentifier(currentSort, "OrderNumber")
-                    @Html.ActionLink("#", "Index", columnSortParams1)
-                    @*@Html.DisplayNameFor(model => model.OrderNumber)*@
-                </td>
-                <td>
-                    @Html.SortIdentifier(currentSort, "CampaignName")
-                    @Html.ActionLink("Campaign Name", "Index", columnSortParams2)
-                </td>
-                <td>
-                    @Html.SortIdentifier(currentSort, "FromLine")
-                    @Html.ActionLink("From Line", "Index", columnSortParams3)
-                </td>
-                <td>
-                    @Html.SortIdentifier(currentSort, "SubjectLine")
-                    @Html.ActionLink("Subject Line", "Index", columnSortParams4)
-                </td>
-                <td>
-                    @Html.SortIdentifier(currentSort, "Quantity")
-                    @Html.ActionLink("Quantity", "Index", columnSortParams6)
-                </td>
-                <td>
-                    @Html.SortIdentifier(currentSort, "DeployDate")
-                    @Html.ActionLink("Deploy Date", "Index", columnSortParams5)
-                </td>
-                <td>
-                    @Html.SortIdentifier(currentSort, "Status")
-                    @Html.ActionLink("Status", "Index", columnSortParams7)
-                </td>
-                <th></th>
-            </tr>
 
-            @foreach (var item in Model)
-            {
-                var disabled = "";
-                if ((CampaignStatus)item.Status == CampaignStatus.Monitoring || (CampaignStatus)item.Status == CampaignStatus.Completed)
-                {
-                    disabled = "disabled";
-                }
-                <tr>
-                    <td>
-                        @Html.DisplayFor(modelItem => item.OrderNumber)
-                        @(item.Segments.Count > 0 ? Html.Raw("<span class='fa fa-users' title='Multi' data-tooltip='tooltip'></span>") : Html.Raw("<span class='fa fa-user' title='Single' data-tooltip='tooltip'></span>"))
-                    </td>
-                    <td>
-                        @(item.Approved != null ? item.Approved.CampaignName : item.Testing  != null ? item.Testing.CampaignName : item.CampaignName)
-                    </td>
-                    <td>
-                        @(item.Approved != null ? item.Approved.FromLine : item.Testing != null ? item.Testing.FromLine : item.FromLine)
-                    </td>
-                    <td>
-                        @(item.Approved != null ? item.Approved.SubjectLine : item.Testing != null ? item.Testing.SubjectLine : item.SubjectLine)
-                    </td>
-                    <td>
-                        @(item.Approved?.Quantity ?? (item.Testing?.Quantity ?? item.Quantity))
-                    </td>
-                    <td>
-                        @((item.Approved?.DeployDate ?? (item.Testing?.DeployDate ?? item.BroadcastDate))?.ToString(StringConstants.TimeStampFormat))
-                    </td>
-                    <td class="no-right-padding no-left-padding">
-                        @Enum.GetName(typeof(CampaignStatus), item.Status)
-                    </td>
-                    <td class="no-right-padding no-left-padding" style="min-width:300px">
-                        <div class="row">
-                            <div class="col-md-12">
-                                @if (isAdmin)
-                                {
-                                    <div class="col-md-3">
-                                        @*@if (!IsAdmin && item.Testing == null)
+<table class="table">
+    <tr>
+        @*<th>
+                @Html.DisplayNameFor(model => model.CreatedAt)
+            </th>*@
+        <td>
+            @Html.SortIdentifier(currentSort, "OrderNumber")
+            @Html.ActionLink("#", "Index", columnSortParams1)
+            @*@Html.DisplayNameFor(model => model.OrderNumber)*@
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "CampaignName")
+            @Html.ActionLink("Campaign Name", "Index", columnSortParams2)
+            @*@Html.DisplayNameFor(model => model.CampaignName)*@
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "CreatedBy")
+            @Html.ActionLink("Order by", "Index", columnSortParams3)
+            @*@Html.DisplayNameFor(model => model.RepresentativeName)*@
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "CreatedAt")
+            @Html.ActionLink("Ordered At", "Index", columnSortParams4)
+            @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "DeployDate")
+            @Html.ActionLink("Deploy Date", "Index", columnSortParams5)
+            @*@Html.DisplayNameFor(model => model.BroadcastDate)*@
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "Quantity")
+            @Html.ActionLink("Quantity", "Index", columnSortParams6)
+        </td>
+        <td>
+            @Html.SortIdentifier(currentSort, "Status")
+            @Html.ActionLink("Status", "Index", columnSortParams7)
+        </td>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        var disabled = "";
+        if ((CampaignStatus)item.Status == CampaignStatus.Monitoring || (CampaignStatus)item.Status == CampaignStatus.Completed)
+        {
+            disabled = "disabled";
+        }
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.OrderNumber)
+                @(item.Segments.Count > 0 ? Html.Raw("<span class='fa fa-users' title='Multi' data-tooltip='tooltip'></span>") : Html.Raw("<span class='fa fa-user' title='Single' data-tooltip='tooltip'></span>"))
+            </td>
+            <td>
+                @(item.Approved != null ? item.Approved.CampaignName : item.Testing != null ? item.Testing.CampaignName : item.CampaignName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.CreatedBy)
+            </td>
+            <td>
+                @(item.CreatedAt.ToString(StringConstants.TimeStampFormat))
+            </td>
+            <td>
+                @*@(item.BroadcastDate?.ToString(StringConstants.TimeStampFormat))*@
+                @((item.Approved?.DeployDate ?? (item.Testing?.DeployDate ?? item.BroadcastDate))?.ToString(StringConstants.TimeStampFormat))
+            </td>
+            <td class="no-right-padding no-left-padding">
+                @(item.Approved?.Quantity ?? (item.Testing?.Quantity ?? item.Quantity))
+            </td>
+
+            <td class="no-right-padding no-left-padding">
+                @Enum.GetName(typeof(CampaignStatus), item.Status)
+            </td>
+            <td class="no-right-padding no-left-padding">
+                <div class="row">
+                    <div class="col-md-12">
+                        @if (isAdmin)
+                        {
+                            <div class="col-md-3">
+                                @*@if (!IsAdmin && item.Testing == null)
                                     {
                                         @Html.ActionLink("Edit", "Edit", new { id = item.Id }, new { @class = "pull-right no-left-padding no-right-padding" })
                                     }*@
-                                        <a href="@Url.Action("Clone", "Campaigns", new {id = item.Id})" title="Clone" data-tooltip="tooltip">
-                                            <span class="fa fa-clone"></span>
-                                        </a> |
-                                        <a href="@Url.Action("Rebroad", "Campaigns", new {id = item.Id})" title="Re-broad" data-tooltip="tooltip">
-                                            <span class="fa fa-repeat"></span>
-                                        </a>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <a href="@Url.Action("Complete", "Campaigns", new {id = item.Id})" title="Complete" data-tooltip="tooltip">
-                                            <span class="fa fa-check"></span>
-                                        </a> |
-                                        <a href="@Url.Action("Cancel", "Campaigns", new {id = item.Id})" title="Cancel" data-tooltip="tooltip">
-                                            <span class="fa fa-times"></span>
-                                        </a>
-                                    </div>
-                                }
-                                <div class="col-md-3">
-                                    <a href="@Url.Action("Delete", "Campaigns", new {id = item.Id})" title="Delete" data-tooltip="tooltip">
-                                        <span class="fa fa-trash"></span>
-                                    </a> |
-                                    @if (isAdmin)
-                                    { 
-                                        <a href="@Url.Action("Sent", "Tracking", new {id = item.Id})" title="Sent Orders" data-tooltip="tooltip">
-                                            <span class="fa fa-envelope"></span>
-                                        </a>
-                                    }
-                                </div>
-                                <div class="col-md-3">
-                                    @if (isAdmin)
-                                    {
-                                        <a href="@Url.Action("View", "OpenModel", new { id = item.Id })" title="Reporting" data-tooltip="tooltip">
-                                            <span class="glyphicon glyphicon-folder-open"></span>
-                                        </a>
-                                        if (item.Assets != null && !string.IsNullOrEmpty(item.Assets.OpenModelLinksFile))
-                                        {
-                                        <a target="_blank" href="/File/DownloadFile?FileName=@item.Assets.OpenModelLinksFile" title="Download Links" data-tooltip="tooltip">
-                                            <span class="glyphicon glyphicon-download-alt"></span>
-                                        </a>
-                                        }
-                                    }
-                                    @if (isAdmin)
-                                    {
-                                       
-                                        if (item.Segments != null)
-                                        {
-                                            foreach (var segment in item.Segments.Where(x => !string.IsNullOrEmpty(x.SegmentDataFileUrl)))
-                                            {
-                                                <a target="_blank" href="@segment.SegmentDataFileUrl" title="@segment.SegmentNumber" data-tooltip="tooltip">
-                                                    <span class="fa fa-download"></span>
-                                                </a>
-                                            }
-                                            if (item.Segments.Count != 0)
-                                            {
-                                               
-                                            }
-                                        }
-
-                                    }
-                                </div>
+                                <a href="@Url.Action("Clone", "Campaigns", new {id = item.Id})" title="Clone" data-tooltip="tooltip">
+                                    <span class="fa fa-clone"></span>
+                                </a> |
+                                <a href="@Url.Action("Rebroad", "Campaigns", new {id = item.Id})" title="Re-broad" data-tooltip="tooltip">
+                                    <span class="fa fa-repeat"></span>
+                                </a>
                             </div>
-                        </div>
-                        @if (isAdmin)
-                        {
-                            <div class="row" style="margin-top: 3px">
-                                <div class="col-md-12">
-                                    <div class="col-md-3">
-                                        @Html.ActionLink("Testing", "Index", "Testing", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Testing", @data_tooltip = "tooltip" })
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.ActionLink("Creative", "Index", "Creative", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Creative", @data_tooltip = "tooltip" })
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.ActionLink("Approved", "Index", "Approved", new {id = item.Id }, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding ", @title = "Approved", @data_tooltip = "tooltip" })
-                                    </div>
-                                    <div class="col-md-3">
-                                        @Html.ActionLink("Tracking", "Report", "Tracking", new {id = item.Id }, new {@class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Tracking", @data_tooltip = "tooltip" })
-                                    </div>
-                                </div>
+                            <div class="col-md-3">
+                                <a href="@Url.Action("Complete", "Campaigns", new {id = item.Id})" title="Complete" data-tooltip="tooltip">
+                                    <span class="fa fa-check"></span>
+                                </a> |
+                                <a href="@Url.Action("Cancel", "Campaigns", new {id = item.Id})" title="Cancel" data-tooltip="tooltip">
+                                    <span class="fa fa-times"></span>
+                                </a>
                             </div>
                         }
-                    </td>
-                </tr>
-            }
+                        <div class="col-md-3">
+                            <a href="@Url.Action("Delete", "Campaigns", new {id = item.Id})" title="Delete" data-tooltip="tooltip">
+                                <span class="fa fa-trash"></span>
+                            </a>
+                            @if (isAdmin)
+                            {
+                                <a href="@Url.Action("Sent", "Tracking", new {id = item.Id})" title="Sent Orders" data-tooltip="tooltip" class="pull-right">
+                                    <span class="fa fa-envelope"></span>
+                                </a>
+                            }
+                        </div>
+                        <div class="col-md-3">
+                            @if (isAdmin)
+                            {
 
-        </table>
+                                if (item.Segments != null)
+                                {
+                                    foreach (var segment in item.Segments.Where(x => !string.IsNullOrEmpty(x.SegmentDataFileUrl)))
+                                    {
+                                        <a target="_blank" href="@segment.SegmentDataFileUrl" title="@segment.SegmentNumber" data-tooltip="tooltip">
+                                            <span class="fa fa-download"></span>
+                                        </a>
+                                    }
+                                    if (item.Segments.Count != 0)
+                                    {
 
-        <div class="row">
-            <div class="col-md-12 text-center">
-                <div class="page-count">
-                    Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+                                    }
+                                }
+
+                            }
+                        </div>
+                    </div>
                 </div>
-                <div class="tp-pagination">
-                @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort,
-               searchType = ViewBag.SearchType, basicString = ViewBag.BasicStringSearched,
-               basicStatus = ViewBag.BasicStatusSearched,
-               advancedStatus = ViewBag.AdvancedStatusSearched,
-               advancedUser = ViewBag.AdvancedUserSearched,
-               campaignName = ViewBag.CampaignName,
-               advancedWhiteLabel = ViewBag.AdvancedWhiteLabelSearched,
-               orderedFrom = ViewBag.OrderedFrom, orderedTo = ViewBag.OrderedTo,
-               broadcastFrom = ViewBag.BroadcastFrom, broadcastTo = ViewBag.BroadcastTo
-           }), new PagedListRenderOptions() { })
-                </div>
-            </div>
+                @if (isAdmin)
+                {
+                    <div class="row" style="margin-top: 3px">
+                        <div class="col-md-12">
+                            <div class="col-md-3">
+                                @Html.ActionLink("Testing", "Index", "Testing", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Testing", @data_tooltip = "tooltip" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.ActionLink("Creative", "Index", "Creative", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding " + disabled, @title = "Creative", @data_tooltip = "tooltip" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.ActionLink("Approved", "Index", "Approved", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding ", @title = "Approved", @data_tooltip = "tooltip" })
+                            </div>
+                            <div class="col-md-3">
+                                @Html.ActionLink("Tracking", "Report", "Tracking", new { id = item.Id }, new { @class = "btn btn-default btn-sm no-left-padding no-right-padding", @title = "Tracking", @data_tooltip = "tooltip" })
+                            </div>
+                        </div>
+                    </div>
+                }
+            </td>
+        </tr>
+    }
+
+</table>
+
+<div class="row">
+    <div class="col-md-12 text-center">
+        <div class="page-count">
+            Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
         </div>
+        <div class="tp-pagination">
+            @Html.PagedListPager(Model, page => Url.Action("Index", new { page, sortOrder = ViewBag.CurrentSort,
+           searchType = ViewBag.SearchType, basicString = ViewBag.BasicStringSearched,
+           basicStatus = ViewBag.BasicStatusSearched,
+           advancedStatus = ViewBag.AdvancedStatusSearched,
+           advancedUser = ViewBag.AdvancedUserSearched,
+           campaignName = ViewBag.CampaignName,
+           advancedWhiteLabel = ViewBag.AdvancedWhiteLabelSearched,
+           orderedFrom = ViewBag.OrderedFrom, orderedTo = ViewBag.OrderedTo,
+           broadcastFrom = ViewBag.BroadcastFrom, broadcastTo = ViewBag.BroadcastTo
+       }), new PagedListRenderOptions() { })
+        </div>
+    </div>
+</div>
 <br />
 <br />
 <!-- Modal -->
@@ -261,41 +258,41 @@
 }
 <script type="text/javascript">
 
-        var wfp = wfp || {};
+    var wfp = wfp || {};
 
-        $(document).ready(function () {
+    $(document).ready(function () {
 
-            $('#basicString').keypress(function (e) {
-                if (e.which === 13) {
-                    $('form#frmSearch').submit();
-                    return false;
-                }
-            });
-
-            $('#btnClearSearch').click(function () {
-                debugger;
-                wfp.reload('/Campaigns/Index');
-                return false;
-            });
-
-            $("#basicOrderNumber").select2().on("change", function (e) {
-                $('form#frmSearch').submit();
-                return;
-            });
-
-            $("#basicStatus").select2().on("change", function (e) {
-                $('form#frmSearch').submit();
-                return;
-
-            });
-
-            $('#btnPending').click(function () {
-                debugger;
-                $("#basicStatus").val(0).trigger('change');
+        $('#basicString').keypress(function (e) {
+            if (e.which === 13) {
                 $('form#frmSearch').submit();
                 return false;
-            });
-            
+            }
         });
+
+        $('#btnClearSearch').click(function () {
+            debugger;
+            wfp.reload('/Campaigns/Index');
+            return false;
+        });
+
+        $("#basicOrderNumber").select2().on("change", function (e) {
+            $('form#frmSearch').submit();
+            return;
+        });
+
+        $("#basicStatus").select2().on("change", function (e) {
+            $('form#frmSearch').submit();
+            return;
+
+        });
+
+        $('#btnPending').click(function () {
+            debugger;
+            $("#basicStatus").val(0).trigger('change');
+            $('form#frmSearch').submit();
+            return false;
+        });
+
+    });
 
 </script>

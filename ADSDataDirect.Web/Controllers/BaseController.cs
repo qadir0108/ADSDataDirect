@@ -29,6 +29,14 @@ namespace ADSDataDirect.Web.Controllers
             }
         }
 
+        protected bool IsNXS
+        {
+            get
+            {
+                return ClientCode == Client.NXS.ToString();
+            }
+        }
+
         private WfpictContext _db;
         protected WfpictContext Db
         {

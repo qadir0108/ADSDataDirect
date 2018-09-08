@@ -14,9 +14,9 @@ namespace ADSDataDirect.Infrastructure.Emails
 {
     public static class EmailHelper
     {
-        readonly static string clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
-        readonly static string clientName = System.Configuration.ConfigurationManager.AppSettings["ClientName"];
-        readonly static string clientAppURL = System.Configuration.ConfigurationManager.AppSettings["ClientAppURL"];
+        private static readonly string clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+        private static readonly string clientName = System.Configuration.ConfigurationManager.AppSettings["ClientName"];
+        private static readonly string clientAppURL = System.Configuration.ConfigurationManager.AppSettings["ClientAppURL"];
 
         readonly static string Footer = $"<br/><br/>Thanks<br/><b>{clientName}</b><br/>{clientAppURL}";
 

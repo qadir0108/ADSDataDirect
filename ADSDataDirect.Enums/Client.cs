@@ -3,6 +3,6 @@
     public enum Client
     {
         ADS,
-        NSX,
+        NXS,
     }
 }

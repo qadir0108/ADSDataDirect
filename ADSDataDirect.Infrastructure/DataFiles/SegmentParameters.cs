@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Data;
 
-namespace ADSDataDirect.Core.DB
+namespace ADSDataDirect.Infrastructure.DataFiles
 {
     public class SegmentParameters
     {
