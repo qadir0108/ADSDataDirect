@@ -5,7 +5,6 @@ using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
-using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
@@ -14,7 +13,7 @@ using Microsoft.Owin.Security;
 namespace ADSDataDirect.Web.Controllers
 {
     [Authorize]
-    public class AccountController : BaseController
+    public class AccountController : AccountControllerBase
     {
         private ApplicationUserManager _userManager;
         private ApplicationSignInManager _signInManager;
@@ -137,7 +136,8 @@ namespace ADSDataDirect.Web.Controllers
         // POST: /Account/LogOff
         //[HttpPost]
         //[ValidateAntiForgeryToken]
-        [Authorize]
+        //[Authorize]
+        [AllowAnonymous]
         public ActionResult LogOff()
         {
             Session.Clear();

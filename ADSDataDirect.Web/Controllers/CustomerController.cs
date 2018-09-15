@@ -36,7 +36,7 @@ namespace ADSDataDirect.Web.Controllers
                 DateCreated = x.CreatedAt.ToString()
             }).ToList();
 
-            string view = IsNXS ? "IndexNXS" : "Index";
+            string view = IsNxs ? "IndexNXS" : "Index";
 
             int pageNumber = (sc.Page ?? 1);
             var model = customer.ToPagedList(pageNumber, PageSize);
@@ -46,7 +46,7 @@ namespace ADSDataDirect.Web.Controllers
         public ActionResult New()
         {
             ViewBag.ReportTemplate = new SelectList(ReportTemplates, "Value", "Text");
-            string view = IsNXS ? "NewNXS" : "New";
+            string view = IsNxs ? "NewNXS" : "New";
             return View(view);
         }
 
@@ -118,7 +118,7 @@ namespace ADSDataDirect.Web.Controllers
             };
             ViewBag.ReportTemplate = new SelectList(ReportTemplates, "Value", "Text", customerVm.ReportTemplate);
 
-            string view = IsNXS ? "NewNXS" : "New";
+            string view = IsNxs ? "NewNXS" : "New";
             return View(view, customerVm);
         }
 

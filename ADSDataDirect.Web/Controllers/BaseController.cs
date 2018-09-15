@@ -14,28 +14,14 @@ using ADSDataDirect.Core.Static;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    public class BaseController : Controller
+    public class BaseController : BaseControllerAuth0
     {
         protected readonly Random Random = new Random();
         protected const int PageSize = 10;
 
-        private readonly string clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+        protected string ClientCode { get; } = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
 
-        protected string ClientCode
-        {
-            get
-            {
-                return clientCode;
-            }
-        }
-
-        protected bool IsNXS
-        {
-            get
-            {
-                return ClientCode == Client.NXS.ToString();
-            }
-        }
+        protected bool IsNxs => ClientCode == Client.NXS.ToString();
 
         private WfpictContext _db;
         protected WfpictContext Db
@@ -61,23 +47,11 @@ namespace ADSDataDirect.Web.Controllers
             Session["user"] = user;
         }
 
-        protected WfpUser LoggedInUser
-        {
-            get
-            {
-                return Session["user"] as WfpUser;
-            }
-        }
+        protected WfpUser LoggedInUser => Session["user"] as WfpUser;
 
-        protected bool IsAdmin
-        {
-            get
-            {
-                return (LoggedInUser != null && (LoggedInUser.UserType == (int)UserType.Admin)
-                    || LoggedInUser.UserName == "kamran.qadir");
-            }
-        }
-        
+        protected bool IsAdmin => LoggedInUser != null && 
+                                  (LoggedInUser.UserType == (int)UserType.Admin || LoggedInUser.UserName == "kamran.qadir");
+
         readonly string _uploadPath = $"~/Uploads";
         protected string UploadPath
         {

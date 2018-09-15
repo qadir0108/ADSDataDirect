@@ -42,10 +42,7 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             long clickCountTotal = (long)((clicksRandom * quantity / 100000.0) / 100.0);
 
             List<ClickModel> clicks = null;
-            if(links.Count <= 8)
-                clicks = GenerateClicksForEightLinks(links, clickCountTotal, keywords);
-            else
-                clicks = GenerateClicks(links, clickCountTotal, keywords);
+            clicks = GenerateClicksOutof100(links, clickCountTotal, keywords);
 
             List<Report> reports = new List<Report>();
             int counter = 0;
@@ -76,7 +73,7 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
 
         }
 
-        private static List<ClickModel> GenerateClicksForEightLinks(List<string> links, long clickCountTotal, List<OpenModelKeyword> keywords)
+        private static List<ClickModel> GenerateClicksOutof100(List<string> links, long clickCountTotal, List<OpenModelKeyword> keywords)
         {
             List<ClickModel> clicks = new List<ClickModel>();
 
@@ -96,8 +93,25 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             }
 
             int remainingPercentage = 100;//(int)totalPercentage;
-
-            var numbers = Randomizer.GetNumbers(links.Count - toOverRideCount, remainingPercentage).AsEnumerable().OrderByDescending(x => x).ToList();
+            int nonSocialLinks = links.Count - toOverRideCount;
+            List<int> numbers;
+            if(nonSocialLinks == 1)
+                numbers = new List<int>() {100};
+            else if (nonSocialLinks == 2)
+            {
+                // first 50-60%
+                var num1 = (int) (Random.Next(50000, 65000) / 1000.0);
+                numbers = new List<int>() { num1, 100 - num1 };
+            }
+            else if (nonSocialLinks == 3)
+            {
+                // first 50-60%, second 30-35%
+                var num1 = (int)(Random.Next(50000, 65000) / 1000.0);
+                var num2 = (int)(Random.Next(20000, 35000) / 1000.0);
+                numbers = new List<int>() { num1, num2, 100 - num1 - num2 };
+            }
+            else
+                numbers = Randomizer.GetNumbers(nonSocialLinks, remainingPercentage).AsEnumerable().OrderByDescending(x => x).ToList();
             int index = 0;
             foreach (var l in links)
             {
@@ -132,7 +146,7 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             return clicks;
         }
 
-        private static List<ClickModel> GenerateClicks(List<string> links, long clickCountTotal, List<OpenModelKeyword> keywords)
+        private static List<ClickModel> GenerateClicksStartFrom12Percent(List<string> links, long clickCountTotal, List<OpenModelKeyword> keywords)
         {
             double firstPercentage = (double)(Random.Next(120000, 150000));
             double percentage = firstPercentage;
@@ -268,8 +282,8 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
                 campaignTracking.Opened = openCountTotal;
             }
             // Open by mobile, desktop
-            campaignTracking.Mobile = (long)(((campaignTracking.Opened * Random.Next(50000, 65000)) / 10000.0) / 100.0);
-            campaignTracking.Desktop = campaignTracking.Opened - campaignTracking.Mobile;
+            campaignTracking.Desktop = (long)(((campaignTracking.Opened * Random.Next(50000, 60000)) / 1000.0) / 100.0);
+            campaignTracking.Mobile = campaignTracking.Opened - campaignTracking.Desktop;
 
             campaignTracking.Clicked = reports.Sum(x => long.Parse(x.ClickCount));
             campaignTracking.Unsub = Random.Next(1, 100);

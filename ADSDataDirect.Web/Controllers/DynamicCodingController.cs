@@ -1,16 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
-using System.Globalization;
-using System.IO;
 using System.Linq;
-using System.Web;
 using System.Web.Mvc;
-using ADSDataDirect.Core.Entities;
-using ADSDataDirect.Enums;
-using ADSDataDirect.Web.Helpers;
-using ADSDataDirect.Web.Models;
-using PagedList;
 using ADSDataDirect.Infrastructure.DynamicCoding;
 using ADSDataDirect.Infrastructure.Csv;
 

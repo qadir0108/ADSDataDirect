@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Data.Entity;
-using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -56,7 +55,7 @@ namespace ADSDataDirect.Web.Controllers
                                     : ViewBag.SearchIds;
             Session["idsForPrint"] = idsForPrint;
 
-            string view = IsNXS ? "IndexNXS" : "Index";
+            string view = IsNxs ? "IndexNXS" : "Index";
             // Paging
             int pageNumber = (sc.Page ?? 1);
             return View(view, campagins.ToPagedList(pageNumber, PageSize));

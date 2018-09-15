@@ -1,6 +1,7 @@
 ﻿@using System.Security.Claims
 @using ADSDataDirect.Core.Entities
 @using ADSDataDirect.Enums
+@using ADSDataDirect.Infrastructure.Auth0
 <!DOCTYPE html>
 <html>
 <head>
@@ -45,7 +46,7 @@
     var loggedInUser = Session["user"] as WfpUser;
     bool isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
 }
-@if (isAdmin)
+@if (isAdmin && ____.___)
 {
     <script src="../../Scripts/jquery.signalR-2.2.2.js"></script>
     <script src="~/signalr/hubs"></script>

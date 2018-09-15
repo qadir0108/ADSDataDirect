@@ -2,6 +2,7 @@
 @using System.Security.Claims;
 @using ADSDataDirect.Core.Entities
 @using ADSDataDirect.Enums
+@using ADSDataDirect.Infrastructure.Auth0
 @{
     var loggedInUser = Session["user"] as WfpUser;
     var isLoggedIn = loggedInUser != null;
@@ -26,7 +27,7 @@
                         @System.Configuration.ConfigurationManager.AppSettings["ClientName"]
 					</div>
 					<ul data-breakpoint="800" class="flexnav">
-						@if (isLoggedIn)
+						@if (isLoggedIn && ____.___)
                         {
                             var userIdentity = HttpContext.Current.User.Identity as ClaimsIdentity;
                             var roles = userIdentity.Claims.Where(x => x.Type == ClaimTypes.Role).Select(claim => claim.Value).ToArray();

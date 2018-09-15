@@ -13,6 +13,7 @@ namespace ADSDataDirect.Infrastructure.Db
         public static SettingsManager Instance => _instance ?? (_instance = new SettingsManager());
 
         private SettingsVm _settings = new SettingsVm();
+
         public SettingsVm LoadSettings(WfpictContext db)
         {
             var settingAuto = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyAutoProcessTracking);
@@ -68,7 +69,7 @@ namespace ADSDataDirect.Infrastructure.Db
             SaveSetting(db, StringConstants.KeyExceededClickRateIn72Hours, settings.ExceededClickRateIn72HoursValue.ToString(CultureInfo.InvariantCulture));
         }
 
-        private void SaveSetting(WfpictContext db, string key, string value)
+        protected void SaveSetting(WfpictContext db, string key, string value)
         {
             var setting = db.Settings.FirstOrDefault(x => x.Key == key);
             if (setting == null)

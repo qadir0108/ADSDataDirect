@@ -3,7 +3,6 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using ADSDataDirect.Enums;
-using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Web.Models;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;

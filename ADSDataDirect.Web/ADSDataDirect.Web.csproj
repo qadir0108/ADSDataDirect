@@ -280,6 +280,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\Auth0Controller.cs" />
+    <Compile Include="Controllers\BaseControllerAuth0.cs" />
+    <Compile Include="Controllers\AccountControllerBase.cs" />
     <Compile Include="Controllers\KeywordController.cs" />
     <Compile Include="Controllers\SmartsheetController.cs" />
     <Compile Include="Controllers\DynamicCodingController.cs" />
@@ -299,6 +302,7 @@
     <Compile Include="Controllers\CustomerController.cs" />
     <Compile Include="Controllers\VendorController.cs" />
     <Compile Include="Helpers\AdsCache.cs" />
+    <Compile Include="Helpers\Auth0.cs" />
     <Compile Include="Helpers\ControllerExceptionHelper.cs" />
     <Compile Include="Models\CampaignTrackingOpenModelVm.cs" />
     <Compile Include="Models\OpenModelInputVm.cs" />
@@ -983,16 +987,7 @@
     <VisualStudio>
       <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
         <WebProjectProperties>
-          <UseIIS>True</UseIIS>
-          <AutoAssignPort>True</AutoAssignPort>
-          <DevelopmentServerPort>56162</DevelopmentServerPort>
-          <DevelopmentServerVPath>/</DevelopmentServerVPath>
-          <IISUrl>http://localhost:49815/</IISUrl>
-          <NTLMAuthentication>False</NTLMAuthentication>
-          <UseCustomServer>False</UseCustomServer>
-          <CustomServerUrl>
-          </CustomServerUrl>
-          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+          <SaveServerSettingsInUserFile>True</SaveServerSettingsInUserFile>
         </WebProjectProperties>
       </FlavorProperties>
     </VisualStudio>

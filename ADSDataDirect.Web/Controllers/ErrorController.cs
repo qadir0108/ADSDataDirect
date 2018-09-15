@@ -3,7 +3,7 @@ using System.Web.Mvc;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    public class ErrorController : BaseController
+    public class ErrorController : Controller
     {
         //
         // GET: /Error/
@@ -17,11 +17,18 @@ namespace ADSDataDirect.Web.Controllers
             return View("Error", exception);
         }
 
-        public ViewResult NotFound(HandleErrorInfo exception)
+        public ViewResult NotFound()
         {
             ViewBag.Title = "404. Not Found";
             return View("Error", new HandleErrorInfo(new HttpException(404, "404. Not Found"), "ErrorController", "Index"));
         }
+
+        public ViewResult NotFound404(HandleErrorInfo exception)
+        {
+            ViewBag.Title = "404. Not Found";
+            return View("Error", new HandleErrorInfo(new HttpException(404, "404. Not Found"), "ErrorController", "Index"));
+        }
+
 
         public ViewResult BadRequest(HandleErrorInfo exception)
         {

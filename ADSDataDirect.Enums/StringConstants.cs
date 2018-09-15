@@ -11,8 +11,6 @@
         public const string DateTimeDisplayFormatReview = "F";
         public const string TimeFormat = "h:mm tt";
 
-        public static readonly string KeyOrderCcEmails = "OrderCCEmails";
-
         public static readonly string KeyNotStartedInXHours = "NotStartedInXHours";
         public static readonly string KeyNotHitOpenRateIn24Hours = "NotHitOpenRateIn24Hours";
         public static readonly string KeyNotHitOpenRateIn72Hours = "NotHitOpenRateIn72Hours";
