@@ -6,6 +6,8 @@
     var loggedInUser = Session["user"] as WfpUser;
     var isLoggedIn = loggedInUser != null;
     var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
+    var clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+    var isNXS = (clientCode == Client.NXS.ToString());
 }
 @if (Session["id"] != null)
 {
@@ -33,7 +35,10 @@
             </div>
             
             <div class="col-md-1">
-                @Html.ActionLink("Reporting", "View", "OpenModel", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
+                @if (isNXS)
+                {
+                    @Html.ActionLink("Reporting", "View", "OpenModel", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm"})
+                }
             </div>
             <div class="col-md-1">
             </div>

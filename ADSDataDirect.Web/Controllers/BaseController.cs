@@ -117,6 +117,10 @@ namespace ADSDataDirect.Web.Controllers
                     Text = "Select Template",
                     Value = string.Empty
                 });
+                if (ClientCode == Client.ADS.ToString())
+                {
+                    items.RemoveAll(x => x.Text == "ReTargeting");
+                }
                 return items;
             }
         }
