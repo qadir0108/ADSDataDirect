@@ -55,6 +55,12 @@
     <Compile Include="UnitTest1.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ADSDataDirect.Infrastructure\ADSDataDirect.Infrastructure.csproj">
+      <Project>{4E429988-3991-4F58-B398-ADC3EFA0D213}</Project>
+      <Name>ADSDataDirect.Infrastructure</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
       <ItemGroup>

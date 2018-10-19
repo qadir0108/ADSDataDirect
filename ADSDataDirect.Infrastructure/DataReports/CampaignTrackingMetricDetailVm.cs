@@ -18,6 +18,7 @@ namespace ADSDataDirect.Infrastructure.DataReports
         public long Total_Clicks { get; set; }
         public long Unique_Clicks { get; set; }
         public long Mobile_Clicks { get; set; }
+        public int ID { get; set; }
 
         public static CampaignTrackingMetricDetailVm[] FromCampaignTracking(Campaign campaign, CampaignTracking campaignTracking)
         {
@@ -26,7 +27,8 @@ namespace ADSDataDirect.Infrastructure.DataReports
             var proDatas = campaign.ProDatas
                 .Where(x => x.OrderNumber == campaignTracking.OrderNumber && x.SegmentNumber == campaignTracking.SegmentNumber)
                 .OrderByDescending(x => x.ClickCount);
-            
+
+            int index = 1;
             foreach (var proData in proDatas)
             {
                 var model = new CampaignTrackingMetricDetailVm
@@ -41,7 +43,8 @@ namespace ADSDataDirect.Infrastructure.DataReports
                     URLS = proData.Destination_URL,
                     Total_Clicks = proData.ClickCount, //string.Format("{0:n0}", proData.ClickCount),
                     Unique_Clicks = proData.UniqueCnt,
-                    Mobile_Clicks = proData.MobileCnt
+                    Mobile_Clicks = proData.MobileCnt,
+                    ID = index++
                 };
 
                 urls.Add(model);

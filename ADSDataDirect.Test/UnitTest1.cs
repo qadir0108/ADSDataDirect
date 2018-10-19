@@ -1,4 +1,5 @@
 ﻿using System;
+using ADSDataDirect.Infrastructure.ReportingModel;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace ADSDataDirect.Test
@@ -9,6 +10,7 @@ namespace ADSDataDirect.Test
         [TestMethod]
         public void TestMethod1()
         {
+           
         }
     }
 }

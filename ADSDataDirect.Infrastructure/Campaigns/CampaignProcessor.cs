@@ -118,6 +118,14 @@ namespace ADSDataDirect.Infrastructure.Campaigns
                     db.CampaignTrackings.Add(tracking);
                     db.SaveChanges();
                 }
+                else
+                {
+                    campaignTracking.Quantity = segment.Quantity;
+                    campaignTracking.DateSent = DateTime.Now;
+                    campaignTracking.SentOrder = sentOrder;
+                    campaignTracking.IsCreatedThroughApi = orderVia == OrderVia.Api;
+                    campaignTracking.QueuedCampaignId = queuedCampaignId;
+                }
 
                 LogHelper.AddLog(db, LogType.Vendor, campaign.OrderNumber, $"Multi {segment.SegmentNumber} has been sent to vendor successfully.");
             }

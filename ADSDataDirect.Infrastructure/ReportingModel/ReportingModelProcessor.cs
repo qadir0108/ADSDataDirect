@@ -42,7 +42,7 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             long clickCountTotal = (long)((clicksRandom * quantity / 100000.0) / 100.0);
 
             List<ClickModel> clicks = null;
-            clicks = GenerateClicksOutof100(links, clickCountTotal, keywords);
+            clicks = ClickModeler.GenerateClicks(links, clickCountTotal, keywords);
 
             List<Report> reports = new List<Report>();
             int counter = 0;
@@ -71,118 +71,6 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             //var settings = SettingsManager.Instance.LoadSettings(db);
             //SaveNotification(db, settings, campaign.Id, campaign.OrderNumber, string.Empty, campaign.Approved.DeployDate, data.ResponseStatus, campaignTracking);
 
-        }
-
-        private static List<ClickModel> GenerateClicksOutof100(List<string> links, long clickCountTotal, List<OpenModelKeyword> keywords)
-        {
-            List<ClickModel> clicks = new List<ClickModel>();
-
-            // Calculate remaing %ages out of 100 excluding %ages of kewords
-            float totalPercentage = 100f;
-            int toOverRideCount = 0;
-            foreach (var l in links)
-            {
-                foreach (var k in keywords)
-                {
-                    if (l.Contains(k.Keyword))
-                    {
-                        totalPercentage = totalPercentage - k.RulePercentage;
-                        toOverRideCount++;
-                    }
-                }
-            }
-
-            int remainingPercentage = 100;//(int)totalPercentage;
-            int nonSocialLinks = links.Count - toOverRideCount;
-            List<int> numbers;
-            if(nonSocialLinks == 1)
-                numbers = new List<int>() {100};
-            else if (nonSocialLinks == 2)
-            {
-                // first 50-60%
-                var num1 = (int) (Random.Next(50000, 65000) / 1000.0);
-                numbers = new List<int>() { num1, 100 - num1 };
-            }
-            else if (nonSocialLinks == 3)
-            {
-                // first 50-60%, second 30-35%
-                var num1 = (int)(Random.Next(50000, 65000) / 1000.0);
-                var num2 = (int)(Random.Next(20000, 35000) / 1000.0);
-                numbers = new List<int>() { num1, num2, 100 - num1 - num2 };
-            }
-            else
-                numbers = Randomizer.GetNumbers(nonSocialLinks, remainingPercentage).AsEnumerable().OrderByDescending(x => x).ToList();
-            int index = 0;
-            foreach (var l in links)
-            {
-                var m = new ClickModel()
-                {
-                    Link = l,
-                };
-
-                float overRidePercentage = -1f;
-
-                foreach (var k in keywords)
-                {
-                    if (l.Contains(k.Keyword))
-                    {
-                        overRidePercentage = k.RulePercentage;
-                        break;
-                    }
-                }
-                if (overRidePercentage != -1)
-                {
-                    m.Percentage = overRidePercentage;
-                }
-                else
-                {
-                    m.Percentage = numbers[index];
-                    index++;
-                }
-                m.Clicks = (int)(m.Percentage / 100.0 * (double)clickCountTotal);
-                clicks.Add(m);
-            }
-
-            return clicks;
-        }
-
-        private static List<ClickModel> GenerateClicksStartFrom12Percent(List<string> links, long clickCountTotal, List<OpenModelKeyword> keywords)
-        {
-            double firstPercentage = (double)(Random.Next(120000, 150000));
-            double percentage = firstPercentage;
-            List<ClickModel> clicks = new List<ClickModel>();
-            foreach (var l in links)
-            {
-                var m = new ClickModel()
-                {
-                    Link = l,
-                };
-
-                float overRidePercentage = -1f;
-
-                foreach (var k in keywords)
-                {
-                    if (l.Contains(k.Keyword))
-                    {
-                        overRidePercentage = k.RulePercentage;
-                        break;
-                    }
-                }
-                if (overRidePercentage != -1)
-                {
-                    m.Percentage = overRidePercentage;
-                }
-                else
-                {
-                    m.Percentage = percentage / 10000.0;
-                    // decrement random for next link  0.1 - firstPercentage
-                    percentage = firstPercentage - (Random.Next(2000, (int)firstPercentage));
-                }
-                m.Clicks = (int)(m.Percentage / 100.0 * (double)clickCountTotal);
-                clicks.Add(m);
-            }
-
-            return clicks;
         }
 
         protected static void SaveProDataNXS(WfpictContext db, Guid? campaignId, string orderNumber, string segmentNumber, ProDataResponse data)
@@ -233,11 +121,12 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
 
         }
 
-        protected static CampaignTracking UpdateTrackingNXS(WfpictContext db, Campaign campaign, string orderNumber, string segmentNumber, ProDataResponse data, Customer customer = null)
+        protected static CampaignTracking UpdateTrackingNXS(WfpictContext db, Campaign campaign, string orderNumber, string segmentNumber, ProDataResponse data, Customer customer)
         {
             var campaignTracking = campaign.Trackings.FirstOrDefault(x => x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber);
 
             long quantity = orderNumber.EndsWith("RDP") ? campaign.ReBroadcastedQuantity : campaign.Approved.Quantity;
+            DateTime? startDateTime = orderNumber.EndsWith("RDP") ? campaign.ReBroadcastedDate : campaign.Approved.DeployDate;
 
             // Save tracking for Old orders
             if (campaignTracking == null)
@@ -262,25 +151,15 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
 
             var reports = data.reports.report;
             var report = reports[0];
-            DateTime startDateTime;
-            DateTime.TryParse(report.CampaignStartDate, out startDateTime);
             campaignTracking.IoNumber = report.IO;
             campaignTracking.StartDate = startDateTime;
             campaignTracking.Deployed = (long)(campaignTracking.Quantity * (1 + Random.Next(2, 30) / 10000.0));
 
             // Prodata & ProData fake Open Modeler
-            if (customer == null)
-            {
-                campaignTracking.Opened = campaign.Approved.IsUseApiDataForOpen ? report.ImpressionCnt : OpenModelerProData.GetOpens(campaignTracking.Quantity, startDateTime);
-                if (campaign.Approved.WhiteLabel == StringConstants.CustomerStrategus)
-                    campaignTracking.Opened = (long)(((campaignTracking.Quantity * Random.Next(160000, 190000)) / 10000.0) / 100.0);
-            }
-            else
-            {
-                int openRandom = Random.Next((int)customer.OpenInitial, (int)customer.OpenEnd);
-                long openCountTotal = (long)((openRandom * campaignTracking.Quantity / 100000.0) / 100.0);
-                campaignTracking.Opened = openCountTotal;
-            }
+            int openRandom = Random.Next((int)customer.OpenInitial, (int)customer.OpenEnd);
+            long openCountTotal = (long)((openRandom * campaignTracking.Quantity / 100000.0) / 100.0);
+            campaignTracking.Opened = openCountTotal;
+            
             // Open by mobile, desktop
             campaignTracking.Desktop = (long)(((campaignTracking.Opened * Random.Next(50000, 60000)) / 1000.0) / 100.0);
             campaignTracking.Mobile = campaignTracking.Opened - campaignTracking.Desktop;

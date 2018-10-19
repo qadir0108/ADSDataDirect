@@ -121,6 +121,7 @@
     <Compile Include="DataFiles\SegmentResponse1.cs" />
     <Compile Include="DataReports\CustomerOrdersStatusVm.cs" />
     <Compile Include="DataReports\CustomerOrdersStatusReports.cs" />
+    <Compile Include="ReportingModel\ClickModeler.cs" />
     <Compile Include="ReportingModel\Randomizer.cs" />
     <Compile Include="TemplateReports\TemplateReportDetailVm.cs" />
     <Compile Include="TemplateReports\TemplateReportVm.cs" />
