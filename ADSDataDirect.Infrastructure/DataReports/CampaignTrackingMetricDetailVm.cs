@@ -38,7 +38,7 @@ namespace ADSDataDirect.Infrastructure.DataReports
                     Campaign_Name = campaign.Approved.CampaignName,
                     From_Line = campaign.Approved.FromLine,
                     Subject_Line = campaign.Approved.SubjectLine,
-                    Deployment_Date = campaign.Approved.DeployDate?.ToString(StringConstants.DateFormatDashes),
+                    Deployment_Date = campaign.Approved.DeployDate?.ToString(StringConstants.DateFormatSlashes),
 
                     URLS = proData.Destination_URL,
                     Total_Clicks = proData.ClickCount, //string.Format("{0:n0}", proData.ClickCount),

@@ -99,6 +99,8 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                 .Where(x => x.OrderNumber == campaignTracking.OrderNumber && x.SegmentNumber == campaignTracking.SegmentNumber)
                 .OrderByDescending(x => x.ClickCount);
 
+            if (proDatas.Count() == 0) throw new AdsException("Tracking links not found.");
+
             foreach (var proData in proDatas)
             {
                 model.PerLink.Add(new TemplateReportDetailVm()
@@ -109,6 +111,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                     MobileCount = proData.MobileCnt
                 });
             }
+
             return model;
         }
     }

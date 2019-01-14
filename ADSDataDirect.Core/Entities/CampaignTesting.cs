@@ -50,6 +50,14 @@ namespace ADSDataDirect.Core.Entities
         public bool IsDynamicCoding { get; set; }
         public string DynamicCodingFile { get; set; }
 
+        // ClickMeter & Ezanga
+        public string ClickMeterGroupId { get; set; } // campaignId=5681807
+        public string ClickMeterRotatorLinkId { get; set; } // DatapointId 358427750
+        public string ClickMeterRotatorLink { get; set; } // https://httpslink.com/2781a
+        public string EzStates { get; set; }
+        public string EzDMAs { get; set; }
+        public string EzLinksFile { get; set; }
+
         public CampaignTesting()
         {
         }

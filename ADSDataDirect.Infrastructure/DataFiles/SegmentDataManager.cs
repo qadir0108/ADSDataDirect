@@ -20,6 +20,8 @@ namespace ADSDataDirect.Infrastructure.DataFiles
                 using (SqlCommand command = new SqlCommand("[dbo].[OneLocationData]", connection))
                 {
                     command.CommandType = CommandType.StoredProcedure;
+                    command.CommandTimeout = 300; // 5m
+
                     command.Parameters.Add("@DataQuantity", SqlDbType.BigInt).Value = parameters.DataQuantity;
                     command.Parameters.Add("@CustomerCode", SqlDbType.VarChar).Value = parameters.CustomerCode;
                     SqlParameter parameter = command.Parameters

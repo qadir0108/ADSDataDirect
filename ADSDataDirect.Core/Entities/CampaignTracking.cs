@@ -37,6 +37,16 @@ namespace ADSDataDirect.Core.Entities
         public long RetargetingImpressions { get; set; }
         public long RetargetingClicks { get; set; }
 
+        // ClickMeter Tracking Data
+        public long Day1Clicks { get; set; }
+        public long Day2Clicks { get; set; }
+        public long Day3Clicks { get; set; }
+        public long Day4Clicks { get; set; }
+        public long Day5Clicks { get; set; }
+        public long Day6Clicks { get; set; }
+        public long Day7Clicks { get; set; }
+        public long Day7PlusClicks { get; set; }
+
         public CampaignTracking()
         {
         }

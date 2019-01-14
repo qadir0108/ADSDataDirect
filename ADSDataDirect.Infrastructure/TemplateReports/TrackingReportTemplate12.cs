@@ -32,6 +32,9 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                 stream.Write(byteArray, 0, byteArray.Length);
                 using (SpreadsheetDocument spreadSheet = SpreadsheetDocument.Open(stream, true))
                 {
+                    spreadSheet.WorkbookPart.Workbook.CalculationProperties.ForceFullCalculation = true;
+                    spreadSheet.WorkbookPart.Workbook.CalculationProperties.FullCalculationOnLoad = true;
+
                     // Do work here
                     IEnumerable<Sheet> sheets = spreadSheet.WorkbookPart.Workbook
                         .GetFirstChild<Sheets>().Elements<Sheet>()
@@ -147,7 +150,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                     }
 
                     // Template ReTargetting
-                    if (Template.Equals(ReportTemplate.ReTargeting.ToString()))
+                    if (Template.Equals(ReportTemplate.TrackingReTargeting.ToString()))
                     {
                         cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 44);
                         cell.CellValue = new CellValue(model.RetargetingImpressions);

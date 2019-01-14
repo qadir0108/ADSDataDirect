@@ -5,11 +5,12 @@
         public const string TimeStampFormat = "M/d/yyyy H:mm";
         public const string DateFormatRegistry = "MMM dd, yyyy";
         public const string DateFormatSlashes = "MM/dd/yyyy";
+        public const string DateFormatDashes = "MM-dd-yyyy";
         public const string DateTimeFormatSlashes = "MM/dd/yyyy HH:mm:ss";
         public const string DateTimeFormatDashes = "yyyy-MM-dd HH:mm:ss"; // "2017-07-10 14:30:00"
-        public const string DateFormatDashes = "MM-dd-yyyy";
         public const string DateTimeDisplayFormatReview = "F";
         public const string TimeFormat = "h:mm tt";
+        public const string TimeFormatAMPM = "tt";
 
         public static readonly string KeyNotStartedInXHours = "NotStartedInXHours";
         public static readonly string KeyNotHitOpenRateIn24Hours = "NotHitOpenRateIn24Hours";

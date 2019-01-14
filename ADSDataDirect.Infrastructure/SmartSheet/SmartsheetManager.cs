@@ -89,12 +89,17 @@ namespace ADSDataDirect.Infrastructure.Smartsheet
 
                 switch (sheetName)
                 {
+                    case "Strategus":
+                        campaign = ReadRowStrategus(row, sheetMap);
+                        break;
                     case "ADS Verum Customers":
-                        campaign = ReadRow1(row, sheetMap);
+                        campaign = ReadRowCustomers(row, sheetMap);
                         break;
                     case "ADS Verum Advantage":
-                        campaign = ReadRow2(row, sheetMap);
+                        campaign = ReadRowAdvantage(row, sheetMap);
                         break;
+                    default:
+                        throw new AdsException("Smartsheet importing not configured for this sheet.");
                 }
 
                 if (campaign == null)
@@ -107,7 +112,42 @@ namespace ADSDataDirect.Infrastructure.Smartsheet
             return campaigns;
         }
 
-        private Campaign ReadRow1(Row row, SheetMap sheetMap)
+        private Campaign ReadRowStrategus(Row row, SheetMap sheetMap)
+        {
+            // Ignore alreay imported
+            string IONumber = sheetMap.GetCellByColumnName(row, "NXS IO Number").DisplayValue;
+            if (!string.IsNullOrEmpty(IONumber))
+                return null;
+
+            var campaign = new Campaign();
+            campaign.Price = row.Id.Value; // Just re-using Price feild, in fact it should be rowId long
+            campaign.Id = Guid.NewGuid();
+            campaign.CreatedAt = DateTime.Now;
+            campaign.CreatedBy = "Smartsheet";
+            campaign.Status = (int)CampaignStatus.OrderRecevied;
+            campaign.WhiteLabel = StringConstants.CustomerStrategus;
+            campaign.CampaignName = sheetMap.GetCellByColumnName(row, "Campaign Name").DisplayValue;
+            campaign.Quantity = sheetMap.GetCellByColumnName(row, "Email Blast QTY").DisplayValue.ToSafeInt();
+            campaign.BroadcastDate = sheetMap.GetCellByColumnName(row, "Broadcast Date").Value.ToSafeDateTime();
+            campaign.GeoDetails = sheetMap.GetCellByColumnName(row, "Geography").DisplayValue;
+            campaign.Demographics = sheetMap.GetCellByColumnName(row, "Demographics").DisplayValue;
+            campaign.FromLine = sheetMap.GetCellByColumnName(row, "From Line").Value.ToSafeString();
+            campaign.SubjectLine = sheetMap.GetCellByColumnName(row, "Subject Line").DisplayValue;
+            campaign.SpecialInstructions = sheetMap.GetCellByColumnName(row, "Special Instructions").DisplayValue;
+            campaign.ReBroadcastedURL = sheetMap.GetCellByColumnName(row, "RTG URL").DisplayValue;
+            campaign.RepresentativeName = sheetMap.GetCellByColumnName(row, "Modified By").DisplayValue;
+            campaign.RepresentativeEmail = sheetMap.GetCellByColumnName(row, "Modified By").DisplayValue;
+            campaign.Assets = new CampaignAsset();
+
+            campaign.Assets.Id = Guid.NewGuid();
+            campaign.Assets.CampaignId = campaign.Id;
+            campaign.Assets.CreatedAt = DateTime.Now;
+            campaign.Assets.CreatedBy = "Smartsheet";
+
+            return campaign;
+        }
+
+        private Campaign ReadRowCustomers(Row row, SheetMap sheetMap)
         {
             // Ignore alreay imported
             string IONumber = sheetMap.GetCellByColumnName(row, "IO#").DisplayValue;
@@ -144,7 +184,7 @@ namespace ADSDataDirect.Infrastructure.Smartsheet
             return campaign;
         }
 
-        private Campaign ReadRow2(Row row, SheetMap sheetMap)
+        private Campaign ReadRowAdvantage(Row row, SheetMap sheetMap)
         {
             // Ignore alreay imported
             string IONumber = sheetMap.GetCellByColumnName(row, "ID#Verum").DisplayValue;
@@ -188,6 +228,12 @@ namespace ADSDataDirect.Infrastructure.Smartsheet
 
             switch (sheetName)
             {
+                case "Strategus":
+                    cellsToUpdate = new Cell[] {
+                            new Cell.UpdateCellBuilder(sheetMap.ColumnMap["NXS IO Number"],IONumber).Build(),
+                            new Cell.UpdateCellBuilder(sheetMap.ColumnMap["Sent to NXS"],"Yes").Build(),
+                            };
+                    break;
                 case "ADS Verum Customers":
                     cellsToUpdate = new Cell[] {
                             new Cell.UpdateCellBuilder(sheetMap.ColumnMap["IO#"],IONumber).Build(),

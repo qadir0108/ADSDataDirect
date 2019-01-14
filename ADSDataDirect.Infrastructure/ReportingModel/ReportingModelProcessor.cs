@@ -76,7 +76,7 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
         protected static void SaveProDataNXS(WfpictContext db, Guid? campaignId, string orderNumber, string segmentNumber, ProDataResponse data)
         {
             // Delete Old
-            LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Deleting Old ProData ");
+            LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Deleting Old Vendor Data ");
             var proDatas = db.ProDatas.Where(x => x.CampaignId == campaignId && x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber);
             foreach (var proData in proDatas)
             {
@@ -88,7 +88,7 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             if (data.reports != null && data.reports.report != null)
             {
                 var reports = data.reports.report;
-                LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"{reports.Length} records fetched from ProData ");
+                LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"{reports.Length} records fetched from Vendor");
                 foreach (var report in reports)
                 {
                     var proData = new Core.Entities.ProData()
@@ -121,7 +121,7 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
 
         }
 
-        protected static CampaignTracking UpdateTrackingNXS(WfpictContext db, Campaign campaign, string orderNumber, string segmentNumber, ProDataResponse data, Customer customer)
+        protected static CampaignTracking UpdateTrackingNXS(WfpictContext db, Campaign campaign, string orderNumber, string segmentNumber, ProDataResponse data, Customer customer, List<long> dayWise = null)
         {
             var campaignTracking = campaign.Trackings.FirstOrDefault(x => x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber);
 
@@ -183,10 +183,36 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             campaignTracking.UnsubPercentage = campaignTracking.Quantity == 0 ? 0 : (double)campaignTracking.Unsub / campaignTracking.Quantity;
             campaignTracking.ClickToOpenPercentage = campaignTracking.Opened == 0 ? 0 : (double)campaignTracking.Clicked / campaignTracking.Opened;
             campaignTracking.UnsubToOpenPercentage = campaignTracking.Opened == 0 ? 0 : (double)campaignTracking.Unsub / campaignTracking.Opened;
+
+            if(dayWise != null)
+            {
+                campaignTracking.Day1Clicks = GetCount(dayWise, 0);
+                campaignTracking.Day2Clicks = GetCount(dayWise, 1);
+                campaignTracking.Day3Clicks = GetCount(dayWise, 2);
+                campaignTracking.Day4Clicks = GetCount(dayWise, 3);
+                campaignTracking.Day5Clicks = GetCount(dayWise, 4);
+                campaignTracking.Day6Clicks = GetCount(dayWise, 5);
+                campaignTracking.Day7Clicks = GetCount(dayWise, 6);
+                campaignTracking.Day7PlusClicks = dayWise.Sum();
+            }
             db.SaveChanges();
 
             return campaignTracking;
         }
 
+        public static long GetCount(List<long> dayWise, int index)
+        {
+            long dayWiseCount = 0;
+            try
+            {
+                dayWiseCount = dayWise[index];
+                return dayWiseCount;
+            }
+            catch (Exception)
+            {
+                //
+            }
+            return dayWiseCount;
+        }
     }
 }

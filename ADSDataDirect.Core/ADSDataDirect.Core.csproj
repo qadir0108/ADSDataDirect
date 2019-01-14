@@ -136,6 +136,14 @@
     <Compile Include="Migrations\201809071448232_Opener.Designer.cs">
       <DependentUpon>201809071448232_Opener.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201901091715570_Ez.cs" />
+    <Compile Include="Migrations\201901091715570_Ez.Designer.cs">
+      <DependentUpon>201901091715570_Ez.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Migrations\201901141829579_Ez1.cs" />
+    <Compile Include="Migrations\201901141829579_Ez1.Designer.cs">
+      <DependentUpon>201901141829579_Ez1.cs</DependentUpon>
+    </Compile>
     <Compile Include="Repository\GenericRepository.cs" />
     <Compile Include="Repository\UnitOfWork.cs" />
     <Compile Include="Entities\WFPRole.cs" />
@@ -147,6 +155,8 @@
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Entities\WFPICTContext.cs" />
+    <Compile Include="Static\DMA.cs" />
+    <Compile Include="Static\DmaLookup.cs" />
     <Compile Include="Static\SfidLookup.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -193,6 +203,12 @@
     </EmbeddedResource>
     <EmbeddedResource Include="Migrations\201809071448232_Opener.resx">
       <DependentUpon>201809071448232_Opener.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901091715570_Ez.resx">
+      <DependentUpon>201901091715570_Ez.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201901141829579_Ez1.resx">
+      <DependentUpon>201901141829579_Ez1.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>

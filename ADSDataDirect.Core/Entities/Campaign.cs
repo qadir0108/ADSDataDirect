@@ -59,6 +59,7 @@ namespace ADSDataDirect.Core.Entities
         public DateTime? ReBroadcastedDate { get; set; }
         public long ReBroadcastedQuantity { get; set; }
         public string ReBroadcastedOrderNumber { get; set; }
+        public string ReBroadcastedURL { get; set; } // RTG URL
 
         public Guid? AssetsId { get; set; }
         public CampaignAsset Assets { get; set; }

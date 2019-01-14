@@ -6,6 +6,7 @@
         Tracking2,
         Tracking3,
         Tracking4,
-        ReTargeting
+        TrackingReTargeting,
+        TrackingStrat
     }
 }

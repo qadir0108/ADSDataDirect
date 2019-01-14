@@ -54,6 +54,19 @@ namespace ADSDataDirect.Web.Models
         public bool IsDynamicCoding { get; set; }
         public string DynamicCodingFile { get; set; }
 
+        // Custom Reporting Model
+        public string OpenModelLinksFile { get; set; }
+        public string OpenModelImageFile { get; set; }
+        public string SFDClientId { get; set; }
+        public bool IsReportType { get; set; } // Static or Dataroma
+
+        public string ClickMeterGroupId { get; set; } // campaignId=5681807
+        public string ClickMeterRotatorLinkId { get; set; } // DatapointId 358427750
+        public string ClickMeterRotatorLink { get; set; } // https://httpslink.com/2781a
+        public string EzStates { get; set; }
+        public string EzDMAs { get; set; }
+        public string EzLinksFile { get; set; }
+
         public CampaignAsset Assets { get; set; }
 
         public ICollection<CampaignSegmentVm> Segments { get; set; }

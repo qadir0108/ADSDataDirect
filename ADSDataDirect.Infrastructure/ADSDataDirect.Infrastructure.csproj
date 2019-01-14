@@ -112,6 +112,12 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth0\____.cs" />
+    <Compile Include="ClickMeter\ClickMeterReport.cs" />
+    <Compile Include="ClickMeter\ClickMeterLink.cs" />
+    <Compile Include="ClickMeter\ClickMeterCampaign.cs" />
+    <Compile Include="ClickMeter\ClickMeterManager.cs" />
+    <Compile Include="ClickMeter\ClickMeterHitResponse.cs" />
+    <Compile Include="ClickMeter\ClickMeterModelProcessor.cs" />
     <Compile Include="Common\StringHelper.cs" />
     <Compile Include="Common\StringListRandomizer.cs" />
     <Compile Include="Creatives\CreativeHelper.cs" />
@@ -121,6 +127,9 @@
     <Compile Include="DataFiles\SegmentResponse1.cs" />
     <Compile Include="DataReports\CustomerOrdersStatusVm.cs" />
     <Compile Include="DataReports\CustomerOrdersStatusReports.cs" />
+    <Compile Include="Db\CampaignMonitoringVm.cs" />
+    <Compile Include="EZanga\EZangaCampaign.cs" />
+    <Compile Include="EZanga\EZangaManager.cs" />
     <Compile Include="ReportingModel\ClickModeler.cs" />
     <Compile Include="ReportingModel\Randomizer.cs" />
     <Compile Include="TemplateReports\TemplateReportDetailVm.cs" />
@@ -151,6 +160,7 @@
     <Compile Include="Db\CampaignTrackingVm.cs" />
     <Compile Include="TemplateReports\ITrackingReport.cs" />
     <Compile Include="TemplateReports\TrackingReportTemplate12.cs" />
+    <Compile Include="TemplateReports\TrackingReportTemplateStrat.cs" />
     <Compile Include="TemplateReports\TrackingReportTemplate34.cs" />
     <Compile Include="S3\S3FileManager.cs" />
     <Compile Include="MailChimps\MailChimpProcessor.cs" />

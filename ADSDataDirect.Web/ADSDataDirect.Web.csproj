@@ -370,6 +370,7 @@
     <Content Include="Content\css\select2.min.css" />
     <Content Include="Content\PagedList.css" />
     <Content Include="css\bootstrap-datetimepicker.min.css" />
+    <Content Include="css\bootstrap-select.min.css" />
     <Content Include="css\bootstrap.min.css" />
     <Content Include="css\build.css" />
     <Content Include="css\font-awesome.min.css" />
@@ -523,6 +524,7 @@
     <Content Include="js\additional-methods.min.js" />
     <Content Include="js\bootstrap-datetimepicker.min.js" />
     <Content Include="js\bootstrap-select.js" />
+    <Content Include="js\bootstrap-select.min.js" />
     <Content Include="js\bootstrap.js" />
     <Content Include="js\bootstrap.min.js" />
     <Content Include="js\googlemap.js" />
@@ -872,7 +874,6 @@
     <Content Include="Views\Shared\_LoginPartial.cshtml" />
     <Content Include="Views\Shared\_Header.cshtml" />
     <Content Include="Views\Shared\_LayoutDashboard.cshtml" />
-    <Content Include="Views\Shared\Notification.cshtml" />
     <Content Include="Views\Shared\Success.cshtml" />
     <Content Include="Views\Campaigns\Create.cshtml" />
     <Content Include="Views\Campaigns\Delete.cshtml" />
@@ -928,10 +929,13 @@
     <Content Include="Views\Keyword\New.cshtml" />
     <Content Include="Views\OpenModel\View.cshtml" />
     <Content Include="Views\OpenModel\SaveInput.cshtml" />
-    <Content Include="Templates\ReTargeting.xlsx" />
+    <Content Include="Templates\TrackingReTargeting.xlsx" />
     <Content Include="Views\Campaigns\IndexNXS.cshtml" />
     <Content Include="Views\Customer\IndexNXS.cshtml" />
     <Content Include="Views\Customer\NewNXS.cshtml" />
+    <Content Include="Templates\TrackingStrat.xlsx" />
+    <Content Include="Views\Testing\EditTestingNXS.cshtml" />
+    <Content Include="Views\Tracking\Monitoring.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

@@ -26,13 +26,13 @@
 					<div class="menu-button">
                         @System.Configuration.ConfigurationManager.AppSettings["ClientName"]
 					</div>
-					<ul data-breakpoint="800" class="flexnav">
-						@if (isLoggedIn && ____.___)
+                    <ul data-breakpoint="800" class="flexnav">
+                        @if (isLoggedIn && ____.___)
                         {
                             var userIdentity = HttpContext.Current.User.Identity as ClaimsIdentity;
                             var roles = userIdentity.Claims.Where(x => x.Type == ClaimTypes.Role).Select(claim => claim.Value).ToArray();
                             var claims = userIdentity.Claims.Where(x => x.Type == ClaimTypes.UserData).Select(claim => claim.Value).ToList();
-                            
+
                             <li class="active">
                                 <a href="~/Campaigns">Orders</a>
                             </li>
@@ -44,9 +44,18 @@
                             </li>
                             if (isAdmin)
                             {
-                                <li class="active">
-                                    <a href="~/Notification">Notifications</a>
-                                </li>
+                                if (isNXS)
+                                {
+                                    <li class="active">
+                                        <a href="~/Tracking/Monitoring">Monitoring</a>
+                                    </li>
+                                }
+                                else
+                                {
+                                    <li class="active">
+                                        <a href="~/Notification">Notifications</a>
+                                    </li>   
+                                }
                             }
                             <li>
                                 <a href="#">@HttpContext.Current.User.Identity.Name</a>
@@ -69,12 +78,12 @@
                         }
                         else
                         {
-							<li>
-								<a href="/Account/Login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
-							</li>
-						}
+                            <li>
+                                <a href="/Account/Login"><span class="glyphicon glyphicon-log-in"></span> Login</a>
+                            </li>
+                        }
 
-					</ul>
+                    </ul>
 				</div>
 			</div>
 		</div>

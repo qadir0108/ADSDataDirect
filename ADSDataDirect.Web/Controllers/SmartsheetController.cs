@@ -44,7 +44,7 @@ namespace ADSDataDirect.Web.Controllers
                         // Pi Ja
                     }
                 }
-                return Json(new JsonResponse() { IsSucess = true, Result = $"Smartsheet ({sheetName}) - {count} orders has been imported to Verum sucessfully." }, JsonRequestBehavior.AllowGet);
+                return Json(new JsonResponse() { IsSucess = true, Result = $"Smartsheet ({sheetName}) - {count} orders has been imported to NXS sucessfully." }, JsonRequestBehavior.AllowGet);
             }
             catch (Exception ex)
             {

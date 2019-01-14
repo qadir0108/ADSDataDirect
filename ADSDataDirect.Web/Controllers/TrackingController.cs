@@ -13,6 +13,7 @@ using ADSDataDirect.Infrastructure.Image;
 using ADSDataDirect.Infrastructure.ProData;
 using ADSDataDirect.Infrastructure.Db;
 using ADSDataDirect.Infrastructure.TemplateReports;
+using ADSDataDirect.Infrastructure.ClickMeter;
 
 namespace ADSDataDirect.Web.Controllers
 {
@@ -51,6 +52,50 @@ namespace ADSDataDirect.Web.Controllers
                 foreach (var campaignTracking in campaign.Trackings)
                 {
                     var model = CampaignTrackingVm.FromCampaignTracking(campaign, campaignTracking);
+                    trackingVms.Add(model);
+                }
+            }
+
+            ViewBag.Status = StatusList;
+            ViewBag.SearchStatus = StatusList;
+
+            // Paging
+            int pageNumber = (sc.Page ?? 1);
+            return View(trackingVms.ToPagedList(pageNumber, PageSize));
+        }
+
+        public ActionResult Monitoring(CampaignSearchVm sc)
+        {
+            ViewBag.CurrentSort = sc.SortOrder;
+            ViewBag.CampaignNameSortParm = sc.SortOrder == "CampaignName" ? "CampaignName_desc" : "CampaignName";
+            ViewBag.BroadcastDateSortParm = sc.SortOrder == "BroadcastDate" ? "BroadcastDate_desc" : "BroadcastDate";
+            ViewBag.CreatedBySortParm = sc.SortOrder == "CreatedBy" ? "CreatedBy_desc" : "CreatedBy";
+            ViewBag.StatusSortParm = sc.SortOrder == "Status" ? "Status_desc" : "Status";
+            ViewBag.OrderNumberSortParm = sc.SortOrder == "OrderNumber" ? "OrderNumber_desc" : "OrderNumber";
+
+            var campagins = Db.Campaigns
+                .Include(x => x.Testing)
+                .Include(x => x.Approved)
+                .Include(x => x.ProDatas)
+                .Include(x => x.Trackings)
+                .Include(x => x.Segments)
+                .OrderByDescending(x => x.CreatedAt)
+                .Where(x => x.Approved != null && (x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring)));
+
+            campagins = FilterSortCampaigns(campagins, sc);
+
+            ViewBag.BasicOrderNumber = OrderNumberList;
+            ViewBag.BasicStatus = StatusList;
+            ViewBag.AdvancedStatus = StatusList;
+            ViewBag.AdvancedUser = UsersList;
+            ViewBag.AdvancedWhiteLabel = CustomersWithWLList;
+
+            var trackingVms = new List<CampaignMonitoringVm>();
+            foreach (var campaign in campagins)
+            {
+                foreach (var campaignTracking in campaign.Trackings)
+                {
+                    var model = CampaignMonitoringVm.FromCampaignTracking(campaign, campaignTracking);
                     trackingVms.Add(model);
                 }
             }
@@ -113,6 +158,10 @@ namespace ADSDataDirect.Web.Controllers
                 TempData["Error"] = "Campaign is not passed through Testing and Approved phase.";
                 return RedirectToAction("Index", "Campaigns");
             }
+
+            Session["id"] = id;
+            Session["OrderNumber"] = campaign.OrderNumber;
+
             var trackingVms = new List<CampaignTrackingVm>();
             foreach (var campaignTracking in campaign.Trackings)
             {
@@ -120,6 +169,9 @@ namespace ADSDataDirect.Web.Controllers
                 trackingVms.Add(model);
             }
             trackingVms = trackingVms.OrderBy(x => x.OrderNumber).ToList();
+
+            ViewBag.Templates = new SelectList(ReportTemplates, "Value", "Text");
+
             return View(trackingVms);
         }
 
@@ -167,6 +219,7 @@ namespace ADSDataDirect.Web.Controllers
 
             if (whiteLable.IsUseOpenModel)
             {
+                if (string.IsNullOrEmpty(campaign.Assets.OpenModelImageFile)) throw new AdsException("Image file not found");
                 S3FileManager.Download(campaign.Assets.OpenModelImageFile, screenshotFilePathTemp);
             }
             else
@@ -184,13 +237,17 @@ namespace ADSDataDirect.Web.Controllers
             {
                 case "Tracking1":
                 case "Tracking2":
-                case "ReTargetting":
+                case "TrackingReTargetting":
                     report = new TrackingReportTemplate12(reportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
                     ScreenshotHeight = 750;
                     break;
                 case "Tracking3":
                 case "Tracking4":
                     report = new TrackingReportTemplate34(reportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
+                    ScreenshotHeight = 550;
+                    break;
+                case "TrackingStrat":
+                    report = new TrackingReportTemplateStrat(reportTemplate, campaign.Approved.WhiteLabel, whiteLable.CompanyLogo, screenshotFilePath);
                     ScreenshotHeight = 550;
                     break;
                 default:
@@ -207,11 +264,12 @@ namespace ADSDataDirect.Web.Controllers
             return File(outputFilePath, "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", outputFileName);
         }
 
-        public JsonResult RefreshProData(Guid? id)
+        public JsonResult RefreshFromVendor(Guid? id)
         {
             try
             {
                 Campaign campaign = Db.Campaigns
+                    .Include(x => x.Testing)
                     .Include(x => x.Approved)
                     .Include(x => x.Segments)
                     .Include(x => x.Trackings)
@@ -225,7 +283,15 @@ namespace ADSDataDirect.Web.Controllers
                     throw new AdsException("Campaign not found.");
                 }
 
-                ProDataApiManager.FetchAndUpdateTrackings(Db, campaign);
+                // On refresh it is deciding which vendor to call
+                if (IsNxs)
+                {
+                    ClickMeterModelProcessor.PopulateFromClickMeter(Db, campaign);
+                }
+                else
+                {
+                    ProDataApiManager.FetchAndUpdateTrackings(Db, campaign);
+                }
 
                 return Json(new JsonResponse() { IsSucess = true });
             }

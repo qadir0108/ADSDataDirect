@@ -13,7 +13,7 @@ namespace ADSDataDirect.Web
             //bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
             //            "~/Scripts/jquery.validate*"));
 
-            //// Use the development version of Modernizr to develop with and learn from. Then, when you're
+            //// Use the development vers0ion of Modernizr to develop with and learn from. Then, when you're
             //// ready for production, use the build tool at http://modernizr.com to pick only the tests you need.
             //bundles.Add(new ScriptBundle("~/bundles/modernizr").Include(
             //            "~/Scripts/modernizr-*"));
@@ -44,7 +44,8 @@ namespace ADSDataDirect.Web
                 "~/Content/css/select2.min.css",
                 "~/css/highcharts.css",
                 "~/css/sweetalert.css",
-                "~/css/bootstrap-datetimepicker.min.css"
+                "~/css/bootstrap-datetimepicker.min.css",
+                "~/css/bootstrap-select.min.css"
                 ));
 
             bundles.Add(new ScriptBundle("~/Theme/JS").Include(
@@ -68,7 +69,8 @@ namespace ADSDataDirect.Web
                  "~/Scripts/moment.min.js",
                  "~/js/jquery.hotkeys.js",
                  "~/js/spinner.js",
-                 "~/js/bootstrap-datetimepicker.min.js"
+                 "~/js/bootstrap-datetimepicker.min.js",
+                 "~/js/bootstrap-select.min.js"
             ));
 
             bundles.Add(new ScriptBundle("~/Theme/jQueryUI").Include(

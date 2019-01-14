@@ -24,10 +24,10 @@
             Campaign Tracking
         </div>
         <div class="col-md-1 listing-action" id="divTools" style="text-align: right">
-        @if (isAdmin)
-        {
-            <a href="#" class="btn btn-default" id="btnRefresh" data-tooltip="tooltip" title="Refresh from Vendor"><span class="glyphicon glyphicon-refresh"></span></a>
-        }
+            @if (isAdmin)
+            {
+                <a href="#" class="btn btn-default" id="btnRefresh" data-tooltip="tooltip" title="Refresh from Vendor"><span class="glyphicon glyphicon-refresh"></span></a>
+            }
         </div>
     </div>
 
@@ -94,7 +94,9 @@
                     </td>
                     <td style="min-width: 90px">
                         <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
-                        <a href="~/Tracking/DownloadReport?id=@item.CampaignId&trackingId=@item.TrackingId" target="_blank" class="btn btn-sm btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
+                        <a href="#"
+                           data-toggle="modal" data-target="#myModal" target="_blank"
+                           data-id='@item.CampaignId' data-trackingid='@item.TrackingId' class="btn btn-sm btn-default" id="btnShowDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
                     </td>
                 </tr>
                 <tr>
@@ -205,52 +207,120 @@
 
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Download Report</h4>
+            </div>
+            <form id="frm" role="form">
+                <div class="modal-body">
+                    <input id="txtId" name="txtId" type="hidden">
+                    <input id="txttrackingId" name="txttrackingId" type="hidden">
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPasswordRetype">Select Template<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                            </div>
+                            @Html.DropDownList("Templates", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-primary btnDownload" id="btnDownload">Download</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script type="text/javascript">
 
-                    var wfp = wfp || {};
+    var wfp = wfp || {};
 
-                    $(document).ready(function () {
+    $(document).ready(function () {
 
-                        $(".divDrillDown").hide();
+        $(".divDrillDown").hide();
 
-                        $(".btnDrill").click(function () {
-                            debugger;
-                            var id = $(this).data('id');
-                            $("#divDrillDown" + id).slideToggle("slow");
-                        });
+        $(".btnDrill").click(function (e) {
+            debugger;
+            e.preventDefault();
+            var id = $(this).data('id');
+            $("#divDrillDown" + id).slideToggle("slow");
+        });
 
-                        $('#btnRefresh').click(function (e) {
-                            debugger;
+        $('#btnRefresh').click(function (e) {
+            debugger;
 
-                            e.preventDefault();
+            e.preventDefault();
 
-                            var dataToPost = {
-                                id: $('#item_CampaignId').val()
-                            };
+            var dataToPost = {
+                id: $('#item_CampaignId').val()
+            };
 
-                            $.ajax({
-                                type: "POST",
-                                url: "/Tracking/RefreshProData",
-                                data: JSON.stringify(dataToPost),
-                                contentType: "application/json; charset=utf-8",
-                                success: function (response) {
-                                    debugger;
-                                    if (response === "") wfp.reload();
-                                    if (response.IsSucess) {
-                                        wfp.showSuccess('Data has been refreshed successfully.');
-                                        wfp.reload();
-                                    } else {
-                                        wfp.showError(response.ErrorMessage);
-                                    }
-                                },
-                                failure: function (response) {
-                                    wfp.showError('There is erorr in service call.');
-                                },
-                                complete: function () {
-                                }
-                            });
+            $.ajax({
+                type: "POST",
+                url: "/Tracking/RefreshFromVendor",
+                data: JSON.stringify(dataToPost),
+                contentType: "application/json; charset=utf-8",
+                success: function (response) {
+                    debugger;
+                    if (response === "") wfp.reload();
+                    if (response.IsSucess) {
+                        wfp.showSuccess('Data has been refreshed successfully.');
+                        wfp.reload();
+                    } else {
+                        wfp.showError(response.ErrorMessage);
+                    }
+                },
+                failure: function (response) {
+                    wfp.showError('There is erorr in service call.');
+                },
+                complete: function () {
+                }
+            });
 
-                        });
+        });
 
-                    });
-                </script>
+        $('#myModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget);
+            var modal = $(this);
+            $('#frm')[0].reset();
+            debugger;
+            $('#txtId').val(button.data('id'));
+            $('#txttrackingId').val(button.data('trackingid'));
+            //modal.find('.modal-title').text('Send to Vendor : ' + button.data('name') + ', Order Number : ' + button.data('order'));
+        });
+
+        $('#btnDownload').click(function (e) {
+            debugger;
+            e.preventDefault();
+
+            if ($('#Templates').find('option:selected').val() === '') {
+                wfp.showError("Please select Template");
+                return;
+            }
+
+            var id = $('#txtId').val();
+            var trackingId = $('#txttrackingId').val();
+            var template = $('#Templates').find('option:selected').val();
+
+            var url = '../../Tracking/DownloadReport?id=' + id + '&trackingId=' + trackingId + '&template=' + template;
+            //window.open(url);
+            var win = window.open(url, '_blank');
+            win.focus();
+
+            $('#myModal').modal('hide');
+        });
+
+    });
+</script>

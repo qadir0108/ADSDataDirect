@@ -1,0 +1,293 @@
+﻿@using System.Threading.Tasks
+@using ADSDataDirect.Core.Entities
+@using ADSDataDirect.Enums
+@using ADSDataDirect.Web.Models
+@using PagedList.Mvc
+
+@model PagedList.IPagedList<ADSDataDirect.Infrastructure.Db.CampaignMonitoringVm>
+
+@{
+    ViewData["Title"] = "Campaign Monitoring";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+
+    var loggedInUser = Session["user"] as WfpUser;
+    var isLoggedIn = loggedInUser != null;
+    var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
+}
+
+<div class="container">
+
+    <div class="row" style="margin-top: 5px">
+        <div class="col-md-8">
+            <div class="headertab">
+                Campaign Monitoring (ClickMeter)
+            </div>
+        </div>
+
+        <div class="col-md-3 no-left-padding" id="divSearch" data-tooltip="tooltip" title="Search">
+            <form id="frmSearch" method="post">
+                <div class="input-group">
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-search"></span>
+                    </div>
+                    <input type="hidden" id="searchType" name="searchType" value="basic" />
+                    <input type="hidden" id="clearSessionId" name="clearSessionId" value="" />
+                    <input type="text" id="basicString" name="basicString" class="form-control input-md" placeholder="Type to search" value="@ViewBag.searchString">
+                    <div class="input-group-addon">
+                        <a href="#" id="btnClearSearch" name="btnClearSearch" data-tooltip="tooltip" title="Clear Search"><span class="glyphicon glyphicon-remove"></span></a>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="col-md-1" id="divTools" style="text-align:left">
+            <button class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
+                <span class="glyphicon glyphicon-search"></span>
+            </button>
+        </div>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    Order #
+                </th>
+                <th>
+                    Campaign Name
+                </th>
+                <th>
+                    Quantity
+                </th>
+                <th>
+                    Clicks Needed
+                </th>
+                <th>
+                    AM/PM
+                </th>
+                <th>
+                    Start Date
+                </th>
+                <th>
+                    ClickMeter Link
+                </th>
+                <th>
+                    Total Clicks
+                </th>
+                <th>
+                    Day7+ Clicks
+                </th>
+                <th>
+                    Campaign Fill
+                </th>
+                <th>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in Model)
+        {
+            var divDrillDownId = "divDrillDown" + item.TrackingId;
+            <tr>
+                <td>
+                    @Html.HiddenFor(modelItem => item.OrderNumber)
+                    @Html.DisplayFor(modelItem => item.OrderNumber)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CampaignName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Quantity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClicksNeeded)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AMPM)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.ClickMeterLink)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Total)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Day7PlusClicks)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CampaignFill)
+                </td>
+                <td style="min-width: 90px">
+                    <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
+                </td>
+                </tr>
+                <tr>
+                <td colspan="11">
+                    <div id="@divDrillDownId" class="divDrillDown">
+                        <table class="table table-responsive table-hover">
+                            <thead>
+                                <tr>
+                                    <th>
+                                        Day1 Clicks
+                                    </th>
+                                    <th>
+                                        Day1
+                                    </th>
+                                    <th>
+                                        Day2 Clicks
+                                    </th>
+                                    <th>
+                                        Day2
+                                    </th>
+                                    <th>
+                                        Day3 Clicks
+                                    </th>
+                                    <th>
+                                        Day3
+                                    </th>
+                                    <th>
+                                        Day4 Clicks
+                                    </th>
+                                    <th>
+                                        Day4
+                                    </th>
+                                    <th>
+                                        Day5 Clicks
+                                    </th>
+                                    <th>
+                                        Day5
+                                    </th>
+                                    <th>
+                                        Day6 Clicks
+                                    </th>
+                                    <th>
+                                        Day6
+                                    </th>
+                                    <th>
+                                        Day7 Clicks
+                                    </th>
+                                    <th>
+                                        Day7
+                                    </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day1Clicks)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day1)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day2Clicks)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day2)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day3Clicks)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day3)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day4Clicks)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day4)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day5Clicks)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day5)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day6Clicks)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day6)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day7Clicks)
+                                    </td>
+                                    <td>
+                                        @Html.DisplayFor(modelItem => item.Day7)
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+
+                </td>
+            </tr>
+        }
+        </tbody>
+    </table>
+    
+    <div class="row">
+        <div class="col-md-12 text-center">
+            <div class="page-count">
+                Page @(Model.PageCount < Model.PageNumber ? 0 : Model.PageNumber) of @Model.PageCount
+            </div>
+            <div class="tp-pagination">
+               @Html.PagedListPager(Model, page => Url.Action("Monitoring", new
+          {
+              page,
+              sortOrder = ViewBag.CurrentSort,
+              searchType = ViewBag.SearchType,
+              basicString = ViewBag.BasicStringSearched,
+              basicStatus = ViewBag.BasicStatusSearched,
+              advancedStatus = ViewBag.AdvancedStatusSearched,
+              advancedUser = ViewBag.AdvancedUserSearched,
+              campaignName = ViewBag.CampaignName,
+              advancedWhiteLabel = ViewBag.AdvancedWhiteLabelSearched,
+              orderedFrom = ViewBag.OrderedFrom,
+              orderedTo = ViewBag.OrderedTo,
+              broadcastFrom = ViewBag.BroadcastFrom,
+              broadcastTo = ViewBag.BroadcastTo
+          }), new PagedListRenderOptions() { })
+            </div>
+        </div>
+    </div>
+
+</div>
+<!-- Modal -->
+@{
+    Html.RenderPartial("_Search", new CampaignSearchVm());
+}
+<script type="text/javascript">
+
+                var wfp = wfp || {};
+
+                $(document).ready(function () {
+
+                    $('#searchString').keypress(function (e) {
+                        if (e.which === 13) {
+                            $('form#frmSearch').submit();
+                            return false;
+                        }
+                    });
+
+                    $('#btnClearSearch').click(function () {
+                        debugger;
+                        $('#clearSessionId').val('1');
+                        $('form#frmSearch').submit();
+                        //wfp.reload('/Status/Index');
+                        return false;
+                    });
+
+                    $(".divDrillDown").hide();
+
+                    $(".btnDrill").click(function (e) {
+                        debugger;
+                        e.preventDefault();
+                        var id = $(this).data('id');
+                        $("#divDrillDown" + id).slideToggle("slow");
+                    });
+
+                });
+</script>
