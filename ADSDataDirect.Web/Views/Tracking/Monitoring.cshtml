@@ -18,7 +18,7 @@
 <div class="container">
 
     <div class="row" style="margin-top: 5px">
-        <div class="col-md-8">
+        <div class="col-md-7">
             <div class="headertab">
                 Campaign Monitoring (ClickMeter)
             </div>
@@ -39,10 +39,13 @@
                 </div>
             </form>
         </div>
-        <div class="col-md-1" id="divTools" style="text-align:left">
+        <div class="col-md-2" id="divTools" style="text-align:left">
             <button class="btn btn-default" href="#" data-toggle="modal" data-target="#searchModal" data-tooltip="tooltip" title="Search">
                 <span class="glyphicon glyphicon-search"></span>
             </button>
+            <a href="@Url.Action("Settings", "Notification")" title="Settings" data-tooltip="tooltip" class="btn btn-default">
+                <span class="fa fa-cog"></span>
+            </a>
         </div>
     </div>
 
@@ -73,9 +76,9 @@
                 <th>
                     Total Clicks
                 </th>
-                <th>
+                @*<th>
                     Day7+ Clicks
-                </th>
+                </th>*@
                 <th>
                     Campaign Fill
                 </th>
@@ -84,147 +87,248 @@
             </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model)
-        {
-            var divDrillDownId = "divDrillDown" + item.TrackingId;
-            <tr>
-                <td>
-                    @Html.HiddenFor(modelItem => item.OrderNumber)
-                    @Html.DisplayFor(modelItem => item.OrderNumber)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CampaignName)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Quantity)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ClicksNeeded)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.AMPM)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.StartDate)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.ClickMeterLink)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Total)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Day7PlusClicks)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.CampaignFill)
-                </td>
-                <td style="min-width: 90px">
-                    <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
-                </td>
+            @foreach (var item in Model)
+            {
+                var divDrillDownId = "divDrillDown" + item.TrackingId;
+                var divDrillDownId1 = "divDrillDown1" + item.TrackingId;
+                <tr>
+                    <td>
+                        @Html.HiddenFor(modelItem => item.OrderNumber)
+                        @Html.DisplayFor(modelItem => item.OrderNumber)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CampaignName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Quantity)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClicksNeeded)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.AMPM)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.StartDate)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.ClickMeterLink)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Total)
+                    </td>
+                    @*<td>
+                        @Html.DisplayFor(modelItem => item.Day7PlusClicks)
+                    </td>*@
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CampaignFill)
+                    </td>
+                    <td style="min-width: 130px">
+                        <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
+                        <a href="#" class="btn btn-sm btn-default btnDrill1" data-id="@item.TrackingId" data-tooltip="tooltip" title="Rules"><span class="glyphicon glyphicon-bell"></span></a>
+                        <a href="#" class="btn btn-sm btn-default btnComplete" data-id="@item.CampaignId" data-tooltip="tooltip" title="Complete"><span class="glyphicon glyphicon-check"></span></a>
+
+                    </td>
                 </tr>
                 <tr>
-                <td colspan="11">
-                    <div id="@divDrillDownId" class="divDrillDown">
-                        <table class="table table-responsive table-hover">
-                            <thead>
-                                <tr>
-                                    <th>
-                                        Day1 Clicks
-                                    </th>
-                                    <th>
-                                        Day1
-                                    </th>
-                                    <th>
-                                        Day2 Clicks
-                                    </th>
-                                    <th>
-                                        Day2
-                                    </th>
-                                    <th>
-                                        Day3 Clicks
-                                    </th>
-                                    <th>
-                                        Day3
-                                    </th>
-                                    <th>
-                                        Day4 Clicks
-                                    </th>
-                                    <th>
-                                        Day4
-                                    </th>
-                                    <th>
-                                        Day5 Clicks
-                                    </th>
-                                    <th>
-                                        Day5
-                                    </th>
-                                    <th>
-                                        Day6 Clicks
-                                    </th>
-                                    <th>
-                                        Day6
-                                    </th>
-                                    <th>
-                                        Day7 Clicks
-                                    </th>
-                                    <th>
-                                        Day7
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <tr>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day1Clicks)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day1)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day2Clicks)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day2)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day3Clicks)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day3)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day4Clicks)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day4)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day5Clicks)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day5)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day6Clicks)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day6)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day7Clicks)
-                                    </td>
-                                    <td>
-                                        @Html.DisplayFor(modelItem => item.Day7)
-                                    </td>
-                                </tr>
-                            </tbody>
-                        </table>
-                    </div>
+                    <td colspan="12">
+                        <div id="@divDrillDownId" class="divDrillDown">
+                            <table class="table table-responsive table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Day1 Clicks
+                                        </th>
+                                        <th>
+                                            Day1
+                                        </th>
+                                        <th>
+                                            Day2 Clicks
+                                        </th>
+                                        <th>
+                                            Day2
+                                        </th>
+                                        <th>
+                                            Day3 Clicks
+                                        </th>
+                                        <th>
+                                            Day3
+                                        </th>
+                                        <th>
+                                            Day4 Clicks
+                                        </th>
+                                        <th>
+                                            Day4
+                                        </th>
+                                        <th>
+                                            Day5 Clicks
+                                        </th>
+                                        <th>
+                                            Day5
+                                        </th>
+                                        <th>
+                                            Day6 Clicks
+                                        </th>
+                                        <th>
+                                            Day6
+                                        </th>
+                                        <th>
+                                            Day7 Clicks
+                                        </th>
+                                        <th>
+                                            Day7
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day1Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day1)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day2Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day2)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day3Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day3)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day4Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day4)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day5Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day5)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day6Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day6)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day7Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day7)
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
 
-                </td>
-            </tr>
-        }
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="12">
+                        <div id="@divDrillDownId1" class="divDrillDown1">
+                            <table class="table table-responsive table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>
+                                            Day
+                                        </th>
+                                        <th>
+                                            Click
+                                        </th>
+                                        <th>
+                                            Rule
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayFor(modelItem => item.Day1)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day1Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.Raw(item.Day1Rule)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayFor(modelItem => item.Day2)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day2Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day2Rule)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayFor(modelItem => item.Day3)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day3Clicks)
+                                        </td>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day3Rule)
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayFor(modelItem => item.Day4)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day4Clicks)
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayFor(modelItem => item.Day5)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day5Clicks)
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayFor(modelItem => item.Day6)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day6Clicks)
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                    <tr>
+                                        <th>
+                                            @Html.DisplayFor(modelItem => item.Day7)
+                                        </th>
+                                        <td>
+                                            @Html.DisplayFor(modelItem => item.Day7Clicks)
+                                        </td>
+                                        <td>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                    </td>
+                </tr>
+            }
         </tbody>
     </table>
     
@@ -289,5 +393,62 @@
                         $("#divDrillDown" + id).slideToggle("slow");
                     });
 
+                    $(".divDrillDown1").hide();
+
+                    $(".btnDrill1").click(function (e) {
+                        debugger;
+                        e.preventDefault();
+                        var id = $(this).data('id');
+                        $("#divDrillDown1" + id).slideToggle("slow");
+                    });
+
+                    $('.btnComplete').click(function (e) {
+                        debugger;
+
+                        e.preventDefault();
+
+                        var dataToPost = {
+                            id: $(this).data('id')
+                        };
+
+                        wfp.showSwal("Are you sure to complete this Campaign?",
+                            function () {
+
+                                debugger;
+                                $.ajax({
+                                    type: "POST",
+                                    url: "/Campaigns/CompleteCampaign",
+                                    data: JSON.stringify(dataToPost),
+                                    contentType: "application/json; charset=utf-8",
+                                    success: function (response) {
+                                        debugger;
+                                        if (response === "") wfp.reload();
+                                        if (response.IsSucess) {
+                                            debugger;
+                                            wfp.showSuccess('Campaign has been completed successfully.');
+                                            wfp.redirectTo();
+                                        } else {
+                                            wfp.showError(response.ErrorMessage);
+                                        }
+                                    },
+                                    failure: function (response) {
+                                        wfp.showError('There is erorr in service call.');
+                                    },
+                                    complete: function () {
+                                    }
+                                });
+                            });
+                    });
+
                 });
 </script>
+
+<style>
+    .divDrillDown1 tr th:first-child {
+        width: 150px;
+    }
+
+    .divDrillDown1 tr th:first-child + td {
+        width: 180px;
+    }
+</style>

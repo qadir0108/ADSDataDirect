@@ -9,14 +9,21 @@ using ADSDataDirect.Enums;
 using Z.EntityFramework.Plus;
 using ADSDataDirect.Infrastructure.Emails;
 using ADSDataDirect.Infrastructure.ProData;
+using ADSDataDirect.Infrastructure.ClickMeter;
 
 namespace ADSDataDirect.Infrastructure.Notifications
 {
     public static class NotificationsProcessor
     {
+        static string ClientCode { get; } = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+
+        static bool IsNxs => ClientCode == Client.NXS.ToString();
+
         public static void FetchAndCheckForQcRules()
         {
-            DateTime dtFrom = DateTime.ParseExact("10/15/2017", "MM/dd/2017",CultureInfo.InvariantCulture);
+            //DateTime dtFrom = DateTime.ParseExact("10/15/2017", "MM/dd/2017",CultureInfo.InvariantCulture);
+            // For only campaigns of last 15 days 
+            DateTime dtFrom = DateTime.Now.AddDays(-30);
             using (var db = new WfpictContext())
             {
                 bool isAutoProcessTracking = false;
@@ -32,12 +39,14 @@ namespace ADSDataDirect.Infrastructure.Notifications
                     // any camp that is in monitoring or any whose any segment is in monitoring
                    
                     List<Campaign> campaigns = db.Campaigns
+                        .Include(x => x.Testing)
                         .Include(x => x.Approved)
                         .Include(x => x.Segments)
                         .Include(x => x.Trackings)
                         .Where(x => x.Status == (int)CampaignStatus.Monitoring || x.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
                         .Where(x => x.Approved != null)
                         .Where(x => DbFunctions.TruncateTime(x.CreatedAt) >= dtFrom)
+                        .Where(x => !string.IsNullOrEmpty(x.Testing.ClickMeterRotatorLinkId))
                         .ToList();
 
                     LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules processing {campaigns.Count} campaigns.");
@@ -46,7 +55,14 @@ namespace ADSDataDirect.Infrastructure.Notifications
                     int index = 1;
                     foreach (var campaign in campaigns)
                     {
-                        ProDataApiManager.FetchAndUpdateTrackings(db, campaign);
+                        if (IsNxs)
+                        {
+                            ClickMeterModelProcessor.PopulateFromClickMeter(db, campaign);
+                        }
+                        else
+                        {
+                            ProDataApiManager.FetchAndUpdateTrackings(db, campaign);
+                        }
                         LogHelper.AddLog(db, LogType.RulesProcessing, "", $"FetchAndCheckForQCRules completed {index} out of {campaigns.Count} campaigns.");
                         index++;
                     }
@@ -84,10 +100,21 @@ namespace ADSDataDirect.Infrastructure.Notifications
                 // pick camps of those notifs
                 var campaigns = (from c in db.Campaigns
                                 join n in db.Notifications on c.Id equals n.CampaignId
-                                where n.Status == (int)NotificationStatus.Found
-                                select c).Distinct().Include(x => x.Notifications).ToList();
+                                where n.Status == (int)NotificationStatus.Found 
+                                && (c.Status == (int)CampaignStatus.Monitoring || 
+                                    c.Segments.Any(s => s.SegmentStatus == (int)SegmentStatus.Monitoring))
+                                 select c)
+                                .Distinct()
+                                .Include(x => x.Testing)
+                                .Include(x => x.Trackings)
+                                .Include(x => x.Notifications)
+                                .OrderByDescending(x => x.CreatedAt)
+                                .ThenBy(x => x.OrderNumber)
+                                .ToList();
 
-                var vendor = db.Vendors.FirstOrDefault(x => x.Name.Contains("Pro") || x.Name.Contains("Test"));
+                var vendor = db.Vendors.FirstOrDefault(x => x.Name.ToLower().Contains("nxsda"));
+                if (vendor == null)
+                    vendor = db.Vendors.FirstOrDefault(x => x.Name.ToLower().Contains("test"));
 
                 if (campaigns.Count > 0)
                 {

@@ -8,6 +8,7 @@ using System.IO;
 using System.Net.Http;
 using System.Text;
 using System.Web.Mvc;
+using System.Web;
 
 namespace ADSDataDirect.Infrastructure.ClickMeter
 {
@@ -19,7 +20,8 @@ namespace ADSDataDirect.Infrastructure.ClickMeter
         private static string urlBase = $"http://apiv2.clickmeter.com";
 
         /// https://support.clickmeter.com/hc/en-us/articles/211037146
-        private static string urlCampaignCreate = $"/groups";
+        private static string urlCampaignsCreate = $"/groups";
+        private static string urlCampaignsSearch = "/groups?textSearch={0}";
         private static string urlCampaignDelete = "/groups/{0}";
         private static string urlRotatorLinkCreate = "/groups/{0}/datapoints";
 
@@ -113,6 +115,10 @@ namespace ADSDataDirect.Infrastructure.ClickMeter
                 rotatorLink.groupId = groupId;
                 return rotatorLink;
             }
+            catch (AdsException adsx)
+            {
+                throw new AdsException(adsx.Message);
+            }
             catch (Exception ex)
             {
                 DeleteCampaign(groupId);
@@ -132,7 +138,13 @@ namespace ADSDataDirect.Infrastructure.ClickMeter
 
         public static long CreateCampaign(ClickMeterCampaign campaign)
         {
-            string url = urlBase + urlCampaignCreate;
+            long id = SearchCampaign(campaign.name);
+            if (id != -1)
+            {
+                throw new AdsException(campaign.name + " with id = " + id + " already created");
+            }
+
+            string url = urlBase + urlCampaignsCreate;
             string data = campaign.ToJson();
             string responseContent = Post(url, data);
             var response = JsonConvert.DeserializeObject<ClickMeterCampaign>(responseContent);
@@ -143,6 +155,19 @@ namespace ADSDataDirect.Infrastructure.ClickMeter
         {
             string url = string.Format(urlBase + urlCampaignDelete, campaignId);
             return Delete(url);
+        }
+
+        public static long SearchCampaign(string campaignName)
+        {
+            long id = -1;
+            string url = string.Format(urlBase + urlCampaignsSearch, HttpUtility.UrlPathEncode(campaignName));
+            string responseContent = Get(url);
+            var response = JsonConvert.DeserializeObject<ClickMeterCampaignSearch>(responseContent);
+
+            if (response.entities != null && response.entities.Count > 0)
+                return response.entities.OrderBy(x => x.id).FirstOrDefault().id;
+
+            return id;
         }
 
         // Destination URL wise clicks

@@ -14,9 +14,12 @@
 
         public static readonly string KeyNotStartedInXHours = "NotStartedInXHours";
         public static readonly string KeyNotHitOpenRateIn24Hours = "NotHitOpenRateIn24Hours";
+        public static readonly string KeyNotHitOpenRateIn48Hours = "NotHitOpenRateIn48Hours";
         public static readonly string KeyNotHitOpenRateIn72Hours = "NotHitOpenRateIn72Hours";
         public static readonly string KeyNotHitClickRateIn24Hours = "NotHitClickRateIn24Hours";
+        public static readonly string KeyNotHitClickRateIn48Hours = "NotHitClickRateIn48Hours";
         public static readonly string KeyNotHitClickRateIn72Hours = "NotHitClickRateIn72Hours";
+
         public static readonly string KeyExceededOpenRateIn24Hours = "ExceededOpenRateIn24Hours";
         public static readonly string KeyExceededOpenRateIn72Hours = "ExceededOpenRateIn72Hours";
         public static readonly string KeyExceededClickRateIn24Hours = "ExceededClickRateIn24Hours";

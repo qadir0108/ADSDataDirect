@@ -53,44 +53,44 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
 
                     //ExcelHelper.AddImage(worksheetPart, LogoResized, 6, 1);
 
-                    Cell cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "L", 2);
+                    Cell cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "J", 1);
                     cell.CellValue = new CellValue(DateTime.Now.ToString(StringConstants.DateFormatSlashes));
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 10);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 4);
                     cell.CellValue = new CellValue(model.StartDate);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 11);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 5);
                     cell.CellValue = new CellValue(model.SubjectLine);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 13);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 6);
                     cell.CellValue = new CellValue(model.FromLine);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 14);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 7);
                     cell.CellValue = new CellValue(model.WhiteLabel);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 16);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 8);
                     cell.CellValue = new CellValue(model.OrderNumber);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 17);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 9);
                     cell.CellValue = new CellValue(model.CampaignName);
                     cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
                     if(!string.IsNullOrEmpty(model.IoNumber) && !model.IoNumber.EndsWith("RDP"))
                     {
-                        uint rowNumber = 18;
+                        uint rowNumber = 10;
                         foreach (var segment in model.Segments)
                         {
-                            cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", rowNumber);
+                            cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", rowNumber);
                             cell.CellValue = new CellValue(segment.SegmentNumber);
                             cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                            cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "D", rowNumber);
+                            cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", rowNumber);
                             cell.CellValue = new CellValue(segment.SegmentDataFileUrl);
                             cell.DataType = new EnumValue<CellValues>(CellValues.String);
                             rowNumber++;
@@ -98,62 +98,73 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                     }
 
                     // right side
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "L", 6);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "J", 2);
                     cell.CellValue = new CellValue(model.Quantity);
                     cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     // key stats
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 23);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 16);
                     cell.CellValue = new CellValue(model.Quantity);
                     cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 26);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 19);
                     cell.CellValue = new CellValue(model.Opened);
                     cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "H", 26);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "G", 19);
                     cell.CellValue = new CellValue(model.Desktop);
                     cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "L", 26);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "J", 19);
                     cell.CellValue = new CellValue(model.Mobile);
                     cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 29);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 21);
                     cell.CellValue = new CellValue(model.Clicked);
                     cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
                     // Shared and Un-sub stats
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 32);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "B", 24);
                     cell.CellValue = new CellValue(model.Bounce);
                     cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 35);
+                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "H", 24);
                     cell.CellValue = new CellValue(model.Opt);
                     cell.DataType = new EnumValue<CellValues>(CellValues.Number);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 39);
-                    cell.CellValue = new CellValue(model.RetargetingImpressions);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+                    if(model.IsRetargeting)
+                    {
+                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "G", 27);
+                        cell.CellValue = new CellValue(model.RetargetingImpressions);
+                        cell.DataType = new EnumValue<CellValues>(CellValues.Number);
+                        
+                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "J", 27);
+                        cell.CellValue = new CellValue(model.RetargetingClicks);
+                    }
+                    else
+                    {
+                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "D", 27);
+                        cell.CellValue = new CellValue("");
+                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-                    cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 40);
-                    cell.CellValue = new CellValue(model.RetargetingClicks);
-                    cell.DataType = new EnumValue<CellValues>(CellValues.Number);
-
+                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "I", 27);
+                        cell.CellValue = new CellValue("");
+                        cell.DataType = new EnumValue<CellValues>(CellValues.String);
+                    }
                     #endregion
 
+                    uint start = 30;
                     #region Second Page
-                    if (File.Exists(ScreenshotFilePath))
-                        ExcelHelper.AddImage(worksheetPart, ScreenshotFilePath, 45, 3);
-                    #endregion
-
-                    uint start = 70;
-                    #region Third Page
                     foreach (var vm in model.PerLink)
                     {
                         PopulateRowTemplate(worksheetPart.Worksheet, vm, start);
                         start++;
                     }
+                    #endregion
+
+                    #region Third Page
+                    if (File.Exists(ScreenshotFilePath))
+                        ExcelHelper.AddImage(worksheetPart, ScreenshotFilePath, 56, 2);
                     #endregion
 
                     worksheetPart.Worksheet.Save();
@@ -169,7 +180,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
             cell.CellValue = new CellValue(row.Link);
             cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
-            cell = ExcelHelper.GetCell(worksheet, "L", rowNumber);
+            cell = ExcelHelper.GetCell(worksheet, "J", rowNumber);
             cell.CellValue = new CellValue(row.ClickCount.ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.Number);
         }

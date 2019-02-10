@@ -9,6 +9,7 @@ using ADSDataDirect.Enums;
 using ADSDataDirect.Web.Helpers;
 using ADSDataDirect.Infrastructure.Notifications;
 using ADSDataDirect.Infrastructure.Common;
+using System.Linq;
 
 namespace ADSDataDirect.Infrastructure.Emails
 {
@@ -156,14 +157,29 @@ namespace ADSDataDirect.Infrastructure.Emails
 
         public static void SendNotificationsToVendor(Vendor vendor, List<Campaign> campaigns)
         {
-            string subject = "Campaign Issues Notifications";
+            string subject = $"{clientCode} Campaign Issues";
 
-            StringBuilder problems = new StringBuilder(@"<table border=""2""><tr><th align=""left"">Order #</th><th align=""left"">Campaign Name</th><th align=""left"">Check Time</th><th align=""left"">Problem</th><th align=""left"">Problem Detail</th></tr>");
+            StringBuilder problems = new StringBuilder(@"<table border=""2""><tr>
+                <th align=""left"">Order #</th><th align=""left"">Campaign Name</th><th align=""left"">Check Time</th>
+                <th align=""left"">Quantity</th><th align=""left"">Clicks Needed</th><th align=""left"">Start Date</th>
+                <th align=""left"">Click Meter Link</th><th align=""left"">Total Clicks</th><th align=""left"">Campaign Fill</th>
+                <th align=""left"">Problem</th><th align=""left"">Problem Detail</th></tr>");
+            
             foreach (var campaign in campaigns)
             {
+                var campaignTracking = campaign.Trackings.FirstOrDefault();
+                long Needed = campaignTracking.Quantity <= 100 ? campaignTracking.Quantity : (long)(campaignTracking.Quantity * 3 / 100.0);
+                long Total = campaignTracking.Day1Clicks + campaignTracking.Day2Clicks + campaignTracking.Day3Clicks + campaignTracking.Day4Clicks + campaignTracking.Day5Clicks + campaignTracking.Day6Clicks + campaignTracking.Day7Clicks;
+                double CampaignFill = (double)Total / Needed;
+                
                 foreach (var notification in campaign.Notifications)
                 {
-                    problems.Append($"<tr><td>{campaign.OrderNumber}</td><td>{campaign.CampaignName}</td><td>{notification.CheckTime}</td><td>{(QcRule)notification.QcRule}</td><td>{QcRuleUtility.GetString(notification.QcRule)}</td></tr>");
+                    problems.Append($@"<tr>
+                    <td>{campaign.OrderNumber}</td><td>{campaign.CampaignName}</td><td>{notification.CheckTime}</td>
+                    <td>{campaignTracking.Quantity}</td><td>{Needed}</td> <td>{campaignTracking.StartDate?.ToString(StringConstants.DateFormatSlashes)} </td>
+                    <td>{campaign.Testing.ClickMeterRotatorLink}</td><td>{string.Format("{0:n0}", Total)}</td> <td>{CampaignFill.ToString("0.00%")}</td>
+                    <td>{(QcRule)notification.QcRule}</td><td>{notification.Message}</td>
+                                    </tr>");
                 }
             }
             problems.Append("</table>");
@@ -181,6 +197,14 @@ namespace ADSDataDirect.Infrastructure.Emails
                             <p>Error Details : {ex.GetExceptionMessage()}</p>";
                 SendEmail(to, subject, body);
             }
+        }
+
+        public static void SendTrackingReport(string to, string orderNumber, List<string> attachments)
+        {
+            string timestamp = DateTime.Now.ToString(StringConstants.DateTimeFormatSlashes);
+            string subject = $"IO# {orderNumber} Tracking report";
+            string body = $@"<p>Please find attached tracking report for IO # {orderNumber} as of {timestamp}</p>";
+            SendEmail(to, subject, body, "", "", attachments);
         }
 
         public static async Task SendEmailAsync(string to, string subject, string body, string ccEmails = "", string bccEmails = "", List < string> attachments = null)
@@ -201,23 +225,27 @@ namespace ADSDataDirect.Infrastructure.Emails
             }
         }
 
-        private static MailMessage CreateMessage(string to, string subject, string body, string ccEmails = "", string bccEmails = "", List<string> attachments = null)
+        private static MailMessage CreateMessage(string toEmails, string subject, string body, string ccEmails = "", string bccEmails = "", List<string> attachments = null)
         { 
             MailMessage msg = new MailMessage();
-            msg.To.Add(new MailAddress(to));
+            foreach (var toEmail in toEmails.Split(new[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                msg.To.Add(toEmail.Trim());
+            }
+            
             if (!string.IsNullOrEmpty(ccEmails))
             {
-                foreach (var ccEmail in ccEmails.Split(", ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (var ccEmail in ccEmails.Split(new[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    msg.CC.Add(ccEmail);
+                    msg.CC.Add(ccEmail.Trim());
                 }
             }
 
             if (!string.IsNullOrEmpty(bccEmails))
             {
-                foreach (var bccEmail in bccEmails.Split(", ".ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                foreach (var bccEmail in bccEmails.Split(new[] { ";", "," }, StringSplitOptions.RemoveEmptyEntries))
                 {
-                    msg.Bcc.Add(bccEmail);
+                    msg.Bcc.Add(bccEmail.Trim());
                 }
             }
 

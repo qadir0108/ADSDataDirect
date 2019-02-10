@@ -55,6 +55,12 @@
     <Reference Include="HtmlAgilityPack, Version=1.4.9.5, Culture=neutral, PublicKeyToken=bd319b19eaf3b43a, processorArchitecture=MSIL">
       <HintPath>..\packages\HtmlAgilityPack.1.4.9.5\lib\Net45\HtmlAgilityPack.dll</HintPath>
     </Reference>
+    <Reference Include="ICSharpCode.SharpZipLib, Version=1.0.0.999, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
+      <HintPath>..\packages\SharpZipLib.1.0.0\lib\net45\ICSharpCode.SharpZipLib.dll</HintPath>
+    </Reference>
+    <Reference Include="itextsharp, Version=5.5.13.0, Culture=neutral, PublicKeyToken=8354ae6d2174ddca, processorArchitecture=MSIL">
+      <HintPath>..\packages\iTextSharp.5.5.13\lib\itextsharp.dll</HintPath>
+    </Reference>
     <Reference Include="MailChimp.Net.V3, Version=1.9.5.0, Culture=neutral, PublicKeyToken=37d26d538413c581, processorArchitecture=MSIL">
       <HintPath>..\packages\MailChimp.Net.V3.1.9.5.0\lib\net45\MailChimp.Net.V3.dll</HintPath>
     </Reference>
@@ -64,11 +70,18 @@
     <Reference Include="Microsoft.AspNet.Identity.EntityFramework, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.EntityFramework.2.2.1\lib\net45\Microsoft.AspNet.Identity.EntityFramework.dll</HintPath>
     </Reference>
+    <Reference Include="Microsoft.Office.Interop.Excel, Version=15.0.0.0, Culture=neutral, PublicKeyToken=71e9bce111e9429c, processorArchitecture=MSIL">
+      <HintPath>..\packages\Microsoft.Office.Interop.Excel.15.0.4795.1000\lib\net20\Microsoft.Office.Interop.Excel.dll</HintPath>
+      <EmbedInteropTypes>True</EmbedInteropTypes>
+    </Reference>
     <Reference Include="Newtonsoft.Json, Version=10.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
       <HintPath>..\packages\Newtonsoft.Json.10.0.2\lib\net45\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.4.10\lib\net45\NLog.dll</HintPath>
+    </Reference>
+    <Reference Include="NReco.PdfGenerator, Version=1.1.15.0, Culture=neutral, PublicKeyToken=231663d50a41b451, processorArchitecture=MSIL">
+      <HintPath>..\packages\NReco.PdfGenerator.1.1.15\lib\net20\NReco.PdfGenerator.dll</HintPath>
     </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="RestSharp, Version=105.2.3.0, Culture=neutral, processorArchitecture=MSIL">
@@ -112,6 +125,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Auth0\____.cs" />
+    <Compile Include="ClickMeter\ClickMeterCampaignSearch.cs" />
     <Compile Include="ClickMeter\ClickMeterReport.cs" />
     <Compile Include="ClickMeter\ClickMeterLink.cs" />
     <Compile Include="ClickMeter\ClickMeterCampaign.cs" />
@@ -128,11 +142,18 @@
     <Compile Include="DataReports\CustomerOrdersStatusVm.cs" />
     <Compile Include="DataReports\CustomerOrdersStatusReports.cs" />
     <Compile Include="Db\CampaignMonitoringVm.cs" />
+    <Compile Include="Pdf\ExcelKiller.cs" />
     <Compile Include="EZanga\EZangaCampaign.cs" />
     <Compile Include="EZanga\EZangaManager.cs" />
+    <Compile Include="Log\ServerLogger.cs" />
+    <Compile Include="Notifications\NotificationRecorder.cs" />
+    <Compile Include="Pdf\Impersonate.cs" />
+    <Compile Include="Pdf\Introp.cs" />
+    <Compile Include="Pdf\PdfOrganizer.cs" />
     <Compile Include="ReportingModel\ClickModeler.cs" />
     <Compile Include="ReportingModel\Randomizer.cs" />
     <Compile Include="TemplateReports\TemplateReportDetailVm.cs" />
+    <Compile Include="Pdf\TemplateReportPdf.cs" />
     <Compile Include="TemplateReports\TemplateReportVm.cs" />
     <Compile Include="Emails\EmailChecker.cs" />
     <Compile Include="Excel\ExcelHelper.cs" />

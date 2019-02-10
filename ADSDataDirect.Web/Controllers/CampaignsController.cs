@@ -165,7 +165,8 @@ namespace ADSDataDirect.Web.Controllers
                         ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1
                         : 2500;
 
-                    string userName = LoggedInUser?.UserName;
+                    string userName = string.IsNullOrEmpty(LoggedInUser?.UserName) ?
+                        UsersList.FirstOrDefault().Text : LoggedInUser?.UserName;
 
                     TinyMapper.Bind<CampaignVm, Campaign>(config =>
                     {
@@ -518,6 +519,29 @@ namespace ADSDataDirect.Web.Controllers
             Db.SaveChanges();
             TempData["Success"] = "Campaign " + campaign.CampaignName + " has been completed sucessfully.";
             return RedirectToAction("Index", "Campaigns");
+        }
+
+        public ActionResult CompleteCampaign(Guid? id)
+        {
+            try
+            {
+                var campaign = Db.Campaigns.Include(x => x.Testing).FirstOrDefault(x => x.Id == id);
+                if (campaign == null)
+                {
+                    throw new AdsException("Campaign not found.");
+                }
+                if (campaign.Testing == null)
+                {
+                    throw new AdsException("Please pass through Testing first.");
+                }
+                campaign.Status = (int)CampaignStatus.Completed;
+                Db.SaveChanges();
+                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
         }
 
         [HttpGet]

@@ -105,10 +105,9 @@
                     @*<td>
                         @Html.DisplayFor(modelItem => item.Status)
                     </td>*@
-                    <td style="min-width: 100px" class="no-right-padding no-left-padding pull-right">
+                    <td style="min-width: 130px" class="no-right-padding no-left-padding pull-right">
                         <a href="#" class="btn btn-sm btn-primary btnProcess" data-id="@item.CampaignId" data-ordernumber="@item.OrderNumber" data-tooltip="tooltip" title="Process Reporting Model"><span class="glyphicon glyphicon-cog"></span></a>
                         <a href="#" class="btn btn-sm btn-default btnDrill" data-id="@item.TrackingId" data-tooltip="tooltip" title="Drill Down"><span class="glyphicon glyphicon-search"></span></a>
-                        @*<a href="~/Tracking/DownloadReport?id=@item.CampaignId&trackingId=@item.TrackingId" target="_blank" class="btn btn-sm btn-default" id="btnDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>*@
                         <a href="#" 
                             data-toggle="modal" data-target="#myModal" target="_blank"
                            data-id='@item.CampaignId' data-trackingid='@item.TrackingId' class="btn btn-sm btn-default" id="btnShowDownload" data-tooltip="tooltip" title="Download"><span class="glyphicon glyphicon-download"></span></a>
@@ -255,6 +254,18 @@
                         <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
                     </div>
 
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPasswordRetype">Format<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-paperclip"></i>
+                            </div>
+                            @Html.DropDownList("Formats", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-primary btnDownload" id="btnDownload">Download</button>
@@ -338,16 +349,21 @@
             debugger;
             e.preventDefault();
 
-            if ($('#Templates').find('option:selected').val() === '') {
-                wfp.showError("Please select Template");
-                return;
-            }
-
             var id = $('#txtId').val();
             var trackingId = $('#txttrackingId').val();
             var template = $('#Templates').find('option:selected').val();
+            var format = $('#Formats').find('option:selected').val();
 
-            var url = '../../Tracking/DownloadReport?id=' + id + '&trackingId=' + trackingId + '&template=' + template;
+            if (template === '') {
+                wfp.showError("Please select Template");
+                return;
+            }
+            if (format === '') {
+                wfp.showError("Please select Format");
+                return;
+            }
+
+            var url = '../../Tracking/DownloadReport?id=' + id + '&trackingId=' + trackingId + '&template=' + template + '&format=' + format;
             //window.open(url);
             var win = window.open(url, '_blank');
             win.focus();

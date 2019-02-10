@@ -8,11 +8,12 @@ using ADSDataDirect.Core;
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Infrastructure.Db;
+using ADSDataDirect.Infrastructure.Notifications;
 using Newtonsoft.Json;
 
 namespace ADSDataDirect.Infrastructure.ProData
 {
-    public static class ProDataApiManager
+    public class ProDataApiManager : NotificationRecorder
     {
         private static string _urlTracking = "http://campaign-data-analytics.com/report_api/tracking/io/ADS{0}.json";
         private static string _urlCreateOrder = "http://www1.report-site.com/report_api/ads_create_campaign/format/json";
@@ -327,14 +328,14 @@ namespace ADSDataDirect.Infrastructure.ProData
                 if (campaignTracking.OpenedPercentage < 0.01 && hoursPassed > 0) // less than 1% and deploy date time passed
                 {
                     message = $"Number of Opens in last 24hrs, No Open Traffic in 24hrs.";
-                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.OpenTrafficInLast24Hours, message);
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.OpenTrafficInLast1Day, message);
                 }
 
                 // QC Rule 10
                 if (campaignTracking.ClickedPercentage < 0.01 && hoursPassed > 0) // less than 1% and deploy date time passed
                 {
                     message = $"Number of Clicks in last 24hrs, No Click Traffic in 24hrs.";
-                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ClickTrafficInLast24Hours, message);
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.ClickTrafficInLast1Day, message);
                 }
             }
 
@@ -344,14 +345,14 @@ namespace ADSDataDirect.Infrastructure.ProData
                 if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn24HoursValue / 100.0))
                 {
                     message = $"{campaignTracking.Opened} / {campaignTracking.Quantity} is Less than required value {settings.NotHitOpenRateIn24HoursValue}% in first 24hrs";
-                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitOpenRateIn24Hours, message);
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitOpenRateIn1Day, message);
                 }
 
                 // QC Rule 4
                 if (campaignTracking.ClickedPercentage < (settings.NotHitClickRateIn24HoursValue / 100.0))
                 {
                     message = $"{campaignTracking.Clicked} / {campaignTracking.Quantity} is Less than required value {settings.NotHitClickRateIn24HoursValue}% in first 24hrs";
-                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitClickRateIn24Hours, message);
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitClickRateIn1Day, message);
                 }
 
                 // QC Rule 6
@@ -374,14 +375,14 @@ namespace ADSDataDirect.Infrastructure.ProData
                 if (campaignTracking.OpenedPercentage < (settings.NotHitOpenRateIn72HoursValue / 100.0))
                 {
                     message = $"{campaignTracking.Opened} / {campaignTracking.Quantity} is Less than required value {settings.NotHitOpenRateIn72HoursValue}% in first 72hrs";
-                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitOpenRateIn72Hours, message);
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitOpenRateIn3Days, message);
                 }
 
                 // QC Rule 5
                 if (campaignTracking.ClickedPercentage < (settings.NotHitClickRateIn72HoursValue / 100.0))
                 {
                     message = $"{campaignTracking.Clicked} / {campaignTracking.Quantity} is Less than required value {settings.NotHitClickRateIn72HoursValue}% in first 72hrs";
-                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitClickRateIn72Hours, message);
+                    SaveNotificationRecord(db, campaignId, orderNumber, segmentNumber, QcRule.NotHitClickRateIn3Days, message);
                 }
 
                 // QC Rule 7
@@ -400,33 +401,6 @@ namespace ADSDataDirect.Infrastructure.ProData
             }
 
         }
-
-        private static void SaveNotificationRecord(WfpictContext db,
-            Guid? campaignId, string orderNumber, string segmentNumber,
-            QcRule qcRule, string message)
-        {
-
-            var alreadyNoted = db.Notifications
-                .FirstOrDefault(x => x.CampaignId == campaignId && x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber
-                                     && x.QcRule == (int)qcRule && x.Status == (int)NotificationStatus.Found);
-
-            if (alreadyNoted != null) return;
-
-            LogHelper.AddLog(db, LogType.RulesProcessing, orderNumber, $"Problem found. QCRule {qcRule} , Message {message}");
-            db.Notifications.Add(new Notification()
-            {
-                Id = Guid.NewGuid(),
-                CreatedAt = DateTime.Now,
-                CampaignId = campaignId,
-                OrderNumber = orderNumber,
-                SegmentNumber = segmentNumber,
-                Status = (int)NotificationStatus.Found,
-                Message = message,
-                CheckTime = DateTime.Now,
-                FoundAt = DateTime.Now,
-                QcRule = (int)qcRule
-            });
-            db.SaveChanges();
-        }
+        
     }
 }

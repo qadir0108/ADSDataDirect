@@ -44,9 +44,15 @@ namespace ADSDataDirect.Web
             // CheckForQCRules 
             RecurringJob.AddOrUpdate("FetchAndCheckForQCRules", () => NotificationsProcessor.FetchAndCheckForQcRules(), Cron.HourInterval(3));
 
+            NotificationsProcessor.SendNotificationEmails();
+
             // "0 8,12,17 * * *"
             // Cron.Minutely
-            RecurringJob.AddOrUpdate("SendNotificationEmails", () => NotificationsProcessor.SendNotificationEmails(), "0 8,12,17 * * *");
+            RecurringJob.AddOrUpdate("SendNotificationEmails", () => 
+                        NotificationsProcessor.SendNotificationEmails(), 
+                        "0 9,16 * * *",
+                        TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")
+                );
 
         }
 

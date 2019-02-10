@@ -16,13 +16,13 @@ namespace ADSDataDirect.Web.Controllers
 {
     public class BaseController : BaseControllerAuth0
     {
-        protected readonly Random Random = new Random();
-        protected const int PageSize = 10;
-
         protected string ClientCode { get; } = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
 
         protected bool IsNxs => ClientCode == Client.NXS.ToString();
 
+        protected readonly Random Random = new Random();
+        protected const int PageSize = 10;
+        
         private WfpictContext _db;
         protected WfpictContext Db
         {
@@ -195,6 +195,32 @@ namespace ADSDataDirect.Web.Controllers
                 return items;
             }
         }
+
+        protected IEnumerable<SelectListItem> DownloadFormats
+        {
+            get
+            {
+                var formats = new List<SelectListItem>() {
+                new SelectListItem()
+                {
+                    Text = "Select Report Type",
+                    Value = ""
+                },
+                new SelectListItem()
+                {
+                    Text = "PDF",
+                    Value = "pdf"
+                },
+                new SelectListItem()
+                {
+                    Text = "Excel",
+                    Value = "excel"
+                }
+                };
+                return formats;
+            }
+        }
+
 
         protected IEnumerable<SelectListItem> SfidClientCampaigns
         {
@@ -580,5 +606,6 @@ namespace ADSDataDirect.Web.Controllers
         {
             return SortCampaigns(FilterCampaigns(campagins, sc), sc);
         }
+
     }
 }

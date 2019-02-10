@@ -18,29 +18,40 @@
     <link rel="icon" href="~/favicon.ico" type="image/x-icon" />
 </head>
 <body>
-<div id="divBodyContent">
-    @Html.Partial("_Header")
-
-    <div class="container body-content">
-        
-        @if (TempData["Success"] != null)
+@{ 
+    var clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+    var isNXS = (clientCode == Client.NXS.ToString());
+}
+    <div id="divBodyContent">
+        @if (isNXS)
         {
-            <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+            @Html.Partial("_HeaderNXS")
         }
-        @if (TempData["Error"] != null)
+        else
         {
-            <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
+            @Html.Partial("_Header")
         }
 
-        @RenderBody()
+        <div class="container body-content">
 
-        <footer>
-            <p>
-                &copy; @DateTime.Now.Year - @System.Configuration.ConfigurationManager.AppSettings["ClientName"]
-            </p>
-        </footer>
+            @if (TempData["Success"] != null)
+            {
+                <p class="alert alert-success" id="successMessage">@TempData["Success"]</p>
+            }
+            @if (TempData["Error"] != null)
+            {
+                <p class="alert alert-danger" id="successMessage">@TempData["Error"]</p>
+            }
+
+            @RenderBody()
+
+            <footer>
+                <p>
+                    &copy; @DateTime.Now.Year - @System.Configuration.ConfigurationManager.AppSettings["ClientName"]
+                </p>
+            </footer>
+        </div>
     </div>
-</div>
     
 @{
     var loggedInUser = Session["user"] as WfpUser;

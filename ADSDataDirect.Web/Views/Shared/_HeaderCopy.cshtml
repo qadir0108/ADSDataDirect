@@ -19,30 +19,33 @@
         </div>
         <div class="row">
             <div class="col-md-1">
-                @Html.ActionLink("Testing", "Index", "Testing", new {id = Session["id"] }, new {@class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Testing", "Index", "Testing", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
+            @*<div class="col-md-1">
+            @Html.ActionLink("Creative", "Index", "Creative", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
+        </div>*@
             <div class="col-md-1">
-                @Html.ActionLink("Creative", "Index", "Creative", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Approved", "Index", "Approved", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
+            @*<div class="col-md-1">
+            @Html.ActionLink("Status", "Index", "Status", new { searchType = "basic", searchString = Session["OrderNumber"] }, new { @class = "btn btn-default btn-sm" })
+        </div>*@
             <div class="col-md-1">
-                @Html.ActionLink("Approved", "Index", "Approved", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm" })
+                @Html.ActionLink("Tracking", "Report", "Tracking", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm", @data_tooltip = "tooltip", @title = "Tracking Vendor Data" })
             </div>
-            <div class="col-md-1">
-                @Html.ActionLink("Status", "Index", "Status", new { searchType = "basic", searchString = Session["OrderNumber"] }, new {@class = "btn btn-default btn-sm" })
-            </div>
-            <div class="col-md-1">
-                @Html.ActionLink("Tracking", "Report", "Tracking", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
-            </div>
-            
+
             <div class="col-md-1">
                 @if (isNXS)
                 {
-                    @Html.ActionLink("Reporting", "View", "OpenModel", new {id = Session["id"]}, new {@class = "btn btn-default btn-sm"})
+                    @Html.ActionLink("Reporting", "View", "OpenModel", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm", @data_tooltip = "tooltip", @title = "Custom Reporting Model" })
                 }
             </div>
             <div class="col-md-1">
             </div>
-
+            <div class="col-md-1">
+            </div>
+            <div class="col-md-1">
+            </div>
             <div class="col-md-1">
                 @Html.ActionLink("Clone", "Clone", "Campaigns", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
@@ -55,7 +58,7 @@
             <div class="col-md-1">
                 @Html.ActionLink("Complete", "Complete", "Campaigns", new { id = Session["id"] }, new { @class = "btn btn-default btn-sm" })
             </div>
-            
+
         </div>
     </div>
 }

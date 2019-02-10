@@ -19,10 +19,13 @@ namespace ADSDataDirect.Infrastructure.Db
         public string ClickMeterLink { get; set; }
         public string Day1Clicks { get; set; }
         public string Day1 { get; set; }
+        public string Day1Rule { get; set; }
         public string Day2Clicks { get; set; }
         public string Day2 { get; set; }
+        public string Day2Rule { get; set; }
         public string Day3Clicks { get; set; }
         public string Day3 { get; set; }
+        public string Day3Rule { get; set; }
         public string Day4Clicks { get; set; }
         public string Day4 { get; set; }
         public string Day5Clicks { get; set; }
@@ -37,7 +40,7 @@ namespace ADSDataDirect.Infrastructure.Db
 
         public static CampaignMonitoringVm FromCampaignTracking(Campaign campaign, CampaignTracking campaignTracking)
         {
-            long Needed = (long)(campaignTracking.Quantity * 3 / 100.0);
+            long Needed = campaignTracking.Quantity <= 100 ? campaignTracking.Quantity : (long)(campaignTracking.Quantity * 3 / 100.0);
             long Total = campaignTracking.Day1Clicks + campaignTracking.Day2Clicks + campaignTracking.Day3Clicks + campaignTracking.Day4Clicks + campaignTracking.Day5Clicks + campaignTracking.Day6Clicks + campaignTracking.Day7Clicks;
             double CampaignFill =(double)Total / Needed;
             var model = new CampaignMonitoringVm
@@ -69,6 +72,15 @@ namespace ADSDataDirect.Infrastructure.Db
                 Total = string.Format("{0:n0}", Total),
                 CampaignFill = CampaignFill.ToString("0.00%")
             };
+            model.Day1Rule = string.Join("<br/>", campaign.Notifications
+                .Where(x => x.QcRule <= (int)QcRule.NotHitClickRateIn1Day).Select(x => x.Message));
+
+            model.Day2Rule = string.Join("<br/>", campaign.Notifications
+                .Where(x => x.QcRule == (int)QcRule.NotHitClickRateIn2Days || x.QcRule == (int)QcRule.NotHitOpenRateIn2Days).Select(x => x.Message));
+
+            model.Day3Rule = string.Join("<br/>", campaign.Notifications
+                .Where(x => x.QcRule == (int)QcRule.NotHitClickRateIn3Days || x.QcRule == (int)QcRule.NotHitOpenRateIn3Days).Select(x => x.Message));
+
             return model;
         }
     }

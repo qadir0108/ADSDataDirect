@@ -118,11 +118,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                     // Shared and Un-sub stats
                     if (Template.Equals(ReportTemplate.Tracking3.ToString()))
                     {
-                        //cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 32);
-                        //cell.CellValue = new CellValue("Forwards : " + model.Forwards);
-                        //cell.DataType = new EnumValue<CellValues>(CellValues.String);
-
-                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "H", 35);
+                        cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "H", 32);
                         cell.CellValue = new CellValue(model.Unsub);
                         cell.DataType = new EnumValue<CellValues>(CellValues.Number);
                     }
@@ -132,7 +128,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                     #region Second Page
                     if (Template.Equals(ReportTemplate.Tracking4.ToString()))
                     {
-                        start = 70;
+                        start = 71;
 
                         cell = ExcelHelper.GetCell(worksheetPart.Worksheet, "C", 39);
                         cell.CellValue = new CellValue(model.SubjectLine);

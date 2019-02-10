@@ -311,6 +311,7 @@
     <Compile Include="Models\NotificationVm.cs" />
     <Compile Include="Models\MessageVm.cs" />
     <Compile Include="Models\CustomerVm.cs" />
+    <Compile Include="Models\ReportGenerationResultVm.cs" />
     <Compile Include="Models\VendorVm.cs" />
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="API\AdsController.cs" />
@@ -837,6 +838,7 @@
     <Content Include="Scripts\tinymce\tinymce.min.js" />
     <Content Include="Scripts\_references.js" />
     <Content Include="css\sweetalert.css" />
+    <Content Include="Templates\ReportTemplateStrat.html" />
     <Content Include="Views\Tracking\ReportRdlc.aspx" />
     <Content Include="Web.config">
       <SubType>Designer</SubType>
@@ -936,6 +938,9 @@
     <Content Include="Templates\TrackingStrat.xlsx" />
     <Content Include="Views\Testing\EditTestingNXS.cshtml" />
     <Content Include="Views\Tracking\Monitoring.cshtml" />
+    <Content Include="Views\Notification\SettingsNXS.cshtml" />
+    <Content Include="Views\Shared\_HeaderNXS.cshtml" />
+    <Content Include="Templates\TrackingStrat_Old.xlsx" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

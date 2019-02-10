@@ -40,6 +40,8 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
         public string Opt { get; set; }
         public string Desktop { get; set; }
         public string Mobile { get; set; }
+
+        public bool IsRetargeting { get; set; }
         public string RetargetingImpressions { get; set; }
         public string RetargetingClicks { get; set; }
 
@@ -76,6 +78,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                 Opt = campaignTracking.Opt.ToString(),
                 Desktop = campaignTracking.Desktop.ToString(),
                 Mobile = campaignTracking.Mobile.ToString(),
+                IsRetargeting = campaign.Approved.ReBroadCast,
                 RetargetingImpressions = campaignTracking.RetargetingImpressions.ToString(),
                 RetargetingClicks = campaignTracking.RetargetingClicks.ToString(),
 
@@ -99,7 +102,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                 .Where(x => x.OrderNumber == campaignTracking.OrderNumber && x.SegmentNumber == campaignTracking.SegmentNumber)
                 .OrderByDescending(x => x.ClickCount);
 
-            if (proDatas.Count() == 0) throw new AdsException("Tracking links not found.");
+            //if (proDatas.Count() == 0) throw new AdsException("Tracking links not found.");
 
             foreach (var proData in proDatas)
             {

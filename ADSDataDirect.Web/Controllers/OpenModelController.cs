@@ -47,6 +47,7 @@ namespace ADSDataDirect.Web.Controllers
                 trackingVms.Add(model);
             }
             trackingVms = trackingVms.OrderBy(x => x.OrderNumber).ToList();
+            ViewBag.Formats = new SelectList(DownloadFormats, "Value", "Text");
 
             ViewBag.Templates = new SelectList(ReportTemplates, "Value", "Text");
 

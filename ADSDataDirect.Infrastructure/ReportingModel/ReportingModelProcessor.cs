@@ -2,6 +2,7 @@
 using ADSDataDirect.Core.Entities;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Infrastructure.Csv;
+using ADSDataDirect.Infrastructure.Notifications;
 using ADSDataDirect.Infrastructure.ProData;
 using ADSDataDirect.Infrastructure.S3;
 using System;
@@ -11,7 +12,7 @@ using System.Linq;
 
 namespace ADSDataDirect.Infrastructure.ReportingModel
 {
-    public class ReportingModelProcessor
+    public class ReportingModelProcessor : NotificationRecorder
     {
         readonly static string clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
         static readonly Random Random = new Random();
@@ -75,6 +76,9 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
 
         protected static void SaveProDataNXS(WfpictContext db, Guid? campaignId, string orderNumber, string segmentNumber, ProDataResponse data)
         {
+            if (data.reports == null || data.reports?.report == null || data.reports?.report.Length == 0)
+                return;
+
             // Delete Old
             LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Deleting Old Vendor Data ");
             var proDatas = db.ProDatas.Where(x => x.CampaignId == campaignId && x.OrderNumber == orderNumber && x.SegmentNumber == segmentNumber);
@@ -85,40 +89,36 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             db.SaveChanges();
 
             // Add new ProData
-            if (data.reports != null && data.reports.report != null)
+            var reports = data.reports.report;
+            LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"{reports.Length} records fetched from Vendor");
+            foreach (var report in reports)
             {
-                var reports = data.reports.report;
-                LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"{reports.Length} records fetched from Vendor");
-                foreach (var report in reports)
+                var proData = new Core.Entities.ProData()
                 {
-                    var proData = new Core.Entities.ProData()
-                    {
-                        Id = Guid.NewGuid(),
-                        CreatedAt = DateTime.Now,
-                        CampaignId = campaignId,
-                        OrderNumber = orderNumber,
-                        SegmentNumber = segmentNumber,
+                    Id = Guid.NewGuid(),
+                    CreatedAt = DateTime.Now,
+                    CampaignId = campaignId,
+                    OrderNumber = orderNumber,
+                    SegmentNumber = segmentNumber,
 
-                        CampaignName = report.CampaignName,
-                        Reportsite_URL = report.Reportsite_URL,
-                        Destination_URL = report.Destination_URL,
-                        CampaignStartDate = report.CampaignStartDate,
-                        ClickCount = long.Parse(report.ClickCount),
-                        //UniqueCnt = report.UniqueCnt, 
-                        // unique should be 15-20% less then total click
-                        UniqueCnt = long.Parse(report.ClickCount) * Random.Next(80, 85) / 100,
-                        //MobileCnt = report.MobileCnt,
-                        // mobile count should be 30-40 of total click
-                        MobileCnt = long.Parse(report.ClickCount) * Random.Next(30, 40) / 100,
-                        ImpressionCnt = report.ImpressionCnt,
-                        IO = report.IO
-                    };
-                    db.ProDatas.Add(proData);
-                }
-                db.SaveChanges();
-                LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Refresh completed successfully at {DateTime.Now} ");
+                    CampaignName = report.CampaignName,
+                    Reportsite_URL = report.Reportsite_URL,
+                    Destination_URL = report.Destination_URL,
+                    CampaignStartDate = report.CampaignStartDate,
+                    ClickCount = long.Parse(report.ClickCount),
+                    //UniqueCnt = report.UniqueCnt, 
+                    // unique should be 15-20% less then total click
+                    UniqueCnt = long.Parse(report.ClickCount) * Random.Next(80, 85) / 100,
+                    //MobileCnt = report.MobileCnt,
+                    // mobile count should be 30-40 of total click
+                    MobileCnt = long.Parse(report.ClickCount) * Random.Next(30, 40) / 100,
+                    ImpressionCnt = report.ImpressionCnt,
+                    IO = report.IO
+                };
+                db.ProDatas.Add(proData);
             }
-
+            db.SaveChanges();
+            LogHelper.AddLog(db, LogType.Vendor, orderNumber, $"Refresh completed successfully at {DateTime.Now} ");
         }
 
         protected static CampaignTracking UpdateTrackingNXS(WfpictContext db, Campaign campaign, string orderNumber, string segmentNumber, ProDataResponse data, Customer customer, List<long> dayWise = null)
@@ -154,7 +154,7 @@ namespace ADSDataDirect.Infrastructure.ReportingModel
             campaignTracking.IoNumber = report.IO;
             campaignTracking.StartDate = startDateTime;
             campaignTracking.Deployed = (long)(campaignTracking.Quantity * (1 + Random.Next(2, 30) / 10000.0));
-
+            
             // Prodata & ProData fake Open Modeler
             int openRandom = Random.Next((int)customer.OpenInitial, (int)customer.OpenEnd);
             long openCountTotal = (long)((openRandom * campaignTracking.Quantity / 100000.0) / 100.0);

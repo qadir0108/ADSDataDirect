@@ -7,8 +7,6 @@
     var loggedInUser = Session["user"] as WfpUser;
     var isLoggedIn = loggedInUser != null;
     var isAdmin = loggedInUser != null && (loggedInUser.UserType == (int)UserType.Admin);
-    var clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
-    var isNXS = (clientCode == Client.NXS.ToString());
 }
 
 <div class="header">
@@ -44,18 +42,9 @@
                             </li>
                             if (isAdmin)
                             {
-                                if (isNXS)
-                                {
-                                    <li class="active">
-                                        <a href="~/Tracking/Monitoring">Monitoring</a>
-                                    </li>
-                                }
-                                else
-                                {
-                                    <li class="active">
-                                        <a href="~/Notification">Notifications</a>
-                                    </li>   
-                                }
+                                <li class="active">
+                                    <a href="~/Notification">Notifications</a>
+                                </li>
                             }
                             <li>
                                 <a href="#">@HttpContext.Current.User.Identity.Name</a>
@@ -65,10 +54,6 @@
                                         <li><a href="/Company/Users" title="Users" class="animsition-link"><span class="glyphicon glyphicon-user"></span> Users</a></li>
                                         <li><a href="/Customer" title="Customer" class="animsition-link"><span class="glyphicon glyphicon-cog"></span> Customers</a></li>
                                         <li><a href="/Vendor" title="Vendors" class="animsition-link"><span class="glyphicon glyphicon-cog"></span> Vendors</a></li>
-                                        if (isNXS)
-                                        {
-                                            <li><a href="/Keyword" title="Reporting Model Keywords" class="animsition-link"><span class="glyphicon glyphicon-text-width"></span> Keywords</a></li>
-                                        }
                                         <li><a href="/Smartsheet" title="Smartsheet" class="animsition-link"><span class="glyphicon glyphicon-list"></span> Smartsheet</a></li>
                                     }
                                     <li><a href="/Home/Settings" title="Settings" class="animsition-link"><span class="glyphicon glyphicon-lock"></span> Settings</a></li>

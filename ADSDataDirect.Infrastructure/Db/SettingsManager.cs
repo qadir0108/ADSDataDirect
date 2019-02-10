@@ -28,11 +28,17 @@ namespace ADSDataDirect.Infrastructure.Db
             key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitOpenRateIn24Hours);
             _settings.NotHitOpenRateIn24HoursValue = key != null ? double.Parse(key.Value) : 0.0;
 
+            key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitOpenRateIn48Hours);
+            _settings.NotHitOpenRateIn48HoursValue = key != null ? double.Parse(key.Value) : 0.0;
+
             key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitOpenRateIn72Hours);
             _settings.NotHitOpenRateIn72HoursValue = key != null ? double.Parse(key.Value) : 0.0;
 
             key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitClickRateIn24Hours);
             _settings.NotHitClickRateIn24HoursValue = key != null ? double.Parse(key.Value) : 0.0;
+
+            key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitClickRateIn48Hours);
+            _settings.NotHitClickRateIn48HoursValue = key != null ? double.Parse(key.Value) : 0.0;
 
             key = db.Settings.FirstOrDefault(x => x.Key == StringConstants.KeyNotHitClickRateIn72Hours);
             _settings.NotHitClickRateIn72HoursValue = key != null ? double.Parse(key.Value) : 0.0;
@@ -59,8 +65,10 @@ namespace ADSDataDirect.Infrastructure.Db
 
             SaveSetting(db, StringConstants.KeyNotStartedInXHours, settings.NotStartedInXHoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitOpenRateIn24Hours, settings.NotHitOpenRateIn24HoursValue.ToString(CultureInfo.InvariantCulture));
+            SaveSetting(db, StringConstants.KeyNotHitOpenRateIn48Hours, settings.NotHitOpenRateIn48HoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitOpenRateIn72Hours, settings.NotHitOpenRateIn72HoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitClickRateIn24Hours, settings.NotHitClickRateIn24HoursValue.ToString(CultureInfo.InvariantCulture));
+            SaveSetting(db, StringConstants.KeyNotHitClickRateIn48Hours, settings.NotHitClickRateIn48HoursValue.ToString(CultureInfo.InvariantCulture));
             SaveSetting(db, StringConstants.KeyNotHitClickRateIn72Hours, settings.NotHitClickRateIn72HoursValue.ToString(CultureInfo.InvariantCulture));
 
             SaveSetting(db, StringConstants.KeyExceededOpenRateIn24Hours, settings.ExceededOpenRateIn24HoursValue.ToString(CultureInfo.InvariantCulture));
