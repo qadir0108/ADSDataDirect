@@ -1,6 +1,6 @@
 projectKey=adsdatadirect
 serverUrl=http://localhost:9000
-serverVersion=6.5.0.27846
-dashboardUrl=http://localhost:9000/dashboard/index/adsdatadirect
-ceTaskId=AV435vSnqev9Yquwqf2L
-ceTaskUrl=http://localhost:9000/api/ce/task?id=AV435vSnqev9Yquwqf2L
+serverVersion=7.9.1.27448
+dashboardUrl=http://localhost:9000/dashboard?id=adsdatadirect
+ceTaskId=AWyRo-Be-K3EgrnSjQ2F
+ceTaskUrl=http://localhost:9000/api/ce/task?id=AWyRo-Be-K3EgrnSjQ2F

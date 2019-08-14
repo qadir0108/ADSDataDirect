@@ -18,7 +18,7 @@
 -->
 <SonarQubeAnalysisProperties  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema" xmlns="http://www.sonarsource.com/msbuild/integration/2015/1">
   <Property Name="sonar.host.url">http://localhost:9000</Property>
-  <Property Name="sonar.login">5e41824e46d8bc64738580a1cbadb9360c3582bc</Property>
+  <Property Name="sonar.login">cf18aa7e6899513843f4541e87b79845e0d64d2c</Property>
   <Property Name="sonar.exclusions">**/Scripts/**,**/js/**</Property>
   <!--<Property Name="sonar.password"></Property>
   -->

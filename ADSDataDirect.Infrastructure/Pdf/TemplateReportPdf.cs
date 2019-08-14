@@ -11,7 +11,6 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
 {
     public class TemplateReportPdf
     {
-        readonly string UploadPath = HttpContext.Current.Server.MapPath($"~/Uploads");
         readonly string DownloadPath = HttpContext.Current.Server.MapPath($"~/Downloads");
         readonly string BootstrapPath = HttpContext.Current.Server.MapPath($"~/css/bootstrap.min.css");
 

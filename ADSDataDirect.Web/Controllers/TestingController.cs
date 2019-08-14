@@ -491,5 +491,27 @@ namespace ADSDataDirect.Web.Controllers
             TempData["Success"] = "Click Meter Rotator Link has been generated successfully.";
             return RedirectToAction("EditTesting", new { id = campaignTestingVm.Id });
         }
+
+        public ActionResult UpdateClickMeterLink(Guid? id, string ClickMeterLinkId, string ClickMeterLink)
+        {
+            try
+            {
+                var campaignTesting = Db.CampaignsTesting.FirstOrDefault(c => c.Id == id);
+                if (campaignTesting == null)
+                {
+                    throw new HttpException(404, "Not found");
+                }
+
+                campaignTesting.ClickMeterRotatorLinkId = ClickMeterLinkId;
+                campaignTesting.ClickMeterRotatorLink = ClickMeterLink;
+                Db.SaveChanges();
+
+                return Json(new JsonResponse() { IsSucess = true }, JsonRequestBehavior.AllowGet);
+            }
+            catch (Exception ex)
+            {
+                return Json(new JsonResponse() { IsSucess = false, ErrorMessage = ex.Message }, JsonRequestBehavior.AllowGet);
+            }
+        }
     }
 }

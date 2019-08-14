@@ -160,7 +160,6 @@
     <Compile Include="Static\SfidLookup.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="ADSDataDirect.Core-1.ruleset" />
     <None Include="ADSDataDirect.Core.ruleset" />
     <None Include="App.config" />
     <None Include="packages.config">
@@ -212,15 +211,15 @@
     </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
-    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\Google.Protobuf.dll" />
-    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.CSharp.dll" />
-    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.6.3.0.2862\analyzers\SonarAnalyzer.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\ADSDataDirect.Enums\ADSDataDirect.Enums.csproj">
       <Project>{1be0cde0-0f59-413c-b089-663db5ef00e1}</Project>
       <Name>ADSDataDirect.Enums</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.7.15.0.8572\analyzers\Google.Protobuf.dll" />
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.7.15.0.8572\analyzers\SonarAnalyzer.CSharp.dll" />
+    <Analyzer Include="..\packages\SonarAnalyzer.CSharp.7.15.0.8572\analyzers\SonarAnalyzer.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

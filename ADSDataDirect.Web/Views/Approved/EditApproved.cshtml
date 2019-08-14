@@ -370,61 +370,61 @@
             </div>
         }
 <br /> <br />
-        <!-- Modal -->
-        <div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" tabindex="-1" data-backdrop="static" data-keyboard="false">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        <h4 class="modal-title" id="myModalLabel">Send to Vendor</h4>
-                    </div>
-                    <form id="frm" role="form">
-                        <div class="modal-body">
-                            <input id="txtId" name="txtId" type="hidden">
-
-                            <!-- Text input-->
-                            <div class="form-group has-feedback">
-                                <label class="control-label" for="txtPasswordRetype">Select Vendor<span class="required">*</span></label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="glyphicon glyphicon-lock"></i>
-                                    </div>
-                                    @Html.DropDownList("Vendor", null, htmlAttributes: new { @class = "form-control" })
-                                </div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                            </div>
-
-                            <!-- Text input-->
-                            <div class="form-group has-feedback">
-                                <label class="control-label" for="txtPasswordRetype">Select Segment Data File</label>
-                                <div class="input-group">
-                                    <div class="input-group-addon">
-                                        <i class="glyphicon glyphicon-briefcase"></i>
-                                    </div>
-                                    <div id="SegmentsSelected">
-                                        @if (Model.Segments != null)
-                                        {
-                                            foreach (var segment in Model.Segments)
-                                            {
-                                                <div class="checkbox checkbox-primary">
-                                                    <input id="@segment.Id" type="checkbox" value="@segment.SegmentNumber" />
-                                                    <label for="@segment.Id" class="control-label">@segment.SegmentNumber - @segment.SegmentDataFileUrl </label>
-                                                </div>
-                                            }
-                                        }
-                                    </div>
-                                </div>
-                                <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="submit" class="btn btn-primary btnSendToVendor" id="btnSendToVendor">Send</button>
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                        </div>
-                    </form>
-                </div>
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Send to Vendor</h4>
             </div>
+            <form id="frm" role="form">
+                <div class="modal-body">
+                    <input id="txtId" name="txtId" type="hidden">
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPasswordRetype">Select Vendor<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                            </div>
+                            @Html.DropDownList("Vendor", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="txtPasswordRetype">Select Segment Data File</label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-briefcase"></i>
+                            </div>
+                            <div id="SegmentsSelected">
+                                @if (Model.Segments != null)
+                                {
+                                    foreach (var segment in Model.Segments)
+                                    {
+                                        <div class="checkbox checkbox-primary">
+                                            <input id="@segment.Id" type="checkbox" value="@segment.SegmentNumber" />
+                                            <label for="@segment.Id" class="control-label">@segment.SegmentNumber - @segment.SegmentDataFileUrl </label>
+                                        </div>
+                                    }
+                                }
+                            </div>
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btnSendToVendor" id="btnSendToVendor">Send</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
         </div>
+    </div>
+</div>
 
         <script type="text/javascript">
 

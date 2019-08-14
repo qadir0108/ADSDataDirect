@@ -1,11 +1,12 @@
 {
   "ServerUri": "http://localhost:9000",
   "Organization": null,
-  "ProjectKey": "NXSdatadirect",
+  "ProjectKey": "adsdatadirect",
+  "ProjectName": "adsdatadirect",
   "Profiles": {
     "CSharp": {
-      "ProfileKey": "AV4SZVSBj6MjXWCq_1BW",
-      "ProfileTimestamp": "2017-08-24T09:20:32+05:00"
+      "ProfileKey": "AWyRK_Rd7mocz8qcBKos",
+      "ProfileTimestamp": "2019-08-14T22:27:52+05:00"
     }
   }
 }

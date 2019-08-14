@@ -153,7 +153,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
                     }
                     #endregion
 
-                    uint start = 30;
+                    uint start = 32;
                     #region Second Page
                     foreach (var vm in model.PerLink)
                     {
@@ -164,7 +164,7 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
 
                     #region Third Page
                     if (File.Exists(ScreenshotFilePath))
-                        ExcelHelper.AddImage(worksheetPart, ScreenshotFilePath, 56, 2);
+                        ExcelHelper.AddImage(worksheetPart, ScreenshotFilePath, 69, 2);
                     #endregion
 
                     worksheetPart.Worksheet.Save();
@@ -177,10 +177,12 @@ namespace ADSDataDirect.Infrastructure.TemplateReports
         public override void PopulateRowTemplate(Worksheet worksheet, TemplateReportDetailVm row, uint rowNumber)
         {
             Cell cell = ExcelHelper.GetCell(worksheet, "A", rowNumber);
+            if (cell == null) return;
             cell.CellValue = new CellValue(row.Link);
             cell.DataType = new EnumValue<CellValues>(CellValues.String);
 
             cell = ExcelHelper.GetCell(worksheet, "J", rowNumber);
+            if (cell == null) return;
             cell.CellValue = new CellValue(row.ClickCount.ToString());
             cell.DataType = new EnumValue<CellValues>(CellValues.Number);
         }

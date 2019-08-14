@@ -421,10 +421,18 @@
                                     </div>
                                     <div class="row">
                                         <div class="form-group">
-                                            <label class="control-label col-md-4">ClickMeter Rotator Link</label>
-                                            <label class="control-label col-md-8" style="text-align:left !important"><a target="_blank" href="@Model.ClickMeterRotatorLink">@Model.ClickMeterRotatorLink</a></label>
+                                            <label class="control-label col-md-4">Click Meter Rotator Link</label>
+                                            <label class="control-label col-md-6" style="text-align:left !important">
+                                                <a target="_blank" href="@Model.ClickMeterRotatorLink">@Model.ClickMeterRotatorLink</a>
+                                            </label>
+                                            <label class="control-label col-md-2" style="text-align:left !important">
+                                                <a href="#" id="" class="btn btn-sm btn-default" title="Change Click Meter" data-tooltip="tooltip"
+                                                   data-toggle="modal" data-target="#myModal" data-id="@Model.Id" data-clickmeter_link_id="@Model.ClickMeterRotatorLinkId" data-clickmeter_link="@Model.ClickMeterRotatorLink">
+                                                    <span class="glyphicon glyphicon-paperclip"></span>
+                                                </a>
+                                            </label>
                                         </div>
-                                        
+
                                     </div>
                                 </div>
 
@@ -689,21 +697,67 @@
                     </div>
                 </div>
             </div>
-           
-          
-        <div class="row">
-            <div class="col-md-offset-9 col-md-3">
-                <input type="submit" value="Save" class="btn btn-default" name="action:EditTesting" /> |
-                <input type="submit" value="Approve" class="btn btn-default" name="action:Approve"/>
+
+
+            <div class="row">
+                <div class="col-md-offset-9 col-md-3">
+                    <input type="submit" value="Save" class="btn btn-default" name="action:EditTesting" /> |
+                    <input type="submit" value="Approve" class="btn btn-default" name="action:Approve" />
+                </div>
             </div>
-        </div>
-            
-        <br />
-        <br />
+
+            <br />
+            <br />
 
         </div>
     </div>
 }
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" role="dialog" aria-labelledby="myModalLabel" tabindex="-1" data-backdrop="static" data-keyboard="false">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Update Click Meter Link</h4>
+            </div>
+            <form id="frm" role="form">
+                <div class="modal-body">
+                    <input id="txtId" name="txtId" type="hidden">
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="LinkId">Click Meter Link Id<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-paperclip"></i>
+                            </div>
+                            @Html.TextBox("txtClickMeterLinkId", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+
+                    <!-- Text input-->
+                    <div class="form-group has-feedback">
+                        <label class="control-label" for="LinkId">Click Meter Link<span class="required">*</span></label>
+                        <div class="input-group">
+                            <div class="input-group-addon">
+                                <i class="glyphicon glyphicon-paperclip"></i>
+                            </div>
+                            @Html.TextBox("txtClickMeterLink", null, htmlAttributes: new { @class = "form-control" })
+                        </div>
+                        <span class="glyphicon form-control-feedback" aria-hidden="true"></span>
+                    </div>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-primary btnUpdateClickMeterLink" id="btnUpdateClickMeterLink">Update</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script type="text/javascript">
 
@@ -744,7 +798,7 @@
         $('#OpenModelLinksFile').prop('readonly', "readonly");
         $('#OpenModelImageFile').prop('readonly', "readonly");
         $('#EzLinksFile').prop('readonly', "readonly");
-        
+
         $("input[name='IsTested']:checked").closest("label.btn").addClass("active");
         $("input[name='ReBroadCast']:checked").closest("label.btn").addClass("active");
         $("input[name='IsOpenPixel']:checked").closest("label.btn").addClass("active");
@@ -873,7 +927,70 @@
         if (activeTab) {
             $('#myTab a[href="' + activeTab + '"]').tab('show');
         }
-       
+
+        $('#myModal').on('show.bs.modal', function (event) {
+
+            var button = $(event.relatedTarget);
+            var modal = $(this);
+            $('#frm')[0].reset();
+            debugger;
+            $('#txtId').val(button.data('id'));
+            $('#txtClickMeterLinkId').val(button.data('clickmeter_link_id'));
+            $('#txtClickMeterLink').val(button.data('clickmeter_link'));
+        });
+
+        $('#btnUpdateClickMeterLink').click(function (e) {
+            debugger;
+            e.preventDefault();
+
+            if ($('#txtClickMeterLinkId').val() === '') {
+                wfp.showError("Please enter Click Meter Link Id");
+                return;
+            }
+
+            if ($('#txtClickMeterLink').val() === '') {
+                wfp.showError("Please enter Click Meter Link");
+                return;
+            }
+            
+            var id = $('#txtId').val();
+
+            var dataToPost = {
+                id: id,
+                ClickMeterLinkId: $('#txtClickMeterLinkId').val(),
+                ClickMeterLink: $('#txtClickMeterLink').val(),
+            };
+
+            wfp.showSwal("Are you sure to update?",
+                function () {
+
+                    debugger;
+                    $.ajax({
+                        type: "POST",
+                        url: "/Testing/UpdateClickMeterLink",
+                        data: JSON.stringify(dataToPost),
+                        contentType: "application/json; charset=utf-8",
+                        success: function (response) {
+                            debugger;
+                            if (response === "") wfp.reload();
+                            if (response.IsSucess) {
+                                wfp.showSuccess('Click Meter Link has been updated successfully.');
+                                $('#myModal').modal('hide');
+                                wfp.redirectTo();
+                            } else {
+                                wfp.showError(response.ErrorMessage);
+                            }
+                        },
+                        failure: function (response) {
+                            wfp.showError('There is erorr in service call.');
+                        },
+                        complete: function () {
+                        }
+                    });
+                });
+
+        });
+
     });
 </script>
 

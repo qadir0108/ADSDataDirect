@@ -21,7 +21,7 @@ namespace ADSDataDirect.Web.Helpers
             if (row != null)
                 return row.Elements<Cell>().FirstOrDefault(c => string.Compare(c.CellReference.Value, columnName + rowIndex, true) == 0);
 
-            var newRow = ExcelHelper_Old.InsertRow(rowIndex, worksheet.WorksheetPart, null, true);
+            var newRow = ExcelHelper_Old.InsertRow(rowIndex, worksheet.WorksheetPart, null, false);
             return newRow.Elements<Cell>().FirstOrDefault(c => string.Compare(c.CellReference.Value, columnName + rowIndex, true) == 0);
 
         }

@@ -18,7 +18,7 @@ using ADSDataDirect.Infrastructure.Emails;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class TrackingController : BaseController
     {
         // NOT USED

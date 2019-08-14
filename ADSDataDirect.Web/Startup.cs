@@ -44,8 +44,6 @@ namespace ADSDataDirect.Web
             // CheckForQCRules 
             RecurringJob.AddOrUpdate("FetchAndCheckForQCRules", () => NotificationsProcessor.FetchAndCheckForQcRules(), Cron.HourInterval(3));
 
-            NotificationsProcessor.SendNotificationEmails();
-
             // "0 8,12,17 * * *"
             // Cron.Minutely
             RecurringJob.AddOrUpdate("SendNotificationEmails", () => 

@@ -8,9 +8,27 @@ namespace ADSDataDirect.Core.Static
 {
     public class DmaLookup
     {
-        public static List<DMA> US { get => all.Where(x => x.country == "US").ToList(); set => all = value; }
+        public static List<DMA> US
+        {
+            get
+            {
+                return all.Where(x => x.country == "US").ToList();
+            }
 
-        public static List<DMA> All { get => all; set => all = value; }
+            set
+            {
+                all = value;
+            }
+        }
+
+        public static List<DMA> All
+        {
+            get { return all; }
+            set
+            {
+                all = value;
+            }
+        }
 
         private static List<DMA> all = new List<DMA>()
         {

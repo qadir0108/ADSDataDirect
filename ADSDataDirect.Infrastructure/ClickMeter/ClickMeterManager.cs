@@ -204,7 +204,10 @@ namespace ADSDataDirect.Infrastructure.ClickMeter
                 {
                     string responseContent = Get(url);
                     var response = ClickMeterHitResponse.FromJson(responseContent);
-                    hits.AddRange(response.Hits);
+                    if(response.Hits != null)
+                    {
+                        hits.AddRange(response.Hits);
+                    }
                     lastKey = response.LastKey;
                     if(!string.IsNullOrEmpty(lastKey))
                     {
