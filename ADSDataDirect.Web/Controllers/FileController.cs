@@ -22,6 +22,12 @@ namespace ADSDataDirect.Web.Controllers
                 {
                     var stream = fileContent.InputStream;
                     filePath = Path.Combine(UploadPath, fileContent.FileName);
+                    if(!string.IsNullOrEmpty(fileVm.OrderNumber))
+                        filePath = Path.Combine(UploadPath, fileVm.OrderNumber, fileContent.FileName);
+                    if (!System.IO.Directory.Exists(Path.Combine(UploadPath, fileVm.OrderNumber)))
+                    {
+                        Directory.CreateDirectory(Path.Combine(UploadPath, fileVm.OrderNumber));
+                    }
                     using (var fileStream = System.IO.File.Create(filePath))
                     {
                         stream.CopyTo(fileStream);
@@ -41,12 +47,12 @@ namespace ADSDataDirect.Web.Controllers
                         System.IO.File.Copy(filePath, logoFilePath, true);
                         amazonFileKey = logoFileName;
                     }
-                    else if (string.IsNullOrEmpty(fileVm.OrderNumber))
+                    else if (string.IsNullOrEmpty(fileVm.OrderNumber) && IsUseS3)
                     {
                         amazonFileKey = $"{DateTime.Now:yyyyMMddHHmmss}_{fileContent.FileName}";
                         S3FileManager.Upload(amazonFileKey, filePath);
                     }
-                    else if (!string.IsNullOrEmpty(fileVm.SegmentNumber))
+                    else if (!string.IsNullOrEmpty(fileVm.SegmentNumber) && IsUseS3)
                         // Data files Upload only // HtmlImageFiles2500A, HtmlImageFiles2500B
                     {
                         amazonFileKey = $"{fileVm.OrderNumber}/{fileVm.SegmentNumber}_html.zip";
@@ -93,7 +99,14 @@ namespace ADSDataDirect.Web.Controllers
                                     Path.GetExtension(filePath));
                                 break;
                         }
-                        S3FileManager.Upload(amazonFileKey, filePath, true, true);
+                        if (IsUseS3)
+                        {
+                            S3FileManager.Upload(amazonFileKey, filePath, true, true);
+                        }
+                        else
+                        {
+                            amazonFileKey = string.Format("{0}\\{1}", fileVm.OrderNumber, fileContent.FileName);
+                        }
                     }
                 }
 
@@ -106,7 +119,7 @@ namespace ADSDataDirect.Web.Controllers
             finally
             {
                 // Delete local
-                if (System.IO.File.Exists(filePath))
+                if (IsUseS3 && System.IO.File.Exists(filePath))
                     System.IO.File.Delete(filePath);
             }
         }
@@ -119,7 +132,7 @@ namespace ADSDataDirect.Web.Controllers
             {
                 filePath = Path.Combine(ImagesPath, fileVm.FileName);
             }
-                else
+            else if (IsUseS3)
             {
                 S3FileManager.Download(fileVm.FileName, filePath);
             }
@@ -131,15 +144,21 @@ namespace ADSDataDirect.Web.Controllers
         {
             try
             {
+                if (IsUseS3)
+                {
+                    S3FileManager.Delete(fileVm.FileName);
+                }
+                else if (!IsUseS3)
+                {
+                    string filePath = Path.Combine(UploadPath, fileVm.FileName);
+                    if (System.IO.File.Exists(filePath))
+                        System.IO.File.Delete(filePath);
+                }
                 if (fileVm.FileType == "CompanyLogo")
                 {
                     string filePath = Path.Combine(ImagesPath, fileVm.FileName);
                     if (System.IO.File.Exists(filePath))
                         System.IO.File.Delete(filePath);
-                }
-                else
-                {
-                    S3FileManager.Delete(fileVm.FileName);
                 }
                 return Json(new JsonResponse() {IsSucess = true});
             }

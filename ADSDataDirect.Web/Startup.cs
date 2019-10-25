@@ -11,6 +11,7 @@ using Owin;
 using System;
 using ADSDataDirect.Enums;
 using ADSDataDirect.Infrastructure.Notifications;
+using Hangfire.SqlServer;
 
 [assembly: OwinStartup(typeof(Startup))]
 namespace ADSDataDirect.Web
@@ -26,6 +27,10 @@ namespace ADSDataDirect.Web
             
             SetupInitialSettings();
 
+            app.MapSignalR();
+            WfpictUpdater.Instance.StartUpdatingClients();
+
+            #region Hangfire
             //GlobalConfiguration.Configuration.UseSqlServerStorage("WFPICTContext");
             app.UseHangfireDashboard($"/hangfire", new DashboardOptions
             {
@@ -37,21 +42,17 @@ namespace ADSDataDirect.Web
             });
             app.UseHangfireServer();
 
-            app.MapSignalR();
-
-            WfpictUpdater.Instance.StartUpdatingClients();
-
             // CheckForQCRules 
             RecurringJob.AddOrUpdate("FetchAndCheckForQCRules", () => NotificationsProcessor.FetchAndCheckForQcRules(), Cron.HourInterval(3));
 
             // "0 8,12,17 * * *"
             // Cron.Minutely
-            RecurringJob.AddOrUpdate("SendNotificationEmails", () => 
-                        NotificationsProcessor.SendNotificationEmails(), 
+            RecurringJob.AddOrUpdate("SendNotificationEmails", () =>
+                        NotificationsProcessor.SendNotificationEmails(),
                         "0 9,16 * * *",
                         TimeZoneInfo.FindSystemTimeZoneById("Eastern Standard Time")
                 );
-
+            #endregion
         }
 
         private void SetupInitialSettings()

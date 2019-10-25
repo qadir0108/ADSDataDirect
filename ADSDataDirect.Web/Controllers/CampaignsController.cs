@@ -16,7 +16,7 @@ using ADSDataDirect.Infrastructure.Csv;
 
 namespace ADSDataDirect.Web.Controllers
 {
-    [Authorize]
+    //[Authorize]
     public class CampaignsController : BaseController
     {
         private static char _c1;
@@ -132,8 +132,13 @@ namespace ADSDataDirect.Web.Controllers
         public ActionResult Create()
         {
             _c1 = 'A';
+            int newOrderNumber = Db.Campaigns.Count() > 0
+                        ? Db.Campaigns.Select(x => x.OrderNumber).ToList()
+                        .Select(x => int.Parse(x.TrimEnd("RDP".ToCharArray()))).Max() + 1
+                        : 2500;
             CampaignVm model = new CampaignVm()
             {
+                OrderNumber = newOrderNumber.ToString(),
                 RepresentativeName = LoggedInUser?.UserName,
                 RepresentativeEmail = LoggedInUser?.Email,
                 ChannelTypes = new List<ChannelType> { }
@@ -159,12 +164,6 @@ namespace ADSDataDirect.Web.Controllers
             {
                 try
                 {
-                    
-                    var camps = Db.Campaigns.ToList();
-                    int newOrderNumber = camps.Count > 0
-                        ? camps.Max(x => int.Parse(x.OrderNumber.TrimEnd("RDP".ToCharArray()))) + 1
-                        : 2500;
-
                     string userName = string.IsNullOrEmpty(LoggedInUser?.UserName) ?
                         UsersList.FirstOrDefault().Text : LoggedInUser?.UserName;
 
@@ -181,14 +180,14 @@ namespace ADSDataDirect.Web.Controllers
                         var segment = TinyMapper.Map<CampaignSegment>(segmentVm);
                         segment.Id = Guid.NewGuid();
                         segment.CreatedAt = DateTime.Now;
-                        segment.OrderNumber = "" + newOrderNumber;
-                        segment.SegmentNumber = newOrderNumber + "" + c2++;
+                        segment.OrderNumber = "" + campaignVm.OrderNumber;
+                        segment.SegmentNumber = campaignVm.OrderNumber + "" + c2++;
                         campaign.Segments.Add(segment);
                     }
                     campaign.Id = Guid.NewGuid();
                     campaign.CreatedAt = DateTime.Now;
                     campaign.CreatedBy = userName;
-                    campaign.OrderNumber = newOrderNumber.ToString();
+                    campaign.OrderNumber = campaignVm.OrderNumber.ToString();
                     campaign.IP = Request.ServerVariables["REMOTE_ADDR"];
                     campaign.Browser = Request.UserAgent;
                     campaign.OS = Environment.OSVersion.Platform + " " + Environment.OSVersion.VersionString;
@@ -453,8 +452,13 @@ namespace ADSDataDirect.Web.Controllers
 
             Db.Campaigns.Remove(campaign);
             Db.SaveChanges();
+
+            string orderNumber = campaign.OrderNumber;
+            if (!IsUseS3)
+                FileProcessor.DeleteFiles(UploadPath, orderNumber);         
+
             ForceOrders = true;
-            TempData["Success"] = "Order :" + campaign.OrderNumber + " has been DELETED succesfully.";
+            TempData["Success"] = "Order :" + orderNumber + " has been DELETED succesfully.";
             return RedirectToAction("Index");
         }
 

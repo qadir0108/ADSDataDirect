@@ -11,14 +11,17 @@ using ADSDataDirect.Enums;
 using ADSDataDirect.Web.Models;
 using Microsoft.AspNet.Identity.Owin;
 using ADSDataDirect.Core.Static;
+using System.Configuration;
 
 namespace ADSDataDirect.Web.Controllers
 {
     public class BaseController : BaseControllerAuth0
     {
-        protected string ClientCode { get; } = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
-
+        protected string ClientCode { get; } = ConfigurationManager.AppSettings["ClientCode"];
         protected bool IsNxs => ClientCode == Client.NXS.ToString();
+
+        protected string UseS3 { get; } = ConfigurationManager.AppSettings["UseS3"];
+        protected bool IsUseS3 => UseS3.ToLowerInvariant() == "true";
 
         protected readonly Random Random = new Random();
         protected const int PageSize = 10;

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.Data.Entity;
 using System.Linq;
 using System.Web;
@@ -12,6 +13,8 @@ namespace ADSDataDirect.Infrastructure.Campaigns
 {
     public static class CampaignProcessor
     {
+        static string UseS3 { get; } = ConfigurationManager.AppSettings["UseS3"];
+        static bool IsUseS3 => UseS3.ToLowerInvariant() == "true";
         public static void ProcessNewOrder(string orderNumber, string userName)
         {
             using (var db = new WfpictContext())
@@ -20,7 +23,10 @@ namespace ADSDataDirect.Infrastructure.Campaigns
                                  .FirstOrDefault(x => x.OrderNumber == orderNumber);
 
                 var user = db.Users.FirstOrDefault(x => x.UserName == userName);
-                FileProcessor.ProcessNewOrderFiles(db, campaign);
+
+                if(IsUseS3)
+                    FileProcessor.ProcessNewOrderFiles(db, campaign);
+                
                 EmailHelper.SendOrderEmailToClient(campaign, user);
 
                 var ads = db.Vendors.FirstOrDefault(x => x.Name.Contains("ADS"));

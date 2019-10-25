@@ -3,14 +3,17 @@ using Amazon;
 using Amazon.S3;
 using Amazon.S3.IO;
 using Amazon.S3.Model;
+using System.Configuration;
 
 namespace ADSDataDirect.Infrastructure.S3
 {
     public class S3FileManager
     {
-        readonly static string clientCode = System.Configuration.ConfigurationManager.AppSettings["ClientCode"];
+        readonly static string clientCode = ConfigurationManager.AppSettings["ClientCode"];
 
         private static string _serverPrefix = $"https://{Bucket}.s3.amazonaws.com/";
+        protected static string UseS3 { get; } = ConfigurationManager.AppSettings["UseS3"];
+        protected static bool IsUseS3 => UseS3.ToLowerInvariant() == "true";
 
         public static string Bucket {
             get
@@ -37,6 +40,8 @@ namespace ADSDataDirect.Infrastructure.S3
 
         public static void Upload(string fileKey, string localFilePath, bool ifMakePublic = true, bool overWrite = false)
         {
+            if (!IsUseS3) return;
+
             if (overWrite) Delete(fileKey);
 
             using (IAmazonS3 client = new AmazonS3Client(Region))
@@ -54,6 +59,8 @@ namespace ADSDataDirect.Infrastructure.S3
 
         public static bool Exists(string fileKey)
         {
+            if (!IsUseS3) return;
+
             using (IAmazonS3 client = new AmazonS3Client(Region))
             {
                 S3FileInfo s3FileInfo = new S3FileInfo(client, Bucket, fileKey);
@@ -63,6 +70,8 @@ namespace ADSDataDirect.Infrastructure.S3
 
         public static void Download(string fileKey, string localFilePath)
         {
+            if (!IsUseS3) return;
+
             using (IAmazonS3 client = new AmazonS3Client(Region))
             {
                 GetObjectRequest request = new GetObjectRequest();
@@ -75,6 +84,8 @@ namespace ADSDataDirect.Infrastructure.S3
 
         public static void Delete(string fileKey)
         {
+            if (!IsUseS3) return;
+
             using (IAmazonS3 client = new AmazonS3Client(Region))
             {
                 DeleteObjectRequest request = new DeleteObjectRequest();
@@ -86,6 +97,8 @@ namespace ADSDataDirect.Infrastructure.S3
 
         public static void CreateDirectory(string folderName)
         {
+            if (!IsUseS3) return;
+
             using (IAmazonS3 client = new AmazonS3Client(Region))
             {
                 S3DirectoryInfo destination = new S3DirectoryInfo(client, Bucket, folderName);
@@ -95,7 +108,9 @@ namespace ADSDataDirect.Infrastructure.S3
 
         public static void Move(string oldFileKey,string newFileKey, string folderName, bool overWrite = false)
         {
-            if(string.IsNullOrEmpty(oldFileKey)) return;
+            if (!IsUseS3) return;
+
+            if (string.IsNullOrEmpty(oldFileKey)) return;
 
             if(overWrite) Delete(newFileKey);
 
@@ -111,6 +126,8 @@ namespace ADSDataDirect.Infrastructure.S3
 
         public static void MakePublic(string fileKey)
         {
+            if (!IsUseS3) return;
+
             using (IAmazonS3 client = new AmazonS3Client(Region))
             {
                 PutACLRequest request = new PutACLRequest();

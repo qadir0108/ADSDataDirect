@@ -200,5 +200,17 @@ namespace ADSDataDirect.Infrastructure.Campaigns
                 }
             }
         }
+
+        public static void DeleteFiles(string uploadPath, string orderNumber)
+        {
+            try
+            {
+                System.IO.Directory.Delete(Path.Combine(uploadPath, orderNumber), true);
+            }
+            catch (Exception ex)
+            {
+                //
+            }
+        }
     }
 }
